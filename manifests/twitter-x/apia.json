@@ -6,7 +6,7 @@
     "description_for_ai": "X (formerly Twitter) social platform API. Search tweets, get user profiles, post tweets, get timelines, stream real-time tweets. 350M+ users. Use for social listening, tweet analysis, posting, monitoring mentions.",
     "url": "https://twitter.com",
     "api_base": "https://api.twitter.com/2",
-    "category": "social_media",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
