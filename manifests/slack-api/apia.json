@@ -1,1 +1,117 @@
-{"apia":"1.0","service":{"id":"slack-api","name":"Slack API","description_for_ai":"Send messages and manage Slack workspaces. Post to channels, DM users, create channels, search messages, manage files. 20M+ daily users. Use for team notifications, bots, workflow automation.","url":"https://slack.com","api_base":"https://slack.com/api","category":"communication_teams","geo":["GLOBAL"],"language":"en","docs":"https://api.slack.com/methods"},"auth":{"type":"bearer_token","anonymous_access":false,"header":"Authorization: Bearer xoxb-...","how_to_get":"Create Slack App at https://api.slack.com/apps — free","cost":"Free Slack plan. API included."},"capabilities":[{"id":"post_message","description_for_ai":"Send message to a Slack channel or user. Supports rich formatting with blocks and attachments.","intent":["send slack message","post to slack","slack notification","team message","message channel","слак сообщение"],"endpoint":"POST https://slack.com/api/chat.postMessage","input":{"channel":{"type":"string","description":"Channel ID (C1234567890) or @username or #channel-name","required":true},"text":{"type":"string","description":"Message text. Use mrkdwn for formatting.","required":false},"blocks":{"type":"array","description":"Rich Block Kit layout elements","required":false},"attachments":{"type":"array","required":false},"thread_ts":{"type":"string","description":"Reply to thread: timestamp of parent message","required":false}},"output":{"type":"message","fields":["ok","channel","ts","message.text"]},"realtime":true,"requires_auth":true},{"id":"search_messages","description_for_ai":"Search messages across Slack workspace.","intent":["search slack","find message","slack history","past messages"],"endpoint":"GET https://slack.com/api/search.messages","input":{"query":{"type":"string","required":true},"count":{"type":"integer","default":20},"sort":{"type":"string","description":"score or timestamp","default":"score"}},"output":{"type":"search_results","fields":["messages.matches[0].text","messages.matches[0].channel.name","messages.matches[0].ts","messages.total"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "slack-api",
+    "name": "Slack API",
+    "description_for_ai": "Send messages and manage Slack workspaces. Post to channels, DM users, create channels, search messages, manage files. 20M+ daily users. Use for team notifications, bots, workflow automation.",
+    "url": "https://slack.com",
+    "api_base": "https://slack.com/api",
+    "category": "communication_teams",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://api.slack.com/methods"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer xoxb-...",
+    "how_to_get": "Create Slack App at https://api.slack.com/apps — free",
+    "cost": "Free Slack plan. API included."
+  },
+  "capabilities": [
+    {
+      "id": "post_message",
+      "description_for_ai": "Send message to a Slack channel or user. Supports rich formatting with blocks and attachments.",
+      "intent": [
+        "send slack message",
+        "post to slack",
+        "slack notification",
+        "team message",
+        "message channel",
+        "слак сообщение"
+      ],
+      "endpoint": "POST https://slack.com/api/chat.postMessage",
+      "input": {
+        "channel": {
+          "type": "string",
+          "description": "Channel ID (C1234567890) or @username or #channel-name",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "description": "Message text. Use mrkdwn for formatting.",
+          "required": false
+        },
+        "blocks": {
+          "type": "array",
+          "description": "Rich Block Kit layout elements",
+          "required": false
+        },
+        "attachments": {
+          "type": "array",
+          "required": false
+        },
+        "thread_ts": {
+          "type": "string",
+          "description": "Reply to thread: timestamp of parent message",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "ok",
+          "channel",
+          "ts",
+          "message.text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_messages",
+      "description_for_ai": "Search messages across Slack workspace.",
+      "intent": [
+        "search slack",
+        "find message",
+        "slack history",
+        "past messages"
+      ],
+      "endpoint": "GET https://slack.com/api/search.messages",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
+        },
+        "sort": {
+          "type": "string",
+          "description": "score or timestamp",
+          "default": "score"
+        }
+      },
+      "output": {
+        "type": "search_results",
+        "fields": [
+          "messages.matches[0].text",
+          "messages.matches[0].channel.name",
+          "messages.matches[0].ts",
+          "messages.total"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
