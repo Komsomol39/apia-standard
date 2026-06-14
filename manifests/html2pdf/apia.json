@@ -3,7 +3,7 @@
   "service": {
     "id": "html2pdf",
     "name": "HTML/CSS to PDF API (pdfcrowd)",
-    "description_for_ai": "Convert HTML, URLs, or CSS to PDF. High-fidelity rendering. Used for invoice generation, report PDFs, document export. Multiple providers available.",
+    "description_for_ai": "Convert HTML content or any URL to PDF with high-fidelity rendering. Supports JavaScript, CSS, custom headers/footers. Used for invoice generation, reports, document export. Multiple providers available (pdfcrowd API shown).",
     "url": "https://pdfcrowd.com",
     "api_base": "https://api.pdfcrowd.com/convert",
     "category": "utilities_pdf",
@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "url_to_pdf",
-      "description_for_ai": "Convert any URL to PDF. Renders JavaScript, CSS. Use for generating PDF reports from web pages.",
+      "description_for_ai": "Convert any URL to PDF. Renders JavaScript and CSS fully. Returns binary PDF. Use for generating PDF versions of web pages or web apps.",
       "intent": [
         "convert to PDF",
         "URL to PDF",
@@ -35,27 +35,48 @@
       "input": {
         "source_url": {
           "type": "string",
-          "description": "URL to convert to PDF",
+          "description": "Full URL to convert: https://example.com/invoice/123. Page must be publicly accessible.",
           "required": true
         },
         "page_size": {
           "type": "string",
-          "description": "A4, Letter, A3",
+          "description": "Paper size: A4, A3, A5, Letter, Legal, Tabloid",
           "default": "A4"
         },
         "orientation": {
           "type": "string",
-          "description": "portrait or landscape",
+          "description": "Page orientation: portrait or landscape",
           "default": "portrait"
         },
         "margin_top": {
           "type": "string",
-          "description": "e.g. 10mm",
+          "description": "Top margin with unit: 10mm, 1cm, 0.5in",
           "default": "10mm"
         },
         "margin_bottom": {
           "type": "string",
+          "description": "Bottom margin",
           "default": "10mm"
+        },
+        "margin_left": {
+          "type": "string",
+          "description": "Left margin",
+          "default": "10mm"
+        },
+        "margin_right": {
+          "type": "string",
+          "description": "Right margin",
+          "default": "10mm"
+        },
+        "javascript_delay": {
+          "type": "integer",
+          "description": "Wait time in ms for JavaScript to execute before capture. Use for SPAs.",
+          "default": 0
+        },
+        "no_background": {
+          "type": "boolean",
+          "description": "Remove background colors and images for print-friendly output",
+          "default": false
         }
       },
       "output": {
@@ -69,7 +90,7 @@
     },
     {
       "id": "html_to_pdf",
-      "description_for_ai": "Convert HTML string to PDF directly. Use for invoice generation, templated documents.",
+      "description_for_ai": "Convert HTML string directly to PDF. Best for template-based documents like invoices, contracts, receipts.",
       "intent": [
         "HTML to PDF",
         "invoice PDF",
@@ -80,12 +101,18 @@
       "input": {
         "source": {
           "type": "string",
-          "description": "HTML string content",
+          "description": "Complete HTML document as string. Include inline CSS for best results.",
           "required": true
         },
         "page_size": {
           "type": "string",
+          "description": "Paper size: A4, Letter, etc.",
           "default": "A4"
+        },
+        "orientation": {
+          "type": "string",
+          "description": "portrait or landscape",
+          "default": "portrait"
         }
       },
       "output": {
