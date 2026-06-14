@@ -6,7 +6,7 @@
     "description_for_ai": "Search YouTube videos, get video details, channel info, comments, trending videos. 10,000 units/day free. Use for video search, embedding, analytics, content discovery.",
     "url": "https://youtube.com",
     "api_base": "https://www.googleapis.com/youtube/v3",
-    "category": "media_video",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
