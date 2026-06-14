@@ -132,5 +132,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "api_app_keys": "Need both API key (DD-API-KEY header) and Application key (DD-APPLICATION-KEY header). API key for sending data, App key for querying.",
+    "site": "EU customers: use api.datadoghq.eu instead of api.datadoghq.com",
+    "metrics_format": "Metric names: lowercase, dots and underscores ok. E.g. myapp.api.response_time",
+    "tags": "Always add env, service, version tags: ['env:prod', 'service:api', 'version:1.2.3']"
   }
 }
