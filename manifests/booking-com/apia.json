@@ -6,7 +6,7 @@
     "description_for_ai": "Booking.com Demand API — access 28M+ accommodation listings worldwide. Hotels, apartments, hostels, villas with real-time prices and availability. 43+ languages, 150K+ destinations. Requires Booking.com partner agreement. Used by travel agencies and OTA platforms.",
     "url": "https://booking.com",
     "api_base": "https://demandapi.booking.com/3.1",
-    "category": "travel_hotels",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
