@@ -6,7 +6,7 @@
     "description_for_ai": "Open-source product analytics. Events, feature flags, session recordings, A/B tests, funnels, cohorts. Self-hostable. 1M events/month free on cloud. Privacy-friendly alternative to Mixpanel.",
     "url": "https://posthog.com",
     "api_base": "https://app.posthog.com",
-    "category": "product_analytics",
+    "category": "analytics",
     "geo": [
       "GLOBAL"
     ],
