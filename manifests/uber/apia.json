@@ -6,7 +6,7 @@
     "description_for_ai": "Uber ride-sharing and delivery API. Get price estimates, request rides, track drivers. Available in 70+ countries. Use for integrating ride booking, showing fare estimates, or managing ride requests.",
     "url": "https://developer.uber.com",
     "api_base": "https://api.uber.com/v1.2",
-    "category": "transport_rideshare",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
