@@ -7,7 +7,9 @@
     "url": "https://x.ai",
     "api_base": "https://api.x.ai/v1",
     "category": "ai_llm",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://docs.x.ai/api"
   },
@@ -22,18 +24,47 @@
     {
       "id": "chat_completion",
       "description_for_ai": "OpenAI-compatible chat completions. Cheapest frontier model in 2026. Grok 4.1 Mini costs $0.20/$0.50 per 1M tokens — 8x cheaper than GPT-4o. Use for high-volume, cost-sensitive applications.",
-      "intent": ["cheapest AI", "grok", "low cost generation", "high volume LLM", "xAI"],
+      "intent": [
+        "cheapest AI",
+        "grok",
+        "low cost generation",
+        "high volume LLM",
+        "xAI"
+      ],
       "endpoint": "POST https://api.x.ai/v1/chat/completions",
       "input": {
-        "model": { "type": "string", "description": "grok-4-mini (cheapest), grok-4 (flagship)", "required": true },
-        "messages": { "type": "array", "description": "OpenAI-compatible [{role, content}]", "required": true },
-        "temperature": { "type": "float", "default": 1 },
-        "max_tokens": { "type": "integer", "required": false },
-        "stream": { "type": "boolean", "default": false }
+        "model": {
+          "type": "string",
+          "description": "grok-4-mini (cheapest), grok-4 (flagship)",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "OpenAI-compatible [{role, content}]",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "default": 1,
+          "description": "Randomness 0.0-1.0: lower=deterministic, higher=creative"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false,
+          "description": "Maximum number of tokens to generate in response"
+        },
+        "stream": {
+          "type": "boolean",
+          "default": false
+        }
       },
       "output": {
         "type": "completion",
-        "fields": ["choices[0].message.content", "usage.prompt_tokens", "usage.completion_tokens"]
+        "fields": [
+          "choices[0].message.content",
+          "usage.prompt_tokens",
+          "usage.completion_tokens"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -41,16 +72,37 @@
     {
       "id": "live_search",
       "description_for_ai": "Grok with real-time X (Twitter) and web search access. Use when user needs current information, trending topics, or recent events that happened after model training cutoff.",
-      "intent": ["real time info", "current events", "latest news", "trending topics", "X twitter search", "live data"],
+      "intent": [
+        "real time info",
+        "current events",
+        "latest news",
+        "trending topics",
+        "X twitter search",
+        "live data"
+      ],
       "endpoint": "POST https://api.x.ai/v1/chat/completions",
       "input": {
-        "model": { "type": "string", "default": "grok-4" },
-        "messages": { "type": "array", "required": true },
-        "search_parameters": { "type": "object", "description": "{mode: on} to enable live search", "required": false }
+        "model": {
+          "type": "string",
+          "default": "grok-4",
+          "description": "AI/ML model identifier to use for this request"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "search_parameters": {
+          "type": "object",
+          "description": "{mode: on} to enable live search",
+          "required": false
+        }
       },
       "output": {
         "type": "completion",
-        "fields": ["choices[0].message.content", "choices[0].message.citations"]
+        "fields": [
+          "choices[0].message.content",
+          "choices[0].message.citations"
+        ]
       },
       "realtime": true,
       "requires_auth": true
