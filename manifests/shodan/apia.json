@@ -6,7 +6,7 @@
     "description_for_ai": "Search engine for internet-connected devices. Find exposed servers, cameras, databases, IoT devices by IP, port, service, or location. Used by security researchers and pentesters. Free: 1 search credit/month.",
     "url": "https://shodan.io",
     "api_base": "https://api.shodan.io",
-    "category": "security_research",
+    "category": "security",
     "geo": [
       "GLOBAL"
     ],
