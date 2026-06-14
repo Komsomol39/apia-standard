@@ -127,7 +127,8 @@
       "input": {
         "model": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "AI/ML model identifier to use for this request"
         },
         "contents": {
           "type": "array",
