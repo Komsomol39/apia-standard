@@ -1,2 +1,141 @@
 {
-  "apia":"1.0","service":{"id":"supabase","name":"Supabase API","description_for_ai":"Open-source Firebase alternative. Postgres database, Auth, Storage, Realtime subscriptions, Edge Functions — all in one. Free tier: 500MB database, 1GB storage. Use for backend-as-a-service, user auth, file storage.","url":"https://supabase.com","api_base":"https://{project_id}.supabase.co","category":"developer_backend","geo":["GLOBAL"],"language":"en","docs":"https://supabase.com/docs"},"auth":{"type":"apikey","anonymous_access":false,"header":"apikey: your-anon-key","how_to_get":"Create project at https://supabase.com — free tier available","cost":"Free: 500MB DB, 1GB storage. Pro: $25/month"},"capabilities":[{"id":"query_database","description_for_ai":"Query Postgres database via REST API using PostgREST. Select, insert, update, delete records. Filter, sort, paginate.","intent":["query database","get records","insert data","update record","database query","PostgreSQL REST"],"endpoint":"GET https://{project_id}.supabase.co/rest/v1/{table}","input":{"table":{"type":"string","description":"Table name","required":true},"select":{"type":"string","description":"Columns: * or col1,col2","default":"*"},"filter":{"type":"string","description":"URL query params: ?column=eq.value","required":false},"order":{"type":"string","description":"column.asc or column.desc","required":false},"limit":{"type":"integer","required":false}},"output":{"type":"list<row>","fields":["All selected columns"]},"realtime":true,"requires_auth":true},{"id":"auth_signup","description_for_ai":"Register new user with email and password. Returns user object and session token.","intent":["register user","sign up","create account","user registration"],"endpoint":"POST https://{project_id}.supabase.co/auth/v1/signup","input":{"email":{"type":"string","required":true},"password":{"type":"string","required":true}},"output":{"type":"auth","fields":["user.id","user.email","session.access_token"]},"realtime":true,"requires_auth":true},{"id":"storage_upload","description_for_ai":"Upload file to Supabase Storage bucket.","intent":["upload file","store image","file storage","upload document"],"endpoint":"POST https://{project_id}.supabase.co/storage/v1/object/{bucket}/{path}","input":{"bucket":{"type":"string","required":true},"path":{"type":"string","required":true},"file":{"type":"binary","required":true}},"output":{"type":"upload","fields":["Key"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "supabase",
+    "name": "Supabase API",
+    "description_for_ai": "Open-source Firebase alternative. Postgres database, Auth, Storage, Realtime subscriptions, Edge Functions — all in one. Free tier: 500MB database, 1GB storage. Use for backend-as-a-service, user auth, file storage.",
+    "url": "https://supabase.com",
+    "api_base": "https://{project_id}.supabase.co",
+    "category": "developer_backend",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://supabase.com/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "apikey: your-anon-key",
+    "how_to_get": "Create project at https://supabase.com — free tier available",
+    "cost": "Free: 500MB DB, 1GB storage. Pro: $25/month"
+  },
+  "capabilities": [
+    {
+      "id": "query_database",
+      "description_for_ai": "Query Postgres database via REST API using PostgREST. Select, insert, update, delete records. Filter, sort, paginate.",
+      "intent": [
+        "query database",
+        "get records",
+        "insert data",
+        "update record",
+        "database query",
+        "PostgreSQL REST"
+      ],
+      "endpoint": "GET https://{project_id}.supabase.co/rest/v1/{table}",
+      "input": {
+        "table": {
+          "type": "string",
+          "description": "Table name",
+          "required": true
+        },
+        "select": {
+          "type": "string",
+          "description": "Columns: * or col1,col2",
+          "default": "*"
+        },
+        "filter": {
+          "type": "string",
+          "description": "URL query params: ?column=eq.value",
+          "required": false
+        },
+        "order": {
+          "type": "string",
+          "description": "column.asc or column.desc",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<row>",
+        "fields": [
+          "All selected columns"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "auth_signup",
+      "description_for_ai": "Register new user with email and password. Returns user object and session token.",
+      "intent": [
+        "register user",
+        "sign up",
+        "create account",
+        "user registration"
+      ],
+      "endpoint": "POST https://{project_id}.supabase.co/auth/v1/signup",
+      "input": {
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "password": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "auth",
+        "fields": [
+          "user.id",
+          "user.email",
+          "session.access_token"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "storage_upload",
+      "description_for_ai": "Upload file to Supabase Storage bucket.",
+      "intent": [
+        "upload file",
+        "store image",
+        "file storage",
+        "upload document"
+      ],
+      "endpoint": "POST https://{project_id}.supabase.co/storage/v1/object/{bucket}/{path}",
+      "input": {
+        "bucket": {
+          "type": "string",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "file": {
+          "type": "binary",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "upload",
+        "fields": [
+          "Key"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
