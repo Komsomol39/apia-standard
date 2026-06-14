@@ -6,7 +6,7 @@
     "description_for_ai": "Travel reviews and recommendations. Hotels, restaurants, attractions ratings and reviews from 1B+ reviews. Location search, photos, traveler reviews. Use for travel planning, destination info, review aggregation.",
     "url": "https://tripadvisor.com",
     "api_base": "https://api.content.tripadvisor.com/api/v1",
-    "category": "travel_reviews",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
