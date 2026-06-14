@@ -7,7 +7,9 @@
     "url": "https://openalex.org",
     "api_base": "https://api.openalex.org",
     "category": "science_research",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://docs.openalex.org/"
   },
@@ -21,18 +23,53 @@
     {
       "id": "search_works",
       "description_for_ai": "Search research works: papers, books, datasets, dissertations. Filter by year, institution, topic, citations count.",
-      "intent": ["academic papers", "research works", "citations", "scholarly articles", "academic search", "open access papers"],
+      "intent": [
+        "academic papers",
+        "research works",
+        "citations",
+        "scholarly articles",
+        "academic search",
+        "open access papers"
+      ],
       "endpoint": "GET https://api.openalex.org/works",
       "input": {
-        "search": {"type": "string", "description": "Full-text search query", "required": false},
-        "filter": {"type": "string", "description": "publication_year:2023, type:journal-article, open_access.is_oa:true, cited_by_count:>100", "required": false},
-        "sort": {"type": "string", "description": "cited_by_count:desc, publication_date:desc", "required": false},
-        "per_page": {"type": "integer", "default": 25},
-        "page": {"type": "integer", "default": 1}
+        "search": {
+          "type": "string",
+          "description": "Full-text search query",
+          "required": false
+        },
+        "filter": {
+          "type": "string",
+          "description": "publication_year:2023, type:journal-article, open_access.is_oa:true, cited_by_count:>100",
+          "required": false
+        },
+        "sort": {
+          "type": "string",
+          "description": "cited_by_count:desc, publication_date:desc",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 25,
+          "description": "Results per page. Check API docs for maximum allowed."
+        },
+        "page": {
+          "type": "integer",
+          "default": 1,
+          "description": "Page number for pagination (1-indexed)"
+        }
       },
       "output": {
         "type": "list<work>",
-        "fields": ["id", "title", "publication_year", "cited_by_count", "open_access.is_oa", "open_access.oa_url", "authorships[0].author.display_name"]
+        "fields": [
+          "id",
+          "title",
+          "publication_year",
+          "cited_by_count",
+          "open_access.is_oa",
+          "open_access.oa_url",
+          "authorships[0].author.display_name"
+        ]
       },
       "realtime": false,
       "requires_auth": false
@@ -40,15 +77,36 @@
     {
       "id": "get_institution",
       "description_for_ai": "Get information about a research institution: papers count, citation metrics, top researchers.",
-      "intent": ["university research", "institution papers", "MIT research", "academic institution"],
+      "intent": [
+        "university research",
+        "institution papers",
+        "MIT research",
+        "academic institution"
+      ],
       "endpoint": "GET https://api.openalex.org/institutions",
       "input": {
-        "search": {"type": "string", "description": "Institution name", "required": false},
-        "filter": {"type": "string", "description": "country_code:RU for Russian institutions", "required": false}
+        "search": {
+          "type": "string",
+          "description": "Institution name",
+          "required": false
+        },
+        "filter": {
+          "type": "string",
+          "description": "country_code:RU for Russian institutions",
+          "required": false
+        }
       },
       "output": {
         "type": "list<institution>",
-        "fields": ["id", "display_name", "country_code", "type", "works_count", "cited_by_count", "homepage_url"]
+        "fields": [
+          "id",
+          "display_name",
+          "country_code",
+          "type",
+          "works_count",
+          "cited_by_count",
+          "homepage_url"
+        ]
       },
       "realtime": false,
       "requires_auth": false
