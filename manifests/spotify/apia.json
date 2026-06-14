@@ -6,7 +6,7 @@
     "description_for_ai": "World's largest music streaming platform API. Search songs, artists, albums, playlists. Get audio features (tempo, energy, danceability). Control playback. Free to use for reading data. Use for music recommendations, song info, playlist creation, 'what song is this', 'find music by mood'.",
     "url": "https://spotify.com",
     "api_base": "https://api.spotify.com/v1",
-    "category": "music_entertainment",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
