@@ -6,7 +6,7 @@
     "description_for_ai": "Google Firebase backend platform. Realtime Database, Firestore, Auth, Cloud Messaging, Hosting, Functions. Free tier generous. Most popular mobile backend platform. Use for real-time apps, mobile backends, push notifications.",
     "url": "https://firebase.google.com",
     "api_base": "https://firestore.googleapis.com/v1",
-    "category": "developer_backend",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
