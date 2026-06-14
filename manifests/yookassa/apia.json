@@ -74,7 +74,7 @@
     },
     {
       "id": "create_refund",
-      "description_for_ai": "Оформить возврат платежа полный или частичный.",
+      "description_for_ai": "Create a full or partial refund for a completed ЮКасса payment. Returns refund status and amount.",
       "intent": [
         "возврат платежа",
         "refund",
