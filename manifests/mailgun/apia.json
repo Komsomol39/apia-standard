@@ -1,1 +1,114 @@
-{"apia":"1.0","service":{"id":"mailgun","name":"Mailgun API","description_for_ai":"Email API for developers. Send, receive, track emails. Email validation, inbox placement testing. 5000 emails/month free for 3 months. High deliverability. Used by GitHub, Stripe, Lyft. Use for transactional email at scale.","url":"https://mailgun.com","api_base":"https://api.mailgun.net/v3","category":"communication_email","geo":["GLOBAL"],"language":"en","docs":"https://documentation.mailgun.com/"},"auth":{"type":"basic_auth","anonymous_access":false,"note":"api as username, API key as password","how_to_get":"Register at https://mailgun.com","cost":"Free: 5000 emails/month 3 months. Then $15/month 50K emails"},"capabilities":[{"id":"send_email","description_for_ai":"Send email with high deliverability. Supports HTML, attachments, tracking, tags, custom headers.","intent":["send email","transactional email","email delivery","mailgun send","developer email"],"endpoint":"POST https://api.mailgun.net/v3/{domain}/messages","input":{"from":{"type":"string","description":"sender@yourdomain.com","required":true},"to":{"type":"string","description":"recipient@example.com","required":true},"subject":{"type":"string","required":true},"html":{"type":"string","description":"HTML email body","required":false},"text":{"type":"string","description":"Plain text body","required":false},"o:tracking":{"type":"boolean","description":"Enable open/click tracking","default":true}},"output":{"type":"message","fields":["id","message"]},"realtime":true,"requires_auth":true},{"id":"validate_email","description_for_ai":"Validate email address deliverability. Returns risk score, mailbox exists check, catch-all detection.","intent":["validate email","email verification","check email","email deliverability","bounce prevention"],"endpoint":"GET https://api.mailgun.net/v4/address/validate","input":{"address":{"type":"string","description":"Email address to validate","required":true}},"output":{"type":"validation","fields":["address","is_disposable_address","is_role_address","reason","result","risk"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "mailgun",
+    "name": "Mailgun API",
+    "description_for_ai": "Email API for developers. Send, receive, track emails. Email validation, inbox placement testing. 5000 emails/month free for 3 months. High deliverability. Used by GitHub, Stripe, Lyft. Use for transactional email at scale.",
+    "url": "https://mailgun.com",
+    "api_base": "https://api.mailgun.net/v3",
+    "category": "communication_email",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://documentation.mailgun.com/"
+  },
+  "auth": {
+    "type": "basic_auth",
+    "anonymous_access": false,
+    "note": "api as username, API key as password",
+    "how_to_get": "Register at https://mailgun.com",
+    "cost": "Free: 5000 emails/month 3 months. Then $15/month 50K emails"
+  },
+  "capabilities": [
+    {
+      "id": "send_email",
+      "description_for_ai": "Send email with high deliverability. Supports HTML, attachments, tracking, tags, custom headers.",
+      "intent": [
+        "send email",
+        "transactional email",
+        "email delivery",
+        "mailgun send",
+        "developer email"
+      ],
+      "endpoint": "POST https://api.mailgun.net/v3/{domain}/messages",
+      "input": {
+        "from": {
+          "type": "string",
+          "description": "sender@yourdomain.com",
+          "required": true
+        },
+        "to": {
+          "type": "string",
+          "description": "recipient@example.com",
+          "required": true
+        },
+        "subject": {
+          "type": "string",
+          "required": true
+        },
+        "html": {
+          "type": "string",
+          "description": "HTML email body",
+          "required": false
+        },
+        "text": {
+          "type": "string",
+          "description": "Plain text body",
+          "required": false
+        },
+        "o:tracking": {
+          "type": "boolean",
+          "description": "Enable open/click tracking",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "id",
+          "message"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "validate_email",
+      "description_for_ai": "Validate email address deliverability. Returns risk score, mailbox exists check, catch-all detection.",
+      "intent": [
+        "validate email",
+        "email verification",
+        "check email",
+        "email deliverability",
+        "bounce prevention"
+      ],
+      "endpoint": "GET https://api.mailgun.net/v4/address/validate",
+      "input": {
+        "address": {
+          "type": "string",
+          "description": "Email address to validate",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "validation",
+        "fields": [
+          "address",
+          "is_disposable_address",
+          "is_role_address",
+          "reason",
+          "result",
+          "risk"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
