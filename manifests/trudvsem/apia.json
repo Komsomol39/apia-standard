@@ -97,12 +97,14 @@
         },
         "offset": {
           "type": "integer",
-          "default": 0
+          "default": 0,
+          "description": "Number of records to skip for pagination"
         },
         "limit": {
           "type": "integer",
           "default": 10,
-          "max": 100
+          "max": 100,
+          "description": "Maximum number of results to return"
         },
         "industry": {
           "type": "string",
@@ -141,12 +143,14 @@
         },
         "offset": {
           "type": "integer",
-          "default": 0
+          "default": 0,
+          "description": "Number of records to skip for pagination"
         },
         "limit": {
           "type": "integer",
           "default": 10,
-          "max": 100
+          "max": 100,
+          "description": "Maximum number of results to return"
         }
       },
       "output": {
@@ -180,12 +184,14 @@
         },
         "offset": {
           "type": "integer",
-          "default": 0
+          "default": 0,
+          "description": "Number of records to skip for pagination"
         },
         "limit": {
           "type": "integer",
           "default": 10,
-          "max": 100
+          "max": 100,
+          "description": "Maximum number of results to return"
         }
       },
       "output": {
