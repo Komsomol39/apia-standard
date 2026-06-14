@@ -6,7 +6,7 @@
     "description_for_ai": "Fast inference API for open-source models. Llama 3, Mixtral, Qwen, DeepSeek at 50-90% lower cost than frontier providers. OpenAI-compatible. Best for: cheap Llama 3 inference, fine-tuned open models.",
     "url": "https://together.ai",
     "api_base": "https://api.together.xyz/v1",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
