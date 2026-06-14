@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_workers",
-      "description_for_ai": "Get employee records from Workday HCM. Returns employee profiles with job info, department, location.",
+      "description_for_ai": "Enterprise HR platform. Employee records, payroll, recruiting, time tracking, benefits, learning. Used by 10K+ organizations. Use for HR automation, employee data integration, talent management. Get employee records from Workday HCM. Returns employee profiles with job info, department, location.",
       "intent": [
         "employee list",
         "HR data",
