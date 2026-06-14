@@ -1,1 +1,134 @@
-{"apia":"1.0","service":{"id":"inaturalist","name":"iNaturalist API","description_for_ai":"Citizen science nature platform. 200M+ wildlife observations from around the world. Species identification, location data, photos. Community-verified identifications. Use for nature apps, biodiversity research, species sightings.","url":"https://inaturalist.org","api_base":"https://api.inaturalist.org/v1","category":"biodiversity","geo":["GLOBAL"],"language":"en","docs":"https://api.inaturalist.org/v1/docs/"},"auth":{"type":"oauth2","anonymous_access":true,"anonymous_limits":"100 req/min","how_to_get":"Register at https://www.inaturalist.org/users/new","cost":"Free"},"capabilities":[{"id":"search_observations","description_for_ai":"Search wildlife observations by species, location, date, user. Returns verified species sightings with photos.","intent":["wildlife sightings","animal observations","nature sightings","bird sightings","species near me","nature app data"],"endpoint":"GET https://api.inaturalist.org/v1/observations","input":{"q":{"type":"string","description":"Species name or keyword","required":false},"lat":{"type":"float","required":false},"lng":{"type":"float","required":false},"radius":{"type":"integer","description":"km from lat/lng","required":false},"taxon_name":{"type":"string","description":"Scientific or common name","required":false},"place_id":{"type":"integer","description":"iNaturalist place ID","required":false},"per_page":{"type":"integer","default":30},"quality_grade":{"type":"string","description":"research, needs_id, casual","required":false}},"output":{"type":"list<observation>","fields":["results[0].species_guess","results[0].taxon.name","results[0].observed_on","results[0].location","results[0].photos[0].url","results[0].quality_grade"]},"realtime":true,"requires_auth":false},{"id":"identify_species","description_for_ai":"Get species suggestions for an image. Uses AI to identify species from photo.","intent":["identify species","what animal is this","plant identification","bird identification","nature AI"],"endpoint":"POST https://api.inaturalist.org/v1/computervision/score_image","input":{"image":{"type":"file","description":"Image file to identify","required":true},"lat":{"type":"float","description":"Location to improve accuracy","required":false},"lng":{"type":"float","required":false}},"output":{"type":"identification","fields":["results[0].taxon.name","results[0].taxon.preferred_common_name","results[0].combined_score","results[0].taxon.default_photo.medium_url"]},"realtime":true,"requires_auth":false}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "inaturalist",
+    "name": "iNaturalist API",
+    "description_for_ai": "Citizen science nature platform. 200M+ wildlife observations from around the world. Species identification, location data, photos. Community-verified identifications. Use for nature apps, biodiversity research, species sightings.",
+    "url": "https://inaturalist.org",
+    "api_base": "https://api.inaturalist.org/v1",
+    "category": "biodiversity",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://api.inaturalist.org/v1/docs/"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": true,
+    "anonymous_limits": "100 req/min",
+    "how_to_get": "Register at https://www.inaturalist.org/users/new",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "search_observations",
+      "description_for_ai": "Search wildlife observations by species, location, date, user. Returns verified species sightings with photos.",
+      "intent": [
+        "wildlife sightings",
+        "animal observations",
+        "nature sightings",
+        "bird sightings",
+        "species near me",
+        "nature app data"
+      ],
+      "endpoint": "GET https://api.inaturalist.org/v1/observations",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Species name or keyword",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "required": false
+        },
+        "lng": {
+          "type": "float",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "description": "km from lat/lng",
+          "required": false
+        },
+        "taxon_name": {
+          "type": "string",
+          "description": "Scientific or common name",
+          "required": false
+        },
+        "place_id": {
+          "type": "integer",
+          "description": "iNaturalist place ID",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 30
+        },
+        "quality_grade": {
+          "type": "string",
+          "description": "research, needs_id, casual",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<observation>",
+        "fields": [
+          "results[0].species_guess",
+          "results[0].taxon.name",
+          "results[0].observed_on",
+          "results[0].location",
+          "results[0].photos[0].url",
+          "results[0].quality_grade"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "identify_species",
+      "description_for_ai": "Get species suggestions for an image. Uses AI to identify species from photo.",
+      "intent": [
+        "identify species",
+        "what animal is this",
+        "plant identification",
+        "bird identification",
+        "nature AI"
+      ],
+      "endpoint": "POST https://api.inaturalist.org/v1/computervision/score_image",
+      "input": {
+        "image": {
+          "type": "file",
+          "description": "Image file to identify",
+          "required": true
+        },
+        "lat": {
+          "type": "float",
+          "description": "Location to improve accuracy",
+          "required": false
+        },
+        "lng": {
+          "type": "float",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "identification",
+        "fields": [
+          "results[0].taxon.name",
+          "results[0].taxon.preferred_common_name",
+          "results[0].combined_score",
+          "results[0].taxon.default_photo.medium_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
