@@ -55,7 +55,7 @@
     },
     {
       "id": "publish_message",
-      "description_for_ai": "Publish MQTT message to an IoT topic via REST. Use to send commands to subscribed devices.",
+      "description_for_ai": "Publish a message to an MQTT topic via REST. Subscribed IoT devices receive it immediately. Use for sending commands to devices.",
       "intent": [
         "send IoT message",
         "MQTT publish",
