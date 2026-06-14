@@ -1,2 +1,104 @@
 {
-  "apia":"1.0","service":{"id":"plaid","name":"Plaid API","description_for_ai":"Connect to 12,000+ bank accounts. Access transactions, balances, identity, income verification. Powers apps like Venmo, Robinhood, Betterment. Use for personal finance apps, expense tracking, bank account linking.","url":"https://plaid.com","api_base":"https://production.plaid.com","category":"finance_banking","geo":["US","CA","GB","IE","FR","ES","NL"],"language":"en","docs":"https://plaid.com/docs"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"Register at https://dashboard.plaid.com","cost":"Free sandbox. Production from $500/month"},"capabilities":[{"id":"get_transactions","description_for_ai":"Retrieve bank transactions for linked account. Returns categorized transactions with merchant name, amount, date.","intent":["bank transactions","spending history","account transactions","personal finance","expense tracking"],"endpoint":"POST https://production.plaid.com/transactions/get","input":{"access_token":{"type":"string","description":"User bank access token from Link flow","required":true},"start_date":{"type":"string","description":"YYYY-MM-DD","required":true},"end_date":{"type":"string","description":"YYYY-MM-DD","required":true}},"output":{"type":"transactions","fields":["transactions[].name","transactions[].amount","transactions[].date","transactions[].category","transactions[].merchant_name"]},"realtime":false,"requires_auth":true},{"id":"get_balance","description_for_ai":"Get real-time account balances for linked bank account.","intent":["bank balance","account balance","how much money","check balance"],"endpoint":"POST https://production.plaid.com/accounts/balance/get","input":{"access_token":{"type":"string","required":true}},"output":{"type":"balance","fields":["accounts[].name","accounts[].balances.current","accounts[].balances.available","accounts[].type"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "plaid",
+    "name": "Plaid API",
+    "description_for_ai": "Connect to 12,000+ bank accounts. Access transactions, balances, identity, income verification. Powers apps like Venmo, Robinhood, Betterment. Use for personal finance apps, expense tracking, bank account linking.",
+    "url": "https://plaid.com",
+    "api_base": "https://production.plaid.com",
+    "category": "finance_banking",
+    "geo": [
+      "US",
+      "CA",
+      "GB",
+      "IE",
+      "FR",
+      "ES",
+      "NL"
+    ],
+    "language": "en",
+    "docs": "https://plaid.com/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://dashboard.plaid.com",
+    "cost": "Free sandbox. Production from $500/month"
+  },
+  "capabilities": [
+    {
+      "id": "get_transactions",
+      "description_for_ai": "Retrieve bank transactions for linked account. Returns categorized transactions with merchant name, amount, date.",
+      "intent": [
+        "bank transactions",
+        "spending history",
+        "account transactions",
+        "personal finance",
+        "expense tracking"
+      ],
+      "endpoint": "POST https://production.plaid.com/transactions/get",
+      "input": {
+        "access_token": {
+          "type": "string",
+          "description": "User bank access token from Link flow",
+          "required": true
+        },
+        "start_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "end_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "transactions",
+        "fields": [
+          "transactions[].name",
+          "transactions[].amount",
+          "transactions[].date",
+          "transactions[].category",
+          "transactions[].merchant_name"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_balance",
+      "description_for_ai": "Get real-time account balances for linked bank account.",
+      "intent": [
+        "bank balance",
+        "account balance",
+        "how much money",
+        "check balance"
+      ],
+      "endpoint": "POST https://production.plaid.com/accounts/balance/get",
+      "input": {
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "balance",
+        "fields": [
+          "accounts[].name",
+          "accounts[].balances.current",
+          "accounts[].balances.available",
+          "accounts[].type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
