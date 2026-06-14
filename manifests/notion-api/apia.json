@@ -23,34 +23,42 @@
   "capabilities": [
     {
       "id": "query_database",
-      "description_for_ai": "Query a Notion database with filters and sorts. Returns pages matching criteria with all properties.",
+      "description_for_ai": "Query a Notion database with filters and sorts. Returns pages matching criteria with all their properties. The database must be shared with your integration.",
       "intent": [
-        "notion database",
-        "query notion",
+        "notion database query",
+        "get notion records",
         "filter notion",
-        "get notion data",
+        "search notion database",
         "notion tasks",
-        "notion projects"
+        "notion projects",
+        "notion CRM"
       ],
       "endpoint": "POST https://api.notion.com/v1/databases/{database_id}/query",
       "input": {
         "database_id": {
           "type": "string",
+          "description": "Database ID from Notion URL (32-char hex or UUID format)",
           "required": true
         },
         "filter": {
           "type": "object",
-          "description": "Filter conditions object",
+          "description": "Filter object: {property: 'Status', select: {equals: 'Done'}} or {and: [{property: ...}, {property: ...}]} for multiple",
           "required": false
         },
         "sorts": {
           "type": "array",
-          "description": "Sort conditions",
+          "description": "[{property: 'Created', direction: 'descending'}] or [{timestamp: 'created_time', direction: 'ascending'}]",
           "required": false
         },
         "page_size": {
           "type": "integer",
+          "description": "Results per page, max 100",
           "default": 100
+        },
+        "start_cursor": {
+          "type": "string",
+          "description": "Pagination cursor from previous response's next_cursor",
+          "required": false
         }
       },
       "output": {
@@ -58,7 +66,9 @@
         "fields": [
           "results[0].id",
           "results[0].properties",
-          "results[0].url"
+          "results[0].url",
+          "has_more",
+          "next_cursor"
         ]
       },
       "realtime": true,
@@ -66,29 +76,39 @@
     },
     {
       "id": "create_page",
-      "description_for_ai": "Create a new page in Notion workspace or database.",
+      "description_for_ai": "Create a new page in a Notion database or as a subpage. Set properties and add content blocks.",
       "intent": [
         "create notion page",
-        "add to notion",
-        "new note",
+        "add to notion database",
+        "new notion entry",
         "write to notion",
-        "notion page"
+        "add task notion"
       ],
       "endpoint": "POST https://api.notion.com/v1/pages",
       "input": {
         "parent": {
           "type": "object",
-          "description": "{database_id: id} or {page_id: id}",
+          "description": "{database_id: 'uuid'} to create in database, or {page_id: 'uuid'} for subpage",
           "required": true
         },
         "properties": {
           "type": "object",
-          "description": "Page properties matching database schema",
+          "description": "Page properties matching database schema. Title: {Name: {title: [{text: {content: 'My Page'}}]}}. Select: {Status: {select: {name: 'Done'}}}. Date: {Due: {date: {start: '2024-01-15'}}}",
           "required": true
         },
         "children": {
           "type": "array",
-          "description": "Page content blocks",
+          "description": "Page content blocks: [{object: 'block', type: 'paragraph', paragraph: {rich_text: [{text: {content: 'Hello'}}]}}]",
+          "required": false
+        },
+        "icon": {
+          "type": "object",
+          "description": "{type: 'emoji', emoji: '✅'} or {type: 'external', external: {url: 'https://...'}} — page icon",
+          "required": false
+        },
+        "cover": {
+          "type": "object",
+          "description": "{type: 'external', external: {url: 'https://image.url'}} — page cover image",
           "required": false
         }
       },
@@ -97,7 +117,8 @@
         "fields": [
           "id",
           "url",
-          "properties"
+          "properties",
+          "created_time"
         ]
       },
       "realtime": true,
@@ -105,28 +126,33 @@
     },
     {
       "id": "search",
-      "description_for_ai": "Search pages and databases in Notion workspace by keyword.",
+      "description_for_ai": "Search pages and databases in the Notion workspace by keyword. Returns titles and URLs of matching pages.",
       "intent": [
         "search notion",
-        "find in notion",
-        "notion search",
-        "look up note"
+        "find notion page",
+        "look up note",
+        "notion search"
       ],
       "endpoint": "POST https://api.notion.com/v1/search",
       "input": {
         "query": {
           "type": "string",
+          "description": "Text to search for in page titles",
           "required": false
         },
         "filter": {
           "type": "object",
-          "description": "{property: object, value: page|database}",
+          "description": "{property: 'object', value: 'page'} to filter pages only, or 'database' for databases only",
           "required": false
         },
         "sort": {
           "type": "object",
-          "description": "{direction: ascending|descending, timestamp: last_edited_time}",
+          "description": "{direction: 'ascending'|'descending', timestamp: 'last_edited_time'}",
           "required": false
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
@@ -135,7 +161,7 @@
           "results[0].object",
           "results[0].id",
           "results[0].url",
-          "results[0].properties"
+          "results[0].properties.title"
         ]
       },
       "realtime": true,
