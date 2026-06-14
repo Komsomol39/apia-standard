@@ -22,13 +22,15 @@
   "capabilities": [
     {
       "id": "list_events",
-      "description_for_ai": "Get upcoming calendar events. Filter by date range, calendar, search term.",
+      "description_for_ai": "Get upcoming or past calendar events with full details. Filter by date range, search query, or calendar. Supports recurring events.",
       "intent": [
         "calendar events",
         "my schedule",
         "upcoming meetings",
         "what is on calendar",
         "free slots",
+        "busy times",
+        "meeting list",
         "расписание",
         "встречи"
       ],
@@ -36,47 +38,57 @@
       "input": {
         "calendarId": {
           "type": "string",
-          "description": "Calendar ID. Use primary for main calendar.",
+          "description": "Calendar ID. Use 'primary' for main calendar, or full calendar ID like user@gmail.com",
           "default": "primary"
         },
         "timeMin": {
           "type": "string",
-          "description": "ISO 8601 start time",
+          "description": "Lower bound for event end time, ISO 8601 format with timezone. E.g. 2024-01-15T00:00:00Z",
           "required": false
         },
         "timeMax": {
           "type": "string",
-          "description": "ISO 8601 end time",
+          "description": "Upper bound for event start time, ISO 8601 format. E.g. 2024-01-22T23:59:59Z",
           "required": false
         },
         "q": {
           "type": "string",
-          "description": "Search term",
+          "description": "Free-text search query matching event title, description, location, attendees",
           "required": false
         },
         "maxResults": {
           "type": "integer",
+          "description": "Max events to return, default 250, max 2500",
           "default": 10
         },
         "orderBy": {
           "type": "string",
+          "description": "startTime (requires singleEvents=true) or updated",
           "default": "startTime"
         },
         "singleEvents": {
           "type": "boolean",
+          "description": "Expand recurring events into individual instances. Required for orderBy=startTime",
           "default": true
+        },
+        "showDeleted": {
+          "type": "boolean",
+          "description": "Include deleted events in results",
+          "default": false
         }
       },
       "output": {
         "type": "list<event>",
         "fields": [
-          "summary",
-          "start.dateTime",
-          "end.dateTime",
-          "location",
-          "description",
-          "attendees[0].email",
-          "htmlLink"
+          "items[0].id",
+          "items[0].summary",
+          "items[0].start.dateTime",
+          "items[0].end.dateTime",
+          "items[0].location",
+          "items[0].description",
+          "items[0].attendees",
+          "items[0].htmlLink",
+          "items[0].status"
         ]
       },
       "realtime": true,
@@ -84,19 +96,22 @@
     },
     {
       "id": "create_event",
-      "description_for_ai": "Create new calendar event with title, time, location, attendees.",
+      "description_for_ai": "Create a new calendar event with title, time, location, attendees, reminders, and recurrence rules.",
       "intent": [
         "create meeting",
         "add to calendar",
         "schedule event",
         "book appointment",
+        "set reminder",
         "новая встреча",
-        "добавить в календарь"
+        "добавить в календарь",
+        "запланировать"
       ],
       "endpoint": "POST https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events",
       "input": {
         "calendarId": {
           "type": "string",
+          "description": "Target calendar ID, use 'primary' for main",
           "default": "primary"
         },
         "summary": {
@@ -106,25 +121,47 @@
         },
         "start": {
           "type": "object",
-          "description": "{dateTime: ISO 8601, timeZone: America/New_York}",
+          "description": "{dateTime: '2024-01-15T14:00:00', timeZone: 'Europe/Moscow'} for timed events, or {date: '2024-01-15'} for all-day",
           "required": true
         },
         "end": {
           "type": "object",
-          "description": "{dateTime: ISO 8601, timeZone}",
+          "description": "{dateTime: '2024-01-15T15:00:00', timeZone: 'Europe/Moscow'} or {date: '2024-01-16'} for all-day",
           "required": true
         },
         "location": {
           "type": "string",
+          "description": "Physical location or meeting URL",
           "required": false
         },
         "description": {
           "type": "string",
+          "description": "Event description/notes (supports some HTML)",
           "required": false
         },
         "attendees": {
           "type": "array",
-          "description": "[{email: user@example.com}]",
+          "description": "[{email: 'user@example.com', optional: false}] — invites guests and sends emails",
+          "required": false
+        },
+        "reminders": {
+          "type": "object",
+          "description": "{useDefault: false, overrides: [{method: 'email'|'popup', minutes: 30}]}",
+          "required": false
+        },
+        "recurrence": {
+          "type": "array",
+          "description": "['RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR'] for recurring events",
+          "required": false
+        },
+        "conferenceData": {
+          "type": "object",
+          "description": "{createRequest: {requestId: 'unique-id', conferenceSolutionKey: {type: 'hangoutsMeet'}}} to auto-create Google Meet",
+          "required": false
+        },
+        "sendUpdates": {
+          "type": "string",
+          "description": "all (notify all attendees), externalOnly, or none. Default none.",
           "required": false
         }
       },
@@ -134,8 +171,10 @@
           "id",
           "htmlLink",
           "summary",
-          "start",
-          "end"
+          "start.dateTime",
+          "end.dateTime",
+          "hangoutLink",
+          "conferenceData.entryPoints[0].uri"
         ]
       },
       "realtime": true,
