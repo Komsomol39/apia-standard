@@ -3,7 +3,7 @@
   "service": {
     "id": "discord",
     "name": "Discord API",
-    "description_for_ai": "Communication platform API for gaming and developer communities. 500M+ registered users. Create bots that send messages, manage servers, handle slash commands. Dominant platform for developer communities, gaming, and OpenClaw community itself.",
+    "description_for_ai": "Discord API — messaging platform with 500M+ registered users popular in gaming, tech, and communities. Create bots, manage servers, send messages, handle slash commands. Webhooks for integrations. Free bot hosting and unlimited messages. Rich embed support with buttons and select menus.",
     "url": "https://discord.com",
     "api_base": "https://discord.com/api/v10",
     "category": "social_media_gaming",
