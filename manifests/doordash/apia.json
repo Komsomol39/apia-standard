@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "create_delivery",
-      "description_for_ai": "On-demand delivery logistics API. Request a DoorDash driver to pick up and deliver packages, food, or goods. Available in US, Canada, Australia. Use for delivery fulfillment, same-day delivery, restaurant order delivery. Request a DoorDash driver for pickup and delivery. Provide pickup and dropoff addresses with item details.",
+      "description_for_ai": "Request a DoorDash driver to pick up and deliver a package or food order. Returns tracking URL and estimated times.",
       "intent": [
         "delivery request",
         "same day delivery",
@@ -36,48 +36,76 @@
       "input": {
         "external_delivery_id": {
           "type": "string",
-          "description": "Your unique order ID",
+          "description": "Your unique order ID for this delivery. Used for idempotency and tracking.",
           "required": true
         },
         "pickup_address": {
           "type": "string",
+          "description": "Pickup address as string: '901 Market Street, San Francisco, CA 94103'",
           "required": true
         },
         "pickup_business_name": {
           "type": "string",
+          "description": "Business name at pickup location for driver reference",
           "required": true
         },
         "pickup_phone_number": {
           "type": "string",
+          "description": "Pickup contact phone in E.164 format: +14155551234",
           "required": true
+        },
+        "pickup_instructions": {
+          "type": "string",
+          "description": "Instructions for driver at pickup: 'Ring doorbell', 'Ask for John at counter'",
+          "required": false
         },
         "dropoff_address": {
           "type": "string",
+          "description": "Delivery address as string",
           "required": true
         },
         "dropoff_contact_given_name": {
           "type": "string",
+          "description": "Recipient's first name",
           "required": true
         },
         "dropoff_phone_number": {
           "type": "string",
+          "description": "Recipient's phone in E.164 format",
           "required": true
+        },
+        "dropoff_instructions": {
+          "type": "string",
+          "description": "Delivery instructions: 'Leave at door', 'Call on arrival'",
+          "required": false
         },
         "order_value": {
           "type": "integer",
-          "description": "Order value in cents",
+          "description": "Order value in cents (USD). E.g. 2500 = $25.00. Used for insurance.",
           "required": true
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code",
+          "default": "USD"
+        },
+        "pickup_time": {
+          "type": "string",
+          "description": "ISO 8601 scheduled pickup time. Omit for immediate pickup.",
+          "required": false
         }
       },
       "output": {
         "type": "delivery",
         "fields": [
           "delivery_id",
-          "fee",
+          "external_delivery_id",
+          "fee (cents)",
           "currency",
           "pickup_time_estimated",
           "dropoff_time_estimated",
-          "tracking_url"
+          "tracking_url",
+          "delivery_status"
         ]
       },
       "realtime": true,
