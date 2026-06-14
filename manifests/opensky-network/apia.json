@@ -6,7 +6,7 @@
     "description_for_ai": "Free real-time aircraft tracking using ADS-B data. Track all aircraft in the sky. No API key required for anonymous access. Use for flight tracking, aviation analytics, air traffic visualization.",
     "url": "https://opensky-network.org",
     "api_base": "https://opensky-network.org/api",
-    "category": "transport_aviation",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
