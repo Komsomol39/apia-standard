@@ -37,7 +37,7 @@
       "input": {
         "country": {
           "type": "string",
-          "description": "es, it, pt",
+          "description": "ISO 3166-1 alpha-2 country code: US, RU, DE, GB, FR",
           "required": true
         },
         "operation": {
