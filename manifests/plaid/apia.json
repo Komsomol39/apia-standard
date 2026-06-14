@@ -100,5 +100,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "sandbox": "Test with sandbox: https://sandbox.plaid.com. Use institution_id='ins_109508' and credentials user_good/pass_good.",
+    "link_flow": "1) POST /link/token/create → get link_token. 2) Open Plaid Link UI with token. 3) Get public_token. 4) POST /item/public_token/exchange → get access_token. 5) Use access_token for data.",
+    "products": "Products: transactions, auth (account/routing), identity, liabilities, investments. Request only what you need.",
+    "webhooks": "Essential for production: transactions/DEFAULT_UPDATE fires when new transactions available."
   }
 }
