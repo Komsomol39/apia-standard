@@ -3,11 +3,13 @@
   "service": {
     "id": "anthropic",
     "name": "Anthropic Claude API",
-    "description_for_ai": "Anthropic Claude AI models. Best-in-class for coding, long-context analysis, and safe, reliable outputs. Claude Haiku 4.5 for fast/cheap tasks, Claude Sonnet 4.6 for balanced quality, Claude Opus 4.6 for frontier capability. OpenAI-compatible chat format with extended thinking support.",
+    "description_for_ai": "Anthropic Claude — family of frontier AI assistants. Claude Sonnet 4.5 for best coding and reasoning, Claude Haiku 4.5 for fast cheap tasks. Supports text, vision (images/PDFs), tool use, extended thinking. 200K token context. Best for: complex analysis, coding, long document processing, multilingual tasks including Russian.",
     "url": "https://anthropic.com",
     "api_base": "https://api.anthropic.com/v1",
     "category": "ai_llm",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://docs.anthropic.com"
   },
@@ -15,57 +17,142 @@
     "type": "apikey",
     "anonymous_access": false,
     "header": "x-api-key: sk-ant-...",
-    "how_to_get": "Register at https://console.anthropic.com — free tier available",
-    "cost": "Haiku 4.5: $0.80/$4 per 1M tokens. Sonnet 4.6: $3/$15. Opus 4.6: $15/$75 per 1M tokens"
+    "how_to_get": "Register at https://console.anthropic.com — free tier available, no credit card required",
+    "cost": "Claude Haiku 4.5: $0.80/$4 per 1M tokens. Claude Sonnet 4.5: $3/$15 per 1M tokens. Claude Opus 4: $15/$75 per 1M tokens"
   },
   "capabilities": [
     {
       "id": "messages",
-      "description_for_ai": "Generate responses using Claude models. Excellent for coding, analysis, writing, and tasks requiring careful reasoning. Supports vision (images), tool use, and extended thinking for complex problems.",
-      "intent": ["generate text", "write code", "analyze document", "long context", "careful reasoning", "claude"],
+      "description_for_ai": "Send messages to Claude for text generation, analysis, coding, translation. Supports multi-turn conversations, system prompts, tool use, and vision. Most capable model available for complex reasoning tasks.",
+      "intent": [
+        "ask Claude",
+        "AI assistant",
+        "generate text",
+        "analyze document",
+        "write code",
+        "summarize",
+        "translate",
+        "explain",
+        "claude AI",
+        "спросить ИИ",
+        "написать текст",
+        "анализ документа",
+        "генерация текста"
+      ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
-        "model": { "type": "string", "description": "claude-haiku-4-5 (fast/cheap), claude-sonnet-4-6 (balanced), claude-opus-4-6 (powerful)", "required": true },
-        "messages": { "type": "array", "description": "Array of {role, content} objects. Roles: user, assistant", "required": true },
-        "system": { "type": "string", "description": "System prompt for behavior instructions", "required": false },
-        "max_tokens": { "type": "integer", "description": "Max tokens in response. Required.", "required": true },
-        "temperature": { "type": "float", "description": "0-1 randomness. Default 1.", "default": 1 },
-        "tools": { "type": "array", "description": "Tool definitions for function calling", "required": false },
-        "thinking": { "type": "object", "description": "{type: enabled, budget_tokens: N} for extended thinking on Opus", "required": false }
+        "model": {
+          "type": "string",
+          "description": "claude-sonnet-4-5 (best quality/price), claude-haiku-4-5 (fastest/cheapest), claude-opus-4 (most capable)",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "Conversation history: [{role: 'user'|'assistant', content: 'string or array of content blocks'}]",
+          "required": true
+        },
+        "system": {
+          "type": "string",
+          "description": "System prompt — sets Claude behavior, persona, constraints. E.g. 'You are a helpful assistant that responds in Russian.'",
+          "required": false
+        },
+        "max_tokens": {
+          "type": "integer",
+          "description": "Maximum tokens to generate. Min 1, max 8192 (Sonnet/Haiku) or 32000 (Opus). Required.",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "description": "Randomness 0.0-1.0. 0=deterministic/consistent, 1=creative/varied. Default 1.0.",
+          "required": false
+        },
+        "tools": {
+          "type": "array",
+          "description": "Tool definitions: [{name, description, input_schema: {type: 'object', properties: {param: {type, description}}}}]. Claude will call tools when needed.",
+          "required": false
+        },
+        "tool_choice": {
+          "type": "object",
+          "description": "{type: 'auto'} lets Claude decide, {type: 'any'} forces tool use, {type: 'tool', name: 'tool_name'} forces specific tool",
+          "required": false
+        },
+        "stream": {
+          "type": "boolean",
+          "description": "Stream response tokens as Server-Sent Events for real-time display",
+          "default": false
+        },
+        "thinking": {
+          "type": "object",
+          "description": "{type: 'enabled', budget_tokens: 5000} — enables extended chain-of-thought reasoning before answering. Improves accuracy on complex problems.",
+          "required": false
+        }
       },
       "output": {
         "type": "message",
-        "fields": ["content[0].text", "usage.input_tokens", "usage.output_tokens", "stop_reason"]
+        "fields": [
+          "id",
+          "content[0].text",
+          "content[0].type (text|tool_use)",
+          "stop_reason (end_turn|tool_use|max_tokens)",
+          "usage.input_tokens",
+          "usage.output_tokens"
+        ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
       "id": "vision",
-      "description_for_ai": "Analyze images with Claude. Pass images as base64 or URL in message content. Best for document analysis, screenshot understanding, diagram interpretation.",
-      "intent": ["analyze image", "read document", "screenshot analysis", "vision", "image understanding"],
+      "description_for_ai": "Analyze images and PDFs with Claude. Describe content, extract text from images, answer questions about visual material. Pass images as base64 or URL.",
+      "intent": [
+        "analyze image",
+        "describe photo",
+        "read document",
+        "image OCR",
+        "PDF analysis",
+        "what is in image",
+        "image understanding",
+        "анализ изображения",
+        "что на картинке",
+        "прочитать документ"
+      ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
-        "model": { "type": "string", "description": "claude-sonnet-4-6 or claude-opus-4-6 for vision", "required": true },
-        "messages": { "type": "array", "description": "Include {type: image, source: {type: base64, media_type: image/jpeg, data: ...}} in content", "required": true },
-        "max_tokens": { "type": "integer", "required": true }
+        "model": {
+          "type": "string",
+          "description": "claude-sonnet-4-5 recommended for vision tasks",
+          "default": "claude-sonnet-4-5"
+        },
+        "messages": {
+          "type": "array",
+          "description": "Content array with image and text: [{role: 'user', content: [{type: 'image', source: {type: 'base64', media_type: 'image/jpeg', data: 'BASE64_STRING'}}, {type: 'text', text: 'What is in this image?'}]}]",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "description": "Max response length",
+          "default": 1024
+        }
       },
-      "output": { "type": "message", "fields": ["content[0].text"] },
+      "output": {
+        "type": "message",
+        "fields": [
+          "content[0].text",
+          "usage.input_tokens",
+          "usage.output_tokens"
+        ]
+      },
       "realtime": true,
       "requires_auth": true
     }
   ],
   "agent_hints": {
-    "model_choice": "Haiku 4.5 for classification, extraction, simple tasks. Sonnet 4.6 for most production use. Opus 4.6 for complex reasoning, coding, long documents.",
-    "system_prompt": "Always use system prompt to set context — Claude follows instructions more reliably with a clear system prompt.",
-    "thinking": "Extended thinking available on Opus: set thinking.type=enabled and thinking.budget_tokens. Shows reasoning chain before final answer.",
-    "prompt_caching": "Use prompt caching for repeated system prompts — up to 90% cost reduction. Add cache_control: {type: ephemeral} to reused blocks.",
-    "tool_use": "Claude is excellent at multi-step tool use. Define tools with JSON Schema, Claude calls them autonomously.",
-    "header_version": "Always include anthropic-version: 2023-06-01 header."
-  },
-  "limits": {
-    "commercial_use": true,
-    "attribution_required": false
+    "model_selection": "claude-haiku-4-5: classification, routing, extraction, Q&A (fast, $0.80/1M). claude-sonnet-4-5: coding, analysis, long docs ($3/1M). claude-opus-4: hardest tasks only ($15/1M).",
+    "context_window": "200K tokens input — pass entire codebases, long documents, or many examples without chunking.",
+    "tool_use": "Define tools with name, description, input_schema. Claude will call them automatically when needed and return results.",
+    "thinking": "Extended thinking: add thinking={type:enabled, budget_tokens:8000} for math, logic, complex coding. Increases quality but also latency and cost.",
+    "pdf_support": "Pass PDFs as {type: 'document', source: {type: 'base64', media_type: 'application/pdf', data: BASE64}} — Claude reads entire PDFs natively.",
+    "multimodal": "Supports JPEG, PNG, GIF, WebP images and PDF documents inline in messages."
   },
   "meta": {
     "apia_version": "1.0",
