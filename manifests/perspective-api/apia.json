@@ -1,1 +1,77 @@
-{"apia":"1.0","service":{"id":"perspective-api","name":"Perspective API (Google Jigsaw)","description_for_ai":"Free content moderation API from Google. Detects toxic comments, threats, insults, profanity, identity attacks. 100+ languages. Free. Used by New York Times, Wikipedia. Use for comment moderation.","url":"https://perspectiveapi.com","api_base":"https://commentanalyzer.googleapis.com/v1alpha1","category":"ai_safety","geo":["GLOBAL"],"language":"en","docs":"https://developers.perspectiveapi.com/s/docs"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"key","param_location":"query","how_to_get":"Request access at https://developers.perspectiveapi.com/s/request-quota","cost":"Free with quota"},"capabilities":[{"id":"analyze_comment","description_for_ai":"Score a comment for toxicity, threats, insults, profanity, identity attacks. Returns 0-1 probability score per attribute.","intent":["toxic comment","moderation","hate speech detection","comment score","is this toxic","offensive content","content moderation"],"endpoint":"POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze","input":{"comment":{"type":"object","description":"{text: comment text}","required":true},"requestedAttributes":{"type":"object","description":"{TOXICITY: {}, SEVERE_TOXICITY: {}, THREAT: {}, INSULT: {}, PROFANITY: {}, IDENTITY_ATTACK: {}}","required":true},"languages":{"type":"array","description":"[en, ru, de, fr, es, it, pt, zh]","required":false}},"output":{"type":"scores","fields":["attributeScores.TOXICITY.summaryScore.value","attributeScores.THREAT.summaryScore.value","attributeScores.INSULT.summaryScore.value"]},"realtime":true,"requires_auth":true}],"agent_hints":{"threshold":"Score > 0.7 is generally considered toxic. Adjust based on your moderation needs.","free":"Free up to quota limits. Much more generous than commercial alternatives.","languages":"Works for 100+ languages but most accurate for English."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "perspective-api",
+    "name": "Perspective API (Google Jigsaw)",
+    "description_for_ai": "Free content moderation API from Google. Detects toxic comments, threats, insults, profanity, identity attacks. 100+ languages. Free. Used by New York Times, Wikipedia. Use for comment moderation.",
+    "url": "https://perspectiveapi.com",
+    "api_base": "https://commentanalyzer.googleapis.com/v1alpha1",
+    "category": "ai_safety",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.perspectiveapi.com/s/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "key",
+    "param_location": "query",
+    "how_to_get": "Request access at https://developers.perspectiveapi.com/s/request-quota",
+    "cost": "Free with quota"
+  },
+  "capabilities": [
+    {
+      "id": "analyze_comment",
+      "description_for_ai": "Score a comment for toxicity, threats, insults, profanity, identity attacks. Returns 0-1 probability score per attribute.",
+      "intent": [
+        "toxic comment",
+        "moderation",
+        "hate speech detection",
+        "comment score",
+        "is this toxic",
+        "offensive content",
+        "content moderation"
+      ],
+      "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
+      "input": {
+        "comment": {
+          "type": "object",
+          "description": "{text: comment text}",
+          "required": true
+        },
+        "requestedAttributes": {
+          "type": "object",
+          "description": "{TOXICITY: {}, SEVERE_TOXICITY: {}, THREAT: {}, INSULT: {}, PROFANITY: {}, IDENTITY_ATTACK: {}}",
+          "required": true
+        },
+        "languages": {
+          "type": "array",
+          "description": "[en, ru, de, fr, es, it, pt, zh]",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "scores",
+        "fields": [
+          "attributeScores.TOXICITY.summaryScore.value",
+          "attributeScores.THREAT.summaryScore.value",
+          "attributeScores.INSULT.summaryScore.value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "threshold": "Score > 0.7 is generally considered toxic. Adjust based on your moderation needs.",
+    "free": "Free up to quota limits. Much more generous than commercial alternatives.",
+    "languages": "Works for 100+ languages but most accurate for English."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
