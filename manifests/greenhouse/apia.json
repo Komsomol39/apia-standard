@@ -6,7 +6,7 @@
     "description_for_ai": "Applicant tracking system (ATS). Manage job postings, candidates, interviews, offers. Used by 7000+ companies including Airbnb, DoorDash. Use for recruiting automation, candidate pipeline management.",
     "url": "https://greenhouse.io",
     "api_base": "https://harvest.greenhouse.io/v1",
-    "category": "hr_recruiting",
+    "category": "hr",
     "geo": [
       "GLOBAL"
     ],
