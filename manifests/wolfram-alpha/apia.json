@@ -26,15 +26,22 @@
       "id": "query",
       "description_for_ai": "Answer any factual or computational query with step-by-step results. Math equations, unit conversions, science facts, statistics, geographic data.",
       "intent": [
-        "solve math",
+        "compute integral",
+        "вычислить",
+        "unit converter",
+        "solve equation",
+        "решить задачу",
+        "compute formula",
         "calculate",
+        "конвертировать единицы",
         "unit conversion",
         "scientific query",
-        "compute integral",
-        "solve equation",
+        "решить уравнение",
+        "scientific facts",
+        "mathematical answer",
+        "solve math",
         "math homework",
-        "конвертировать единицы",
-        "решить уравнение"
+        "math calculation"
       ],
       "endpoint": "GET https://api.wolframalpha.com/v2/query",
       "input": {
@@ -73,8 +80,12 @@
       "description_for_ai": "Get a simple one-line answer to a factual question. Faster and cheaper than full query.",
       "intent": [
         "quick answer",
+        "fast fact",
+        "one-line result",
+        "simple math",
         "simple calculation",
-        "fast fact"
+        "fast answer",
+        "quick calculation"
       ],
       "endpoint": "GET https://api.wolframalpha.com/v1/result",
       "input": {
