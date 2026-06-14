@@ -1,1 +1,69 @@
-{"apia":"1.0","service":{"id":"rosreestr","name":"Росреестр API (ЕГРН)","description_for_ai":"Федеральная служба государственной регистрации — данные о недвижимости России. Кадастровые данные, сведения о правообладателях, кадастровая стоимость, обременения. Необходим для сделок с недвижимостью в России.","url":"https://rosreestr.gov.ru","api_base":"https://pkk.rosreestr.ru/api","category":"real_estate_gov","geo":["RU"],"language":"ru","docs":"https://rosreestr.gov.ru/api/online/fir_object/"},"auth":{"type":"none","anonymous_access":true,"note":"Публичные данные кадастровой карты доступны без авторизации. Расширенные сведения через Госуслуги или авторизованных посредников.","cost":"Бесплатно для публичных данных"},"capabilities":[{"id":"search_object","description_for_ai":"Поиск объекта недвижимости по кадастровому номеру или адресу. Возвращает кадастровый номер, площадь, адрес, кадастровую стоимость.","intent":["кадастровый номер","данные о недвижимости","проверить квартиру","кадастровая стоимость","ЕГРН","объект недвижимости"],"endpoint":"GET https://pkk.rosreestr.ru/api/features/1","input":{"text":{"type":"string","description":"Кадастровый номер (77:01:0001001:1) или адрес","required":true},"limit":{"type":"integer","default":5}},"output":{"type":"list<object>","fields":["feature.attrs.cn","feature.attrs.address","feature.attrs.area_value","feature.attrs.cad_cost","feature.attrs.category_type"]},"realtime":false,"requires_auth":false}],"agent_hints":{"cad_number_format":"Кадастровый номер: РР:КК:ССССССС:ПП (регион:квартал:массив:участок). Например: 77:01:0001001:1","public_vs_full":"Публичный API даёт ограниченные данные. Для полной выписки ЕГРН нужна авторизация через Госуслуги или API посредника."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "rosreestr",
+    "name": "Росреестр API (ЕГРН)",
+    "description_for_ai": "Федеральная служба государственной регистрации — данные о недвижимости России. Кадастровые данные, сведения о правообладателях, кадастровая стоимость, обременения. Необходим для сделок с недвижимостью в России.",
+    "url": "https://rosreestr.gov.ru",
+    "api_base": "https://pkk.rosreestr.ru/api",
+    "category": "real_estate_gov",
+    "geo": [
+      "RU"
+    ],
+    "language": "ru",
+    "docs": "https://rosreestr.gov.ru/api/online/fir_object/"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "note": "Публичные данные кадастровой карты доступны без авторизации. Расширенные сведения через Госуслуги или авторизованных посредников.",
+    "cost": "Бесплатно для публичных данных"
+  },
+  "capabilities": [
+    {
+      "id": "search_object",
+      "description_for_ai": "Поиск объекта недвижимости по кадастровому номеру или адресу. Возвращает кадастровый номер, площадь, адрес, кадастровую стоимость.",
+      "intent": [
+        "кадастровый номер",
+        "данные о недвижимости",
+        "проверить квартиру",
+        "кадастровая стоимость",
+        "ЕГРН",
+        "объект недвижимости"
+      ],
+      "endpoint": "GET https://pkk.rosreestr.ru/api/features/1",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Кадастровый номер (77:01:0001001:1) или адрес",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 5
+        }
+      },
+      "output": {
+        "type": "list<object>",
+        "fields": [
+          "feature.attrs.cn",
+          "feature.attrs.address",
+          "feature.attrs.area_value",
+          "feature.attrs.cad_cost",
+          "feature.attrs.category_type"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "cad_number_format": "Кадастровый номер: РР:КК:ССССССС:ПП (регион:квартал:массив:участок). Например: 77:01:0001001:1",
+    "public_vs_full": "Публичный API даёт ограниченные данные. Для полной выписки ЕГРН нужна авторизация через Госуслуги или API посредника."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
