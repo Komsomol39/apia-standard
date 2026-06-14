@@ -6,7 +6,7 @@
     "description_for_ai": "Free recipe database. 300+ recipes with ingredients, instructions, photos, YouTube videos. Search by name, ingredient, category, or area/cuisine. No API key needed for basic access.",
     "url": "https://themealdb.com",
     "api_base": "https://www.themealdb.com/api/json/v1/1",
-    "category": "food_recipes",
+    "category": "food",
     "geo": [
       "GLOBAL"
     ],
