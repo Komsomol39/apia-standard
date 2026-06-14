@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "search_opinions",
-      "description_for_ai": "Search US court opinions by keyword, court, date, citation. Returns case name, court, date, citation, text snippet.",
+      "description_for_ai": "Free US court case database. 5M+ court opinions, oral arguments, federal court dockets. Search by case name, court, judge, citation. Use for legal research, case lookup, precedent finding. Search US court opinions by keyword, court, date, citation. Returns case name, court, date, citation, text snippet.",
       "intent": [
         "court case",
         "legal precedent",
