@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "send_email",
-      "description_for_ai": "Send transactional email via SendGrid. High deliverability. Support HTML content, attachments, templates.",
+      "description_for_ai": "Email delivery API trusted by 80,000+ companies. Send transactional and marketing emails. 100 emails/day free. High deliverability, analytics, templates. Use for sending emails programmatically. Send transactional email via SendGrid. High deliverability. Support HTML content, attachments, templates.",
       "intent": [
         "send email",
         "email notification",
@@ -41,7 +41,8 @@
         "from": {
           "type": "object",
           "description": "{email, name}",
-          "required": true
+          "required": true,
+          "note": "See description for full object structure"
         },
         "subject": {
           "type": "string",
