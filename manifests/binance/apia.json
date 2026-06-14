@@ -1,2 +1,105 @@
 {
-  "apia":"1.0","service":{"id":"binance","name":"Binance API","description_for_ai":"World largest crypto exchange by volume. Real-time prices, order books, trading history for 2000+ crypto pairs. Free market data, no key needed for public endpoints. Use for crypto prices, market data, trading automation.","url":"https://binance.com","api_base":"https://api.binance.com","category":"finance_crypto","geo":["GLOBAL"],"language":"en","docs":"https://binance-docs.github.io/apidocs/spot/en/"},"auth":{"type":"apikey","anonymous_access":true,"anonymous_capabilities":["get_price","get_orderbook","get_klines"],"how_to_get":"Register at https://binance.com for trading endpoints","cost":"Free for market data. Trading: 0.1% per trade"},"capabilities":[{"id":"get_price","description_for_ai":"Get current price of any crypto pair. No API key needed. Fastest and most accurate crypto price data.","intent":["crypto price","bitcoin price","BTC USDT price","crypto market price","binance price"],"endpoint":"GET https://api.binance.com/api/v3/ticker/price","input":{"symbol":{"type":"string","description":"Trading pair e.g. BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT","required":false}},"output":{"type":"price","fields":["symbol","price"]},"realtime":true,"requires_auth":false},{"id":"get_klines","description_for_ai":"Get OHLCV candlestick data for any crypto pair and interval. Use for price charts, technical analysis.","intent":["crypto chart","price history","candlestick data","OHLCV crypto","technical analysis"],"endpoint":"GET https://api.binance.com/api/v3/klines","input":{"symbol":{"type":"string","description":"Trading pair e.g. BTCUSDT","required":true},"interval":{"type":"string","description":"1m, 5m, 15m, 1h, 4h, 1d, 1w","required":true},"limit":{"type":"integer","description":"Number of candles","default":100,"max":1000}},"output":{"type":"list<kline>","fields":["[0]=open_time","[1]=open","[2]=high","[3]=low","[4]=close","[5]=volume"]},"realtime":true,"requires_auth":false}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "binance",
+    "name": "Binance API",
+    "description_for_ai": "World largest crypto exchange by volume. Real-time prices, order books, trading history for 2000+ crypto pairs. Free market data, no key needed for public endpoints. Use for crypto prices, market data, trading automation.",
+    "url": "https://binance.com",
+    "api_base": "https://api.binance.com",
+    "category": "finance_crypto",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://binance-docs.github.io/apidocs/spot/en/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": true,
+    "anonymous_capabilities": [
+      "get_price",
+      "get_orderbook",
+      "get_klines"
+    ],
+    "how_to_get": "Register at https://binance.com for trading endpoints",
+    "cost": "Free for market data. Trading: 0.1% per trade"
+  },
+  "capabilities": [
+    {
+      "id": "get_price",
+      "description_for_ai": "Get current price of any crypto pair. No API key needed. Fastest and most accurate crypto price data.",
+      "intent": [
+        "crypto price",
+        "bitcoin price",
+        "BTC USDT price",
+        "crypto market price",
+        "binance price"
+      ],
+      "endpoint": "GET https://api.binance.com/api/v3/ticker/price",
+      "input": {
+        "symbol": {
+          "type": "string",
+          "description": "Trading pair e.g. BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "price",
+        "fields": [
+          "symbol",
+          "price"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_klines",
+      "description_for_ai": "Get OHLCV candlestick data for any crypto pair and interval. Use for price charts, technical analysis.",
+      "intent": [
+        "crypto chart",
+        "price history",
+        "candlestick data",
+        "OHLCV crypto",
+        "technical analysis"
+      ],
+      "endpoint": "GET https://api.binance.com/api/v3/klines",
+      "input": {
+        "symbol": {
+          "type": "string",
+          "description": "Trading pair e.g. BTCUSDT",
+          "required": true
+        },
+        "interval": {
+          "type": "string",
+          "description": "1m, 5m, 15m, 1h, 4h, 1d, 1w",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Number of candles",
+          "default": 100,
+          "max": 1000
+        }
+      },
+      "output": {
+        "type": "list<kline>",
+        "fields": [
+          "[0]=open_time",
+          "[1]=open",
+          "[2]=high",
+          "[3]=low",
+          "[4]=close",
+          "[5]=volume"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
