@@ -1,1 +1,72 @@
-{"apia":"1.0","service":{"id":"google-gemini-flash","name":"Gemini 2.5 Flash API","description_for_ai":"Googles fastest and cheapest frontier model. Excellent quality at $0.30/$2.50 per 1M tokens. 1M token context. Free tier: 1500 req/day. Best for: high-volume tasks, real-time applications, cost-sensitive production.","url":"https://ai.google.dev","api_base":"https://generativelanguage.googleapis.com/v1beta","category":"ai_llm_fast","geo":["GLOBAL"],"language":"en","docs":"https://ai.google.dev/gemini-api/docs/models"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"https://aistudio.google.com/app/apikey — free key instantly","cost":"Free: 1500 req/day. Paid: $0.30/$2.50 per 1M tokens"},"capabilities":[{"id":"generate","description_for_ai":"Fast, cheap frontier AI. Best for high-volume classification, extraction, summarization, translation. 1500 req/day free.","intent":["fast AI","cheap AI","high volume","real-time AI","free AI 1500 day","Gemini Flash"],"endpoint":"POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent","input":{"contents":{"type":"array","required":true},"systemInstruction":{"type":"object","required":false},"generationConfig":{"type":"object","description":"{temperature, maxOutputTokens}","required":false}},"output":{"type":"completion","fields":["candidates[0].content.parts[0].text","usageMetadata.promptTokenCount","usageMetadata.candidatesTokenCount"]},"realtime":true,"requires_auth":true}],"agent_hints":{"free_tier":"1500 req/day free — most generous free tier among frontier models in 2026.","best_value":"Best price-to-quality ratio in 2026. OpenAI-comparable quality at lower cost.","thinking":"Add thinkingConfig: {thinkingBudget: 1024} for chain-of-thought on complex tasks."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "google-gemini-flash",
+    "name": "Gemini 2.5 Flash API",
+    "description_for_ai": "Googles fastest and cheapest frontier model. Excellent quality at $0.30/$2.50 per 1M tokens. 1M token context. Free tier: 1500 req/day. Best for: high-volume tasks, real-time applications, cost-sensitive production.",
+    "url": "https://ai.google.dev",
+    "api_base": "https://generativelanguage.googleapis.com/v1beta",
+    "category": "ai_llm_fast",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "https://aistudio.google.com/app/apikey — free key instantly",
+    "cost": "Free: 1500 req/day. Paid: $0.30/$2.50 per 1M tokens"
+  },
+  "capabilities": [
+    {
+      "id": "generate",
+      "description_for_ai": "Fast, cheap frontier AI. Best for high-volume classification, extraction, summarization, translation. 1500 req/day free.",
+      "intent": [
+        "fast AI",
+        "cheap AI",
+        "high volume",
+        "real-time AI",
+        "free AI 1500 day",
+        "Gemini Flash"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "systemInstruction": {
+          "type": "object",
+          "required": false
+        },
+        "generationConfig": {
+          "type": "object",
+          "description": "{temperature, maxOutputTokens}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "candidates[0].content.parts[0].text",
+          "usageMetadata.promptTokenCount",
+          "usageMetadata.candidatesTokenCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "free_tier": "1500 req/day free — most generous free tier among frontier models in 2026.",
+    "best_value": "Best price-to-quality ratio in 2026. OpenAI-comparable quality at lower cost.",
+    "thinking": "Add thinkingConfig: {thinkingBudget: 1024} for chain-of-thought on complex tasks."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
