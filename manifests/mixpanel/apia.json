@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "track_event",
-      "description_for_ai": "Track a user event in Mixpanel. Records what users do in your app.",
+      "description_for_ai": "Track a user action/event in Mixpanel. Events power funnels, retention analysis, A/B tests, and user segmentation.",
       "intent": [
         "track event",
         "analytics event",
@@ -35,20 +35,19 @@
       "input": {
         "event": {
           "type": "string",
-          "description": "Event name e.g. Purchase Completed, Button Clicked",
+          "description": "Event name — use consistent noun+verb pattern: 'Purchase Completed', 'Video Played', 'Button Clicked', 'Page Viewed'",
           "required": true
         },
         "properties": {
           "type": "object",
-          "description": "{distinct_id: user123, token: PROJECT_TOKEN, ...custom properties}",
+          "description": "MUST include token and distinct_id: {token: 'YOUR_PROJECT_TOKEN', distinct_id: 'user_123', revenue: 49.99, plan: 'pro', source: 'email_campaign'}. Time is auto-set if not provided.",
           "required": true
         }
       },
       "output": {
         "type": "success",
         "fields": [
-          "status",
-          "error"
+          "HTTP 200 with '1' body on success"
         ]
       },
       "realtime": true,
@@ -56,7 +55,7 @@
     },
     {
       "id": "export_events",
-      "description_for_ai": "Export raw event data for date range. Returns one JSON event per line.",
+      "description_for_ai": "Export raw event data as JSONL for a date range. Returns one JSON event per line. Use for data warehousing and custom analysis.",
       "intent": [
         "export analytics",
         "raw events",
@@ -67,27 +66,34 @@
       "input": {
         "from_date": {
           "type": "string",
-          "description": "Start date filter: YYYY-MM-DD",
+          "description": "Start date in YYYY-MM-DD format. Max 60-day range on free plan.",
           "required": true
         },
         "to_date": {
           "type": "string",
-          "description": "End date filter: YYYY-MM-DD",
+          "description": "End date in YYYY-MM-DD format",
           "required": true
         },
         "event": {
           "type": "string",
-          "description": "Event name filter",
+          "description": "Filter by event name (optional). Use ['Event 1','Event 2'] for multiple.",
+          "required": false
+        },
+        "where": {
+          "type": "string",
+          "description": "Mixpanel expression filter: 'properties[\"plan\"] == \"pro\"'",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Max events to return",
           "required": false
         }
       },
       "output": {
         "type": "jsonl",
         "fields": [
-          "event",
-          "properties.distinct_id",
-          "properties.time",
-          "properties.mp_country_code"
+          "Each line: {event, properties: {distinct_id, time, $browser, $city, $country_code, ...custom_properties}}"
         ]
       },
       "realtime": false,
