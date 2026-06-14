@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "get_items",
-      "description_for_ai": "Получить список объявлений пользователя или компании.",
+      "description_for_ai": "Get your own active/inactive listings on Авито with status, price, views, and category.",
       "intent": [
         "объявления Авито",
         "мои объявления",
@@ -64,14 +64,19 @@
     },
     {
       "id": "search_items",
-      "description_for_ai": "Поиск объявлений на Авито по ключевому слову и категории. Публичный поиск.",
+      "description_for_ai": "Search public listings on Авито by keyword, category, and location. Returns ads with price, photos, and seller info.",
       "intent": [
+        "классифайд",
         "найти на Авито",
-        "поиск объявлений",
-        "купить авто",
         "аренда квартиры",
         "товары Авито",
-        "классифайд"
+        "classifieds Russia",
+        "поиск объявлений",
+        "купить авто",
+        "купить на Авито",
+        "недвижимость Авито",
+        "объявления Авито",
+        "авто Авито"
       ],
       "endpoint": "GET https://api.avito.ru/v1/ads",
       "input": {
