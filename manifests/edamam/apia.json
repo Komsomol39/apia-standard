@@ -6,7 +6,7 @@
     "description_for_ai": "Food and nutrition API. Recipe search with 2.3M+ recipes, food database, nutrition analysis. Supports diet labels (balanced, low-carb, paleo), health labels (vegan, vegetarian, kosher). 5 min free req.",
     "url": "https://edamam.com",
     "api_base": "https://api.edamam.com",
-    "category": "food_nutrition",
+    "category": "healthcare",
     "geo": [
       "GLOBAL"
     ],
