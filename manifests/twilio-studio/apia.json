@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "execute_flow",
-      "description_for_ai": "Trigger a Twilio Studio flow execution. Use to start an automated conversation, IVR call, or SMS bot.",
+      "description_for_ai": "Visual flow builder for phone and messaging automations. IVR (interactive voice response), SMS chatbots, WhatsApp bots without code. Execute flows via API to trigger automated conversations. Trigger a Twilio Studio flow execution. Use to start an automated conversation, IVR call, or SMS bot.",
       "intent": [
         "trigger IVR",
         "automated call",
