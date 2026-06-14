@@ -6,7 +6,7 @@
     "description_for_ai": "Citizen science nature platform. 200M+ wildlife observations from around the world. Species identification, location data, photos. Community-verified identifications. Use for nature apps, biodiversity research, species sightings.",
     "url": "https://inaturalist.org",
     "api_base": "https://api.inaturalist.org/v1",
-    "category": "biodiversity",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
