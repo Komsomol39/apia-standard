@@ -1,2 +1,144 @@
 {
-  "apia":"1.0","service":{"id":"cohere","name":"Cohere API","description_for_ai":"Enterprise AI API specializing in RAG, embeddings, and reranking. Command models for text generation. Embed v3 for best-in-class embeddings. Rerank for search relevance. Best for enterprise search and document processing.","url":"https://cohere.com","api_base":"https://api.cohere.ai/v1","category":"ai_llm","geo":["GLOBAL"],"language":"en","docs":"https://docs.cohere.com"},"auth":{"type":"bearer_token","anonymous_access":false,"header":"Authorization: bearer ...","how_to_get":"Register at https://dashboard.cohere.com","cost":"Trial key free. Command R: $0.15/$0.60 per 1M tokens"},"capabilities":[{"id":"chat","description_for_ai":"Generate text with Command models. Supports RAG with document grounding — pass documents and model cites them.","intent":["enterprise AI","RAG","document Q&A","grounded generation","cohere"],"endpoint":"POST https://api.cohere.ai/v1/chat","input":{"model":{"type":"string","description":"command-r-plus (best), command-r (balanced), command-light (cheap)","required":true},"message":{"type":"string","required":true},"documents":{"type":"array","description":"Documents for RAG: [{title, text}]","required":false},"connectors":{"type":"array","required":false}},"output":{"type":"completion","fields":["text","citations","documents"]},"realtime":true,"requires_auth":true},{"id":"embed","description_for_ai":"Create embeddings with Embed v3 — best retrieval quality. Use for semantic search, RAG document indexing.","intent":["embeddings","semantic search","RAG indexing","vector search"],"endpoint":"POST https://api.cohere.ai/v1/embed","input":{"texts":{"type":"array","required":true},"model":{"type":"string","default":"embed-multilingual-v3.0"},"input_type":{"type":"string","description":"search_document or search_query","required":true}},"output":{"type":"embeddings","fields":["embeddings"]},"realtime":true,"requires_auth":true},{"id":"rerank","description_for_ai":"Rerank search results by relevance to query. Improves RAG quality dramatically. Pass query + list of documents, get relevance scores.","intent":["rerank results","improve search","RAG reranking","relevance scoring"],"endpoint":"POST https://api.cohere.ai/v1/rerank","input":{"model":{"type":"string","default":"rerank-multilingual-v3.0"},"query":{"type":"string","required":true},"documents":{"type":"array","required":true},"top_n":{"type":"integer","required":false}},"output":{"type":"rerank_results","fields":["results[].index","results[].relevance_score"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "cohere",
+    "name": "Cohere API",
+    "description_for_ai": "Enterprise AI API specializing in RAG, embeddings, and reranking. Command models for text generation. Embed v3 for best-in-class embeddings. Rerank for search relevance. Best for enterprise search and document processing.",
+    "url": "https://cohere.com",
+    "api_base": "https://api.cohere.ai/v1",
+    "category": "ai_llm",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.cohere.com"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: bearer ...",
+    "how_to_get": "Register at https://dashboard.cohere.com",
+    "cost": "Trial key free. Command R: $0.15/$0.60 per 1M tokens"
+  },
+  "capabilities": [
+    {
+      "id": "chat",
+      "description_for_ai": "Generate text with Command models. Supports RAG with document grounding — pass documents and model cites them.",
+      "intent": [
+        "enterprise AI",
+        "RAG",
+        "document Q&A",
+        "grounded generation",
+        "cohere"
+      ],
+      "endpoint": "POST https://api.cohere.ai/v1/chat",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "command-r-plus (best), command-r (balanced), command-light (cheap)",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        },
+        "documents": {
+          "type": "array",
+          "description": "Documents for RAG: [{title, text}]",
+          "required": false
+        },
+        "connectors": {
+          "type": "array",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "text",
+          "citations",
+          "documents"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "embed",
+      "description_for_ai": "Create embeddings with Embed v3 — best retrieval quality. Use for semantic search, RAG document indexing.",
+      "intent": [
+        "embeddings",
+        "semantic search",
+        "RAG indexing",
+        "vector search"
+      ],
+      "endpoint": "POST https://api.cohere.ai/v1/embed",
+      "input": {
+        "texts": {
+          "type": "array",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "embed-multilingual-v3.0"
+        },
+        "input_type": {
+          "type": "string",
+          "description": "search_document or search_query",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "embeddings",
+        "fields": [
+          "embeddings"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "rerank",
+      "description_for_ai": "Rerank search results by relevance to query. Improves RAG quality dramatically. Pass query + list of documents, get relevance scores.",
+      "intent": [
+        "rerank results",
+        "improve search",
+        "RAG reranking",
+        "relevance scoring"
+      ],
+      "endpoint": "POST https://api.cohere.ai/v1/rerank",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "rerank-multilingual-v3.0"
+        },
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "documents": {
+          "type": "array",
+          "required": true
+        },
+        "top_n": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "rerank_results",
+        "fields": [
+          "results[].index",
+          "results[].relevance_score"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
