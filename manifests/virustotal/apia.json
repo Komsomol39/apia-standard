@@ -1,1 +1,122 @@
-{"apia":"1.0","service":{"id":"virustotal","name":"VirusTotal API","description_for_ai":"Scan files, URLs, IPs and domains for malware using 70+ antivirus engines. Free: 4 lookups/min. Use for security checking, malware detection, URL safety verification, threat intelligence.","url":"https://virustotal.com","api_base":"https://www.virustotal.com/api/v3","category":"security","geo":["GLOBAL"],"language":"en","docs":"https://developers.virustotal.com/reference/overview"},"auth":{"type":"apikey","anonymous_access":false,"header":"x-apikey: ...","how_to_get":"Free API key at https://www.virustotal.com/gui/join-us","cost":"Free: 4 req/min, 500 req/day. Premium for higher limits"},"capabilities":[{"id":"scan_url","description_for_ai":"Check if a URL is malicious using 70+ security engines. Returns threat scores per engine.","intent":["check URL safety","is this link safe","malware check","phishing detection","scan URL","безопасная ссылка"],"endpoint":"POST https://www.virustotal.com/api/v3/urls","input":{"url":{"type":"string","description":"URL to scan","required":true}},"output":{"type":"analysis","fields":["data.id","meta.url_info.url"]},"realtime":true,"requires_auth":true},{"id":"get_url_report","description_for_ai":"Get scan results for a URL. Returns malicious/suspicious/harmless votes from all engines.","intent":["URL scan results","malicious check","security report","URL reputation"],"endpoint":"GET https://www.virustotal.com/api/v3/analyses/{id}","input":{"id":{"type":"string","description":"Analysis ID from scan_url","required":true}},"output":{"type":"report","fields":["data.attributes.stats.malicious","data.attributes.stats.suspicious","data.attributes.stats.harmless","data.attributes.results"]},"realtime":false,"requires_auth":true},{"id":"get_ip_report","description_for_ai":"Get reputation and threat info for an IP address.","intent":["IP reputation","check IP","malicious IP","IP threat intel","IP scan"],"endpoint":"GET https://www.virustotal.com/api/v3/ip_addresses/{ip}","input":{"ip":{"type":"string","description":"IP address to check","required":true}},"output":{"type":"ip_report","fields":["data.attributes.last_analysis_stats","data.attributes.reputation","data.attributes.country","data.attributes.as_owner"]},"realtime":false,"requires_auth":true}],"agent_hints":{"async":"URL scanning is async: 1) POST to scan → get id. 2) GET /analyses/{id} until status=completed.","rate_limit":"Free: 4 req/min. Exceed this and you get 429. Add sleep between requests."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "virustotal",
+    "name": "VirusTotal API",
+    "description_for_ai": "Scan files, URLs, IPs and domains for malware using 70+ antivirus engines. Free: 4 lookups/min. Use for security checking, malware detection, URL safety verification, threat intelligence.",
+    "url": "https://virustotal.com",
+    "api_base": "https://www.virustotal.com/api/v3",
+    "category": "security",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.virustotal.com/reference/overview"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "x-apikey: ...",
+    "how_to_get": "Free API key at https://www.virustotal.com/gui/join-us",
+    "cost": "Free: 4 req/min, 500 req/day. Premium for higher limits"
+  },
+  "capabilities": [
+    {
+      "id": "scan_url",
+      "description_for_ai": "Check if a URL is malicious using 70+ security engines. Returns threat scores per engine.",
+      "intent": [
+        "check URL safety",
+        "is this link safe",
+        "malware check",
+        "phishing detection",
+        "scan URL",
+        "безопасная ссылка"
+      ],
+      "endpoint": "POST https://www.virustotal.com/api/v3/urls",
+      "input": {
+        "url": {
+          "type": "string",
+          "description": "URL to scan",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "analysis",
+        "fields": [
+          "data.id",
+          "meta.url_info.url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_url_report",
+      "description_for_ai": "Get scan results for a URL. Returns malicious/suspicious/harmless votes from all engines.",
+      "intent": [
+        "URL scan results",
+        "malicious check",
+        "security report",
+        "URL reputation"
+      ],
+      "endpoint": "GET https://www.virustotal.com/api/v3/analyses/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Analysis ID from scan_url",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "report",
+        "fields": [
+          "data.attributes.stats.malicious",
+          "data.attributes.stats.suspicious",
+          "data.attributes.stats.harmless",
+          "data.attributes.results"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_ip_report",
+      "description_for_ai": "Get reputation and threat info for an IP address.",
+      "intent": [
+        "IP reputation",
+        "check IP",
+        "malicious IP",
+        "IP threat intel",
+        "IP scan"
+      ],
+      "endpoint": "GET https://www.virustotal.com/api/v3/ip_addresses/{ip}",
+      "input": {
+        "ip": {
+          "type": "string",
+          "description": "IP address to check",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "ip_report",
+        "fields": [
+          "data.attributes.last_analysis_stats",
+          "data.attributes.reputation",
+          "data.attributes.country",
+          "data.attributes.as_owner"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "async": "URL scanning is async: 1) POST to scan → get id. 2) GET /analyses/{id} until status=completed.",
+    "rate_limit": "Free: 4 req/min. Exceed this and you get 429. Add sleep between requests."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
