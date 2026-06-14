@@ -99,13 +99,16 @@
     },
     {
       "id": "enrich_person",
-      "description_for_ai": "Enrich a person profile with email, phone, LinkedIn from name and company.",
+      "description_for_ai": "Enrich a person profile from Apollo database: get verified email, direct phone, LinkedIn URL, job title, and company from name and company/domain.",
       "intent": [
-        "enrich contact",
-        "find email",
+        "professional contact",
         "get phone",
+        "get phone number",
+        "contact data",
+        "find email",
         "lead enrichment",
-        "contact data"
+        "enrich contact",
+        "find email from name"
       ],
       "endpoint": "POST https://api.apollo.io/v1/people/match",
       "input": {
