@@ -23,7 +23,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 ---
 
-## Registry — 252 Manifests
+## Registry — 257 Manifests
 
 > Full candidate list: [docs/ALL_APIS.md](docs/ALL_APIS.md) · How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
 
@@ -503,4 +503,4 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 💬 [Discussions](../../discussions) · 🐛 [Issues](../../issues) · [CONTRIBUTING.md](CONTRIBUTING.md)
 
-**APIA · 252 manifests · 4 languages · Open source · June 2026**
+**APIA · 257 manifests · 4 languages · Open source · June 2026**
