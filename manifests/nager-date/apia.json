@@ -21,14 +21,16 @@
   "capabilities": [
     {
       "id": "get_public_holidays",
-      "description_for_ai": "Get public holidays for a country and year. Returns all national holidays.",
+      "description_for_ai": "Get all public holidays for a country and year with local names, descriptions, and whether they're national/regional.",
       "intent": [
+        "выходные дни",
         "public holidays",
         "national holidays",
+        "праздники страны",
+        "calendar holidays",
         "bank holidays",
         "days off",
-        "выходные дни",
-        "праздники страны"
+        "праздничные дни"
       ],
       "endpoint": "GET https://date.nager.at/api/v3/PublicHolidays/{year}/{countryCode}",
       "input": {
@@ -64,10 +66,13 @@
       "id": "is_today_public_holiday",
       "description_for_ai": "Check if today is a public holiday in a specific country. Returns HTTP 200 if holiday, HTTP 204 if not.",
       "intent": [
-        "is today holiday",
-        "is bank closed",
+        "holiday check",
+        "working day check",
         "holiday today",
-        "working day check"
+        "is today holiday",
+        "working day",
+        "is bank closed",
+        "bank open today"
       ],
       "endpoint": "GET https://date.nager.at/api/v3/IsTodayPublicHoliday/{countryCode}",
       "input": {
