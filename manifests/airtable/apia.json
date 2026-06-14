@@ -6,7 +6,7 @@
     "description_for_ai": "Flexible database-spreadsheet hybrid. Tables, records, views, formulas, attachments. 300K+ companies use it. Use for data management, project tracking, CRM-lite, content calendars, inventory.",
     "url": "https://airtable.com",
     "api_base": "https://api.airtable.com/v0",
-    "category": "productivity_database",
+    "category": "productivity",
     "geo": [
       "GLOBAL"
     ],
