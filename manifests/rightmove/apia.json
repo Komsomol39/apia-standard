@@ -24,11 +24,15 @@
       "id": "search_properties",
       "description_for_ai": "UK largest property portal. Buy, rent, commercial property listings across England, Scotland, Wales. Used by 95% of UK estate agents. Official API for property professionals. Search UK properties for sale or rent by location and criteria.",
       "intent": [
-        "UK property",
-        "houses for sale UK",
         "rent flat London",
+        "houses for sale UK",
+        "UK property",
+        "UK real estate",
         "buy house England",
-        "UK real estate"
+        "UK listings",
+        "British real estate",
+        "property UK",
+        "UK houses for sale"
       ],
       "endpoint": "GET https://api.rightmove.co.uk/api/sale/find",
       "input": {
