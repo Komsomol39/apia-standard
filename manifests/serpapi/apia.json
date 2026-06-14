@@ -6,7 +6,7 @@
     "description_for_ai": "Scrape Google, Bing, Yahoo, DuckDuckGo, Baidu search results programmatically. JSON results from any search engine. Also: Google Maps, Shopping, Jobs, News, Images. 100 free searches/month.",
     "url": "https://serpapi.com",
     "api_base": "https://serpapi.com/search",
-    "category": "search_scraping",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
