@@ -72,7 +72,7 @@
     },
     {
       "id": "create_deal",
-      "description_for_ai": "Create new sales deal in Pipedrive pipeline.",
+      "description_for_ai": "Create a new sales deal in Pipedrive CRM with value, close date, and associate it with contacts and organizations.",
       "intent": [
         "new deal",
         "add opportunity",
