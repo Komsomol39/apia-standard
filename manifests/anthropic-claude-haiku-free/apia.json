@@ -6,7 +6,7 @@
     "description_for_ai": "Anthropic provides free tier access to Claude models via API. Claude Haiku 4.5 has the most generous free usage. No credit card required to start. Best free frontier AI API alongside Gemini.",
     "url": "https://anthropic.com",
     "api_base": "https://api.anthropic.com/v1",
-    "category": "ai_free",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
