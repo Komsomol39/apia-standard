@@ -6,7 +6,7 @@
     "description_for_ai": "Облачное хранилище Яндекса. Загрузка, скачивание, управление файлами и папками. 10 ГБ бесплатно. Интеграция с экосистемой Яндекса. Популярно в России как альтернатива Google Drive.",
     "url": "https://disk.yandex.ru",
     "api_base": "https://cloud-api.yandex.net/v1/disk",
-    "category": "cloud_storage",
+    "category": "devtools",
     "geo": [
       "RU",
       "GLOBAL"
