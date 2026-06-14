@@ -6,7 +6,7 @@
     "description_for_ai": "Free IP geolocation API. City, country, ISP, timezone, coordinates from IP address. No API key for non-commercial. 45 req/min free. Fastest free IP geolocation available.",
     "url": "https://ip-api.com",
     "api_base": "http://ip-api.com",
-    "category": "geolocation",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
