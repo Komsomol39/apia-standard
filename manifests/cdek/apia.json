@@ -1,1 +1,170 @@
-{"apia":"1.0","service":{"id":"cdek","name":"СДЭК API","description_for_ai":"Крупнейшая курьерская служба России и СНГ. Доставка в 2000+ городов России, Казахстана, Беларуси. Расчёт стоимости, создание заказов, отслеживание посылок. Обязательна для российских интернет-магазинов.","url":"https://sdek.ru","api_base":"https://api.cdek.ru/v2","category":"logistics_shipping","geo":["RU","BY","KZ","KG","UZ"],"language":"ru","docs":"https://api-docs.cdek.ru/"},"auth":{"type":"oauth2_client_credentials","anonymous_access":false,"token_url":"https://api.cdek.ru/v2/oauth/token","how_to_get":"Личный кабинет СДЭК → Настройки → Интеграция","cost":"По тарифам СДЭК"},"capabilities":[{"id":"calculate_tariff","description_for_ai":"Рассчитать стоимость доставки СДЭК между городами. Возвращает цену и сроки доставки.","intent":["стоимость доставки СДЭК","рассчитать доставку","тариф СДЭК","сколько стоит доставить","доставка Россия"],"endpoint":"POST https://api.cdek.ru/v2/calculator/tariff","input":{"type":{"type":"integer","description":"Тип заказа: 1=интернет-магазин, 2=доставка","default":1},"currency":{"type":"integer","description":"Код валюты: 1=рубль","default":1},"from_location":{"type":"object","description":"{address: Москва} или {code: 44}","required":true},"to_location":{"type":"object","description":"{address: Санкт-Петербург}","required":true},"packages":{"type":"array","description":"[{weight: 1000, length: 10, width: 10, height: 10}] вес в граммах","required":true},"tariff_code":{"type":"integer","description":"136=посылка склад-дверь, 137=посылка дверь-дверь","required":false}},"output":{"type":"tariff","fields":["delivery_sum","period_min","period_max","tariff_code","tariff_name"]},"realtime":true,"requires_auth":true},{"id":"create_order","description_for_ai":"Создать заказ на доставку СДЭК.","intent":["создать заказ СДЭК","оформить доставку","отправить посылку СДЭК"],"endpoint":"POST https://api.cdek.ru/v2/orders","input":{"type":{"type":"integer","required":true},"tariff_code":{"type":"integer","required":true},"recipient":{"type":"object","description":"{name, phones: [{number}], email}","required":true},"from_location":{"type":"object","required":true},"to_location":{"type":"object","required":true},"packages":{"type":"array","required":true}},"output":{"type":"order","fields":["entity.uuid","requests[0].state","requests[0].errors"]},"realtime":true,"requires_auth":true},{"id":"track_order","description_for_ai":"Отследить заказ СДЭК по номеру.","intent":["трек СДЭК","отследить посылку","где посылка СДЭК","статус заказа СДЭК"],"endpoint":"GET https://api.cdek.ru/v2/orders","input":{"cdek_number":{"type":"string","description":"Номер заказа СДЭК","required":false},"im_number":{"type":"string","description":"Номер заказа интернет-магазина","required":false}},"output":{"type":"order","fields":["entity.cdek_number","entity.statuses[0].name","entity.statuses[0].date_time"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "cdek",
+    "name": "СДЭК API",
+    "description_for_ai": "Крупнейшая курьерская служба России и СНГ. Доставка в 2000+ городов России, Казахстана, Беларуси. Расчёт стоимости, создание заказов, отслеживание посылок. Обязательна для российских интернет-магазинов.",
+    "url": "https://sdek.ru",
+    "api_base": "https://api.cdek.ru/v2",
+    "category": "logistics_shipping",
+    "geo": [
+      "RU",
+      "BY",
+      "KZ",
+      "KG",
+      "UZ"
+    ],
+    "language": "ru",
+    "docs": "https://api-docs.cdek.ru/"
+  },
+  "auth": {
+    "type": "oauth2_client_credentials",
+    "anonymous_access": false,
+    "token_url": "https://api.cdek.ru/v2/oauth/token",
+    "how_to_get": "Личный кабинет СДЭК → Настройки → Интеграция",
+    "cost": "По тарифам СДЭК"
+  },
+  "capabilities": [
+    {
+      "id": "calculate_tariff",
+      "description_for_ai": "Рассчитать стоимость доставки СДЭК между городами. Возвращает цену и сроки доставки.",
+      "intent": [
+        "стоимость доставки СДЭК",
+        "рассчитать доставку",
+        "тариф СДЭК",
+        "сколько стоит доставить",
+        "доставка Россия"
+      ],
+      "endpoint": "POST https://api.cdek.ru/v2/calculator/tariff",
+      "input": {
+        "type": {
+          "type": "integer",
+          "description": "Тип заказа: 1=интернет-магазин, 2=доставка",
+          "default": 1
+        },
+        "currency": {
+          "type": "integer",
+          "description": "Код валюты: 1=рубль",
+          "default": 1
+        },
+        "from_location": {
+          "type": "object",
+          "description": "{address: Москва} или {code: 44}",
+          "required": true
+        },
+        "to_location": {
+          "type": "object",
+          "description": "{address: Санкт-Петербург}",
+          "required": true
+        },
+        "packages": {
+          "type": "array",
+          "description": "[{weight: 1000, length: 10, width: 10, height: 10}] вес в граммах",
+          "required": true
+        },
+        "tariff_code": {
+          "type": "integer",
+          "description": "136=посылка склад-дверь, 137=посылка дверь-дверь",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "tariff",
+        "fields": [
+          "delivery_sum",
+          "period_min",
+          "period_max",
+          "tariff_code",
+          "tariff_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_order",
+      "description_for_ai": "Создать заказ на доставку СДЭК.",
+      "intent": [
+        "создать заказ СДЭК",
+        "оформить доставку",
+        "отправить посылку СДЭК"
+      ],
+      "endpoint": "POST https://api.cdek.ru/v2/orders",
+      "input": {
+        "type": {
+          "type": "integer",
+          "required": true
+        },
+        "tariff_code": {
+          "type": "integer",
+          "required": true
+        },
+        "recipient": {
+          "type": "object",
+          "description": "{name, phones: [{number}], email}",
+          "required": true
+        },
+        "from_location": {
+          "type": "object",
+          "required": true
+        },
+        "to_location": {
+          "type": "object",
+          "required": true
+        },
+        "packages": {
+          "type": "array",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
+          "entity.uuid",
+          "requests[0].state",
+          "requests[0].errors"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "track_order",
+      "description_for_ai": "Отследить заказ СДЭК по номеру.",
+      "intent": [
+        "трек СДЭК",
+        "отследить посылку",
+        "где посылка СДЭК",
+        "статус заказа СДЭК"
+      ],
+      "endpoint": "GET https://api.cdek.ru/v2/orders",
+      "input": {
+        "cdek_number": {
+          "type": "string",
+          "description": "Номер заказа СДЭК",
+          "required": false
+        },
+        "im_number": {
+          "type": "string",
+          "description": "Номер заказа интернет-магазина",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
+          "entity.cdek_number",
+          "entity.statuses[0].name",
+          "entity.statuses[0].date_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
