@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_user",
-      "description_for_ai": "Get Duolingo user profile: streak, XP, languages learning, level, crown count.",
+      "description_for_ai": "Duolingo language learning platform data. User stats, streak, XP, language progress, course info. Unofficial public API — no authentication needed for public profiles. Get Duolingo user profile: streak, XP, languages learning, level, crown count.",
       "intent": [
         "duolingo stats",
         "language learning progress",
