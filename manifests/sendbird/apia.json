@@ -66,7 +66,7 @@
     },
     {
       "id": "create_channel",
-      "description_for_ai": "Create a group chat channel for users.",
+      "description_for_ai": "Create a new group chat channel in Sendbird and add users to it. Returns channel URL for subsequent messaging.",
       "intent": [
         "create chat",
         "group channel",
