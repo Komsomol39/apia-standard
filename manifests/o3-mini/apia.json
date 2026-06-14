@@ -1,1 +1,78 @@
-{"apia":"1.0","service":{"id":"o3-mini","name":"OpenAI o3-mini Reasoning API","description_for_ai":"OpenAI reasoning model for complex problem solving. Thinks step-by-step before answering. Best for: math, science, coding, logic puzzles, multi-step analysis. Slower but more accurate than GPT-4o on hard problems.","url":"https://openai.com","api_base":"https://api.openai.com/v1","category":"ai_reasoning","geo":["GLOBAL"],"language":"en","docs":"https://platform.openai.com/docs/models/o3-mini"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"OpenAI API key","cost":"o3-mini: $1.10/$4.40 per 1M tokens. o3: $10/$40."},"capabilities":[{"id":"reason","description_for_ai":"Solve complex reasoning problems. Math proofs, algorithm design, multi-step code debugging, scientific analysis. Takes longer but produces higher quality answers for hard problems.","intent":["complex math","hard problem","reasoning","algorithm design","prove theorem","logic puzzle","scientific analysis","step by step thinking"],"endpoint":"POST https://api.openai.com/v1/chat/completions","input":{"model":{"type":"string","description":"o3-mini, o3, o1","required":true},"messages":{"type":"array","required":true},"reasoning_effort":{"type":"string","description":"low, medium, high — controls thinking depth/cost","default":"medium"},"max_completion_tokens":{"type":"integer","required":false}},"output":{"type":"completion","fields":["choices[0].message.content","usage.completion_tokens_details.reasoning_tokens"]},"realtime":false,"requires_auth":true}],"agent_hints":{"vs_gpt4o":"Use o3-mini for: math proofs, complex algorithms, logic puzzles, hard coding. Use GPT-4o for: everyday tasks, writing, fast responses.","reasoning_effort":"low=fast/cheap, medium=balanced, high=best quality/most expensive. Start with medium.","streaming":"Reasoning models stream the final answer, not the thinking process."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "o3-mini",
+    "name": "OpenAI o3-mini Reasoning API",
+    "description_for_ai": "OpenAI reasoning model for complex problem solving. Thinks step-by-step before answering. Best for: math, science, coding, logic puzzles, multi-step analysis. Slower but more accurate than GPT-4o on hard problems.",
+    "url": "https://openai.com",
+    "api_base": "https://api.openai.com/v1",
+    "category": "ai_reasoning",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://platform.openai.com/docs/models/o3-mini"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "OpenAI API key",
+    "cost": "o3-mini: $1.10/$4.40 per 1M tokens. o3: $10/$40."
+  },
+  "capabilities": [
+    {
+      "id": "reason",
+      "description_for_ai": "Solve complex reasoning problems. Math proofs, algorithm design, multi-step code debugging, scientific analysis. Takes longer but produces higher quality answers for hard problems.",
+      "intent": [
+        "complex math",
+        "hard problem",
+        "reasoning",
+        "algorithm design",
+        "prove theorem",
+        "logic puzzle",
+        "scientific analysis",
+        "step by step thinking"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "o3-mini, o3, o1",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "reasoning_effort": {
+          "type": "string",
+          "description": "low, medium, high — controls thinking depth/cost",
+          "default": "medium"
+        },
+        "max_completion_tokens": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content",
+          "usage.completion_tokens_details.reasoning_tokens"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "vs_gpt4o": "Use o3-mini for: math proofs, complex algorithms, logic puzzles, hard coding. Use GPT-4o for: everyday tasks, writing, fast responses.",
+    "reasoning_effort": "low=fast/cheap, medium=balanced, high=best quality/most expensive. Start with medium.",
+    "streaming": "Reasoning models stream the final answer, not the thinking process."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
