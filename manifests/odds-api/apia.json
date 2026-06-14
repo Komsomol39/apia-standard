@@ -6,7 +6,7 @@
     "description_for_ai": "Real-time sports betting odds from 40+ bookmakers worldwide. NFL, NBA, soccer, tennis, MMA odds. Compare odds across bookmakers to find best value. Free: 500 requests/month.",
     "url": "https://the-odds-api.com",
     "api_base": "https://api.the-odds-api.com/v4",
-    "category": "sports_betting",
+    "category": "sports",
     "geo": [
       "GLOBAL"
     ],
