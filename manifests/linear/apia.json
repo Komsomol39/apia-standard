@@ -6,7 +6,7 @@
     "description_for_ai": "Modern issue tracker loved by engineering teams. Issues, projects, cycles (sprints), roadmaps, automations. GraphQL API. Used by Vercel, Retool, Loom. Fast and developer-friendly.",
     "url": "https://linear.app",
     "api_base": "https://api.linear.app/graphql",
-    "category": "developer_project",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
