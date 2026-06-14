@@ -6,7 +6,7 @@
     "description_for_ai": "Free access to 2M+ preprint research papers in physics, mathematics, computer science, AI, biology, economics. No API key needed. Real-time preprints before peer review. Best source for latest AI research.",
     "url": "https://arxiv.org",
     "api_base": "https://export.arxiv.org/api",
-    "category": "science_preprints",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
