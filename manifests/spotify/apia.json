@@ -7,7 +7,9 @@
     "url": "https://spotify.com",
     "api_base": "https://api.spotify.com/v1",
     "category": "music_entertainment",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://developer.spotify.com/documentation/web-api"
   },
@@ -24,19 +26,48 @@
       "id": "search",
       "description_for_ai": "Search Spotify catalog for tracks, artists, albums or playlists. Use for 'find song X', 'songs by artist Y', 'albums like Z', 'playlist for working out'.",
       "intent": [
-        "find song", "search music", "songs by artist",
-        "music search", "find album", "найти песню", "поиск музыки"
+        "find song",
+        "search music",
+        "songs by artist",
+        "music search",
+        "find album",
+        "найти песню",
+        "поиск музыки"
       ],
       "endpoint": "GET https://api.spotify.com/v1/search",
       "input": {
-        "q": { "type": "string", "description": "Search query. Can include field filters: artist:Radiohead, year:2020, genre:jazz", "required": true },
-        "type": { "type": "string", "description": "Comma-separated: track, artist, album, playlist", "default": "track" },
-        "limit": { "type": "integer", "description": "Number of results", "default": 10, "max": 50 },
-        "market": { "type": "string", "description": "ISO country code for availability filtering. E.g. RU, US, DE", "required": false }
+        "q": {
+          "type": "string",
+          "description": "Search query. Can include field filters: artist:Radiohead, year:2020, genre:jazz",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "Comma-separated: track, artist, album, playlist",
+          "default": "track"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Number of results",
+          "default": 10,
+          "max": 50
+        },
+        "market": {
+          "type": "string",
+          "description": "ISO country code for availability filtering. E.g. RU, US, DE",
+          "required": false
+        }
       },
       "output": {
         "type": "search_results",
-        "fields": ["tracks.items[].name", "tracks.items[].artists[].name", "tracks.items[].album.name", "tracks.items[].duration_ms", "tracks.items[].external_urls.spotify", "tracks.items[].preview_url"]
+        "fields": [
+          "tracks.items[].name",
+          "tracks.items[].artists[].name",
+          "tracks.items[].album.name",
+          "tracks.items[].duration_ms",
+          "tracks.items[].external_urls.spotify",
+          "tracks.items[].preview_url"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -45,16 +76,36 @@
       "id": "get_track_features",
       "description_for_ai": "Get audio features of a track: tempo (BPM), energy, danceability, valence (happiness), acousticness. Use for music mood analysis, finding similar songs, or describing a track's feel.",
       "intent": [
-        "song tempo", "BPM", "track mood", "energy level",
-        "danceability", "happy songs", "calm music"
+        "song tempo",
+        "BPM",
+        "track mood",
+        "energy level",
+        "danceability",
+        "happy songs",
+        "calm music"
       ],
       "endpoint": "GET https://api.spotify.com/v1/audio-features/{id}",
       "input": {
-        "id": { "type": "string", "description": "Spotify track ID from search results", "required": true }
+        "id": {
+          "type": "string",
+          "description": "Spotify track ID from search results",
+          "required": true
+        }
       },
       "output": {
         "type": "audio_features",
-        "fields": ["tempo", "energy", "danceability", "valence", "acousticness", "instrumentalness", "speechiness", "key", "mode", "time_signature"]
+        "fields": [
+          "tempo",
+          "energy",
+          "danceability",
+          "valence",
+          "acousticness",
+          "instrumentalness",
+          "speechiness",
+          "key",
+          "mode",
+          "time_signature"
+        ]
       },
       "realtime": false,
       "requires_auth": true
@@ -63,22 +114,62 @@
       "id": "get_recommendations",
       "description_for_ai": "Get song recommendations based on seed tracks, artists, or genres. Use for 'songs like X', 'music similar to this artist', 'recommend upbeat songs'.",
       "intent": [
-        "recommend songs", "similar music", "songs like",
-        "music recommendations", "playlist suggestions", "похожая музыка"
+        "recommend songs",
+        "similar music",
+        "songs like",
+        "music recommendations",
+        "playlist suggestions",
+        "похожая музыка"
       ],
       "endpoint": "GET https://api.spotify.com/v1/recommendations",
       "input": {
-        "seed_tracks": { "type": "string", "description": "Comma-separated track IDs (up to 5 total seeds)", "required": false },
-        "seed_artists": { "type": "string", "description": "Comma-separated artist IDs", "required": false },
-        "seed_genres": { "type": "string", "description": "Comma-separated genres: pop, rock, jazz, classical, hip-hop etc.", "required": false },
-        "target_energy": { "type": "float", "description": "Target energy 0.0-1.0", "required": false },
-        "target_valence": { "type": "float", "description": "Target happiness 0.0-1.0", "required": false },
-        "target_tempo": { "type": "float", "description": "Target BPM", "required": false },
-        "limit": { "type": "integer", "default": 20, "max": 100 }
+        "seed_tracks": {
+          "type": "string",
+          "description": "Comma-separated track IDs (up to 5 total seeds)",
+          "required": false
+        },
+        "seed_artists": {
+          "type": "string",
+          "description": "Comma-separated artist IDs",
+          "required": false
+        },
+        "seed_genres": {
+          "type": "string",
+          "description": "Comma-separated genres: pop, rock, jazz, classical, hip-hop etc.",
+          "required": false
+        },
+        "target_energy": {
+          "type": "float",
+          "description": "Target energy 0.0-1.0",
+          "required": false
+        },
+        "target_valence": {
+          "type": "float",
+          "description": "Target happiness 0.0-1.0",
+          "required": false
+        },
+        "target_tempo": {
+          "type": "float",
+          "description": "Target BPM",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20,
+          "max": 100,
+          "description": "Maximum number of results to return"
+        }
       },
       "output": {
         "type": "list<track>",
-        "fields": ["name", "artists[].name", "album.name", "duration_ms", "external_urls.spotify", "preview_url"]
+        "fields": [
+          "name",
+          "artists[].name",
+          "album.name",
+          "duration_ms",
+          "external_urls.spotify",
+          "preview_url"
+        ]
       },
       "realtime": true,
       "requires_auth": true
