@@ -1,0 +1,76 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "xai-grok",
+    "name": "xAI Grok API",
+    "description_for_ai": "Elon Musk xAI Grok models. Cheapest frontier-quality API in 2026 ($0.20/$0.50 per 1M tokens). Real-time X (Twitter) data access. OpenAI-compatible. Best for: cost-sensitive high-volume tasks, real-time social media analysis, X platform integration.",
+    "url": "https://x.ai",
+    "api_base": "https://api.x.ai/v1",
+    "category": "ai_llm",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://docs.x.ai/api"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer xai-...",
+    "how_to_get": "Register at https://console.x.ai — $25 free monthly credit",
+    "cost": "Grok 4.1: $0.20/$0.50 per 1M tokens. Grok 4: $3/$15 per 1M tokens"
+  },
+  "capabilities": [
+    {
+      "id": "chat_completion",
+      "description_for_ai": "OpenAI-compatible chat completions. Cheapest frontier model in 2026. Grok 4.1 Mini costs $0.20/$0.50 per 1M tokens — 8x cheaper than GPT-4o. Use for high-volume, cost-sensitive applications.",
+      "intent": ["cheapest AI", "grok", "low cost generation", "high volume LLM", "xAI"],
+      "endpoint": "POST https://api.x.ai/v1/chat/completions",
+      "input": {
+        "model": { "type": "string", "description": "grok-4-mini (cheapest), grok-4 (flagship)", "required": true },
+        "messages": { "type": "array", "description": "OpenAI-compatible [{role, content}]", "required": true },
+        "temperature": { "type": "float", "default": 1 },
+        "max_tokens": { "type": "integer", "required": false },
+        "stream": { "type": "boolean", "default": false }
+      },
+      "output": {
+        "type": "completion",
+        "fields": ["choices[0].message.content", "usage.prompt_tokens", "usage.completion_tokens"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "live_search",
+      "description_for_ai": "Grok with real-time X (Twitter) and web search access. Use when user needs current information, trending topics, or recent events that happened after model training cutoff.",
+      "intent": ["real time info", "current events", "latest news", "trending topics", "X twitter search", "live data"],
+      "endpoint": "POST https://api.x.ai/v1/chat/completions",
+      "input": {
+        "model": { "type": "string", "default": "grok-4" },
+        "messages": { "type": "array", "required": true },
+        "search_parameters": { "type": "object", "description": "{mode: on} to enable live search", "required": false }
+      },
+      "output": {
+        "type": "completion",
+        "fields": ["choices[0].message.content", "choices[0].message.citations"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "price_tip": "Grok 4.1 Mini at $0.20/$0.50 per 1M tokens is among cheapest frontier models — ideal for classification, extraction, high-volume tasks.",
+    "openai_compat": "100% OpenAI SDK compatible. Change base_url to https://api.x.ai/v1 and model name. Same code works.",
+    "live_search": "Unique feature: Grok can search X (Twitter) in real-time. Ideal for monitoring brand mentions, trending topics.",
+    "free_credit": "$25 free monthly credit — generous for testing.",
+    "context": "grok-4 has 1M token context window."
+  },
+  "limits": {
+    "free_monthly_credit_usd": 25,
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
