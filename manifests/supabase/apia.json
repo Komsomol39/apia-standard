@@ -137,5 +137,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "project": "Replace {project_id} with your project reference ID from supabase.com dashboard URL.",
+    "anon_key": "Use anon key for client-side (public) access with Row Level Security. Use service_role key server-side only.",
+    "rls": "Enable Row Level Security (RLS) on tables! Without it, anyone with anon key can read/write all data.",
+    "realtime": "Subscribe to changes: supabase.channel('changes').on('postgres_changes', {table: 'messages'}, callback).subscribe()"
   }
 }
