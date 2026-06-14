@@ -1,0 +1,94 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "vk",
+    "name": "VK API (ВКонтакте)",
+    "description_for_ai": "Russia and CIS largest social network API. 100M+ users. Access user profiles, posts, groups, messages, photos and videos. Essential for Russia-focused apps. Use for social login, posting content, reading group posts, user profile lookup.",
+    "url": "https://vk.com",
+    "api_base": "https://api.vk.com/method",
+    "category": "social_media",
+    "geo": ["RU", "BY", "KZ", "UA", "UZ"],
+    "language": "ru",
+    "docs": "https://dev.vk.com/ru/api/overview"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Create app at https://dev.vk.com/ru — free",
+    "oauth_url": "https://oauth.vk.com/authorize",
+    "token_url": "https://oauth.vk.com/access_token",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "search_posts",
+      "description_for_ai": "Search posts across VK by keyword. Use for monitoring mentions, finding trending content in Russia, sentiment analysis of Russian social media.",
+      "intent": ["vk posts", "поиск по вк", "посты вконтакте", "упоминания вк", "russian social media", "vk mentions"],
+      "endpoint": "GET https://api.vk.com/method/newsfeed.search",
+      "input": {
+        "q": { "type": "string", "description": "Search query", "required": true },
+        "count": { "type": "integer", "description": "Number of results", "default": 20, "max": 200 },
+        "start_time": { "type": "integer", "description": "Unix timestamp filter", "required": false },
+        "v": { "type": "string", "description": "API version", "default": "5.199" }
+      },
+      "output": {
+        "type": "list<post>",
+        "fields": ["id", "text", "date", "likes.count", "reposts.count", "comments.count", "from_id"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user",
+      "description_for_ai": "Get VK user profile: name, photo, city, followers, friends count.",
+      "intent": ["vk profile", "профиль вк", "информация о пользователе вк", "vk user info"],
+      "endpoint": "GET https://api.vk.com/method/users.get",
+      "input": {
+        "user_ids": { "type": "string", "description": "VK user IDs or screen names, comma-separated", "required": true },
+        "fields": { "type": "string", "description": "photo_200, city, followers_count, status, bdate", "required": false },
+        "v": { "type": "string", "default": "5.199" }
+      },
+      "output": {
+        "type": "list<user>",
+        "fields": ["id", "first_name", "last_name", "photo_200", "city.title", "followers_count", "status"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "wall_post",
+      "description_for_ai": "Publish a post on VK wall (user or group). Use to post content to VK automatically.",
+      "intent": ["post to vk", "опубликовать в вк", "publish vk post", "vk wall post"],
+      "endpoint": "POST https://api.vk.com/method/wall.post",
+      "input": {
+        "owner_id": { "type": "integer", "description": "User or group ID (negative for groups)", "required": false },
+        "message": { "type": "string", "description": "Post text", "required": true },
+        "attachments": { "type": "string", "description": "Photos, links, etc.", "required": false },
+        "v": { "type": "string", "default": "5.199" }
+      },
+      "output": {
+        "type": "post",
+        "fields": ["post_id"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "version": "Always pass v=5.199 — older versions may be deprecated.",
+    "group_id": "Group IDs are negative in VK API. Group 123456 → owner_id=-123456.",
+    "access_token": "Different scopes needed for different methods. For wall.post need scope=wall. For messages need scope=messages.",
+    "russia_reach": "VK is the primary social platform for Russians — more relevant than Twitter/X for Russian audiences."
+  },
+  "limits": {
+    "requests_per_second": 3,
+    "commercial_use": true,
+    "attribution_required": false,
+    "cost": "Free"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
