@@ -6,7 +6,7 @@
     "description_for_ai": "Cohere flagship model for enterprise. Best RAG performance with document grounding and citations. Supports 23 languages. 128K context. Used by Oracle, Salesforce, HubSpot. Best choice for document-heavy enterprise AI.",
     "url": "https://cohere.com",
     "api_base": "https://api.cohere.ai/v1",
-    "category": "ai_llm_enterprise",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
