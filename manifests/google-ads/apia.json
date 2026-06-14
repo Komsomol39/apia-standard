@@ -6,7 +6,7 @@
     "description_for_ai": "Google advertising platform API. Create and manage search, display, video ads. Access campaign performance, keywords, bids, budgets, conversions. $150B+ annual ad spend flows through Google Ads. Use for advertising automation, campaign management, reporting.",
     "url": "https://ads.google.com",
     "api_base": "https://googleads.googleapis.com/v17",
-    "category": "advertising",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
