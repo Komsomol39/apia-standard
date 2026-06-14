@@ -80,7 +80,7 @@
     },
     {
       "id": "get_repository",
-      "description_for_ai": "Get full details of a specific GitHub repository by owner and name.",
+      "description_for_ai": "Get detailed information about a GitHub repository: description, stars, forks, language, topics, license, open issues.",
       "intent": [
         "repo details",
         "repository info",
@@ -91,28 +91,31 @@
       "input": {
         "owner": {
           "type": "string",
-          "description": "Repository owner username or org",
+          "description": "Repository owner username or organization name e.g. 'microsoft', 'facebook'",
           "required": true
         },
         "repo": {
           "type": "string",
-          "description": "Repository name",
+          "description": "Repository name e.g. 'vscode', 'react'",
           "required": true
         }
       },
       "output": {
         "type": "repository",
         "fields": [
+          "id",
           "full_name",
           "description",
           "stargazers_count",
           "forks_count",
-          "open_issues_count",
           "language",
           "topics",
-          "license",
-          "created_at",
-          "updated_at"
+          "license.name",
+          "open_issues_count",
+          "default_branch",
+          "pushed_at",
+          "clone_url",
+          "homepage"
         ]
       },
       "realtime": true,
@@ -120,7 +123,7 @@
     },
     {
       "id": "create_file",
-      "description_for_ai": "Create or update a file in a GitHub repository. Use to write code, configs, or documents directly to a repo.",
+      "description_for_ai": "Create a new file in a GitHub repository with content. Commits the file and returns the commit SHA.",
       "intent": [
         "create file in GitHub",
         "push file to repo",
@@ -131,36 +134,46 @@
       "input": {
         "owner": {
           "type": "string",
+          "description": "Repository owner username",
           "required": true
         },
         "repo": {
           "type": "string",
+          "description": "Repository name",
           "required": true
         },
         "path": {
           "type": "string",
-          "description": "File path in repo. E.g. 'src/main.py'",
+          "description": "File path in repo: 'src/utils/helper.js', 'README.md', 'docs/guide.md'",
           "required": true
         },
         "message": {
           "type": "string",
-          "description": "Commit message",
+          "description": "Commit message: 'Add helper utility', 'Update README'",
           "required": true
         },
         "content": {
           "type": "string",
-          "description": "File content encoded in Base64",
+          "description": "File content BASE64 encoded. In Python: base64.b64encode(text.encode()).decode()",
           "required": true
         },
-        "sha": {
+        "branch": {
           "type": "string",
-          "description": "SHA of existing file (required for updates)",
+          "description": "Branch to commit to. Default: repository default branch",
+          "required": false
+        },
+        "committer": {
+          "type": "object",
+          "description": "{name: 'John Doe', email: 'john@example.com'} — author of the commit",
           "required": false
         }
       },
       "output": {
-        "type": "commit",
+        "type": "file",
         "fields": [
+          "content.name",
+          "content.path",
+          "content.sha",
           "content.html_url",
           "commit.sha",
           "commit.message"
