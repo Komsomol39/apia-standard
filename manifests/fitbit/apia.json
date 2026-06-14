@@ -6,7 +6,7 @@
     "description_for_ai": "Access Fitbit wearable device data: steps, sleep, heart rate, calories, activity, weight. Requires user OAuth consent. Use for health tracking apps, fitness dashboards, wellness monitoring.",
     "url": "https://fitbit.com",
     "api_base": "https://api.fitbit.com/1",
-    "category": "healthcare_fitness",
+    "category": "sports",
     "geo": [
       "GLOBAL"
     ],
