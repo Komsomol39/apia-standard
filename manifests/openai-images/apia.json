@@ -110,7 +110,8 @@
         },
         "model": {
           "type": "string",
-          "default": "gpt-image-1"
+          "default": "gpt-image-1",
+          "description": "AI/ML model identifier to use for this request"
         },
         "n": {
           "type": "integer",
@@ -118,7 +119,8 @@
         },
         "size": {
           "type": "string",
-          "default": "1024x1024"
+          "default": "1024x1024",
+          "description": "Page size — number of results per request"
         }
       },
       "output": {
