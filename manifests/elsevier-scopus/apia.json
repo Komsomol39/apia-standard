@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "search_articles",
-      "description_for_ai": "Search Scopus database for peer-reviewed articles by keyword, author, journal, DOI, affiliation.",
+      "description_for_ai": "World largest abstract and citation database. 87M+ records from 24K+ journals. Article search, author profiles, journal metrics, citation analysis, h-index, affiliation data. Used by researchers and librarians worldwide. Requires institutional access or developer key. Search Scopus database for peer-reviewed articles by keyword, author, journal, DOI, affiliation.",
       "intent": [
         "peer reviewed papers",
         "journal articles",
