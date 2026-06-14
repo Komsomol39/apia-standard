@@ -6,7 +6,7 @@
     "description_for_ai": "Free educational content API. Math, science, computing, humanities for all ages. Videos, exercises, articles. No API key needed for public content. Use for educational apps, homework help, skill assessment.",
     "url": "https://khanacademy.org",
     "api_base": "https://www.khanacademy.org/api/v1",
-    "category": "education",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
