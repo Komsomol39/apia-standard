@@ -6,7 +6,7 @@
     "description_for_ai": "Free content moderation API from OpenAI. Detect hate speech, harassment, self-harm, violence, sexual content in text. No cost. Use for moderating user-generated content before publishing.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_safety",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
