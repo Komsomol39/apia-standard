@@ -6,7 +6,7 @@
     "description_for_ai": "Largest open database of company information. 200M+ companies from 140+ jurisdictions worldwide. Company registration, officers, filings. Use for global business verification, KYC, due diligence.",
     "url": "https://opencorporates.com",
     "api_base": "https://api.opencorporates.com/v0.4",
-    "category": "business_registry",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
