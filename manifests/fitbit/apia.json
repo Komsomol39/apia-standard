@@ -1,1 +1,119 @@
-{"apia":"1.0","service":{"id":"fitbit","name":"Fitbit API","description_for_ai":"Access Fitbit wearable device data: steps, sleep, heart rate, calories, activity, weight. Requires user OAuth consent. Use for health tracking apps, fitness dashboards, wellness monitoring.","url":"https://fitbit.com","api_base":"https://api.fitbit.com/1","category":"healthcare_fitness","geo":["GLOBAL"],"language":"en","docs":"https://dev.fitbit.com/build/reference/web-api/"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Register at https://dev.fitbit.com/apps/new","cost":"Free"},"capabilities":[{"id":"get_activities","description_for_ai":"Get daily activity data: steps, distance, calories, floors, active minutes for a user.","intent":["step count","daily steps","calories burned","activity data","fitbit steps","fitness tracking"],"endpoint":"GET https://api.fitbit.com/1/user/-/activities/date/{date}.json","input":{"date":{"type":"string","description":"Date in YYYY-MM-DD format. Use today for current day.","required":true}},"output":{"type":"activities","fields":["summary.steps","summary.caloriesOut","summary.distances","summary.activeScore","summary.fairlyActiveMinutes","summary.veryActiveMinutes"]},"realtime":true,"requires_auth":true},{"id":"get_sleep","description_for_ai":"Get sleep data: duration, stages (deep/light/REM/awake), efficiency score.","intent":["sleep data","sleep quality","sleep stages","REM sleep","sleep tracking"],"endpoint":"GET https://api.fitbit.com/1.2/user/-/sleep/date/{date}.json","input":{"date":{"type":"string","description":"YYYY-MM-DD","required":true}},"output":{"type":"sleep","fields":["sleep[0].duration","sleep[0].efficiency","sleep[0].levels.summary.deep","sleep[0].levels.summary.rem","sleep[0].levels.summary.light"]},"realtime":true,"requires_auth":true},{"id":"get_heart_rate","description_for_ai":"Get heart rate data including resting heart rate and zones.","intent":["heart rate","resting heart rate","heart zones","cardio data"],"endpoint":"GET https://api.fitbit.com/1/user/-/activities/heart/date/{date}/1d.json","input":{"date":{"type":"string","required":true}},"output":{"type":"heart_rate","fields":["activities-heart[0].value.restingHeartRate","activities-heart[0].value.heartRateZones"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "fitbit",
+    "name": "Fitbit API",
+    "description_for_ai": "Access Fitbit wearable device data: steps, sleep, heart rate, calories, activity, weight. Requires user OAuth consent. Use for health tracking apps, fitness dashboards, wellness monitoring.",
+    "url": "https://fitbit.com",
+    "api_base": "https://api.fitbit.com/1",
+    "category": "healthcare_fitness",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://dev.fitbit.com/build/reference/web-api/"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://dev.fitbit.com/apps/new",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "get_activities",
+      "description_for_ai": "Get daily activity data: steps, distance, calories, floors, active minutes for a user.",
+      "intent": [
+        "step count",
+        "daily steps",
+        "calories burned",
+        "activity data",
+        "fitbit steps",
+        "fitness tracking"
+      ],
+      "endpoint": "GET https://api.fitbit.com/1/user/-/activities/date/{date}.json",
+      "input": {
+        "date": {
+          "type": "string",
+          "description": "Date in YYYY-MM-DD format. Use today for current day.",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "activities",
+        "fields": [
+          "summary.steps",
+          "summary.caloriesOut",
+          "summary.distances",
+          "summary.activeScore",
+          "summary.fairlyActiveMinutes",
+          "summary.veryActiveMinutes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_sleep",
+      "description_for_ai": "Get sleep data: duration, stages (deep/light/REM/awake), efficiency score.",
+      "intent": [
+        "sleep data",
+        "sleep quality",
+        "sleep stages",
+        "REM sleep",
+        "sleep tracking"
+      ],
+      "endpoint": "GET https://api.fitbit.com/1.2/user/-/sleep/date/{date}.json",
+      "input": {
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "sleep",
+        "fields": [
+          "sleep[0].duration",
+          "sleep[0].efficiency",
+          "sleep[0].levels.summary.deep",
+          "sleep[0].levels.summary.rem",
+          "sleep[0].levels.summary.light"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_heart_rate",
+      "description_for_ai": "Get heart rate data including resting heart rate and zones.",
+      "intent": [
+        "heart rate",
+        "resting heart rate",
+        "heart zones",
+        "cardio data"
+      ],
+      "endpoint": "GET https://api.fitbit.com/1/user/-/activities/heart/date/{date}/1d.json",
+      "input": {
+        "date": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "heart_rate",
+        "fields": [
+          "activities-heart[0].value.restingHeartRate",
+          "activities-heart[0].value.heartRateZones"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
