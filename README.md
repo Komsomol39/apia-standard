@@ -10,36 +10,14 @@ Inspired by what SOAP did for enterprise contracts in the 2000s — built for th
 
 ## The Problem
 
-An AI agent helping a user find a job near their location, check a bus schedule, and find an open pharmacy needs to separately learn each API. Every service has its own format, its own auth, its own pagination. There is no shared contract.
+An AI agent helping a user find a job near their location, check a bus schedule, and find an open pharmacy needs to separately learn each API. Every service has its own format, auth, and pagination. There is no shared contract.
 
-**APIA solves this with a single `apia.json` manifest** — a machine-readable file that tells any AI agent:
-
+**APIA solves this with a single `apia.json` manifest** that tells any AI agent:
 - 🧠 **What** the service can do (written for LLMs, not developers)
 - 🌍 **Where** it works (geography, language)
 - 🔑 **How** to authenticate
 - ⚡ **Whether** data is realtime or cached
-- 💡 **Hints** on how to use the API correctly in real-world scenarios
-
----
-
-## How It Works
-
-```
-User: "Find me a Python job near me with salary above 80k"
-        ↓
-Agent reads APIA registry
-        ↓
-Finds hh-ru → capability: search_vacancies
-        ↓
-Maps intent to API parameters:
-  text="Python", lat=55.75, lng=37.61, salary=80000
-        ↓
-Calls HH.ru API → returns results
-        ↓
-Agent answers user
-```
-
-No hardcoded integration. No custom training. Just the manifest.
+- 💡 **Hints** on how to use correctly in real scenarios
 
 ---
 
@@ -49,68 +27,66 @@ No hardcoded integration. No custom training. Just the manifest.
 {
   "apia": "1.0",
   "service": {
-    "id": "hh-ru",
-    "name": "HeadHunter",
-    "description_for_ai": "Largest Russian job board. Use to search vacancies by keyword, city or coordinates.",
-    "category": "employment",
-    "geo": ["RU", "BY", "KZ"]
+    "id": "openweathermap",
+    "description_for_ai": "Get current weather and forecasts for any city or coordinates worldwide.",
+    "category": "weather",
+    "geo": ["GLOBAL"]
   },
-  "capabilities": [
-    {
-      "id": "search_vacancies",
-      "description_for_ai": "Search job vacancies by keyword and geolocation. Use for 'find Python developer jobs near me'.",
-      "intent": ["find job", "vacancies nearby", "looking for work"],
-      "endpoint": "GET https://api.hh.ru/vacancies",
-      "realtime": true,
-      "requires_auth": false
-    }
-  ],
-  "agent_hints": {
-    "geo_flow": "If user says 'near me' — pass lat/lng. If user names a city — call get_areas first."
-  }
+  "capabilities": [{
+    "id": "current_weather",
+    "description_for_ai": "Get current weather. Use for 'what's the weather now', 'is it raining in London'.",
+    "intent": ["current weather", "temperature now", "is it raining"],
+    "endpoint": "GET https://api.openweathermap.org/data/2.5/weather",
+    "realtime": true
+  }]
 }
 ```
 
 ---
 
-## Registry
+## Registry — 25 Manifests
 
 ### 🌍 Global APIs
 
-| Service | Category | Cap. | Auth | API Ver. | Docs | Status |
-|---|---|---|---|---|---|---|
-| [OpenWeatherMap](manifests/openweathermap/apia.json) | Weather | 3 | API Key | v2.5 | [docs](https://openweathermap.org/api) | ✅ Ready |
-| [Google Maps](manifests/google-maps/apia.json) | Maps/Geocoding | 3 | API Key | v3 | [docs](https://developers.google.com/maps) | ✅ Ready |
-| [GitHub API](manifests/github/apia.json) | Dev Tools | 4 | Token/Anon | v3 | [docs](https://docs.github.com/en/rest) | ✅ Ready |
-| [Twilio](manifests/twilio/apia.json) | Communications | 2 | Basic Auth | 2010-04-01 | [docs](https://twilio.com/docs/sms/api) | ✅ Ready |
-| [Stripe](manifests/stripe/apia.json) | Payments | 3 | Bearer | v1 | [docs](https://stripe.com/docs/api) | ✅ Ready |
+| Service | Category | Cap. | Auth | Docs | Status |
+|---|---|---|---|---|---|
+| [OpenWeatherMap](manifests/openweathermap/apia.json) | Weather | 3 | API Key | [docs](https://openweathermap.org/api) | ✅ |
+| [Google Maps](manifests/google-maps/apia.json) | Maps/Geocoding | 3 | API Key | [docs](https://developers.google.com/maps) | ✅ |
+| [GitHub API](manifests/github/apia.json) | Dev Tools | 4 | Token/Anon | [docs](https://docs.github.com/en/rest) | ✅ |
+| [Twilio](manifests/twilio/apia.json) | SMS/WhatsApp | 2 | Basic Auth | [docs](https://twilio.com/docs/sms/api) | ✅ |
+| [Stripe](manifests/stripe/apia.json) | Payments | 3 | Bearer | [docs](https://stripe.com/docs/api) | ✅ |
+| [DeepL](manifests/deepl/apia.json) | Translation | 2 | API Key | [docs](https://www.deepl.com/docs-api) | ✅ |
+| [ExchangeRate-API](manifests/exchangerate-api/apia.json) | Currency | 2 | API Key | [docs](https://www.exchangerate-api.com/docs) | ✅ |
+| [Spotify](manifests/spotify/apia.json) | Music | 3 | OAuth2 | [docs](https://developer.spotify.com/documentation/web-api) | ✅ |
+| [Wikipedia](manifests/wikipedia/apia.json) | Knowledge | 3 | None | [docs](https://en.wikipedia.org/api/rest_v1/) | ✅ |
+| [Amadeus](manifests/amadeus/apia.json) | Flights/Travel | 3 | OAuth2 | [docs](https://developers.amadeus.com/self-service) | ✅ |
 
 ### 🇷🇺 Russia
 
-| Service | Category | Cap. | Auth | API Ver. | Docs | Status |
-|---|---|---|---|---|---|---|
-| [hh.ru](manifests/hh-ru/apia.json) | Employment | 5 | OAuth2/Anon | v1 | [docs](https://github.com/hhru/api) | ✅ Ready |
-| [SuperJob](manifests/superjob/apia.json) | Employment | 4 | API Key/Anon | v2.0 | [docs](https://api.superjob.ru/) | ✅ Ready |
-| [SuperJob Resumes](manifests/superjob-resumes/apia.json) | Resumes | 2 | OAuth2 | v2.0 | [docs](https://api.superjob.ru/) | ✅ Ready |
-| [Авито.Работа](manifests/avito-jobs/apia.json) | Employment | 2 | OAuth2 | v1 | [docs](https://developers.avito.ru/api-catalog/job/documentation) | ⚠️ Partial |
-| [trudvsem.ru](manifests/trudvsem/apia.json) | Employment Gov | 4 | None | v1 | [docs](https://trudvsem.ru/opendata/api) | ✅ Ready |
-| [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport | 5 | API Key | v3.0 | [docs](https://yandex.ru/dev/rasp/doc/ru/) | ✅ Ready |
-| [Яндекс.Карты](manifests/yandex-maps/apia.json) | Maps/Geocoding | 3 | API Key | v1.x | [docs](https://yandex.ru/dev/maps/) | ✅ Ready |
-| [2GIS](manifests/2gis/apia.json) | Maps/POI | 4 | API Key | v3.0 | [docs](https://docs.2gis.com/en/api/search/overview) | ✅ Ready |
-| [data.mos.ru](manifests/data-mos-ru/apia.json) | City Data | 3 | API Key | v1 | [docs](https://data.mos.ru/developers/documentation) | ✅ Ready |
-| [ЕГРЮЛ/ФНС](manifests/egrul-fns/apia.json) | Business Registry | 2 | API Key | v1 | [docs](https://api-fns.ru/) | ✅ Ready |
-| [ФИАС/ГАР](manifests/fias/apia.json) | Address Registry | 2 | None | v1 | [docs](https://fias.nalog.ru/) | ✅ Ready |
-| [Госуслуги](manifests/gosuslugi/apia.json) | Gov Services | 1 | ЕСИА | v1 | [docs](https://partners.gosuslugi.ru/catalog/api_for_gu) | ⚠️ Partial |
+| Service | Category | Cap. | Auth | Docs | Status |
+|---|---|---|---|---|---|
+| [hh.ru](manifests/hh-ru/apia.json) | Employment | 5 | OAuth2/Anon | [docs](https://github.com/hhru/api) | ✅ |
+| [SuperJob](manifests/superjob/apia.json) | Employment | 4 | API Key/Anon | [docs](https://api.superjob.ru/) | ✅ |
+| [SuperJob Resumes](manifests/superjob-resumes/apia.json) | Resumes | 2 | OAuth2 | [docs](https://api.superjob.ru/) | ✅ |
+| [Авито.Работа](manifests/avito-jobs/apia.json) | Employment | 2 | OAuth2 | [docs](https://developers.avito.ru/api-catalog/job/documentation) | ⚠️ |
+| [trudvsem.ru](manifests/trudvsem/apia.json) | Employment Gov | 4 | None | [docs](https://trudvsem.ru/opendata/api) | ✅ |
+| [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport | 5 | API Key | [docs](https://yandex.ru/dev/rasp/doc/ru/) | ✅ |
+| [Яндекс.Карты](manifests/yandex-maps/apia.json) | Maps/Geocoding | 3 | API Key | [docs](https://yandex.ru/dev/maps/) | ✅ |
+| [2GIS](manifests/2gis/apia.json) | Maps/POI | 4 | API Key | [docs](https://docs.2gis.com/en/api/search/overview) | ✅ |
+| [data.mos.ru](manifests/data-mos-ru/apia.json) | City Data | 3 | API Key | [docs](https://data.mos.ru/developers/documentation) | ✅ |
+| [ЕГРЮЛ/ФНС](manifests/egrul-fns/apia.json) | Business Registry | 2 | API Key | [docs](https://api-fns.ru/) | ✅ |
+| [ФИАС/ГАР](manifests/fias/apia.json) | Address Registry | 2 | None | [docs](https://fias.nalog.ru/) | ✅ |
+| [Госуслуги](manifests/gosuslugi/apia.json) | Gov Services | 1 | ЕСИА | [docs](https://partners.gosuslugi.ru/catalog/api_for_gu) | ⚠️ |
 
 ### 🇧🇾🇰🇿 CIS
 
-| Service | Category | Cap. | Auth | API Ver. | Docs | Status |
-|---|---|---|---|---|---|---|
-| [hh.kz](manifests/hh-kz/apia.json) | Employment KZ | 3 | OAuth2/Anon | v1 | [docs](https://dev.hh.kz/) | ✅ Ready |
-| [hh.by](manifests/hh-by/apia.json) | Employment BY | 3 | OAuth2/Anon | v1 | [docs](https://github.com/hhru/api) | ✅ Ready |
-| [2GIS CIS](manifests/2gis-cis/apia.json) | Maps/POI BY+KZ | 2 | API Key | v3.0 | [docs](https://docs.2gis.com/en/api/search/overview) | ✅ Ready |
+| Service | Category | Cap. | Auth | Docs | Status |
+|---|---|---|---|---|---|
+| [hh.kz](manifests/hh-kz/apia.json) | Employment KZ | 3 | OAuth2/Anon | [docs](https://dev.hh.kz/) | ✅ |
+| [hh.by](manifests/hh-by/apia.json) | Employment BY | 3 | OAuth2/Anon | [docs](https://github.com/hhru/api) | ✅ |
+| [2GIS CIS](manifests/2gis-cis/apia.json) | Maps/POI BY+KZ | 2 | API Key | [docs](https://docs.2gis.com/en/api/search/overview) | ✅ |
 
-> ⚠️ Partial = manifest exists with docs links, needs contributor to complete
+> ⚠️ Partial = needs contributor · ✅ Ready to use
 
 ---
 
@@ -118,28 +94,24 @@ No hardcoded integration. No custom training. Just the manifest.
 
 | Standard | Relationship |
 |---|---|
-| **MCP** (Anthropic) | APIA manifests → MCP tool definitions |
-| **OpenAPI / Swagger** | APIA references OpenAPI specs |
-| **OpenClaw skills** | APIA manifests → `SKILL.md` |
+| **MCP** (Anthropic) | APIA → MCP tool definitions |
+| **OpenAPI** | APIA references OpenAPI specs |
+| **OpenClaw skills** | APIA → `SKILL.md` |
 
 ---
 
-## How to Contribute
+## Contribute
 
-1. Fork this repository
-2. Create `manifests/{service-id}/apia.json`
-3. Follow the [HH.ru example](manifests/hh-ru/apia.json)
-4. Write `description_for_ai` for LLMs, not developers
-5. Open a Pull Request
+1. Fork → create `manifests/{id}/apia.json`
+2. Follow the [HH.ru example](manifests/hh-ru/apia.json)
+3. Write `description_for_ai` for LLMs, not developers
+4. Pull Request
 
-### ❌ Bad vs ✅ Good
-
-❌ *"Endpoint for retrieving a paginated list of vacancies"*
-
-✅ *"Search job vacancies by keyword. Use when user says 'find work nearby'"*
+❌ *"Endpoint for retrieving paginated vacancies"*
+✅ *"Search jobs by keyword. Use when user says 'find work nearby'"*
 
 ---
 
-- 💬 [Discussions](../../discussions) · 🐛 [Issues](../../issues) · 🌐 OpenClaw Discord `#showcase`
+💬 [Discussions](../../discussions) · 🐛 [Issues](../../issues) · 🌐 OpenClaw `#showcase`
 
-**APIA is open source · 20 manifests · 4 languages · Started June 2026**
+**25 manifests · 4 languages · Open source · Started June 2026**
