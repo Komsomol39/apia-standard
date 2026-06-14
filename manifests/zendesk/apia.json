@@ -81,7 +81,8 @@
         },
         "per_page": {
           "type": "integer",
-          "default": 25
+          "default": 25,
+          "description": "Results per page. Check API docs for maximum allowed."
         }
       },
       "output": {
