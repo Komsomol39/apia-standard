@@ -6,7 +6,14 @@
     "description_for_ai": "Картографические сервисы Яндекса для России и СНГ. Включает три ключевых API: геокодер (адрес↔координаты), поиск по организациям (13 млн компаний с часами работы и телефонами), маршрутизация. Лучший выбор для геозадач в России — обновляется 2-3 раза в неделю, знает адреса которых нет в Google.",
     "url": "https://yandex.ru/maps",
     "category": "maps_geocoding",
-    "geo": ["RU", "BY", "KZ", "UA", "UZ", "TR"],
+    "geo": [
+      "RU",
+      "BY",
+      "KZ",
+      "UA",
+      "UZ",
+      "TR"
+    ],
     "language": "ru",
     "docs": "https://yandex.ru/dev/maps/",
     "how_to_get_key": "https://developer.tech.yandex.ru/services/"
@@ -24,8 +31,12 @@
       "id": "geocode",
       "description_for_ai": "Прямое геокодирование: адрес → координаты. Обратное геокодирование: координаты → адрес. Используй для определения координат по адресу пользователя или адреса по GPS-координатам. Лучший геокодер для российских адресов — знает все улицы, дома, корпуса.",
       "intent": [
-        "координаты адреса", "адрес по координатам", "где находится улица",
-        "найти координаты", "определить адрес", "геокодировать адрес",
+        "координаты адреса",
+        "адрес по координатам",
+        "где находится улица",
+        "найти координаты",
+        "определить адрес",
+        "геокодировать адрес",
         "что за место по координатам"
       ],
       "endpoint": "GET https://geocode-maps.yandex.ru/1.x/",
@@ -35,11 +46,31 @@
           "description": "Адрес для прямого геокодирования ('Москва, Тверская 1') или координаты для обратного ('37.621, 55.753')",
           "required": true
         },
-        "format": { "type": "string", "description": "Формат ответа", "default": "json" },
-        "results": { "type": "integer", "description": "Количество результатов", "default": 10 },
-        "ll": { "type": "string", "description": "Центр области поиска 'lng,lat' для уточнения результатов", "required": false },
-        "spn": { "type": "string", "description": "Размер области поиска в градусах 'dlng,dlat'", "required": false },
-        "lang": { "type": "string", "description": "Язык ответа", "default": "ru_RU" }
+        "format": {
+          "type": "string",
+          "description": "Response format: json, xml, or csv",
+          "default": "json"
+        },
+        "results": {
+          "type": "integer",
+          "description": "Количество результатов",
+          "default": 10
+        },
+        "ll": {
+          "type": "string",
+          "description": "Центр области поиска 'lng,lat' для уточнения результатов",
+          "required": false
+        },
+        "spn": {
+          "type": "string",
+          "description": "Размер области поиска в градусах 'dlng,dlat'",
+          "required": false
+        },
+        "lang": {
+          "type": "string",
+          "description": "Language code e.g. en, ru, de, fr, es",
+          "default": "ru_RU"
+        }
       },
       "output": {
         "type": "GeoObjectCollection",
@@ -59,9 +90,15 @@
       "id": "search_organizations",
       "description_for_ai": "Поиск организаций по названию или категории рядом с координатами. Возвращает название, адрес, часы работы, телефоны, сайт. База — 13 млн организаций из Яндекс Справочника. Используй для запросов 'кафе рядом', 'аптека поблизости', 'банк в этом районе'.",
       "intent": [
-        "организации рядом", "кафе поблизости", "аптека рядом",
-        "банк рядом", "магазин рядом", "где поесть",
-        "часы работы", "телефон организации", "найди заведение"
+        "организации рядом",
+        "кафе поблизости",
+        "аптека рядом",
+        "банк рядом",
+        "магазин рядом",
+        "где поесть",
+        "часы работы",
+        "телефон организации",
+        "найди заведение"
       ],
       "endpoint": "GET https://search-maps.yandex.ru/v1/",
       "input": {
@@ -85,9 +122,22 @@
           "description": "Тип объекта: biz (организации), geo (географические объекты)",
           "default": "biz"
         },
-        "results": { "type": "integer", "description": "Количество результатов", "default": 10, "max": 500 },
-        "skip": { "type": "integer", "description": "Смещение для пагинации", "default": 0 },
-        "lang": { "type": "string", "default": "ru_RU" }
+        "results": {
+          "type": "integer",
+          "description": "Количество результатов",
+          "default": 10,
+          "max": 500
+        },
+        "skip": {
+          "type": "integer",
+          "description": "Смещение для пагинации",
+          "default": 0
+        },
+        "lang": {
+          "type": "string",
+          "default": "ru_RU",
+          "description": "Language code e.g. en, ru, de, fr, es"
+        }
       },
       "output": {
         "type": "FeatureCollection",
@@ -109,17 +159,41 @@
     {
       "id": "suggest",
       "description_for_ai": "Автодополнение адресов и названий организаций. Используй когда пользователь вводит адрес — возвращает подсказки для завершения ввода.",
-      "intent": ["подсказки адреса", "автодополнение", "завершить адрес"],
+      "intent": [
+        "подсказки адреса",
+        "автодополнение",
+        "завершить адрес"
+      ],
       "endpoint": "GET https://suggest-maps.yandex.ru/suggest-geo",
       "input": {
-        "part": { "type": "string", "description": "Частичный адрес или название", "required": true },
-        "ll": { "type": "string", "description": "Координаты для приоритизации результатов", "required": false },
-        "lang": { "type": "string", "default": "ru_RU" },
-        "n": { "type": "integer", "description": "Количество подсказок", "default": 10 }
+        "part": {
+          "type": "string",
+          "description": "Частичный адрес или название",
+          "required": true
+        },
+        "ll": {
+          "type": "string",
+          "description": "Координаты для приоритизации результатов",
+          "required": false
+        },
+        "lang": {
+          "type": "string",
+          "default": "ru_RU",
+          "description": "Language code e.g. en, ru, de, fr, es"
+        },
+        "n": {
+          "type": "integer",
+          "description": "Количество подсказок",
+          "default": 10
+        }
       },
       "output": {
         "type": "list<suggest>",
-        "fields": ["value", "hl", "tags"]
+        "fields": [
+          "value",
+          "hl",
+          "tags"
+        ]
       },
       "realtime": true,
       "requires_auth": true
