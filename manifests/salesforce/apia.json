@@ -1,1 +1,93 @@
-{"apia":"1.0","service":{"id":"salesforce","name":"Salesforce REST API","description_for_ai":"Enterprise CRM platform. Leads, opportunities, accounts, contacts, cases. Workflow automation, reporting. Most widely used CRM in enterprise. Use for sales pipeline, customer data, service management.","url":"https://salesforce.com","api_base":"https://{instance}.salesforce.com/services/data/v59.0","category":"crm_enterprise","geo":["GLOBAL"],"language":"en","docs":"https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Developer org at https://developer.salesforce.com/signup — free","cost":"Free developer org. Enterprise from $150/user/month"},"capabilities":[{"id":"query","description_for_ai":"Query Salesforce objects using SOQL. Get leads, opportunities, accounts, contacts with custom filters.","intent":["salesforce query","CRM data","get opportunities","account data","SOQL query","sales pipeline"],"endpoint":"GET https://{instance}.salesforce.com/services/data/v59.0/query","input":{"q":{"type":"string","description":"SOQL query e.g. SELECT Id,Name,Amount,StageName FROM Opportunity WHERE StageName=Prospecting","required":true}},"output":{"type":"query_result","fields":["totalSize","records[0].Id","records[0].Name","records"]},"realtime":true,"requires_auth":true},{"id":"create_record","description_for_ai":"Create a new Salesforce record: Lead, Contact, Account, Opportunity, Case.","intent":["create lead","new opportunity","add account","create contact","new case"],"endpoint":"POST https://{instance}.salesforce.com/services/data/v59.0/sobjects/{object_name}","input":{"object_name":{"type":"string","description":"Lead, Contact, Account, Opportunity, Case","required":true},"fields":{"type":"object","description":"Object fields as key-value pairs","required":true}},"output":{"type":"record","fields":["id","success"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "salesforce",
+    "name": "Salesforce REST API",
+    "description_for_ai": "Enterprise CRM platform. Leads, opportunities, accounts, contacts, cases. Workflow automation, reporting. Most widely used CRM in enterprise. Use for sales pipeline, customer data, service management.",
+    "url": "https://salesforce.com",
+    "api_base": "https://{instance}.salesforce.com/services/data/v59.0",
+    "category": "crm_enterprise",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Developer org at https://developer.salesforce.com/signup — free",
+    "cost": "Free developer org. Enterprise from $150/user/month"
+  },
+  "capabilities": [
+    {
+      "id": "query",
+      "description_for_ai": "Query Salesforce objects using SOQL. Get leads, opportunities, accounts, contacts with custom filters.",
+      "intent": [
+        "salesforce query",
+        "CRM data",
+        "get opportunities",
+        "account data",
+        "SOQL query",
+        "sales pipeline"
+      ],
+      "endpoint": "GET https://{instance}.salesforce.com/services/data/v59.0/query",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "SOQL query e.g. SELECT Id,Name,Amount,StageName FROM Opportunity WHERE StageName=Prospecting",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "query_result",
+        "fields": [
+          "totalSize",
+          "records[0].Id",
+          "records[0].Name",
+          "records"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_record",
+      "description_for_ai": "Create a new Salesforce record: Lead, Contact, Account, Opportunity, Case.",
+      "intent": [
+        "create lead",
+        "new opportunity",
+        "add account",
+        "create contact",
+        "new case"
+      ],
+      "endpoint": "POST https://{instance}.salesforce.com/services/data/v59.0/sobjects/{object_name}",
+      "input": {
+        "object_name": {
+          "type": "string",
+          "description": "Lead, Contact, Account, Opportunity, Case",
+          "required": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "Object fields as key-value pairs",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "record",
+        "fields": [
+          "id",
+          "success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
