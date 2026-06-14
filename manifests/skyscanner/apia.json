@@ -6,7 +6,7 @@
     "description_for_ai": "Flight price search across 1200+ airlines. Live prices, price calendars, route suggestions. Used by millions of travelers. Requires partnership for full access. Use for flight price comparison, cheapest dates, route search.",
     "url": "https://skyscanner.com",
     "api_base": "https://partners.api.skyscanner.net/apiservices/v3",
-    "category": "travel_flights",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
