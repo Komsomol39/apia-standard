@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "chat",
-      "description_for_ai": "Generate text with Command models. Supports RAG with document grounding — pass documents and model cites them.",
+      "description_for_ai": "Generate text with Command models. Supports RAG with document grounding — pass documents and model cites them. Best for enterprise document Q&A and knowledge retrieval.",
       "intent": [
         "enterprise AI",
         "RAG",
@@ -35,20 +35,42 @@
       "input": {
         "model": {
           "type": "string",
-          "description": "command-r-plus (best), command-r (balanced), command-light (cheap)",
+          "description": "command-r-plus (best quality), command-r (balanced, cheaper), command-light (fastest)",
           "required": true
         },
         "message": {
           "type": "string",
+          "description": "User's message or question",
           "required": true
         },
         "documents": {
           "type": "array",
-          "description": "Documents for RAG: [{title, text}]",
+          "description": "Documents for RAG grounding: [{title: 'Doc title', text: 'Content...'}]. Model will cite these in response.",
+          "required": false
+        },
+        "preamble": {
+          "type": "string",
+          "description": "System prompt / instructions for the model",
+          "required": false
+        },
+        "chat_history": {
+          "type": "array",
+          "description": "Conversation history: [{role: 'USER'|'CHATBOT', message: 'text'}]",
           "required": false
         },
         "connectors": {
           "type": "array",
+          "description": "[{id: 'web-search'}] to use built-in web search for grounding",
+          "required": false
+        },
+        "temperature": {
+          "type": "float",
+          "description": "Creativity 0.0-1.0. Lower = more focused.",
+          "default": 0.3
+        },
+        "max_tokens": {
+          "type": "integer",
+          "description": "Max response tokens",
           "required": false
         }
       },
@@ -56,8 +78,12 @@
         "type": "completion",
         "fields": [
           "text",
-          "citations",
-          "documents"
+          "citations[0].start",
+          "citations[0].end",
+          "citations[0].text",
+          "citations[0].document_ids",
+          "documents",
+          "finish_reason"
         ]
       },
       "realtime": true,
@@ -65,7 +91,7 @@
     },
     {
       "id": "embed",
-      "description_for_ai": "Create embeddings with Embed v3 — best retrieval quality. Use for semantic search, RAG document indexing.",
+      "description_for_ai": "Create vector embeddings for semantic search, RAG document indexing, and similarity comparisons. Embed-v3 multilingual supports 100+ languages.",
       "intent": [
         "embeddings",
         "semantic search",
@@ -76,22 +102,30 @@
       "input": {
         "texts": {
           "type": "array",
+          "description": "List of strings to embed. Max 96 texts per call, max 512 tokens per text.",
           "required": true
         },
         "model": {
           "type": "string",
+          "description": "embed-multilingual-v3.0 (best, 100+ languages), embed-english-v3.0 (English only, faster)",
           "default": "embed-multilingual-v3.0"
         },
         "input_type": {
           "type": "string",
-          "description": "search_document or search_query",
+          "description": "search_document (for indexing), search_query (for queries). Must match at retrieval time.",
           "required": true
+        },
+        "truncate": {
+          "type": "string",
+          "description": "NONE (error if too long), START, END",
+          "default": "END"
         }
       },
       "output": {
         "type": "embeddings",
         "fields": [
-          "embeddings"
+          "embeddings (list of float arrays, 1024 dimensions)",
+          "meta.billed_units.input_tokens"
         ]
       },
       "realtime": true,
@@ -99,7 +133,7 @@
     },
     {
       "id": "rerank",
-      "description_for_ai": "Rerank search results by relevance to query. Improves RAG quality dramatically. Pass query + list of documents, get relevance scores.",
+      "description_for_ai": "Rerank a list of documents by relevance to a query. Dramatically improves RAG quality. Pass query + candidate documents, get relevance scores 0-1.",
       "intent": [
         "rerank results",
         "improve search",
@@ -110,26 +144,36 @@
       "input": {
         "model": {
           "type": "string",
+          "description": "rerank-multilingual-v3.0 (100+ languages), rerank-english-v3.0",
           "default": "rerank-multilingual-v3.0"
         },
         "query": {
           "type": "string",
+          "description": "The search query to rank documents against",
           "required": true
         },
         "documents": {
           "type": "array",
+          "description": "Documents to rank: list of strings, or [{text: 'content'}] objects. Max 1000 docs.",
           "required": true
         },
         "top_n": {
           "type": "integer",
+          "description": "Return only top N ranked results. Returns all if not set.",
           "required": false
+        },
+        "return_documents": {
+          "type": "boolean",
+          "description": "Include document text in response",
+          "default": true
         }
       },
       "output": {
         "type": "rerank_results",
         "fields": [
-          "results[].index",
-          "results[].relevance_score"
+          "results[0].index",
+          "results[0].relevance_score (0-1)",
+          "results[0].document.text"
         ]
       },
       "realtime": true,
