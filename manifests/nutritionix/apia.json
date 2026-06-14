@@ -1,1 +1,104 @@
-{"apia":"1.0","service":{"id":"nutritionix","name":"Nutritionix API","description_for_ai":"Largest verified nutrition database. 3M+ food items with calories, macros, vitamins, minerals. Natural language food search. Use for calorie counting apps, nutrition tracking, meal planning.","url":"https://nutritionix.com","api_base":"https://trackapi.nutritionix.com/v2","category":"healthcare_nutrition","geo":["GLOBAL"],"language":"en","docs":"https://developer.nutritionix.com/docs/v2"},"auth":{"type":"apikey","anonymous_access":false,"header":"x-app-id + x-app-key","how_to_get":"Register at https://developer.nutritionix.com","cost":"Free: 500 calls/day"},"capabilities":[{"id":"natural_nutrients","description_for_ai":"Get nutrition facts from natural language food description. e.g. 2 eggs and toast with butter returns full nutritional breakdown.","intent":["calories in","nutrition facts","food calories","what are macros","calorie count","калории в еде","БЖУ продукта"],"endpoint":"POST https://trackapi.nutritionix.com/v2/natural/nutrients","input":{"query":{"type":"string","description":"Natural language food description e.g. 2 large eggs scrambled, 1 cup of rice","required":true}},"output":{"type":"nutrients","fields":["foods[0].food_name","foods[0].serving_qty","foods[0].nf_calories","foods[0].nf_protein","foods[0].nf_total_carbohydrate","foods[0].nf_total_fat","foods[0].nf_dietary_fiber"]},"realtime":false,"requires_auth":true},{"id":"search_food","description_for_ai":"Search food database by name. Returns branded and common food items with nutrition.","intent":["search food","find food nutrition","food database search"],"endpoint":"GET https://trackapi.nutritionix.com/v2/search/instant","input":{"query":{"type":"string","required":true},"branded":{"type":"boolean","default":true},"common":{"type":"boolean","default":true}},"output":{"type":"search_results","fields":["common[].food_name","branded[].food_name","branded[].brand_name","branded[].nf_calories"]},"realtime":false,"requires_auth":true}],"agent_hints":{"natural_language":"natural_nutrients endpoint understands plain English - much better UX than looking up by ID.","disclaimer":"Always note nutrition info is approximate and encourage consulting healthcare provider."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "nutritionix",
+    "name": "Nutritionix API",
+    "description_for_ai": "Largest verified nutrition database. 3M+ food items with calories, macros, vitamins, minerals. Natural language food search. Use for calorie counting apps, nutrition tracking, meal planning.",
+    "url": "https://nutritionix.com",
+    "api_base": "https://trackapi.nutritionix.com/v2",
+    "category": "healthcare_nutrition",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developer.nutritionix.com/docs/v2"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "x-app-id + x-app-key",
+    "how_to_get": "Register at https://developer.nutritionix.com",
+    "cost": "Free: 500 calls/day"
+  },
+  "capabilities": [
+    {
+      "id": "natural_nutrients",
+      "description_for_ai": "Get nutrition facts from natural language food description. e.g. 2 eggs and toast with butter returns full nutritional breakdown.",
+      "intent": [
+        "calories in",
+        "nutrition facts",
+        "food calories",
+        "what are macros",
+        "calorie count",
+        "калории в еде",
+        "БЖУ продукта"
+      ],
+      "endpoint": "POST https://trackapi.nutritionix.com/v2/natural/nutrients",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Natural language food description e.g. 2 large eggs scrambled, 1 cup of rice",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "nutrients",
+        "fields": [
+          "foods[0].food_name",
+          "foods[0].serving_qty",
+          "foods[0].nf_calories",
+          "foods[0].nf_protein",
+          "foods[0].nf_total_carbohydrate",
+          "foods[0].nf_total_fat",
+          "foods[0].nf_dietary_fiber"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "search_food",
+      "description_for_ai": "Search food database by name. Returns branded and common food items with nutrition.",
+      "intent": [
+        "search food",
+        "find food nutrition",
+        "food database search"
+      ],
+      "endpoint": "GET https://trackapi.nutritionix.com/v2/search/instant",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "branded": {
+          "type": "boolean",
+          "default": true
+        },
+        "common": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "search_results",
+        "fields": [
+          "common[].food_name",
+          "branded[].food_name",
+          "branded[].brand_name",
+          "branded[].nf_calories"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "natural_language": "natural_nutrients endpoint understands plain English - much better UX than looking up by ID.",
+    "disclaimer": "Always note nutrition info is approximate and encourage consulting healthcare provider."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
