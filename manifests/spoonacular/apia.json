@@ -38,7 +38,8 @@
       "input": {
         "query": {
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Search query string"
         },
         "diet": {
           "type": "string",
@@ -97,7 +98,8 @@
       "input": {
         "title": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Title or name string"
         },
         "ingr": {
           "type": "array",
