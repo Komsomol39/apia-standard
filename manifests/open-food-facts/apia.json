@@ -6,7 +6,7 @@
     "description_for_ai": "Free open database of food products worldwide. 3M+ products with ingredients, nutrition, additives, allergens, Nutri-Score, Eco-Score. Search by barcode or name. No API key needed.",
     "url": "https://world.openfoodfacts.org",
     "api_base": "https://world.openfoodfacts.org",
-    "category": "food_products",
+    "category": "food",
     "geo": [
       "GLOBAL"
     ],
