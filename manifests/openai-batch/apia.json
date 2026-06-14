@@ -6,7 +6,7 @@
     "description_for_ai": "Process large volumes of OpenAI API requests at 50% discount. Submit batch of requests, results ready within 24 hours. Perfect for bulk classification, embedding, analysis tasks. Same models as regular API.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_batch",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
