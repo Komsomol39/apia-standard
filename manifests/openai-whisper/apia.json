@@ -1,1 +1,104 @@
-{"apia":"1.0","service":{"id":"openai-whisper","name":"OpenAI Whisper API","description_for_ai":"State-of-the-art speech recognition. Transcribe or translate audio in 99 languages. $0.006/min. Handles accents, background noise, technical terms. Best accuracy available for speech-to-text.","url":"https://openai.com","api_base":"https://api.openai.com/v1","category":"ai_speech","geo":["GLOBAL"],"language":"en","docs":"https://platform.openai.com/docs/guides/speech-to-text"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"OpenAI API key at https://platform.openai.com","cost":"$0.006/minute audio"},"capabilities":[{"id":"transcribe","description_for_ai":"Convert audio to text. Supports mp3, mp4, wav, m4a, webm up to 25MB. Best accuracy for speech recognition.","intent":["transcribe audio","speech to text","convert audio to text","voice transcription","meeting notes","podcast transcript"],"endpoint":"POST https://api.openai.com/v1/audio/transcriptions","input":{"file":{"type":"file","description":"Audio file mp3/mp4/wav/m4a/webm max 25MB","required":true},"model":{"type":"string","default":"whisper-1"},"language":{"type":"string","description":"ISO 639-1 language code. Auto-detected if omitted. ru, en, de, zh, etc.","required":false},"prompt":{"type":"string","description":"Context hint to improve accuracy","required":false},"response_format":{"type":"string","description":"json, text, srt, vtt, verbose_json","default":"json"}},"output":{"type":"transcription","fields":["text"]},"realtime":false,"requires_auth":true},{"id":"translate","description_for_ai":"Transcribe and translate audio to English from any language.","intent":["translate audio","audio translation","foreign audio to english"],"endpoint":"POST https://api.openai.com/v1/audio/translations","input":{"file":{"type":"file","required":true},"model":{"type":"string","default":"whisper-1"}},"output":{"type":"translation","fields":["text"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "openai-whisper",
+    "name": "OpenAI Whisper API",
+    "description_for_ai": "State-of-the-art speech recognition. Transcribe or translate audio in 99 languages. $0.006/min. Handles accents, background noise, technical terms. Best accuracy available for speech-to-text.",
+    "url": "https://openai.com",
+    "api_base": "https://api.openai.com/v1",
+    "category": "ai_speech",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://platform.openai.com/docs/guides/speech-to-text"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "OpenAI API key at https://platform.openai.com",
+    "cost": "$0.006/minute audio"
+  },
+  "capabilities": [
+    {
+      "id": "transcribe",
+      "description_for_ai": "Convert audio to text. Supports mp3, mp4, wav, m4a, webm up to 25MB. Best accuracy for speech recognition.",
+      "intent": [
+        "transcribe audio",
+        "speech to text",
+        "convert audio to text",
+        "voice transcription",
+        "meeting notes",
+        "podcast transcript"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
+      "input": {
+        "file": {
+          "type": "file",
+          "description": "Audio file mp3/mp4/wav/m4a/webm max 25MB",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "whisper-1"
+        },
+        "language": {
+          "type": "string",
+          "description": "ISO 639-1 language code. Auto-detected if omitted. ru, en, de, zh, etc.",
+          "required": false
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Context hint to improve accuracy",
+          "required": false
+        },
+        "response_format": {
+          "type": "string",
+          "description": "json, text, srt, vtt, verbose_json",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "transcription",
+        "fields": [
+          "text"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "translate",
+      "description_for_ai": "Transcribe and translate audio to English from any language.",
+      "intent": [
+        "translate audio",
+        "audio translation",
+        "foreign audio to english"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/translations",
+      "input": {
+        "file": {
+          "type": "file",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "whisper-1"
+        }
+      },
+      "output": {
+        "type": "translation",
+        "fields": [
+          "text"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
