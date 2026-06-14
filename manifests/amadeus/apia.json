@@ -6,7 +6,7 @@
     "description_for_ai": "Leading travel API platform. Search flights, hotels, and points of interest. Used by major travel agencies and booking sites. Free test environment. Use for 'find cheap flights', 'flight prices', 'hotels in city', 'things to do in destination'.",
     "url": "https://amadeus.com",
     "api_base": "https://test.api.amadeus.com/v2",
-    "category": "travel_flights",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
