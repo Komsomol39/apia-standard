@@ -6,7 +6,7 @@
     "description_for_ai": "Read and write Google Calendar events. Create meetings, check availability, list events, manage calendars. 1B+ users. Use for scheduling apps, meeting management, availability checking.",
     "url": "https://calendar.google.com",
     "api_base": "https://www.googleapis.com/calendar/v3",
-    "category": "productivity_calendar",
+    "category": "productivity",
     "geo": [
       "GLOBAL"
     ],
