@@ -59,7 +59,7 @@
     },
     {
       "id": "deploy_site",
-      "description_for_ai": "Trigger a new deployment for a Netlify site.",
+      "description_for_ai": "Trigger a new deploy build for an existing Netlify site. Rebuilds from the connected git repository.",
       "intent": [
         "deploy site",
         "redeploy",
