@@ -6,7 +6,7 @@
     "description_for_ai": "Enterprise CRM platform. Leads, opportunities, accounts, contacts, cases. Workflow automation, reporting. Most widely used CRM in enterprise. Use for sales pipeline, customer data, service management.",
     "url": "https://salesforce.com",
     "api_base": "https://{instance}.salesforce.com/services/data/v59.0",
-    "category": "crm_enterprise",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
