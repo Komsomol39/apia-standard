@@ -6,7 +6,7 @@
     "description_for_ai": "Real-time and historical US stock market data. Stocks, options, forex, crypto. Tick-level data, aggregates, news, financials. Free: 5 req/min. Used by hedge funds and retail traders.",
     "url": "https://polygon.io",
     "api_base": "https://api.polygon.io",
-    "category": "finance_market_data",
+    "category": "finance",
     "geo": [
       "US",
       "GLOBAL"
