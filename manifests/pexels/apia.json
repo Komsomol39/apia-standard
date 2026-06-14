@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "search_photos",
-      "description_for_ai": "Search free stock photos by keyword. Returns high-quality images with multiple size options.",
+      "description_for_ai": "Search Pexels free stock photos by keyword. Returns high-resolution images with multiple size options and photographer credit.",
       "intent": [
         "free photos",
         "stock images",
@@ -37,35 +37,37 @@
       "input": {
         "query": {
           "type": "string",
+          "description": "Search term e.g. 'mountains sunset', 'business meeting', 'abstract background'",
           "required": true
         },
         "per_page": {
           "type": "integer",
-          "default": 15,
-          "max": 80
+          "description": "Results per page, max 80",
+          "default": 15
         },
         "page": {
           "type": "integer",
+          "description": "Page number for pagination",
           "default": 1
         },
         "orientation": {
           "type": "string",
-          "description": "landscape, portrait, square",
+          "description": "landscape, portrait, or square",
           "required": false
         },
         "size": {
           "type": "string",
-          "description": "large, medium, small",
+          "description": "large (min 24MP), medium (min 12MP), or small (min 4MP)",
           "required": false
         },
         "color": {
           "type": "string",
-          "description": "red, orange, yellow, green, blue, purple, pink, white, black",
+          "description": "Filter by color: red, orange, yellow, green, turquoise, blue, violet, pink, brown, black, gray, white",
           "required": false
         },
         "locale": {
           "type": "string",
-          "description": "Response language",
+          "description": "Search language locale e.g. en-US, es-ES, fr-FR, de-DE, ru-RU",
           "default": "en-US"
         }
       },
@@ -73,12 +75,15 @@
         "type": "list<photo>",
         "fields": [
           "photos[0].id",
-          "photos[0].url",
           "photos[0].photographer",
+          "photos[0].photographer_url",
           "photos[0].src.original",
+          "photos[0].src.large2x",
           "photos[0].src.large",
           "photos[0].src.medium",
-          "photos[0].alt"
+          "photos[0].src.small",
+          "photos[0].alt",
+          "total_results"
         ]
       },
       "realtime": false,
@@ -86,7 +91,7 @@
     },
     {
       "id": "search_videos",
-      "description_for_ai": "Search free stock videos by keyword.",
+      "description_for_ai": "Search Pexels free stock videos by keyword. Returns MP4 video files in multiple resolutions.",
       "intent": [
         "free video",
         "stock footage",
@@ -98,19 +103,31 @@
       "input": {
         "query": {
           "type": "string",
+          "description": "Search term for videos",
           "required": true
         },
         "per_page": {
           "type": "integer",
+          "description": "Results per page, max 80",
           "default": 15
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         },
         "orientation": {
           "type": "string",
+          "description": "landscape, portrait, or square",
           "required": false
         },
         "size": {
           "type": "string",
+          "description": "large, medium, or small minimum resolution",
           "required": false
+        },
+        "locale": {
+          "type": "string",
+          "default": "en-US"
         }
       },
       "output": {
@@ -118,9 +135,12 @@
         "fields": [
           "videos[0].id",
           "videos[0].url",
-          "videos[0].image",
-          "videos[0].duration",
-          "videos[0].video_files[0].link"
+          "videos[0].image (thumbnail)",
+          "videos[0].duration (seconds)",
+          "videos[0].user.name",
+          "videos[0].video_files[0].link",
+          "videos[0].video_files[0].quality",
+          "videos[0].video_files[0].width"
         ]
       },
       "realtime": false,
