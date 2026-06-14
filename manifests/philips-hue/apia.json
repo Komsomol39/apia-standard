@@ -82,7 +82,7 @@
     },
     {
       "id": "get_lights",
-      "description_for_ai": "Get list of all Hue lights with current state.",
+      "description_for_ai": "Get all Philips Hue lights with their current state: on/off, brightness, color, reachability.",
       "intent": [
         "list lights",
         "all lights status",
@@ -106,7 +106,9 @@
   "agent_hints": {
     "local": "This API runs locally on your network — no internet required. Bridge IP from hue app settings.",
     "color_tip": "For red: hue=0, sat=254. Green: hue=25500, sat=254. Blue: hue=46920, sat=254. White: sat=0.",
-    "discovery": "Find bridge IP via https://discovery.meethue.com or check router."
+    "discovery": "Find bridge IP via https://discovery.meethue.com or check router.",
+    "discover": "Find bridge IP: https://discovery.meethue.com or check router DHCP list for device named 'Philips hue'.",
+    "first_use": "First time: 1) Press bridge button. 2) POST http://{bridge_ip}/api with body {devicetype:'myapp#mydevice'} within 30s. 3) Save returned username."
   },
   "meta": {
     "apia_version": "1.0",
