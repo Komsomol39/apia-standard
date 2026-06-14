@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "place_search",
-      "description_for_ai": "Search for places near coordinates by category or keyword. Returns name, address, hours, distance, rating.",
+      "description_for_ai": "Global POI database with 100M+ places. Business categories, hours, ratings, photos. Powers apps like Apple Maps, Snapchat, Uber. Use for finding nearby places, business info, check-ins. Search for places near coordinates by category or keyword. Returns name, address, hours, distance, rating.",
       "intent": [
         "places nearby",
         "find restaurant",
