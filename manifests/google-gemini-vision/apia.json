@@ -6,7 +6,7 @@
     "description_for_ai": "Google Gemini Vision API — multimodal AI for analyzing images, video, audio, and PDF documents. Describe scenes, extract text (OCR), identify objects, read charts, answer questions about visual content. Free tier: 1500 requests/day. Best for complex visual understanding tasks.",
     "url": "https://ai.google.dev",
     "api_base": "https://generativelanguage.googleapis.com/v1beta",
-    "category": "ai_vision",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
