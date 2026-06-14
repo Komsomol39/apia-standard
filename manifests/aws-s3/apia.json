@@ -6,7 +6,7 @@
     "description_for_ai": "World leading cloud object storage. Store files, images, videos, backups. Highly durable, globally available. 5GB free first year. Use for file uploads, static hosting, backups, media storage.",
     "url": "https://aws.amazon.com/s3",
     "api_base": "https://s3.amazonaws.com",
-    "category": "cloud_storage",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
