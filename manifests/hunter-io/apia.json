@@ -1,1 +1,153 @@
-{"apia":"1.0","service":{"id":"hunter-io","name":"Hunter.io API","description_for_ai":"Find and verify professional email addresses. Domain search finds all emails at a company. Email finder gets email for a specific person. Email verification checks deliverability. Used for B2B prospecting and outreach.","url":"https://hunter.io","api_base":"https://api.hunter.io/v2","category":"data_enrichment","geo":["GLOBAL"],"language":"en","docs":"https://hunter.io/api-documentation"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"api_key","param_location":"query","how_to_get":"Register at https://hunter.io — 25 searches/month free","cost":"Free: 25/month. Starter: $49/month 500 searches"},"capabilities":[{"id":"domain_search","description_for_ai":"Find all email addresses at a company domain. Returns contacts with name, role, department.","intent":["find company emails","company contacts","email prospecting","sales leads","find decision maker","B2B emails"],"endpoint":"GET https://api.hunter.io/v2/domain-search","input":{"domain":{"type":"string","description":"Company domain e.g. google.com, stripe.com","required":true},"company":{"type":"string","description":"Company name","required":false},"limit":{"type":"integer","default":10},"offset":{"type":"integer","default":0},"type":{"type":"string","description":"personal or generic","required":false}},"output":{"type":"domain_search","fields":["data.emails[0].value","data.emails[0].first_name","data.emails[0].last_name","data.emails[0].position","data.emails[0].seniority","data.organization"]},"realtime":true,"requires_auth":true},{"id":"email_finder","description_for_ai":"Find email address for a specific person at a company given their name and domain.","intent":["find email","person email","contact email","email lookup","find professional email"],"endpoint":"GET https://api.hunter.io/v2/email-finder","input":{"domain":{"type":"string","required":true},"first_name":{"type":"string","required":true},"last_name":{"type":"string","required":true}},"output":{"type":"email","fields":["data.email","data.score","data.first_name","data.last_name","data.sources[0].domain"]},"realtime":true,"requires_auth":true},{"id":"verify_email","description_for_ai":"Verify if an email address is valid and deliverable. Checks MX records, SMTP, disposable email.","intent":["verify email","check email valid","email validation","is email deliverable"],"endpoint":"GET https://api.hunter.io/v2/email-verifier","input":{"email":{"type":"string","required":true}},"output":{"type":"verification","fields":["data.result","data.score","data.regexp","data.gibberish","data.disposable","data.webmail","data.mx_records","data.smtp_server","data.smtp_check"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "hunter-io",
+    "name": "Hunter.io API",
+    "description_for_ai": "Find and verify professional email addresses. Domain search finds all emails at a company. Email finder gets email for a specific person. Email verification checks deliverability. Used for B2B prospecting and outreach.",
+    "url": "https://hunter.io",
+    "api_base": "https://api.hunter.io/v2",
+    "category": "data_enrichment",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://hunter.io/api-documentation"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "api_key",
+    "param_location": "query",
+    "how_to_get": "Register at https://hunter.io — 25 searches/month free",
+    "cost": "Free: 25/month. Starter: $49/month 500 searches"
+  },
+  "capabilities": [
+    {
+      "id": "domain_search",
+      "description_for_ai": "Find all email addresses at a company domain. Returns contacts with name, role, department.",
+      "intent": [
+        "find company emails",
+        "company contacts",
+        "email prospecting",
+        "sales leads",
+        "find decision maker",
+        "B2B emails"
+      ],
+      "endpoint": "GET https://api.hunter.io/v2/domain-search",
+      "input": {
+        "domain": {
+          "type": "string",
+          "description": "Company domain e.g. google.com, stripe.com",
+          "required": true
+        },
+        "company": {
+          "type": "string",
+          "description": "Company name",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0
+        },
+        "type": {
+          "type": "string",
+          "description": "personal or generic",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "domain_search",
+        "fields": [
+          "data.emails[0].value",
+          "data.emails[0].first_name",
+          "data.emails[0].last_name",
+          "data.emails[0].position",
+          "data.emails[0].seniority",
+          "data.organization"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "email_finder",
+      "description_for_ai": "Find email address for a specific person at a company given their name and domain.",
+      "intent": [
+        "find email",
+        "person email",
+        "contact email",
+        "email lookup",
+        "find professional email"
+      ],
+      "endpoint": "GET https://api.hunter.io/v2/email-finder",
+      "input": {
+        "domain": {
+          "type": "string",
+          "required": true
+        },
+        "first_name": {
+          "type": "string",
+          "required": true
+        },
+        "last_name": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "email",
+        "fields": [
+          "data.email",
+          "data.score",
+          "data.first_name",
+          "data.last_name",
+          "data.sources[0].domain"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "verify_email",
+      "description_for_ai": "Verify if an email address is valid and deliverable. Checks MX records, SMTP, disposable email.",
+      "intent": [
+        "verify email",
+        "check email valid",
+        "email validation",
+        "is email deliverable"
+      ],
+      "endpoint": "GET https://api.hunter.io/v2/email-verifier",
+      "input": {
+        "email": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "verification",
+        "fields": [
+          "data.result",
+          "data.score",
+          "data.regexp",
+          "data.gibberish",
+          "data.disposable",
+          "data.webmail",
+          "data.mx_records",
+          "data.smtp_server",
+          "data.smtp_check"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
