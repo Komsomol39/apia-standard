@@ -6,7 +6,7 @@
     "description_for_ai": "On-demand delivery logistics API. Request a DoorDash driver to pick up and deliver packages, food, or goods. Available in US, Canada, Australia. Use for delivery fulfillment, same-day delivery, restaurant order delivery.",
     "url": "https://doordash.com",
     "api_base": "https://openapi.doordash.com/drive/v2",
-    "category": "food_delivery",
+    "category": "food",
     "geo": [
       "US",
       "CA",
