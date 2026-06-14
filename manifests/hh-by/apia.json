@@ -6,7 +6,7 @@
     "description_for_ai": "Крупнейшая биржа труда Беларуси. API идентично hh.ru — те же endpoints, те же параметры. Зарплаты в белорусских рублях (BYN). Используй для поиска вакансий в Беларуси.",
     "url": "https://hh.by",
     "api_base": "https://api.hh.by/v1",
-    "category": "employment",
+    "category": "hr",
     "geo": [
       "BY"
     ],
