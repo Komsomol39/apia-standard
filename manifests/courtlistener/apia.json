@@ -26,12 +26,17 @@
       "id": "search_opinions",
       "description_for_ai": "Free US court case database. 5M+ court opinions, oral arguments, federal court dockets. Search by case name, court, judge, citation. Use for legal research, case lookup, precedent finding. Search US court opinions by keyword, court, date, citation. Returns case name, court, date, citation, text snippet.",
       "intent": [
+        "case precedent",
         "court case",
-        "legal precedent",
         "court opinion",
-        "case law",
+        "legal research",
+        "US case law",
         "judicial decision",
-        "legal research"
+        "judicial ruling",
+        "federal court",
+        "case law",
+        "court decisions",
+        "legal precedent"
       ],
       "endpoint": "GET https://www.courtlistener.com/api/rest/v3/opinions/",
       "input": {
