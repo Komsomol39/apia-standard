@@ -7,7 +7,9 @@
     "url": "https://hh.by",
     "api_base": "https://api.hh.by/v1",
     "category": "employment",
-    "geo": ["BY"],
+    "geo": [
+      "BY"
+    ],
     "language": "ru",
     "docs": "https://github.com/hhru/api",
     "note": "API полностью совместимо с hh.ru. rabota.by — то же самое под другим доменом."
@@ -15,7 +17,11 @@
   "auth": {
     "type": "oauth2",
     "anonymous_access": true,
-    "anonymous_capabilities": ["search_vacancies", "get_vacancy", "get_areas"],
+    "anonymous_capabilities": [
+      "search_vacancies",
+      "get_vacancy",
+      "get_areas"
+    ],
     "oauth_url": "https://hh.by/oauth/authorize",
     "token_url": "https://hh.by/oauth/token",
     "contact": "+375 17 336 03 02"
@@ -25,56 +31,131 @@
       "id": "search_vacancies",
       "description_for_ai": "Поиск вакансий в Беларуси по ключевому слову и городу. Зарплаты в BYN (белорусских рублях). Используй для запросов 'работа в Минске', 'вакансии в Беларуси', 'найди работу разработчика в Гомеле'.",
       "intent": [
-        "работа в Беларуси", "вакансии в Минске", "работа в Гомеле",
-        "найти работу в BY", "вакансии в Беларуси"
+        "работа в Беларуси",
+        "вакансии в Минске",
+        "работа в Гомеле",
+        "найти работу в BY",
+        "вакансии в Беларуси"
       ],
       "endpoint": "GET https://api.hh.by/vacancies",
       "input": {
-        "text": { "type": "string", "description": "Поисковый запрос", "required": false },
-        "area": { "type": "integer", "description": "ID города. Минск=1. Получить через get_areas", "required": false },
-        "salary": { "type": "integer", "description": "Минимальная зарплата в BYN", "required": false },
-        "currency": { "type": "string", "default": "BYR" },
-        "experience": { "type": "string", "description": "noExperience, between1And3, between3And6, moreThan6", "required": false },
-        "per_page": { "type": "integer", "default": 20, "max": 100 },
-        "page": { "type": "integer", "default": 0 }
+        "text": {
+          "type": "string",
+          "description": "Поисковый запрос",
+          "required": false
+        },
+        "area": {
+          "type": "integer",
+          "description": "ID города. Минск=1. Получить через get_areas",
+          "required": false
+        },
+        "salary": {
+          "type": "integer",
+          "description": "Минимальная зарплата в BYN",
+          "required": false
+        },
+        "currency": {
+          "type": "string",
+          "default": "BYR"
+        },
+        "experience": {
+          "type": "string",
+          "description": "noExperience, between1And3, between3And6, moreThan6",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20,
+          "max": 100
+        },
+        "page": {
+          "type": "integer",
+          "default": 0
+        }
       },
       "output": {
         "type": "list<vacancy>",
-        "fields": ["id", "name", "area.name", "salary.from", "salary.to", "salary.currency", "employer.name", "url"]
+        "fields": [
+          "id",
+          "name",
+          "area.name",
+          "salary.from",
+          "salary.to",
+          "salary.currency",
+          "employer.name",
+          "url"
+        ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
       "id": "get_vacancy",
-      "description_for_ai": "Полное описание вакансии по ID.",
-      "intent": ["подробнее о вакансии BY", "описание вакансии Беларусь"],
+      "description_for_ai": "Get full vacancy details: title, company, salary range, requirements, responsibilities, employer contacts. Returns structured data in Russian.",
+      "intent": [
+        "вакансия BY",
+        "работа Беларусь",
+        "вакансии Минск",
+        "зарплата Беларусь",
+        "job Belarus"
+      ],
       "endpoint": "GET https://api.hh.by/vacancies/{vacancy_id}",
       "input": {
-        "vacancy_id": { "type": "string", "required": true }
+        "id": {
+          "type": "string",
+          "description": "Vacancy ID from search results",
+          "required": true
+        },
+        "locale": {
+          "type": "string",
+          "description": "Response language: RU or EN",
+          "default": "RU"
+        }
       },
       "output": {
         "type": "vacancy",
-        "fields": ["name", "description", "key_skills", "employer.name", "salary", "address.raw"]
+        "fields": [
+          "name",
+          "description",
+          "key_skills",
+          "employer.name",
+          "salary",
+          "address.raw"
+        ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
       "id": "get_areas",
-      "description_for_ai": "Список городов Беларуси с ID.",
-      "intent": ["города Беларуси", "ID Минска"],
+      "description_for_ai": "Get list of geographic areas/cities available for job search in Belarus with their IDs.",
+      "intent": [
+        "города Беларуси",
+        "ID Минска"
+      ],
       "endpoint": "GET https://api.hh.by/areas",
-      "input": {},
-      "output": { "type": "list<area>", "fields": ["id", "name", "areas"] },
+      "input": {
+        "locale": {
+          "type": "string",
+          "default": "RU"
+        }
+      },
+      "output": {
+        "type": "list<area>",
+        "fields": [
+          "id",
+          "name",
+          "areas"
+        ]
+      },
       "realtime": false,
       "requires_auth": false
     }
   ],
   "agent_hints": {
-    "salary_tip": "Зарплаты в BYN (белорусский рубль). 1 USD ≈ 3.2 BYN.",
-    "cities": "Минск=1 (столица), Гомель=21, Могилёв=26, Витебск=22, Гродно=23.",
-    "same_api": "API идентично hh.ru. Просто смени base URL на api.hh.by."
+    "base_url": "API identical to hh.ru — change base_url to api.hh.by for Belarus-specific results",
+    "areas": "Belarus area ID: 16. Minsk ID: 153. Get full list from /areas endpoint.",
+    "currency": "Salaries in BYR (Belarusian rubles). 1 USD ≈ 3.2 BYR (2024)."
   },
   "contributor_notes": {
     "useful_links": [
