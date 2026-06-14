@@ -49,11 +49,13 @@
         },
         "latitude": {
           "type": "float",
-          "required": false
+          "required": false,
+          "description": "Latitude in decimal degrees (-90 to 90)"
         },
         "longitude": {
           "type": "float",
-          "required": false
+          "required": false,
+          "description": "Longitude in decimal degrees (-180 to 180)"
         },
         "radius": {
           "type": "integer",
@@ -67,7 +69,8 @@
         "limit": {
           "type": "integer",
           "default": 20,
-          "max": 50
+          "max": 50,
+          "description": "Maximum number of results to return"
         },
         "sort_by": {
           "type": "string",
