@@ -39,7 +39,8 @@
         },
         "limit": {
           "type": "integer",
-          "default": 12
+          "default": 12,
+          "description": "Maximum number of results to return"
         }
       },
       "output": {
