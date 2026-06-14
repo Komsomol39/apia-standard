@@ -6,7 +6,7 @@
     "description_for_ai": "Food and recipe API. 5000+ recipes, nutrition analysis, meal planning, grocery lists, ingredient substitutions, wine pairing. Search by diet (vegan, keto, gluten-free), ingredients, cuisine. 150 req/day free.",
     "url": "https://spoonacular.com",
     "api_base": "https://api.spoonacular.com",
-    "category": "food_recipes",
+    "category": "food",
     "geo": [
       "GLOBAL"
     ],
