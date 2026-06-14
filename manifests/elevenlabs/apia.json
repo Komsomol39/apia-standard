@@ -1,2 +1,100 @@
 {
-  "apia":"1.0","service":{"id":"elevenlabs","name":"ElevenLabs API","description_for_ai":"Best-in-class text-to-speech and voice cloning. 1000+ voices, 29 languages, ultra-realistic output. Clone any voice from audio sample. Use for audiobooks, podcasts, voice assistants, accessibility features.","url":"https://elevenlabs.io","api_base":"https://api.elevenlabs.io/v1","category":"ai_speech","geo":["GLOBAL"],"language":"en","docs":"https://elevenlabs.io/docs/api-reference"},"auth":{"type":"apikey","anonymous_access":false,"header":"xi-api-key: ...","how_to_get":"Register at https://elevenlabs.io — 10K chars/month free","cost":"Free: 10K chars/month. Starter: $5/month 30K chars"},"capabilities":[{"id":"text_to_speech","description_for_ai":"Convert text to natural-sounding speech. Choose from 1000+ voices or clone a voice. Use for reading content aloud, voice assistants, audiobook narration.","intent":["text to speech","TTS","read aloud","voice synthesis","audiobook","voice assistant","озвучить текст"],"endpoint":"POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}","input":{"voice_id":{"type":"string","description":"Voice ID. Popular: 21m00Tcm4TlvDq8ikWAM (Rachel), AZnzlk1XvdvUeBnXmlld (Domi)","required":true},"text":{"type":"string","required":true},"model_id":{"type":"string","description":"eleven_multilingual_v2 (best), eleven_turbo_v2 (fast)","default":"eleven_multilingual_v2"},"voice_settings":{"type":"object","description":"{stability: 0.5, similarity_boost: 0.8}","required":false}},"output":{"type":"audio","fields":["audio/mpeg stream"]},"realtime":true,"requires_auth":true},{"id":"get_voices","description_for_ai":"Get list of available voices with their IDs and descriptions.","intent":["list voices","available voices","voice options"],"endpoint":"GET https://api.elevenlabs.io/v1/voices","input":{},"output":{"type":"list<voice>","fields":["voice_id","name","category","labels"]},"realtime":false,"requires_auth":true}],"agent_hints":{"voice_tip":"Rachel (21m00Tcm4TlvDq8ikWAM) and Adam (pNInz6obpgDQGcFmaJgB) are popular defaults. Get full list with get_voices.","language":"eleven_multilingual_v2 supports 29 languages including Russian. Detect language automatically from text.","streaming":"Use /stream endpoint for real-time audio streaming in voice apps."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "elevenlabs",
+    "name": "ElevenLabs API",
+    "description_for_ai": "Best-in-class text-to-speech and voice cloning. 1000+ voices, 29 languages, ultra-realistic output. Clone any voice from audio sample. Use for audiobooks, podcasts, voice assistants, accessibility features.",
+    "url": "https://elevenlabs.io",
+    "api_base": "https://api.elevenlabs.io/v1",
+    "category": "ai_speech",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://elevenlabs.io/docs/api-reference"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "xi-api-key: ...",
+    "how_to_get": "Register at https://elevenlabs.io — 10K chars/month free",
+    "cost": "Free: 10K chars/month. Starter: $5/month 30K chars"
+  },
+  "capabilities": [
+    {
+      "id": "text_to_speech",
+      "description_for_ai": "Convert text to natural-sounding speech. Choose from 1000+ voices or clone a voice. Use for reading content aloud, voice assistants, audiobook narration.",
+      "intent": [
+        "text to speech",
+        "TTS",
+        "read aloud",
+        "voice synthesis",
+        "audiobook",
+        "voice assistant",
+        "озвучить текст"
+      ],
+      "endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+      "input": {
+        "voice_id": {
+          "type": "string",
+          "description": "Voice ID. Popular: 21m00Tcm4TlvDq8ikWAM (Rachel), AZnzlk1XvdvUeBnXmlld (Domi)",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "required": true
+        },
+        "model_id": {
+          "type": "string",
+          "description": "eleven_multilingual_v2 (best), eleven_turbo_v2 (fast)",
+          "default": "eleven_multilingual_v2"
+        },
+        "voice_settings": {
+          "type": "object",
+          "description": "{stability: 0.5, similarity_boost: 0.8}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "audio",
+        "fields": [
+          "audio/mpeg stream"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_voices",
+      "description_for_ai": "Get list of available voices with their IDs and descriptions.",
+      "intent": [
+        "list voices",
+        "available voices",
+        "voice options"
+      ],
+      "endpoint": "GET https://api.elevenlabs.io/v1/voices",
+      "input": {},
+      "output": {
+        "type": "list<voice>",
+        "fields": [
+          "voice_id",
+          "name",
+          "category",
+          "labels"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "voice_tip": "Rachel (21m00Tcm4TlvDq8ikWAM) and Adam (pNInz6obpgDQGcFmaJgB) are popular defaults. Get full list with get_voices.",
+    "language": "eleven_multilingual_v2 supports 29 languages including Russian. Detect language automatically from text.",
+    "streaming": "Use /stream endpoint for real-time audio streaming in voice apps."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
