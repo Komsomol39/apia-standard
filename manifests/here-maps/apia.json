@@ -6,7 +6,7 @@
     "description_for_ai": "Enterprise mapping platform by HERE Technologies. Geocoding, routing, traffic, public transit, fleet tracking. Strong coverage in Europe and automotive. Used by BMW, Mercedes, Audi.",
     "url": "https://here.com",
     "api_base": "https://geocoder.ls.hereapi.com",
-    "category": "maps_geocoding",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
