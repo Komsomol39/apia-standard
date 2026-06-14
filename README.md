@@ -23,7 +23,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 ---
 
-## Registry — 212 Manifests
+## Registry — 237 Manifests
 
 > Full candidate list: [docs/ALL_APIS.md](docs/ALL_APIS.md) · How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
 
@@ -32,7 +32,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
 | [OpenAI](manifests/openai/apia.json) | GPT/DALL-E/Whisper/TTS | $5 credit | [→](https://platform.openai.com/docs) |
-| [OpenAI Assistants](manifests/openai-assistants/apia.json) | RAG/Code/Memory agents | Same | [→](https://platform.openai.com/docs/assistants/overview) |
+| [OpenAI Assistants](manifests/openai-assistants/apia.json) | RAG/Code/Memory | Same | [→](https://platform.openai.com/docs/assistants/overview) |
 | [OpenAI Batch](manifests/openai-batch/apia.json) | 50% discount bulk | 50% off | [→](https://platform.openai.com/docs/guides/batch) |
 | [OpenAI Fine-Tuning](manifests/openai-fine-tuning/apia.json) | Custom model training | Paid | [→](https://platform.openai.com/docs/guides/fine-tuning) |
 | [OpenAI Moderation](manifests/openai-moderation/apia.json) | Content safety | **FREE** | [→](https://platform.openai.com/docs/guides/moderation) |
@@ -49,10 +49,12 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Hugging Face](manifests/huggingface/apia.json) | 300K+ open models | Free tier | [→](https://huggingface.co/docs/api-inference) |
 | [Replicate](manifests/replicate/apia.json) | Run any open model | Pay/sec | [→](https://replicate.com/docs) |
 | [Cohere](manifests/cohere/apia.json) | LLM/Embed/Rerank | Trial | [→](https://docs.cohere.com) |
-| [Stability AI](manifests/stability-ai/apia.json) | Stable Diffusion | Credits | [→](https://platform.stability.ai/docs/api-reference) |
+| [Stability AI](manifests/stability-ai/apia.json) | Image generation | Credits | [→](https://platform.stability.ai/docs/api-reference) |
 | [Pinecone](manifests/pinecone/apia.json) | Vector DB for RAG | 2GB free | [→](https://docs.pinecone.io) |
-| [Google Vision](manifests/google-vision/apia.json) | Image labels/OCR/faces | 1000/month | [→](https://cloud.google.com/vision/docs) |
-| [AWS Rekognition](manifests/aws-rekognition/apia.json) | Face/object/text detection | 5K/month | [→](https://docs.aws.amazon.com/rekognition/) |
+| [Google Vision](manifests/google-vision/apia.json) | Labels/OCR/faces | 1000/month | [→](https://cloud.google.com/vision/docs) |
+| [AWS Rekognition](manifests/aws-rekognition/apia.json) | Face/object/text | 5K/month | [→](https://docs.aws.amazon.com/rekognition/) |
+| [Google Natural Language](manifests/google-natural-language/apia.json) | Sentiment/Entities/Classify | 5000/month | [→](https://cloud.google.com/natural-language/docs) |
+| [AWS Comprehend](manifests/aws-comprehend/apia.json) | NLP 12 languages | 50K/month | [→](https://docs.aws.amazon.com/comprehend/) |
 | [Perspective API](manifests/perspective-api/apia.json) | Toxicity detection | **FREE** | [→](https://developers.perspectiveapi.com/s/docs) |
 
 ### 🎤 Speech & Audio
@@ -60,17 +62,17 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
 | [OpenAI Whisper](manifests/openai-whisper/apia.json) | Best STT accuracy | $0.006/min | [→](https://platform.openai.com/docs/guides/speech-to-text) |
-| [Deepgram](manifests/deepgram/apia.json) | Real-time streaming STT | $200 credit | [→](https://developers.deepgram.com/reference/) |
+| [Deepgram](manifests/deepgram/apia.json) | Real-time STT | $200 credit | [→](https://developers.deepgram.com/reference/) |
 | [AssemblyAI](manifests/assemblyai/apia.json) | STT + AI insights | $50 credit | [→](https://www.assemblyai.com/docs) |
 | [ElevenLabs](manifests/elevenlabs/apia.json) | Best TTS + voice clone | 10K chars | [→](https://elevenlabs.io/docs/api-reference) |
 | [OpenAI TTS](manifests/openai-tts/apia.json) | Fast TTS 6 voices | $15/1M chars | [→](https://platform.openai.com/docs/guides/text-to-speech) |
 
 ### 🎬 Video Generation
 
-| Service | Specialty | Docs |
-|---|---|---|
-| [RunwayML](manifests/runway/apia.json) | Gen-3 image-to-video | [→](https://docs.dev.runwayml.com/) |
-| [Luma AI](manifests/luma-ai/apia.json) | Dream Machine video | [→](https://docs.lumalabs.ai/) |
+| Service | Docs |
+|---|---|
+| [RunwayML](manifests/runway/apia.json) | [→](https://docs.dev.runwayml.com/) |
+| [Luma AI](manifests/luma-ai/apia.json) | [→](https://docs.lumalabs.ai/) |
 
 ### 🌍 Maps & Location
 
@@ -80,7 +82,9 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Mapbox](manifests/mapbox/apia.json) | Global custom | 200K loads | [→](https://docs.mapbox.com) |
 | [HERE Maps](manifests/here-maps/apia.json) | Global automotive | 250K/month | [→](https://developer.here.com/documentation) |
 | [Nominatim/OSM](manifests/openstreetmap-nominatim/apia.json) | Global geocoding | **FREE** | [→](https://nominatim.org/release-docs/develop/api/Overview/) |
+| [OSM Overpass](manifests/openstreetmap-overpass/apia.json) | Map data queries | **FREE** | [→](https://wiki.openstreetmap.org/wiki/Overpass_API) |
 | [Foursquare](manifests/foursquare/apia.json) | 100M+ places | 1000/day | [→](https://docs.foursquare.com) |
+| [Mapillary](manifests/mapillary/apia.json) | Street imagery 2B+ | Free dev | [→](https://www.mapillary.com/developer/api-documentation) |
 | [ip-api.com](manifests/ipapi/apia.json) | IP geolocation | **FREE** | [→](https://ip-api.com/docs/api:json) |
 | [IPGeolocation](manifests/ipgeolocation/apia.json) | IP + timezone | 1000/day | [→](https://ipgeolocation.io/documentation) |
 | [Яндекс.Карты](manifests/yandex-maps/apia.json) | Russia/CIS | Free tier | [→](https://yandex.ru/dev/maps/) |
@@ -92,7 +96,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 |---|---|---|---|
 | [OpenWeatherMap](manifests/openweathermap/apia.json) | Weather global | 1000/day | [→](https://openweathermap.org/api) |
 | [Open-Meteo](manifests/open-meteo/apia.json) | Weather no key | **FREE** | [→](https://open-meteo.com/en/docs) |
-| [OpenAQ](manifests/openaq/apia.json) | Air quality global | **FREE** | [→](https://docs.openaq.org) |
+| [OpenAQ](manifests/openaq/apia.json) | Air quality | **FREE** | [→](https://docs.openaq.org) |
 | [NASA APIs](manifests/nasa/apia.json) | Space + Earth | **FREE** | [→](https://api.nasa.gov/) |
 | [Planet Labs](manifests/planet-labs/apia.json) | Daily satellite | Education | [→](https://developers.planet.com/docs/apis/data/) |
 | [GBIF](manifests/gbif/apia.json) | Biodiversity 2.4B | **FREE** | [→](https://www.gbif.org/developer/summary) |
@@ -111,23 +115,22 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Plaid](manifests/plaid/apia.json) | Bank data | Sandbox free | [→](https://plaid.com/docs) |
 | [Alpha Vantage](manifests/alpha-vantage/apia.json) | Stocks EOD | 25/day | [→](https://www.alphavantage.co/documentation/) |
 | [Polygon.io](manifests/polygon-io/apia.json) | Stocks real-time | 5/min | [→](https://polygon.io/docs/stocks/) |
-| [CoinGecko](manifests/coingecko/apia.json) | Crypto 10K+ coins | **FREE** | [→](https://www.coingecko.com/api/documentation) |
+| [CoinGecko](manifests/coingecko/apia.json) | Crypto 10K+ | **FREE** | [→](https://www.coingecko.com/api/documentation) |
 | [Coinbase](manifests/coinbase/apia.json) | Crypto prices | **FREE** | [→](https://docs.cdp.coinbase.com) |
-| [Binance](manifests/binance/apia.json) | Crypto market data | **FREE** | [→](https://binance-docs.github.io/apidocs/) |
-| [ExchangeRate-API](manifests/exchangerate-api/apia.json) | Currency rates | 1500/month | [→](https://www.exchangerate-api.com/docs) |
+| [Binance](manifests/binance/apia.json) | Crypto market | **FREE** | [→](https://binance-docs.github.io/apidocs/) |
+| [ExchangeRate-API](manifests/exchangerate-api/apia.json) | Currency | 1500/month | [→](https://www.exchangerate-api.com/docs) |
 | [ЦБ РФ](manifests/cbrf/apia.json) | Official RU rates | **FREE** | [→](https://www.cbr.ru/development/) |
-| [SEC EDGAR](manifests/sec-edgar/apia.json) | US company filings | **FREE** | [→](https://www.sec.gov/developer) |
-| [World Bank](manifests/world-bank/apia.json) | Economic data 200+ | **FREE** | [→](https://datahelpdesk.worldbank.org) |
+| [SEC EDGAR](manifests/sec-edgar/apia.json) | US filings | **FREE** | [→](https://www.sec.gov/developer) |
+| [World Bank](manifests/world-bank/apia.json) | Economic data | **FREE** | [→](https://datahelpdesk.worldbank.org) |
 
 ### ✈️ Transport & Travel
 
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
-| [Amadeus](manifests/amadeus/apia.json) | Flights/Hotels/POI | 2000/month | [→](https://developers.amadeus.com/self-service) |
+| [Amadeus](manifests/amadeus/apia.json) | Flights/Hotels | 2000/month | [→](https://developers.amadeus.com/self-service) |
 | [FlightAware](manifests/flightaware/apia.json) | Flight tracking | 500/month | [→](https://flightaware.com/commercial/aeroapi/) |
-| [AviationStack](manifests/aviationstack/apia.json) | Flight data | 100/month | [→](https://aviationstack.com/documentation) |
 | [OpenSky Network](manifests/opensky-network/apia.json) | Aircraft ADS-B | **FREE** | [→](https://openskynetwork.github.io/opensky-api/) |
-| [Skyscanner](manifests/skyscanner/apia.json) | Flight price search | Partnership | [→](https://developers.skyscanner.net/docs) |
+| [Skyscanner](manifests/skyscanner/apia.json) | Flight prices | Partnership | [→](https://developers.skyscanner.net/docs) |
 | [GTFS/Transitland](manifests/gtfs/apia.json) | Public transit | Free tier | [→](https://www.transit.land/documentation) |
 | [Uber](manifests/uber/apia.json) | Ride estimates | Partnership | [→](https://developer.uber.com/docs) |
 | [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport Russia | Free key | [→](https://yandex.ru/dev/rasp/doc/ru/) |
@@ -136,20 +139,20 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 | Service | Specialty | Docs |
 |---|---|---|
-| [Booking.com](manifests/booking-com/apia.json) | 28M+ hotel listings | [→](https://developers.booking.com/demand/overview.html) |
-| [Airbnb](manifests/airbnb/apia.json) | 7M+ vacation rentals | [→](https://www.airbnb.com/partner) |
+| [Booking.com](manifests/booking-com/apia.json) | 28M+ hotels | [→](https://developers.booking.com/demand/overview.html) |
+| [Airbnb](manifests/airbnb/apia.json) | 7M+ rentals | [→](https://www.airbnb.com/partner) |
 | [TripAdvisor](manifests/tripadvisor/apia.json) | Reviews 1B+ | [→](https://tripadvisor-content-api.readme.io/reference/overview) |
-| [Google Hotels](manifests/google-hotels/apia.json) | Google hotel search | [→](https://serpapi.com/google-hotels-api) |
+| [Google Hotels](manifests/google-hotels/apia.json) | Hotel prices | [→](https://serpapi.com/google-hotels-api) |
 
 ### 📦 Logistics & Shipping
 
 | Service | Region | Docs |
 |---|---|---|
-| [EasyPost](manifests/easypost/apia.json) | Multi-carrier US/Global | [→](https://www.easypost.com/docs/api) |
-| [Shippo](manifests/shippo/apia.json) | 85+ carriers global | [→](https://goshippo.com/docs/reference) |
-| [DHL API](manifests/dhl-api/apia.json) | International express | [→](https://developer.dhl.com/api-reference/dhl-express-mydhl-api) |
-| [СДЭК](manifests/cdek/apia.json) | Russia/CIS delivery | [→](https://api-docs.cdek.ru/) |
-| [Почта России](manifests/pochta-russia/apia.json) | Russia all regions | [→](https://otpravka.pochta.ru/specification) |
+| [EasyPost](manifests/easypost/apia.json) | Multi-carrier | [→](https://www.easypost.com/docs/api) |
+| [Shippo](manifests/shippo/apia.json) | 85+ carriers | [→](https://goshippo.com/docs/reference) |
+| [DHL API](manifests/dhl-api/apia.json) | International | [→](https://developer.dhl.com/api-reference/dhl-express-mydhl-api) |
+| [СДЭК](manifests/cdek/apia.json) | Russia/CIS | [→](https://api-docs.cdek.ru/) |
+| [Почта России](manifests/pochta-russia/apia.json) | Russia postal | [→](https://otpravka.pochta.ru/specification) |
 
 ### 👥 Social & Communication
 
@@ -167,9 +170,21 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [LinkedIn](manifests/linkedin/apia.json) | 1B+ | 500/day | [→](https://learn.microsoft.com/en-us/linkedin/) |
 | [Twilio SMS](manifests/twilio/apia.json) | Global SMS | $15 trial | [→](https://twilio.com/docs/sms/api) |
 | [Twilio Verify](manifests/twilio-verify/apia.json) | OTP/2FA | $15 trial | [→](https://www.twilio.com/docs/verify/api) |
+| [Twilio Studio](manifests/twilio-studio/apia.json) | IVR/SMS bots | Per use | [→](https://www.twilio.com/docs/studio/rest-api/v2) |
 | [SendGrid](manifests/sendgrid/apia.json) | Email delivery | 100/day | [→](https://docs.sendgrid.com/api-reference) |
 | [Mailchimp](manifests/mailchimp/apia.json) | Email marketing | 500 contacts | [→](https://mailchimp.com/developer/marketing/api/) |
+| [Mailgun](manifests/mailgun/apia.json) | Dev email | 5K/month | [→](https://documentation.mailgun.com/) |
+| [Brevo](manifests/brevo/apia.json) | Email/SMS/WhatsApp | 300/day | [→](https://developers.brevo.com/reference/) |
+| [Klaviyo](manifests/klaviyo/apia.json) | E-commerce email | 500 contacts | [→](https://developers.klaviyo.com/en/reference/api_overview) |
 | [Sendbird](manifests/sendbird/apia.json) | In-app chat | 1000 MAU | [→](https://sendbird.com/docs/chat/platform-api/v3/overview) |
+
+### 📣 Marketing & Advertising
+
+| Service | Specialty | Docs |
+|---|---|---|
+| [Google Ads](manifests/google-ads/apia.json) | Search/Display/Video ads | [→](https://developers.google.com/google-ads/api/docs/start) |
+| [Meta Ads](manifests/facebook-ads/apia.json) | Facebook/Instagram ads | [→](https://developers.facebook.com/docs/marketing-api/reference/) |
+| [Klaviyo](manifests/klaviyo/apia.json) | E-commerce marketing | [→](https://developers.klaviyo.com/en/reference/api_overview) |
 
 ### 🎮 Entertainment & Media
 
@@ -183,16 +198,26 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Spotify](manifests/spotify/apia.json) | Music 100M tracks | Free | [→](https://developer.spotify.com/documentation/web-api) |
 | [NewsAPI](manifests/newsapi/apia.json) | News 150K sources | 100/day | [→](https://newsapi.org/docs) |
 | [Unsplash](manifests/unsplash/apia.json) | Stock photos 5M+ | 50/hr | [→](https://unsplash.com/documentation) |
+| [Pexels](manifests/pexels/apia.json) | Free photos/videos | 200/hr | [→](https://www.pexels.com/api/documentation/) |
+| [LottieFiles](manifests/lottie-files/apia.json) | Animations 200K+ | Free | [→](https://docs.lottiefiles.com/api/) |
 | [PokéAPI](manifests/pokeapi/apia.json) | All Pokémon | **FREE** | [→](https://pokeapi.co/docs/v2) |
+
+### 🖼️ Media Management
+
+| Service | Specialty | Free | Docs |
+|---|---|---|---|
+| [Cloudinary](manifests/cloudinary/apia.json) | Image/Video CDN + AI | 25GB free | [→](https://cloudinary.com/documentation/image_upload_api_reference) |
+| [imgix](manifests/imgix/apia.json) | Real-time image transform | 10GB trial | [→](https://docs.imgix.com/apis/url) |
+| [Mapillary](manifests/mapillary/apia.json) | Street imagery | Free dev | [→](https://www.mapillary.com/developer/api-documentation) |
 
 ### 🏋️ Sports & Fitness
 
 | Service | Category | Free | Docs |
 |---|---|---|---|
 | [Strava](manifests/strava/apia.json) | Running/Cycling | 100/15min | [→](https://developers.strava.com/docs/reference/) |
-| [Football-Data](manifests/football-data/apia.json) | Soccer top leagues | **FREE** | [→](https://docs.football-data.org) |
+| [Football-Data](manifests/football-data/apia.json) | Soccer | **FREE** | [→](https://docs.football-data.org) |
 | [SportsData.io](manifests/sportsdata-io/apia.json) | NFL/NBA/MLB/NHL | Trial | [→](https://sportsdata.io/developers) |
-| [Ergast F1](manifests/ergast-f1/apia.json) | Formula 1 1950-now | **FREE** | [→](https://ergast.com/mrd/) |
+| [Ergast F1](manifests/ergast-f1/apia.json) | Formula 1 | **FREE** | [→](https://ergast.com/mrd/) |
 | [The Odds API](manifests/odds-api/apia.json) | Betting odds | 500/month | [→](https://the-odds-api.com) |
 
 ### 🏥 Healthcare
@@ -205,11 +230,32 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Nutritionix](manifests/nutritionix/apia.json) | Nutrition NLP | 500/day | [→](https://developer.nutritionix.com/docs/v2) |
 | [Infermedica](manifests/infermedica/apia.json) | Symptom checker | Sandbox | [→](https://developer.infermedica.com/docs) |
 
+### 🔬 Science & Research
+
+| Service | Specialty | Free | Docs |
+|---|---|---|---|
+| [PubMed/NCBI](manifests/pubmed/apia.json) | 35M+ medical papers | **FREE** | [→](https://www.ncbi.nlm.nih.gov/books/NBK25499/) |
+| [arXiv](manifests/arxiv/apia.json) | 2M+ preprints CS/AI/Math | **FREE** | [→](https://info.arxiv.org/help/api/index.html) |
+| [Semantic Scholar](manifests/semantic-scholar/apia.json) | 220M papers + AI recs | **FREE** | [→](https://api.semanticscholar.org/) |
+| [OpenAlex](manifests/open-alex/apia.json) | 250M research works | **FREE** | [→](https://docs.openalex.org/) |
+| [Elsevier Scopus](manifests/elsevier-scopus/apia.json) | 87M peer-reviewed | Dev key free | [→](https://dev.elsevier.com/) |
+
+### 🌿 Nature & Biodiversity
+
+| Service | Specialty | Free | Docs |
+|---|---|---|---|
+| [GBIF](manifests/gbif/apia.json) | Occurrences 2.4B | **FREE** | [→](https://www.gbif.org/developer/summary) |
+| [GBIF Species](manifests/gbif-species/apia.json) | Taxonomy all life | **FREE** | [→](https://www.gbif.org/developer/species) |
+| [iNaturalist](manifests/inaturalist/apia.json) | 200M wildlife obs + AI ID | **FREE** | [→](https://api.inaturalist.org/v1/docs/) |
+| [Carbon Interface](manifests/carbon-interface/apia.json) | Carbon emissions | 100/month | [→](https://docs.carboninterface.com) |
+| [OpenAQ](manifests/openaq/apia.json) | Air quality global | **FREE** | [→](https://docs.openaq.org) |
+
 ### 📚 Education & Knowledge
 
 | Service | Category | Free | Docs |
 |---|---|---|---|
 | [Wikipedia](manifests/wikipedia/apia.json) | 60M articles | **FREE** | [→](https://en.wikipedia.org/api/rest_v1/) |
+| [Wikidata](manifests/wikidata/apia.json) | 100M entities | **FREE** | [→](https://www.wikidata.org/wiki/Wikidata:Data_access) |
 | [Wolfram Alpha](manifests/wolfram-alpha/apia.json) | Computation | 2000/month | [→](https://products.wolframalpha.com/api/documentation/) |
 | [Khan Academy](manifests/khan-academy/apia.json) | Free education | **FREE** | [→](https://api-explorer.khanacademy.org/) |
 | [Google Books](manifests/google-books/apia.json) | 40M books | **FREE** | [→](https://developers.google.com/books/docs/v1/using) |
@@ -236,19 +282,19 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Idealista](manifests/idealista/apia.json) | Spain/Italy/Portugal | [→](https://developers.idealista.com/) |
 | [ATTOM](manifests/attom/apia.json) | US property data | [→](https://api.developer.attomdata.com/docs) |
 
-### 💼 Business, CRM & HR
+### 💼 Business & CRM
 
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
 | [HubSpot](manifests/hubspot/apia.json) | CRM/Marketing | **FREE** | [→](https://developers.hubspot.com/docs/api/overview) |
-| [Salesforce](manifests/salesforce/apia.json) | Enterprise CRM | Dev org free | [→](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/) |
-| [Pipedrive](manifests/pipedrive/apia.json) | Sales CRM | 14-day trial | [→](https://developers.pipedrive.com/docs/api/v1) |
-| [amoCRM](manifests/amocrm/apia.json) | CRM Russia/CIS | 14-day trial | [→](https://www.amocrm.ru/developers/) |
-| [Bitrix24](manifests/bitrix24/apia.json) | All-in-one Russia | 5 users free | [→](https://apidocs.bitrix24.ru/) |
-| [Workday](manifests/workday/apia.json) | Enterprise HR | Enterprise | [→](https://developer.workday.com/) |
-| [Greenhouse](manifests/greenhouse/apia.json) | Recruiting ATS | Demo | [→](https://developers.greenhouse.io/harvest.html) |
-| [BambooHR](manifests/bamboohr/apia.json) | HR for SMB | Paid | [→](https://documentation.bamboohr.com/reference) |
-| [Clearbit](manifests/clearbit/apia.json) | B2B enrichment | 50/month | [→](https://dashboard.clearbit.com/docs) |
+| [Salesforce](manifests/salesforce/apia.json) | Enterprise CRM | Dev org | [→](https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/) |
+| [Pipedrive](manifests/pipedrive/apia.json) | Sales CRM | 14-day | [→](https://developers.pipedrive.com/docs/api/v1) |
+| [amoCRM](manifests/amocrm/apia.json) | CRM Russia/CIS | 14-day | [→](https://www.amocrm.ru/developers/) |
+| [Bitrix24](manifests/bitrix24/apia.json) | All-in-one Russia | 5 users | [→](https://apidocs.bitrix24.ru/) |
+| [Hunter.io](manifests/hunter-io/apia.json) | B2B email finder | 25/month | [→](https://hunter.io/api-documentation) |
+| [Apollo.io](manifests/apollo-io/apia.json) | Sales intelligence 265M | 50 credits | [→](https://apolloio.github.io/apollo-api-docs/) |
+| [ZoomInfo](manifests/zoominfo/apia.json) | Enterprise B2B data | Enterprise | [→](https://api-docs.zoominfo.com/) |
+| [Clearbit](manifests/clearbit/apia.json) | Company enrichment | 50/month | [→](https://dashboard.clearbit.com/docs) |
 | [OpenCorporates](manifests/opencorporates/apia.json) | 200M companies | 10/min | [→](https://api.opencorporates.com/documentation/API-Reference) |
 | [Companies House](manifests/companies-house/apia.json) | UK companies | **FREE** | [→](https://developer.company-information.service.gov.uk/) |
 
@@ -256,23 +302,30 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
-| [Zendesk](manifests/zendesk/apia.json) | Help desk 25K+ companies | 14-day trial | [→](https://developer.zendesk.com/api-reference/) |
-| [Freshdesk](manifests/freshdesk/apia.json) | Help desk | 10 agents free | [→](https://developers.freshdesk.com/api/) |
-| [Intercom](manifests/intercom/apia.json) | Customer messaging | 14-day trial | [→](https://developers.intercom.com/docs/) |
-| [Sendbird](manifests/sendbird/apia.json) | In-app chat SDK | 1000 MAU | [→](https://sendbird.com/docs/chat/platform-api/v3/overview) |
+| [Zendesk](manifests/zendesk/apia.json) | Help desk | 14-day | [→](https://developer.zendesk.com/api-reference/) |
+| [Freshdesk](manifests/freshdesk/apia.json) | Help desk | 10 agents | [→](https://developers.freshdesk.com/api/) |
+| [Intercom](manifests/intercom/apia.json) | Customer messaging | 14-day | [→](https://developers.intercom.com/docs/) |
+
+### 👔 HR & Recruiting
+
+| Service | Specialty | Docs |
+|---|---|---|
+| [Workday](manifests/workday/apia.json) | Enterprise HR | [→](https://developer.workday.com/) |
+| [Greenhouse](manifests/greenhouse/apia.json) | Recruiting ATS | [→](https://developers.greenhouse.io/harvest.html) |
+| [BambooHR](manifests/bamboohr/apia.json) | HR for SMB | [→](https://documentation.bamboohr.com/reference) |
 
 ### ⚖️ Legal & Government
 
 | Service | Category | Free | Docs |
 |---|---|---|---|
-| [SEC EDGAR](manifests/sec-edgar/apia.json) | US company filings | **FREE** | [→](https://www.sec.gov/developer) |
+| [SEC EDGAR](manifests/sec-edgar/apia.json) | US filings | **FREE** | [→](https://www.sec.gov/developer) |
 | [Companies House](manifests/companies-house/apia.json) | UK companies | **FREE** | [→](https://developer.company-information.service.gov.uk/) |
 | [World Bank](manifests/world-bank/apia.json) | Economic data | **FREE** | [→](https://datahelpdesk.worldbank.org) |
 | [CourtListener](manifests/courtlistener/apia.json) | US court cases | **FREE** | [→](https://www.courtlistener.com/help/api/) |
 | [OpenCorporates](manifests/opencorporates/apia.json) | 200M companies | 10/min | [→](https://api.opencorporates.com/documentation/API-Reference) |
 | [DocuSign](manifests/docusign/apia.json) | eSignature | Sandbox | [→](https://developers.docusign.com/docs/esign-rest-api/) |
 
-### 🔒 Security & Identity
+### 🔒 Security
 
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
@@ -288,39 +341,31 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 |---|---|---|---|
 | [Home Assistant](manifests/home-assistant/apia.json) | 3000+ devices | **FREE** | [→](https://developers.home-assistant.io/docs/api/rest/) |
 | [Philips Hue](manifests/philips-hue/apia.json) | Smart lights | **FREE** | [→](https://developers.meethue.com/develop/hue-api/) |
-| [Tesla Fleet](manifests/tesla/apia.json) | EV control/data | Free personal | [→](https://developer.tesla.com/docs/fleet-api) |
+| [Tesla Fleet](manifests/tesla/apia.json) | EV data/control | Free personal | [→](https://developer.tesla.com/docs/fleet-api) |
 | [Particle](manifests/particle/apia.json) | IoT prototyping | 100 devices | [→](https://docs.particle.io/reference/cloud-apis/api/) |
 | [AWS IoT](manifests/aws-iot/apia.json) | Enterprise IoT | 250K msg/month | [→](https://docs.aws.amazon.com/iot/) |
 
-### 🛒 E-commerce
-
-| Service | Specialty | Docs |
-|---|---|---|
-| [Shopify](manifests/shopify/apia.json) | 4M+ stores | [→](https://shopify.dev/docs/api) |
-| [WooCommerce](manifests/woocommerce/apia.json) | WordPress stores | [→](https://woocommerce.github.io/woocommerce-rest-api-docs/) |
-| [Yelp](manifests/yelp/apia.json) | Local business reviews | [→](https://docs.developer.yelp.com) |
-
-### 🧰 Developer Tools & Infrastructure
+### 🧰 Developer Tools
 
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
-| [GitHub](manifests/github/apia.json) | Code/repos/CI | 60 req/hr | [→](https://docs.github.com/en/rest) |
+| [GitHub](manifests/github/apia.json) | Code/repos | 60 req/hr | [→](https://docs.github.com/en/rest) |
 | [GitLab](manifests/gitlab/apia.json) | DevOps platform | Free OSS | [→](https://docs.gitlab.com/ee/api/rest/) |
 | [Jira](manifests/jira/apia.json) | Issue tracking | 10 users | [→](https://developer.atlassian.com/cloud/jira/) |
-| [Linear](manifests/linear/apia.json) | Modern issue tracker | 250 issues | [→](https://developers.linear.app/docs/) |
-| [Datadog](manifests/datadog/apia.json) | Monitoring/Metrics | 14-day trial | [→](https://docs.datadoghq.com/api/latest/) |
-| [Sentry](manifests/sentry/apia.json) | Error tracking | 5K errors/month | [→](https://docs.sentry.io/api/) |
-| [PagerDuty](manifests/pagerduty/apia.json) | Incident management | 14-day trial | [→](https://developer.pagerduty.com/api-reference/) |
+| [Linear](manifests/linear/apia.json) | Modern issues | 250 issues | [→](https://developers.linear.app/docs/) |
+| [Datadog](manifests/datadog/apia.json) | Monitoring | 14-day | [→](https://docs.datadoghq.com/api/latest/) |
+| [Sentry](manifests/sentry/apia.json) | Error tracking | 5K/month | [→](https://docs.sentry.io/api/) |
+| [PagerDuty](manifests/pagerduty/apia.json) | Incidents | 14-day | [→](https://developer.pagerduty.com/api-reference/) |
 | [Vercel](manifests/vercel/apia.json) | Frontend deploy | Hobby free | [→](https://vercel.com/docs/rest-api) |
-| [Netlify](manifests/netlify/apia.json) | Jamstack hosting | 100GB/month | [→](https://open-api.netlify.com/) |
+| [Netlify](manifests/netlify/apia.json) | Jamstack | 100GB/month | [→](https://open-api.netlify.com/) |
 | [DigitalOcean](manifests/digitalocean/apia.json) | Cloud VMs | $200 credit | [→](https://docs.digitalocean.com/reference/api/) |
 | [AWS Lambda](manifests/aws-lambda/apia.json) | Serverless | 1M req/month | [→](https://docs.aws.amazon.com/lambda/) |
-| [Supabase](manifests/supabase/apia.json) | Backend/DB/Auth | 500MB | [→](https://supabase.com/docs) |
+| [Supabase](manifests/supabase/apia.json) | Backend/DB | 500MB | [→](https://supabase.com/docs) |
 | [Firebase](manifests/firebase/apia.json) | Mobile backend | Generous | [→](https://firebase.google.com/docs/reference/rest) |
 | [AWS S3](manifests/aws-s3/apia.json) | Cloud storage | 5GB | [→](https://docs.aws.amazon.com/s3) |
 | [Cloudflare Workers](manifests/cloudflare-workers/apia.json) | Edge compute | 100K/day | [→](https://developers.cloudflare.com/workers/) |
 
-### 📊 Analytics & Data
+### 📊 Analytics
 
 | Service | Specialty | Free | Docs |
 |---|---|---|---|
@@ -329,7 +374,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Mixpanel](manifests/mixpanel/apia.json) | Product analytics | 100M events | [→](https://developer.mixpanel.com/reference/overview) |
 | [PostHog](manifests/posthog/apia.json) | Open-source analytics | 1M events | [→](https://posthog.com/docs/api) |
 | [Segment](manifests/segment/apia.json) | CDP 450+ integrations | 1000 MTU | [→](https://segment.com/docs/connections/sources/catalog/libraries/server/http-api/) |
-| [SerpAPI](manifests/serpapi/apia.json) | Google/Bing SERP data | 100/month | [→](https://serpapi.com/search-api) |
+| [SerpAPI](manifests/serpapi/apia.json) | Search results data | 100/month | [→](https://serpapi.com/search-api) |
 
 ### 🧩 Productivity
 
@@ -338,7 +383,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Notion](manifests/notion-api/apia.json) | Notes/DB/Wiki | Free | [→](https://developers.notion.com/reference/intro) |
 | [Google Calendar](manifests/google-calendar/apia.json) | Calendar | Free | [→](https://developers.google.com/calendar/api/v3/reference) |
 | [Airtable](manifests/airtable/apia.json) | DB/Spreadsheet | 1000 records | [→](https://airtable.com/developers/web/api/introduction) |
-| [Typeform](manifests/typeform/apia.json) | Beautiful forms | 10/month | [→](https://www.typeform.com/developers/) |
+| [Typeform](manifests/typeform/apia.json) | Forms | 10/month | [→](https://www.typeform.com/developers/) |
 | [Zapier NLA](manifests/zapier/apia.json) | 6000+ automations | Paid | [→](https://nla.zapier.com/docs/) |
 
 ### 🌐 Translation & NLP
@@ -371,24 +416,33 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [JokeAPI](manifests/jokeapi/apia.json) | Jokes 7 languages | [→](https://jokeapi.dev/#docs) |
 | [RestCountries](manifests/rest-countries/apia.json) | 250 countries | [→](https://restcountries.com) |
 | [PokéAPI](manifests/pokeapi/apia.json) | All 1000+ Pokémon | [→](https://pokeapi.co/docs/v2) |
-| [Open Trivia DB](manifests/open-trivia/apia.json) | 4000+ quiz questions | [→](https://opentdb.com/api_config.php) |
-| [NASA APOD](manifests/nasa/apia.json) | Space photo daily | [→](https://api.nasa.gov/) |
-| [GBIF](manifests/gbif/apia.json) | Biodiversity 2.4B records | [→](https://www.gbif.org/developer/summary) |
+| [Open Trivia DB](manifests/open-trivia/apia.json) | Quiz questions | [→](https://opentdb.com/api_config.php) |
+| [NASA](manifests/nasa/apia.json) | Space photos/data | [→](https://api.nasa.gov/) |
+| [GBIF](manifests/gbif/apia.json) | Biodiversity 2.4B | [→](https://www.gbif.org/developer/summary) |
 | [OpenSky](manifests/opensky-network/apia.json) | Live aircraft | [→](https://openskynetwork.github.io/opensky-api/) |
 | [Ergast F1](manifests/ergast-f1/apia.json) | F1 data 1950-now | [→](https://ergast.com/mrd/) |
 | [Wikipedia](manifests/wikipedia/apia.json) | Encyclopedia | [→](https://en.wikipedia.org/api/rest_v1/) |
+| [Wikidata](manifests/wikidata/apia.json) | Knowledge graph | [→](https://www.wikidata.org/wiki/Wikidata:Data_access) |
+| [arXiv](manifests/arxiv/apia.json) | Research preprints | [→](https://info.arxiv.org/help/api/index.html) |
+| [PubMed](manifests/pubmed/apia.json) | Medical papers | [→](https://www.ncbi.nlm.nih.gov/books/NBK25499/) |
+| [Semantic Scholar](manifests/semantic-scholar/apia.json) | Academic papers | [→](https://api.semanticscholar.org/) |
+| [OpenAlex](manifests/open-alex/apia.json) | Research works | [→](https://docs.openalex.org/) |
+| [iNaturalist](manifests/inaturalist/apia.json) | Wildlife + AI ID | [→](https://api.inaturalist.org/v1/docs/) |
 | [ip-api.com](manifests/ipapi/apia.json) | IP geolocation | [→](https://ip-api.com/docs/api:json) |
 | [Nominatim](manifests/openstreetmap-nominatim/apia.json) | Geocoding | [→](https://nominatim.org/release-docs/develop/api/Overview/) |
-| [SEC EDGAR](manifests/sec-edgar/apia.json) | US company filings | [→](https://www.sec.gov/developer) |
+| [OSM Overpass](manifests/openstreetmap-overpass/apia.json) | Map data | [→](https://wiki.openstreetmap.org/wiki/Overpass_API) |
+| [SEC EDGAR](manifests/sec-edgar/apia.json) | US filings | [→](https://www.sec.gov/developer) |
 | [World Bank](manifests/world-bank/apia.json) | Economic data | [→](https://datahelpdesk.worldbank.org) |
 | [CourtListener](manifests/courtlistener/apia.json) | US court cases | [→](https://www.courtlistener.com/help/api/) |
+| [Companies House](manifests/companies-house/apia.json) | UK companies | [→](https://developer.company-information.service.gov.uk/) |
 | [Nager.Date](manifests/nager-date/apia.json) | Public holidays | [→](https://date.nager.at/swagger/index.html) |
 | [QR Code API](manifests/qr-code-api/apia.json) | QR generation | [→](https://goqr.me/api/doc/) |
 | [LanguageTool](manifests/languagetool/apia.json) | Grammar check | [→](https://languagetool.org/http-api/) |
 | [OpenAQ](manifests/openaq/apia.json) | Air quality | [→](https://docs.openaq.org) |
 | [CoinGecko](manifests/coingecko/apia.json) | Crypto prices | [→](https://www.coingecko.com/api/documentation) |
 | [Perspective API](manifests/perspective-api/apia.json) | Toxicity detection | [→](https://developers.perspectiveapi.com/s/docs) |
-| [Companies House](manifests/companies-house/apia.json) | UK companies | [→](https://developer.company-information.service.gov.uk/) |
+| [OpenAI Moderation](manifests/openai-moderation/apia.json) | Content safety | [→](https://platform.openai.com/docs/guides/moderation) |
+| [GBIF Species](manifests/gbif-species/apia.json) | Species taxonomy | [→](https://www.gbif.org/developer/species) |
 | [Rosreestr](manifests/rosreestr/apia.json) | Russian real estate | [→](https://rosreestr.gov.ru/api/online/fir_object/) |
 
 ### 🇷🇺 Russia
@@ -399,7 +453,6 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [YandexGPT](manifests/yandex-gpt/apia.json) | Russian LLM + Embeddings | [→](https://yandex.cloud/ru/docs/foundation-models/) |
 | [hh.ru](manifests/hh-ru/apia.json) | Employment | [→](https://github.com/hhru/api) |
 | [SuperJob](manifests/superjob/apia.json) | Employment | [→](https://api.superjob.ru/) |
-| [SuperJob Resumes](manifests/superjob-resumes/apia.json) | Resumes | [→](https://api.superjob.ru/) |
 | [Авито.Работа](manifests/avito-jobs/apia.json) | Employment | [→](https://developers.avito.ru/api-catalog/job/documentation) |
 | [trudvsem.ru](manifests/trudvsem/apia.json) | Employment Gov | [→](https://trudvsem.ru/opendata/api) |
 | [data.mos.ru](manifests/data-mos-ru/apia.json) | City Data Moscow | [→](https://data.mos.ru/developers/documentation) |
@@ -415,8 +468,8 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [Bitrix24](manifests/bitrix24/apia.json) | Business Platform | [→](https://apidocs.bitrix24.ru/) |
 | [ЦИАН](manifests/cian/apia.json) | Real Estate | [→](https://www.cian.ru/help/about/partners-api/) |
 | [Росреестр](manifests/rosreestr/apia.json) | Real Estate Gov | [→](https://rosreestr.gov.ru/api/online/fir_object/) |
-| [Контур.Фокус](manifests/kontur-focus/apia.json) | Business Intelligence | [→](https://developer.kontur.ru/doc/focus) |
-| [DaData](manifests/dadata/apia.json) | Address/Company Data | [→](https://dadata.ru/api/) |
+| [Контур.Фокус](manifests/kontur-focus/apia.json) | Business Intel | [→](https://developer.kontur.ru/doc/focus) |
+| [DaData](manifests/dadata/apia.json) | Address/Company | [→](https://dadata.ru/api/) |
 | [HFLabs](manifests/hflabs/apia.json) | Data Validation | [→](https://hflabs.ru/api/) |
 | [VK](manifests/vk/apia.json) | Social Media | [→](https://dev.vk.com/ru/api/overview) |
 
@@ -436,7 +489,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 **Quality:** ✅ Verified · 🔶 Draft · ⚠️ Partial · ❌ Deprecated
 
-**Health:** Monthly Action checks all endpoints, opens Issues on failures
+**Health:** Monthly Action checks endpoints, opens Issues on failures
 
 **Ideas:** [Discussions](../../discussions/categories/ideas)
 
@@ -444,10 +497,10 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 ## Compatibility
 
-**MCP** (Anthropic) · **OpenAPI** · **OpenClaw skills** — APIA works alongside all of them
+**MCP** · **OpenAPI** · **OpenClaw skills** — APIA works alongside all of them
 
 ---
 
 💬 [Discussions](../../discussions) · 🐛 [Issues](../../issues) · [CONTRIBUTING.md](CONTRIBUTING.md)
 
-**APIA · 212 manifests · 4 languages · Open source · June 2026**
+**APIA · 237 manifests · 4 languages · Open source · June 2026**
