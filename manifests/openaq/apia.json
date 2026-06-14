@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "get_measurements",
-      "description_for_ai": "Get real-time air quality measurements near coordinates or for a specific location. Returns PM2.5, PM10, NO2, ozone levels.",
+      "description_for_ai": "Get real-time and historical air quality measurements from 10,000+ monitoring stations worldwide. Filter by location, pollutant, and date range.",
       "intent": [
         "air quality",
         "pollution level",
@@ -38,38 +38,56 @@
       "input": {
         "coordinates": {
           "type": "string",
-          "description": "lat,lng e.g. 55.75,37.62",
+          "description": "Center point for proximity search: lat,lng e.g. 55.75,37.62 (Moscow)",
           "required": false
         },
         "radius": {
           "type": "integer",
-          "description": "Meters",
+          "description": "Search radius in meters from coordinates",
           "default": 10000
         },
         "parameter": {
           "type": "string",
-          "description": "pm25, pm10, no2, o3, co, so2",
+          "description": "Pollutant: pm25, pm10, no2, o3, co, so2, bc (black carbon), um100 (ultrafine particles)",
+          "required": false
+        },
+        "location_id": {
+          "type": "integer",
+          "description": "Specific station location ID from get_locations",
           "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Results per page, max 1000",
           "default": 100
+        },
+        "page": {
+          "type": "integer",
+          "description": "Page number",
+          "default": 1
         },
         "date_from": {
           "type": "string",
-          "description": "ISO 8601",
+          "description": "ISO 8601 start datetime e.g. 2024-01-01T00:00:00Z",
+          "required": false
+        },
+        "date_to": {
+          "type": "string",
+          "description": "ISO 8601 end datetime",
           "required": false
         }
       },
       "output": {
         "type": "list<measurement>",
         "fields": [
-          "parameter",
-          "value",
-          "unit",
-          "location.name",
-          "location.coordinates",
-          "date.utc"
+          "results[0].parameter",
+          "results[0].value",
+          "results[0].unit",
+          "results[0].location.name",
+          "results[0].location.coordinates.latitude",
+          "results[0].location.coordinates.longitude",
+          "results[0].date.utc",
+          "meta.found"
         ]
       },
       "realtime": true,
@@ -77,7 +95,7 @@
     },
     {
       "id": "get_locations",
-      "description_for_ai": "Get air quality monitoring station locations near coordinates.",
+      "description_for_ai": "Get air quality monitoring station locations. Find stations near coordinates or filter by country.",
       "intent": [
         "monitoring stations",
         "air sensors",
@@ -87,25 +105,41 @@
       "input": {
         "coordinates": {
           "type": "string",
+          "description": "lat,lng to find nearby stations",
           "required": false
         },
         "radius": {
           "type": "integer",
+          "description": "Search radius in meters",
           "default": 10000
+        },
+        "country_id": {
+          "type": "string",
+          "description": "ISO 2-letter country code to filter by: US, DE, IN, CN, RU",
+          "required": false
+        },
+        "parameter": {
+          "type": "string",
+          "description": "Filter stations that measure a specific parameter: pm25, pm10, no2",
+          "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Max results per page, max 1000",
           "default": 100
         }
       },
       "output": {
         "type": "list<location>",
         "fields": [
-          "id",
-          "name",
-          "coordinates",
-          "country.name",
-          "parameters[0].parameter"
+          "results[0].id",
+          "results[0].name",
+          "results[0].city",
+          "results[0].country.name",
+          "results[0].coordinates.latitude",
+          "results[0].coordinates.longitude",
+          "results[0].parameters[0].parameter",
+          "results[0].lastUpdated"
         ]
       },
       "realtime": false,
