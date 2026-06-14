@@ -6,7 +6,7 @@
     "description_for_ai": "OpenAI reasoning model for complex problem solving. Thinks step-by-step before answering. Best for: math, science, coding, logic puzzles, multi-step analysis. Slower but more accurate than GPT-4o on hard problems.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_reasoning",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
