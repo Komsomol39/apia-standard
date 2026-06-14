@@ -7,7 +7,17 @@
     "url": "https://2gis.com",
     "api_base": "https://catalog.api.2gis.com/3.0",
     "category": "maps_poi",
-    "geo": ["BY", "KZ", "KG", "UZ", "AE", "CL", "IT", "CY", "CZ"],
+    "geo": [
+      "BY",
+      "KZ",
+      "KG",
+      "UZ",
+      "AE",
+      "CL",
+      "IT",
+      "CY",
+      "CZ"
+    ],
     "language": "ru",
     "docs": "https://docs.2gis.com/en/api/search/overview",
     "note": "Это расширение манифеста 2gis/apia.json с акцентом на международное использование. API идентично."
@@ -25,21 +35,56 @@
       "id": "search_places_by",
       "description_for_ai": "Поиск организаций в Беларуси по координатам. Используй для запросов 'аптека в Минске', 'кафе рядом в Гомеле', 'банк в Беларуси'.",
       "intent": [
-        "организации в Беларуси", "кафе в Минске", "аптека в Гомеле",
-        "банк в Беларуси", "магазин в Минске"
+        "организации в Беларуси",
+        "кафе в Минске",
+        "аптека в Гомеле",
+        "банк в Беларуси",
+        "магазин в Минске"
       ],
       "endpoint": "GET https://catalog.api.2gis.com/3.0/items",
       "input": {
-        "q": { "type": "string", "description": "Поисковый запрос", "required": true },
-        "point": { "type": "string", "description": "Координаты 'lng,lat'. Минск: '27.5615,53.9045'", "required": false },
-        "radius": { "type": "integer", "default": 500 },
-        "sort": { "type": "string", "default": "distance" },
-        "fields": { "type": "string", "description": "items.schedule,items.contact_groups", "required": false },
-        "locale": { "type": "string", "default": "ru_RU" }
+        "q": {
+          "type": "string",
+          "description": "Поисковый запрос",
+          "required": true
+        },
+        "point": {
+          "type": "string",
+          "description": "Координаты 'lng,lat'. Минск: '27.5615,53.9045'",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "default": 500,
+          "description": "Search radius in meters (unless otherwise specified)"
+        },
+        "sort": {
+          "type": "string",
+          "default": "distance",
+          "description": "Sort field and direction e.g. 'created_at:desc' or 'name'"
+        },
+        "fields": {
+          "type": "string",
+          "description": "items.schedule,items.contact_groups",
+          "required": false
+        },
+        "locale": {
+          "type": "string",
+          "default": "ru_RU",
+          "description": "Locale code: en-US, ru-RU, de-DE, fr-FR, etc."
+        }
       },
       "output": {
         "type": "list<place>",
-        "fields": ["id", "name", "address.name", "point.lat", "point.lon", "schedule", "contact_groups"]
+        "fields": [
+          "id",
+          "name",
+          "address.name",
+          "point.lat",
+          "point.lon",
+          "schedule",
+          "contact_groups"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -48,21 +93,56 @@
       "id": "search_places_kz",
       "description_for_ai": "Поиск организаций в Казахстане по координатам. Используй для запросов 'аптека в Алматы', 'кафе в Астане', 'банк в Казахстане'.",
       "intent": [
-        "организации в Казахстане", "кафе в Алматы", "аптека в Астане",
-        "банк в Казахстане", "магазин в Алматы"
+        "организации в Казахстане",
+        "кафе в Алматы",
+        "аптека в Астане",
+        "банк в Казахстане",
+        "магазин в Алматы"
       ],
       "endpoint": "GET https://catalog.api.2gis.com/3.0/items",
       "input": {
-        "q": { "type": "string", "required": true },
-        "point": { "type": "string", "description": "Алматы: '76.9286,43.2567', Астана: '71.4306,51.1801'", "required": false },
-        "radius": { "type": "integer", "default": 500 },
-        "sort": { "type": "string", "default": "distance" },
-        "fields": { "type": "string", "required": false },
-        "locale": { "type": "string", "default": "ru_RU" }
+        "q": {
+          "type": "string",
+          "required": true,
+          "description": "Search query or filter expression"
+        },
+        "point": {
+          "type": "string",
+          "description": "Алматы: '76.9286,43.2567', Астана: '71.4306,51.1801'",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "default": 500,
+          "description": "Search radius in meters (unless otherwise specified)"
+        },
+        "sort": {
+          "type": "string",
+          "default": "distance",
+          "description": "Sort field and direction e.g. 'created_at:desc' or 'name'"
+        },
+        "fields": {
+          "type": "string",
+          "required": false,
+          "description": "Comma-separated list of fields to include in response"
+        },
+        "locale": {
+          "type": "string",
+          "default": "ru_RU",
+          "description": "Locale code: en-US, ru-RU, de-DE, fr-FR, etc."
+        }
       },
       "output": {
         "type": "list<place>",
-        "fields": ["id", "name", "address.name", "point.lat", "point.lon", "schedule", "contact_groups"]
+        "fields": [
+          "id",
+          "name",
+          "address.name",
+          "point.lat",
+          "point.lon",
+          "schedule",
+          "contact_groups"
+        ]
       },
       "realtime": true,
       "requires_auth": true
