@@ -6,7 +6,7 @@
     "description_for_ai": "Vacation rental and short-term accommodation platform. 7M+ listings in 220+ countries. Unique stays: houses, apartments, villas, treehouses. Official API very restricted — primarily for property managers and analytics partners.",
     "url": "https://airbnb.com",
     "api_base": "https://api.airbnb.com/v2",
-    "category": "travel_rentals",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
