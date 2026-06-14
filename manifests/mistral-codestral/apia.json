@@ -90,7 +90,8 @@
       "input": {
         "model": {
           "type": "string",
-          "default": "codestral-latest"
+          "default": "codestral-latest",
+          "description": "AI/ML model identifier to use for this request"
         },
         "messages": {
           "type": "array",
@@ -104,7 +105,8 @@
         },
         "max_tokens": {
           "type": "integer",
-          "required": false
+          "required": false,
+          "description": "Maximum number of tokens to generate in response"
         }
       },
       "output": {
