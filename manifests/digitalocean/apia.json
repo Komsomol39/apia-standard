@@ -6,7 +6,7 @@
     "description_for_ai": "Developer-friendly cloud platform. Droplets (VMs), Kubernetes, managed databases, App Platform, Spaces (S3-compatible storage). Simple pricing, great docs. $200 free credit for new users. Use for cloud hosting, VMs, managed services.",
     "url": "https://digitalocean.com",
     "api_base": "https://api.digitalocean.com/v2",
-    "category": "cloud_hosting",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
