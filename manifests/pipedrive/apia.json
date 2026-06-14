@@ -6,7 +6,7 @@
     "description_for_ai": "Sales-focused CRM. Deals, contacts, organizations, activities, pipelines. Visual sales pipeline. Popular with SMBs. Free trial 14 days. Use for sales pipeline management, deal tracking, contact management.",
     "url": "https://pipedrive.com",
     "api_base": "https://api.pipedrive.com/v1",
-    "category": "crm",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
