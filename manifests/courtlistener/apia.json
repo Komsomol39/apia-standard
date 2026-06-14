@@ -37,7 +37,7 @@
       "input": {
         "q": {
           "type": "string",
-          "description": "Search query",
+          "description": "Search query or filter expression",
           "required": false
         },
         "court": {
