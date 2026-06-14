@@ -6,7 +6,7 @@
     "description_for_ai": "Complete Pokémon database API. All 1000+ Pokémon with stats, abilities, moves, evolutions, types. No API key needed. Completely free. Use for Pokémon games, apps, trivia, fan projects.",
     "url": "https://pokeapi.co",
     "api_base": "https://pokeapi.co/api/v2",
-    "category": "gaming_fun",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
