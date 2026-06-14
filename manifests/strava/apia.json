@@ -45,12 +45,14 @@
         },
         "page": {
           "type": "integer",
-          "default": 1
+          "default": 1,
+          "description": "Page number for pagination (1-indexed)"
         },
         "per_page": {
           "type": "integer",
           "default": 30,
-          "max": 200
+          "max": 200,
+          "description": "Results per page. Check API docs for maximum allowed."
         }
       },
       "output": {
@@ -85,7 +87,8 @@
       "input": {
         "id": {
           "type": "integer",
-          "required": true
+          "required": true,
+          "description": "Unique identifier"
         }
       },
       "output": {
