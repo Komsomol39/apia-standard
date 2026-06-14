@@ -77,7 +77,8 @@
       "input": {
         "name": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Name identifier"
         },
         "user_ids": {
           "type": "array",
