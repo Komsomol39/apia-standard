@@ -1,0 +1,114 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "github",
+    "name": "GitHub API",
+    "description_for_ai": "World's largest code hosting platform API. Search repositories, manage code, create issues, pull requests, read files. Used by every developer. Use for code search, repository management, CI/CD automation, and developer profile lookup.",
+    "url": "https://github.com",
+    "api_base": "https://api.github.com",
+    "category": "developer_tools",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://docs.github.com/en/rest"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": true,
+    "anonymous_limits": "60 requests/hour",
+    "auth_limits": "5000 requests/hour",
+    "header": "Authorization: Bearer ghp_...",
+    "how_to_get": "GitHub Settings → Developer Settings → Personal Access Tokens",
+    "cost": "Free for public repos. GitHub Pro: $4/month"
+  },
+  "capabilities": [
+    {
+      "id": "search_repositories",
+      "description_for_ai": "Search GitHub repositories by keyword, language, stars, or topic. Use for 'find Python ML libraries', 'popular React components', 'open source alternatives to X'.",
+      "intent": [
+        "find repository", "search GitHub", "open source library",
+        "find code", "popular projects", "GitHub repos"
+      ],
+      "endpoint": "GET https://api.github.com/search/repositories",
+      "input": {
+        "q": { "type": "string", "description": "Search query. Supports qualifiers: language:python, stars:>1000, topic:machine-learning", "required": true },
+        "sort": { "type": "string", "description": "stars, forks, updated", "default": "stars" },
+        "order": { "type": "string", "description": "desc or asc", "default": "desc" },
+        "per_page": { "type": "integer", "default": 10, "max": 100 }
+      },
+      "output": {
+        "type": "list<repository>",
+        "fields": ["full_name", "description", "stargazers_count", "language", "html_url", "topics", "updated_at", "license.name"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_repository",
+      "description_for_ai": "Get full details of a specific GitHub repository by owner and name.",
+      "intent": ["repo details", "repository info", "GitHub project info", "stars count"],
+      "endpoint": "GET https://api.github.com/repos/{owner}/{repo}",
+      "input": {
+        "owner": { "type": "string", "description": "Repository owner username or org", "required": true },
+        "repo": { "type": "string", "description": "Repository name", "required": true }
+      },
+      "output": {
+        "type": "repository",
+        "fields": ["full_name", "description", "stargazers_count", "forks_count", "open_issues_count", "language", "topics", "license", "created_at", "updated_at"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "create_file",
+      "description_for_ai": "Create or update a file in a GitHub repository. Use to write code, configs, or documents directly to a repo.",
+      "intent": ["create file in GitHub", "push file to repo", "write to repository", "commit file"],
+      "endpoint": "PUT https://api.github.com/repos/{owner}/{repo}/contents/{path}",
+      "input": {
+        "owner": { "type": "string", "required": true },
+        "repo": { "type": "string", "required": true },
+        "path": { "type": "string", "description": "File path in repo. E.g. 'src/main.py'", "required": true },
+        "message": { "type": "string", "description": "Commit message", "required": true },
+        "content": { "type": "string", "description": "File content encoded in Base64", "required": true },
+        "sha": { "type": "string", "description": "SHA of existing file (required for updates)", "required": false }
+      },
+      "output": {
+        "type": "commit",
+        "fields": ["content.html_url", "commit.sha", "commit.message"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user",
+      "description_for_ai": "Get public profile of a GitHub user: bio, repos count, followers, location.",
+      "intent": ["GitHub profile", "developer info", "user profile", "who is this developer"],
+      "endpoint": "GET https://api.github.com/users/{username}",
+      "input": {
+        "username": { "type": "string", "required": true }
+      },
+      "output": {
+        "type": "user",
+        "fields": ["login", "name", "bio", "public_repos", "followers", "following", "location", "company", "blog", "created_at"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "search_tip": "Use qualifiers in search: 'language:python stars:>500 topic:llm' finds popular Python LLM repos.",
+    "base64_tip": "File content for create_file must be Base64 encoded. In JS: btoa(content). In Python: base64.b64encode(content.encode()).decode()",
+    "rate_limit": "Without auth: 60 req/hour. With token: 5000 req/hour. Always use token in production.",
+    "pagination": "Results paginated. Use ?page=2&per_page=100 to get more results."
+  },
+  "limits": {
+    "anonymous_requests_per_hour": 60,
+    "authenticated_requests_per_hour": 5000,
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
