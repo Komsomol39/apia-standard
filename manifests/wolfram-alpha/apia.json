@@ -6,7 +6,7 @@
     "description_for_ai": "Computational knowledge engine. Answers math, science, geography, history, statistics questions with step-by-step solutions. Solves equations, computes integrals, converts units, plots functions. Use for math homework, scientific calculations, factual queries.",
     "url": "https://wolframalpha.com",
     "api_base": "https://api.wolframalpha.com",
-    "category": "education_knowledge",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
