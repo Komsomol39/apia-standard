@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "classify",
-      "description_for_ai": "Fast text classification, routing, extraction at low cost. Use for labeling, intent detection, sentiment at scale.",
+      "description_for_ai": "Anthropic fastest and cheapest Claude model. Best for high-volume classification, extraction, summarization, simple Q&A. Near-instant responses. Use when speed and cost matter more than maximum capability. Fast text classification, routing, extraction at low cost. Use for labeling, intent detection, sentiment at scale.",
       "intent": [
         "classify text",
         "detect intent",
