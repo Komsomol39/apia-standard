@@ -128,5 +128,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "api_token": "Get token: Settings → Personal Preferences → API. Append to every request as ?api_token=...",
+    "pagination": "Use start and limit params. Response includes additional_data.pagination.more_items_in_collection",
+    "custom_fields": "Custom fields have hash keys like 'abc123def456'. List all via GET /dealFields, /personFields etc.",
+    "webhooks": "Set up webhooks in Tools → Webhooks for real-time deal/contact/activity updates."
   }
 }
