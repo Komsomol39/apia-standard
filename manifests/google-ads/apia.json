@@ -55,12 +55,17 @@
     },
     {
       "id": "create_campaign",
-      "description_for_ai": "Create a new Google Ads campaign with budget, targeting, and bidding strategy.",
+      "description_for_ai": "Create a new Google Ads campaign with budget, bidding strategy, targeting, and campaign type settings.",
       "intent": [
+        "google ads campaign",
+        "launch ads",
+        "PPC campaign",
+        "search campaign",
         "create ad campaign",
         "new campaign",
-        "google ads campaign",
-        "start advertising"
+        "Google advertising",
+        "start advertising",
+        "new ad campaign"
       ],
       "endpoint": "POST https://googleads.googleapis.com/v17/customers/{customer_id}/campaigns:mutate",
       "input": {
