@@ -1,1 +1,78 @@
-{"apia":"1.0","service":{"id":"languagetool","name":"LanguageTool API","description_for_ai":"Free grammar and spell checker. Supports 25+ languages including Russian, German, French, Spanish. Detects grammar errors, punctuation mistakes, style issues. Free: 20 req/min 20KB text.","url":"https://languagetool.org","api_base":"https://api.languagetool.org/v2","category":"nlp_grammar","geo":["GLOBAL"],"language":"en","docs":"https://languagetool.org/http-api/"},"auth":{"type":"none","anonymous_access":true,"anonymous_limits":"20 req/min, 20KB text","cost":"Free. Premium: $4.99/month"},"capabilities":[{"id":"check","description_for_ai":"Check text for grammar, spelling, punctuation and style errors. Returns list of mistakes with suggestions.","intent":["grammar check","spell check","proofread","fix grammar","writing errors","correct text","проверка грамматики","проверить текст"],"endpoint":"POST https://api.languagetool.org/v2/check","input":{"text":{"type":"string","description":"Text to check","required":true},"language":{"type":"string","description":"Language code: en-US, ru-RU, de-DE, fr, es, it, pt-BR","required":true},"enabledOnly":{"type":"boolean","default":false}},"output":{"type":"check_result","fields":["matches[0].message","matches[0].context.text","matches[0].offset","matches[0].length","matches[0].replacements[0].value","matches[0].rule.description"]},"realtime":true,"requires_auth":false}],"agent_hints":{"language_codes":"English: en-US or en-GB. Russian: ru-RU. German: de-DE. French: fr. Spanish: es.","free":"Free tier is very generous — 20 req/min with 20KB text per request is enough for most use cases.","self_host":"LanguageTool is open source and can be self-hosted for unlimited use."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "languagetool",
+    "name": "LanguageTool API",
+    "description_for_ai": "Free grammar and spell checker. Supports 25+ languages including Russian, German, French, Spanish. Detects grammar errors, punctuation mistakes, style issues. Free: 20 req/min 20KB text.",
+    "url": "https://languagetool.org",
+    "api_base": "https://api.languagetool.org/v2",
+    "category": "nlp_grammar",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://languagetool.org/http-api/"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "anonymous_limits": "20 req/min, 20KB text",
+    "cost": "Free. Premium: $4.99/month"
+  },
+  "capabilities": [
+    {
+      "id": "check",
+      "description_for_ai": "Check text for grammar, spelling, punctuation and style errors. Returns list of mistakes with suggestions.",
+      "intent": [
+        "grammar check",
+        "spell check",
+        "proofread",
+        "fix grammar",
+        "writing errors",
+        "correct text",
+        "проверка грамматики",
+        "проверить текст"
+      ],
+      "endpoint": "POST https://api.languagetool.org/v2/check",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Text to check",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "description": "Language code: en-US, ru-RU, de-DE, fr, es, it, pt-BR",
+          "required": true
+        },
+        "enabledOnly": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "check_result",
+        "fields": [
+          "matches[0].message",
+          "matches[0].context.text",
+          "matches[0].offset",
+          "matches[0].length",
+          "matches[0].replacements[0].value",
+          "matches[0].rule.description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "language_codes": "English: en-US or en-GB. Russian: ru-RU. German: de-DE. French: fr. Spanish: es.",
+    "free": "Free tier is very generous — 20 req/min with 20KB text per request is enough for most use cases.",
+    "self_host": "LanguageTool is open source and can be self-hosted for unlimited use."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
