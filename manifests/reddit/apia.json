@@ -6,7 +6,7 @@
     "description_for_ai": "Access Reddit posts, comments, subreddits and user profiles. World's largest discussion platform with 1.5B+ monthly users. Use for trending topics, community sentiment, finding discussions on any subject, monitoring subreddits.",
     "url": "https://reddit.com",
     "api_base": "https://oauth.reddit.com",
-    "category": "social_media",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
