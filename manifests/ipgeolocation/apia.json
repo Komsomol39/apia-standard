@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "get_ip_info",
-      "description_for_ai": "Get geographic location, timezone, currency and ISP for any IP address. Omit ip param to get info for caller IP.",
+      "description_for_ai": "Get location, timezone, currency, and ISP info from any IP address. Use to detect user country/city without GPS, localize content, detect VPN/proxy. Get geographic location, timezone, currency and ISP for any IP address. Omit ip param to get info for caller IP.",
       "intent": [
         "IP location",
         "where is this IP",
