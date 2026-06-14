@@ -6,7 +6,7 @@
     "description_for_ai": "Business intelligence API. Enrich company and person data from email or domain. Get company size, industry, funding, tech stack, social profiles. Used by Stripe, Zendesk, Intercom. Use for lead enrichment, B2B data.",
     "url": "https://clearbit.com",
     "api_base": "https://company.clearbit.com/v2",
-    "category": "business_intelligence",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
