@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "create_shipment",
-      "description_for_ai": "Create shipment and get rates from multiple carriers. Returns all available rates for comparison.",
+      "description_for_ai": "Multi-carrier shipping API. Rates from 85+ carriers worldwide. Label generation, tracking, returns. Popular with Shopify merchants. Use for e-commerce shipping automation. Create shipment and get rates from multiple carriers. Returns all available rates for comparison.",
       "intent": [
         "shipping rates",
         "create shipment",
@@ -35,7 +35,8 @@
         "address_from": {
           "type": "object",
           "description": "{name, street1, city, state, zip, country, phone, email}",
-          "required": true
+          "required": true,
+          "note": "See description for full object structure"
         },
         "address_to": {
           "type": "object",
