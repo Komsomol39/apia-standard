@@ -6,7 +6,7 @@
     "description_for_ai": "Best code completion model from Mistral. Fill-in-the-middle (FIM) completion for 80+ programming languages. Integrated in VS Code, JetBrains, Cursor. $0.30/$0.90 per 1M tokens. Use for code autocomplete, code generation, code explanation.",
     "url": "https://mistral.ai",
     "api_base": "https://codestral.mistral.ai/v1",
-    "category": "ai_code",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
