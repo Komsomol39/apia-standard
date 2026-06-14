@@ -6,7 +6,7 @@
     "description_for_ai": "Email and SMS marketing platform for e-commerce. 150K+ brands use it. Segments, flows (automation), campaigns, profiles, events, metrics. Deep Shopify integration. Use for e-commerce email marketing automation.",
     "url": "https://klaviyo.com",
     "api_base": "https://a.klaviyo.com/api",
-    "category": "marketing_email",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
