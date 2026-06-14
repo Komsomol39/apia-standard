@@ -6,7 +6,7 @@
     "description_for_ai": "Search 40M+ books. Get book metadata: title, author, publisher, description, cover image, ISBN, page count, categories. Preview links. No API key needed for basic search.",
     "url": "https://books.google.com",
     "api_base": "https://www.googleapis.com/books/v1",
-    "category": "education_books",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
