@@ -111,7 +111,8 @@
       "input": {
         "name": {
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Name identifier"
         },
         "organization_name": {
           "type": "string",
