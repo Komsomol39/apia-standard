@@ -1,1 +1,107 @@
-{"apia":"1.0","service":{"id":"zendesk","name":"Zendesk API","description_for_ai":"Customer support platform. Manage tickets, users, organizations, knowledge base articles, chat. Used by Airbnb, Shopify, Slack for customer service. Use for support ticket management, customer service automation.","url":"https://zendesk.com","api_base":"https://{subdomain}.zendesk.com/api/v2","category":"customer_support","geo":["GLOBAL"],"language":"en","docs":"https://developer.zendesk.com/api-reference/"},"auth":{"type":"basic_auth","anonymous_access":false,"note":"Email/token as username:password base64 encoded","how_to_get":"Admin Center → Apps → API","cost":"Suite Team: $55/agent/month. 14-day trial"},"capabilities":[{"id":"create_ticket","description_for_ai":"Create a customer support ticket. Assign to agent, set priority and tags.","intent":["create support ticket","customer issue","help desk ticket","support request","customer complaint"],"endpoint":"POST https://{subdomain}.zendesk.com/api/v2/tickets","input":{"ticket":{"type":"object","description":"{subject: string, comment: {body: string}, requester: {name, email}, priority: urgent|high|normal|low, tags: []}","required":true}},"output":{"type":"ticket","fields":["ticket.id","ticket.url","ticket.status","ticket.priority","ticket.created_at"]},"realtime":true,"requires_auth":true},{"id":"list_tickets","description_for_ai":"Get list of support tickets with filters by status, assignee, priority.","intent":["open tickets","support queue","customer issues","pending tickets","help desk queue"],"endpoint":"GET https://{subdomain}.zendesk.com/api/v2/tickets","input":{"status":{"type":"string","description":"new, open, pending, hold, solved, closed","required":false},"sort_by":{"type":"string","description":"created_at, updated_at, priority","default":"created_at"},"sort_order":{"type":"string","description":"asc or desc","default":"desc"},"per_page":{"type":"integer","default":25}},"output":{"type":"list<ticket>","fields":["tickets[0].id","tickets[0].subject","tickets[0].status","tickets[0].priority","tickets[0].created_at","tickets[0].requester_id"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "zendesk",
+    "name": "Zendesk API",
+    "description_for_ai": "Customer support platform. Manage tickets, users, organizations, knowledge base articles, chat. Used by Airbnb, Shopify, Slack for customer service. Use for support ticket management, customer service automation.",
+    "url": "https://zendesk.com",
+    "api_base": "https://{subdomain}.zendesk.com/api/v2",
+    "category": "customer_support",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developer.zendesk.com/api-reference/"
+  },
+  "auth": {
+    "type": "basic_auth",
+    "anonymous_access": false,
+    "note": "Email/token as username:password base64 encoded",
+    "how_to_get": "Admin Center → Apps → API",
+    "cost": "Suite Team: $55/agent/month. 14-day trial"
+  },
+  "capabilities": [
+    {
+      "id": "create_ticket",
+      "description_for_ai": "Create a customer support ticket. Assign to agent, set priority and tags.",
+      "intent": [
+        "create support ticket",
+        "customer issue",
+        "help desk ticket",
+        "support request",
+        "customer complaint"
+      ],
+      "endpoint": "POST https://{subdomain}.zendesk.com/api/v2/tickets",
+      "input": {
+        "ticket": {
+          "type": "object",
+          "description": "{subject: string, comment: {body: string}, requester: {name, email}, priority: urgent|high|normal|low, tags: []}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "ticket",
+        "fields": [
+          "ticket.id",
+          "ticket.url",
+          "ticket.status",
+          "ticket.priority",
+          "ticket.created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_tickets",
+      "description_for_ai": "Get list of support tickets with filters by status, assignee, priority.",
+      "intent": [
+        "open tickets",
+        "support queue",
+        "customer issues",
+        "pending tickets",
+        "help desk queue"
+      ],
+      "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/tickets",
+      "input": {
+        "status": {
+          "type": "string",
+          "description": "new, open, pending, hold, solved, closed",
+          "required": false
+        },
+        "sort_by": {
+          "type": "string",
+          "description": "created_at, updated_at, priority",
+          "default": "created_at"
+        },
+        "sort_order": {
+          "type": "string",
+          "description": "asc or desc",
+          "default": "desc"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<ticket>",
+        "fields": [
+          "tickets[0].id",
+          "tickets[0].subject",
+          "tickets[0].status",
+          "tickets[0].priority",
+          "tickets[0].created_at",
+          "tickets[0].requester_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
