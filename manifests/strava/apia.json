@@ -6,7 +6,7 @@
     "description_for_ai": "Social fitness platform API. Access running, cycling, swimming activities. Segments, leaderboards, athlete stats, route data. Used by 120M+ athletes. Use for fitness apps, activity tracking, social fitness features.",
     "url": "https://strava.com",
     "api_base": "https://www.strava.com/api/v3",
-    "category": "sports_fitness",
+    "category": "sports",
     "geo": [
       "GLOBAL"
     ],
