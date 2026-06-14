@@ -1,0 +1,77 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "exchangerate-api",
+    "name": "ExchangeRate-API",
+    "description_for_ai": "Real-time and historical currency exchange rates for 160+ currencies. Free tier: 1500 requests/month, no credit card. Use for currency conversion, showing prices in local currency, financial calculations.",
+    "url": "https://exchangerate-api.com",
+    "api_base": "https://v6.exchangerate-api.com/v6",
+    "category": "finance_currency",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://www.exchangerate-api.com/docs/overview"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_location": "path",
+    "how_to_get": "Register at https://www.exchangerate-api.com — free tier, no credit card",
+    "cost": "Free: 1500 requests/month. Pro: from $9.99/month"
+  },
+  "capabilities": [
+    {
+      "id": "get_latest_rates",
+      "description_for_ai": "Get current exchange rates for a base currency against all other currencies. Use for 'what is USD to RUB rate', 'convert euros to dollars', 'currency exchange rates today'.",
+      "intent": [
+        "exchange rate", "currency conversion", "convert dollars to rubles",
+        "USD to RUB", "курс валют", "конвертировать валюту", "forex rate"
+      ],
+      "endpoint": "GET https://v6.exchangerate-api.com/v6/{api_key}/latest/{base_currency}",
+      "input": {
+        "base_currency": { "type": "string", "description": "Base currency code: USD, EUR, RUB, GBP, JPY, CNY, KZT, BYN etc.", "required": true }
+      },
+      "output": {
+        "type": "exchange_rates",
+        "fields": ["base_code", "time_last_update_utc", "conversion_rates"]
+      },
+      "realtime": true,
+      "requires_auth": true,
+      "rate_limit": "1500/month free"
+    },
+    {
+      "id": "convert_amount",
+      "description_for_ai": "Convert a specific amount from one currency to another. Use for 'how much is 100 dollars in rubles', 'convert 500 EUR to GBP'.",
+      "intent": [
+        "convert amount", "how much is X in Y", "currency calculator",
+        "сколько рублей в долларе", "конвертировать сумму"
+      ],
+      "endpoint": "GET https://v6.exchangerate-api.com/v6/{api_key}/pair/{from}/{to}/{amount}",
+      "input": {
+        "from": { "type": "string", "description": "Source currency code. E.g. USD", "required": true },
+        "to": { "type": "string", "description": "Target currency code. E.g. RUB", "required": true },
+        "amount": { "type": "float", "description": "Amount to convert", "required": true }
+      },
+      "output": {
+        "type": "conversion",
+        "fields": ["base_code", "target_code", "conversion_rate", "conversion_result", "time_last_update_utc"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "common_codes": "USD=US Dollar, EUR=Euro, RUB=Russian Ruble, GBP=British Pound, JPY=Japanese Yen, CNY=Chinese Yuan, KZT=Kazakhstani Tenge, BYN=Belarusian Ruble, UAH=Ukrainian Hryvnia",
+    "update_frequency": "Rates updated every 24 hours on free tier, every hour on Pro.",
+    "calculation_tip": "To convert: result = amount * conversion_rate. E.g. 100 USD * 89.5 = 8950 RUB"
+  },
+  "limits": {
+    "free_requests_per_month": 1500,
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
