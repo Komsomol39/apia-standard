@@ -6,7 +6,7 @@
     "description_for_ai": "Business reviews and local search API. 265M+ reviews, 8M+ businesses. Search restaurants, services, shops with ratings and hours. Best for US/Canada business discovery. Use for finding local businesses with reviews.",
     "url": "https://yelp.com",
     "api_base": "https://api.yelp.com/v3",
-    "category": "local_business",
+    "category": "business",
     "geo": [
       "US",
       "CA",
