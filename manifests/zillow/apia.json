@@ -26,13 +26,18 @@
       "id": "search_properties",
       "description_for_ai": "US real estate data. Property details, home values (Zestimate), listing info, neighborhood data. 135M+ US properties. Use for property search, home value estimates, real estate market data. Search US properties by location, price, beds, baths, property type. Returns listing details with Zestimate home value.",
       "intent": [
+        "US property",
         "find homes",
-        "property search",
-        "houses for sale",
+        "US home search",
+        "buy house",
+        "homes for sale",
         "real estate listings",
         "home prices",
-        "buy house",
-        "US property"
+        "houses for sale",
+        "property search",
+        "Zillow search",
+        "Zestimate",
+        "property search US"
       ],
       "endpoint": "GET https://api.bridgedataoutput.com/api/v2/zora/core/listings",
       "input": {
