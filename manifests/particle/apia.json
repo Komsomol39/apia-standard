@@ -1,1 +1,101 @@
-{"apia":"1.0","service":{"id":"particle","name":"Particle IoT Cloud API","description_for_ai":"IoT device management platform. Flash firmware, read sensor data, control Particle devices (Photon, Argon, Boron) remotely. Cloud API for IoT prototyping and production.","url":"https://particle.io","api_base":"https://api.particle.io/v1","category":"iot_platform","geo":["GLOBAL"],"language":"en","docs":"https://docs.particle.io/reference/cloud-apis/api/"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"Register at https://particle.io — free Sandbox tier","cost":"Free Sandbox: 100 devices. Paid from $0.10/device/month"},"capabilities":[{"id":"call_function","description_for_ai":"Call a function on a Particle device remotely. Use to trigger actions on IoT devices — toggle relay, read sensor, start motor.","intent":["control IoT device","call device function","trigger device","remote control","IoT command"],"endpoint":"POST https://api.particle.io/v1/devices/{device_id}/{function_name}","input":{"device_id":{"type":"string","description":"Particle device ID","required":true},"function_name":{"type":"string","description":"Function registered in firmware","required":true},"arg":{"type":"string","description":"Argument to pass to function","required":false}},"output":{"type":"function_result","fields":["return_value","id","connected"]},"realtime":true,"requires_auth":true},{"id":"get_variable","description_for_ai":"Read a variable value from a Particle device. Use to get sensor readings, device status.","intent":["read sensor","get device value","IoT sensor data","temperature reading","device variable"],"endpoint":"GET https://api.particle.io/v1/devices/{device_id}/{variable_name}","input":{"device_id":{"type":"string","required":true},"variable_name":{"type":"string","description":"Variable registered in firmware","required":true}},"output":{"type":"variable","fields":["name","result","device_id"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "particle",
+    "name": "Particle IoT Cloud API",
+    "description_for_ai": "IoT device management platform. Flash firmware, read sensor data, control Particle devices (Photon, Argon, Boron) remotely. Cloud API for IoT prototyping and production.",
+    "url": "https://particle.io",
+    "api_base": "https://api.particle.io/v1",
+    "category": "iot_platform",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.particle.io/reference/cloud-apis/api/"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://particle.io — free Sandbox tier",
+    "cost": "Free Sandbox: 100 devices. Paid from $0.10/device/month"
+  },
+  "capabilities": [
+    {
+      "id": "call_function",
+      "description_for_ai": "Call a function on a Particle device remotely. Use to trigger actions on IoT devices — toggle relay, read sensor, start motor.",
+      "intent": [
+        "control IoT device",
+        "call device function",
+        "trigger device",
+        "remote control",
+        "IoT command"
+      ],
+      "endpoint": "POST https://api.particle.io/v1/devices/{device_id}/{function_name}",
+      "input": {
+        "device_id": {
+          "type": "string",
+          "description": "Particle device ID",
+          "required": true
+        },
+        "function_name": {
+          "type": "string",
+          "description": "Function registered in firmware",
+          "required": true
+        },
+        "arg": {
+          "type": "string",
+          "description": "Argument to pass to function",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "function_result",
+        "fields": [
+          "return_value",
+          "id",
+          "connected"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_variable",
+      "description_for_ai": "Read a variable value from a Particle device. Use to get sensor readings, device status.",
+      "intent": [
+        "read sensor",
+        "get device value",
+        "IoT sensor data",
+        "temperature reading",
+        "device variable"
+      ],
+      "endpoint": "GET https://api.particle.io/v1/devices/{device_id}/{variable_name}",
+      "input": {
+        "device_id": {
+          "type": "string",
+          "required": true
+        },
+        "variable_name": {
+          "type": "string",
+          "description": "Variable registered in firmware",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "variable",
+        "fields": [
+          "name",
+          "result",
+          "device_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
