@@ -1,2 +1,77 @@
 {
-  "apia":"1.0","service":{"id":"ipgeolocation","name":"IPGeolocation API","description_for_ai":"Get location, timezone, currency, and ISP info from any IP address. Use to detect user country/city without GPS, localize content, detect VPN/proxy.","url":"https://ipgeolocation.io","api_base":"https://api.ipgeolocation.io","category":"geolocation","geo":["GLOBAL"],"language":"en","docs":"https://ipgeolocation.io/documentation"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"apiKey","param_location":"query","how_to_get":"Register at https://ipgeolocation.io — 1000 req/day free","cost":"Free: 1000/day. Paid from $15/month"},"capabilities":[{"id":"get_ip_info","description_for_ai":"Get geographic location, timezone, currency and ISP for any IP address. Omit ip param to get info for caller IP.","intent":["IP location","where is this IP","detect user country","user timezone from IP","IP geolocation"],"endpoint":"GET https://api.ipgeolocation.io/ipgeo","input":{"ip":{"type":"string","description":"IP address to look up. Omit for current request IP.","required":false},"fields":{"type":"string","description":"Comma-separated fields: geo,isp,timezone,currency","required":false}},"output":{"type":"ip_info","fields":["ip","country_name","country_code2","city","latitude","longitude","timezone.name","timezone.current_time","currency.code","isp","is_proxy"]},"realtime":true,"requires_auth":true}],"agent_hints":{"auto_detect":"Call without ip param to get current user location — great for personalizing content.","vpn_check":"is_proxy field detects VPN/proxy/Tor."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "ipgeolocation",
+    "name": "IPGeolocation API",
+    "description_for_ai": "Get location, timezone, currency, and ISP info from any IP address. Use to detect user country/city without GPS, localize content, detect VPN/proxy.",
+    "url": "https://ipgeolocation.io",
+    "api_base": "https://api.ipgeolocation.io",
+    "category": "geolocation",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://ipgeolocation.io/documentation"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "apiKey",
+    "param_location": "query",
+    "how_to_get": "Register at https://ipgeolocation.io — 1000 req/day free",
+    "cost": "Free: 1000/day. Paid from $15/month"
+  },
+  "capabilities": [
+    {
+      "id": "get_ip_info",
+      "description_for_ai": "Get geographic location, timezone, currency and ISP for any IP address. Omit ip param to get info for caller IP.",
+      "intent": [
+        "IP location",
+        "where is this IP",
+        "detect user country",
+        "user timezone from IP",
+        "IP geolocation"
+      ],
+      "endpoint": "GET https://api.ipgeolocation.io/ipgeo",
+      "input": {
+        "ip": {
+          "type": "string",
+          "description": "IP address to look up. Omit for current request IP.",
+          "required": false
+        },
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated fields: geo,isp,timezone,currency",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "ip_info",
+        "fields": [
+          "ip",
+          "country_name",
+          "country_code2",
+          "city",
+          "latitude",
+          "longitude",
+          "timezone.name",
+          "timezone.current_time",
+          "currency.code",
+          "isp",
+          "is_proxy"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "auto_detect": "Call without ip param to get current user location — great for personalizing content.",
+    "vpn_check": "is_proxy field detects VPN/proxy/Tor."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
