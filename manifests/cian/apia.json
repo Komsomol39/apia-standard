@@ -1,242 +1,134 @@
-[
-  {
-    "apia": "1.0",
-    "service": {
-      "id": "cian",
-      "name": "ЦИАН API (Россия)",
-      "description_for_ai": "Крупнейший портал недвижимости России. Поиск квартир, домов, коммерческой недвижимости для покупки и аренды. Официальный API через партнёрскую программу. Используй для поиска жилья в России.",
-      "url": "https://cian.ru",
-      "api_base": "https://public-api.cian.ru",
-      "category": "real_estate",
-      "geo": [
-        "RU"
-      ],
-      "language": "ru",
-      "docs": "https://www.cian.ru/help/about/partners-api/"
-    },
-    "auth": {
-      "type": "apikey",
-      "anonymous_access": false,
-      "how_to_get": "Подать заявку на партнёрство: https://www.cian.ru/help/about/partners-api/",
-      "cost": "Партнёрский договор"
-    },
-    "capabilities": [
-      {
-        "id": "search_offers",
-        "description_for_ai": "Search property listings on ЦИАН — Russia's largest real estate portal. Filter by type, price, rooms, metro, and location.",
-        "intent": [
-          "квартира купить",
-          "снять квартиру",
-          "недвижимость Москва",
-          "аренда жилья",
-          "продажа квартиры",
-          "найти квартиру"
-        ],
-        "endpoint": "GET https://public-api.cian.ru/v1/offers/search",
-        "input": {
-          "deal_type": {
-            "type": "string",
-            "description": "Transaction type: sale (продажа) or rent (аренда)",
-            "required": true
-          },
-          "offer_type": {
-            "type": "string",
-            "description": "Property type: flat (квартира), house (дом/дача), commercial (коммерческая), garage",
-            "default": "flat"
-          },
-          "region_id": {
-            "type": "integer",
-            "description": "Region ID: 1=Москва, 2=Санкт-Петербург, 4593=Московская область. Full list at /api/geo/regions/",
-            "required": false
-          },
-          "rooms_count": {
-            "type": "array",
-            "description": "Number of rooms: [1] for 1-комнатные, [2,3] for 2-3 комнатные, [0] for студии",
-            "required": false
-          },
-          "price_min": {
-            "type": "integer",
-            "description": "Minimum price in RUB (for sale) or RUB/month (for rent)",
-            "required": false
-          },
-          "price_max": {
-            "type": "integer",
-            "description": "Maximum price in RUB",
-            "required": false
-          },
-          "total_area_min": {
-            "type": "float",
-            "description": "Minimum total area in square meters",
-            "required": false
-          },
-          "total_area_max": {
-            "type": "float",
-            "description": "Maximum total area in square meters",
-            "required": false
-          },
-          "floor_min": {
-            "type": "integer",
-            "description": "Minimum floor number",
-            "required": false
-          },
-          "metro_id": {
-            "type": "integer",
-            "description": "Metro station ID for proximity search",
-            "required": false
-          },
-          "page": {
-            "type": "integer",
-            "description": "Page number for pagination",
-            "default": 1
-          },
-          "page_size": {
-            "type": "integer",
-            "description": "Results per page",
-            "default": 20
-          }
-        },
-        "output": {
-          "type": "list<offer>",
-          "fields": [
-            "offersSerialized[0].id",
-            "offersSerialized[0].fullPrice",
-            "offersSerialized[0].roomsCount",
-            "offersSerialized[0].totalArea",
-            "offersSerialized[0].floorNumber",
-            "offersSerialized[0].floorsCount",
-            "offersSerialized[0].address",
-            "offersSerialized[0].photos[0].fullUrl",
-            "offersSerialized[0].description"
-          ]
-        },
-        "realtime": true,
-        "requires_auth": true
-      }
+{
+  "apia": "1.0",
+  "service": {
+    "id": "cian",
+    "name": "ЦИАН API (Россия)",
+    "description_for_ai": "Крупнейший портал недвижимости России. Поиск квартир, домов, коммерческой недвижимости для покупки и аренды. Официальный API через партнёрскую программу. Более 20M объявлений. Используй для поиска жилья в России, проверки цен на недвижимость.",
+    "url": "https://cian.ru",
+    "api_base": "https://public-api.cian.ru",
+    "category": "real_estate",
+    "geo": [
+      "RU"
     ],
-    "meta": {
-      "apia_version": "1.0",
-      "manifest_author": "APIA community",
-      "last_verified": "2026-06-14"
-    }
+    "language": "ru",
+    "docs": "https://www.cian.ru/help/about/partners-api/"
   },
-  {
-    "apia": "1.0",
-    "service": {
-      "id": "cian",
-      "name": "ЦИАН API (Россия)",
-      "description_for_ai": "Крупнейший портал недвижимости России. Поиск квартир, домов, коммерческой недвижимости для покупки и аренды. Официальный API через партнёрскую программу. Используй для поиска жилья в России.",
-      "url": "https://cian.ru",
-      "api_base": "https://public-api.cian.ru",
-      "category": "real_estate",
-      "geo": [
-        "RU"
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "Подать заявку на партнёрство: https://www.cian.ru/help/about/partners-api/",
+    "cost": "Партнёрский договор"
+  },
+  "capabilities": [
+    {
+      "id": "search_offers",
+      "description_for_ai": "Поиск объявлений о продаже и аренде недвижимости в России. Фильтры по цене, площади, количеству комнат, метро, типу недвижимости.",
+      "intent": [
+        "квартира купить",
+        "снять квартиру",
+        "недвижимость Москва",
+        "аренда жилья",
+        "продажа квартиры",
+        "найти квартиру",
+        "цена квартиры",
+        "real estate Russia"
       ],
-      "language": "ru",
-      "docs": "https://www.cian.ru/help/about/partners-api/"
-    },
-    "auth": {
-      "type": "apikey",
-      "anonymous_access": false,
-      "how_to_get": "Подать заявку на партнёрство: https://www.cian.ru/help/about/partners-api/",
-      "cost": "Партнёрский договор"
-    },
-    "capabilities": [
-      {
-        "id": "search_offers",
-        "description_for_ai": "Search property listings on ЦИАН — Russia's largest real estate portal. Filter by type, price, rooms, metro, and location.",
-        "intent": [
-          "квартира купить",
-          "снять квартиру",
-          "недвижимость Москва",
-          "аренда жилья",
-          "продажа квартиры",
-          "найти квартиру"
-        ],
-        "endpoint": "GET https://public-api.cian.ru/v1/offers/search",
-        "input": {
-          "deal_type": {
-            "type": "string",
-            "description": "Transaction type: sale (продажа) or rent (аренда)",
-            "required": true
-          },
-          "offer_type": {
-            "type": "string",
-            "description": "Property type: flat (квартира), house (дом/дача), commercial (коммерческая), garage",
-            "default": "flat"
-          },
-          "region_id": {
-            "type": "integer",
-            "description": "Region ID: 1=Москва, 2=Санкт-Петербург, 4593=Московская область. Full list at /api/geo/regions/",
-            "required": false
-          },
-          "rooms_count": {
-            "type": "array",
-            "description": "Number of rooms: [1] for 1-комнатные, [2,3] for 2-3 комнатные, [0] for студии",
-            "required": false
-          },
-          "price_min": {
-            "type": "integer",
-            "description": "Minimum price in RUB (for sale) or RUB/month (for rent)",
-            "required": false
-          },
-          "price_max": {
-            "type": "integer",
-            "description": "Maximum price in RUB",
-            "required": false
-          },
-          "total_area_min": {
-            "type": "float",
-            "description": "Minimum total area in square meters",
-            "required": false
-          },
-          "total_area_max": {
-            "type": "float",
-            "description": "Maximum total area in square meters",
-            "required": false
-          },
-          "floor_min": {
-            "type": "integer",
-            "description": "Minimum floor number",
-            "required": false
-          },
-          "metro_id": {
-            "type": "integer",
-            "description": "Metro station ID for proximity search",
-            "required": false
-          },
-          "page": {
-            "type": "integer",
-            "description": "Page number for pagination",
-            "default": 1
-          },
-          "page_size": {
-            "type": "integer",
-            "description": "Results per page",
-            "default": 20
-          }
+      "endpoint": "GET https://public-api.cian.ru/v1/offers/search",
+      "input": {
+        "deal_type": {
+          "type": "string",
+          "description": "Тип сделки: sale (продажа) или rent (аренда)",
+          "required": true
         },
-        "output": {
-          "type": "list<offer>",
-          "fields": [
-            "offersSerialized[0].id",
-            "offersSerialized[0].fullPrice",
-            "offersSerialized[0].roomsCount",
-            "offersSerialized[0].totalArea",
-            "offersSerialized[0].floorNumber",
-            "offersSerialized[0].floorsCount",
-            "offersSerialized[0].address",
-            "offersSerialized[0].photos[0].fullUrl",
-            "offersSerialized[0].description"
-          ]
+        "offer_type": {
+          "type": "string",
+          "description": "Тип недвижимости: flat (квартира), house (дом/дача), commercial (коммерческая), garage",
+          "default": "flat"
         },
-        "realtime": true,
-        "requires_auth": true
-      }
-    ],
-    "meta": {
-      "apia_version": "1.0",
-      "manifest_author": "APIA community",
-      "last_verified": "2026-06-14"
+        "region_id": {
+          "type": "integer",
+          "description": "ID региона: 1=Москва, 2=Санкт-Петербург, 4593=Московская область, 4608=Ленобласть",
+          "required": false
+        },
+        "rooms_count": {
+          "type": "array",
+          "description": "Количество комнат: [1] для однушек, [2,3] для 2-3 комнатных, [0] для студий, [9] для многокомнатных",
+          "required": false
+        },
+        "price_min": {
+          "type": "integer",
+          "description": "Минимальная цена в рублях (для продажи) или руб/мес (для аренды)",
+          "required": false
+        },
+        "price_max": {
+          "type": "integer",
+          "description": "Максимальная цена в рублях",
+          "required": false
+        },
+        "total_area_min": {
+          "type": "float",
+          "description": "Минимальная общая площадь в кв.м.",
+          "required": false
+        },
+        "total_area_max": {
+          "type": "float",
+          "description": "Максимальная общая площадь в кв.м.",
+          "required": false
+        },
+        "floor_min": {
+          "type": "integer",
+          "description": "Минимальный этаж (не первый = 2)",
+          "required": false
+        },
+        "floor_max": {
+          "type": "integer",
+          "description": "Максимальный этаж",
+          "required": false
+        },
+        "metro_id": {
+          "type": "integer",
+          "description": "ID станции метро для поиска рядом",
+          "required": false
+        },
+        "page": {
+          "type": "integer",
+          "description": "Номер страницы (1-indexed)",
+          "default": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "Объявлений на странице",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<offer>",
+        "fields": [
+          "offersSerialized[0].id",
+          "offersSerialized[0].fullPrice",
+          "offersSerialized[0].roomsCount",
+          "offersSerialized[0].totalArea",
+          "offersSerialized[0].floorNumber",
+          "offersSerialized[0].floorsCount",
+          "offersSerialized[0].address",
+          "offersSerialized[0].photos[0].fullUrl",
+          "offersSerialized[0].description",
+          "offersSerialized[0].publishedUserId"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
+  ],
+  "agent_hints": {
+    "partnership": "API доступен только для партнёров ЦИАН. Подать заявку: cian.ru/help/about/partners-api/",
+    "regions": "Регионы: 1=Москва, 2=Санкт-Петербург. Остальные регионы смотри в справочнике регионов API.",
+    "alternative": "Для парсинга без партнёрства используется неофициальный API через мобильное приложение (нестабильно).",
+    "metro": "ID метро получи через справочный эндпоинт /v1/geo/metros/{region_id}"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
   }
-]
+}
