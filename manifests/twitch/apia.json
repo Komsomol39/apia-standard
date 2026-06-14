@@ -88,7 +88,7 @@
         },
         "id": {
           "type": "string",
-          "description": "Game ID",
+          "description": "Unique identifier",
           "required": false
         }
       },
