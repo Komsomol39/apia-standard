@@ -23,12 +23,16 @@
       "id": "get_indicator",
       "description_for_ai": "Get WHO health indicator data for countries and years. E.g. life expectancy, mortality rates, disease prevalence, vaccination coverage.",
       "intent": [
-        "world health data",
-        "WHO statistics",
+        "mortality data",
         "disease rates",
-        "life expectancy",
+        "WHO statistics",
         "vaccination coverage",
-        "mortality rate"
+        "world health data",
+        "global health",
+        "mortality rate",
+        "world health",
+        "life expectancy",
+        "health metrics"
       ],
       "endpoint": "GET https://ghoapi.azureedge.net/api/{indicator_code}",
       "input": {
@@ -64,9 +68,10 @@
       "id": "list_indicators",
       "description_for_ai": "List all available WHO health indicators with codes and names.",
       "intent": [
-        "WHO indicators",
         "health metrics list",
-        "available statistics"
+        "WHO indicators",
+        "available statistics",
+        "available health data"
       ],
       "endpoint": "GET https://ghoapi.azureedge.net/api/Indicator",
       "input": {
