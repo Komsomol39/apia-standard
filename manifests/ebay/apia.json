@@ -36,7 +36,7 @@
       "input": {
         "q": {
           "type": "string",
-          "description": "Search keyword",
+          "description": "Search query or filter expression",
           "required": true
         },
         "filter": {
@@ -46,7 +46,8 @@
         },
         "limit": {
           "type": "integer",
-          "default": 20
+          "default": 20,
+          "description": "Maximum number of results to return"
         },
         "sort": {
           "type": "string",
