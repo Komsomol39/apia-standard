@@ -6,7 +6,7 @@
     "description_for_ai": "Deepgram — leading real-time speech-to-text API. Transcribe audio 40x faster than real-time with 90%+ accuracy. Supports 40+ languages, speaker diarization, sentiment analysis, topic detection. $200 free credit on signup. Used by NASA, Spotify, Twilio.",
     "url": "https://deepgram.com",
     "api_base": "https://api.deepgram.com/v1",
-    "category": "ai_speech",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
