@@ -1,1 +1,74 @@
-{"apia":"1.0","service":{"id":"aws-lambda","name":"AWS Lambda API","description_for_ai":"Serverless compute. Run code without servers. Pay per 100ms execution. 1M free invocations/month forever. Supports Node.js, Python, Java, Go, Ruby. Use for event-driven functions, APIs, automation, processing.","url":"https://aws.amazon.com/lambda","api_base":"https://lambda.{region}.amazonaws.com","category":"developer_serverless","geo":["GLOBAL"],"language":"en","docs":"https://docs.aws.amazon.com/lambda/latest/dg/API_Reference.html"},"auth":{"type":"aws_sig_v4","anonymous_access":false,"how_to_get":"AWS account at https://aws.amazon.com","cost":"Free forever: 1M requests/month, 400K GB-seconds/month"},"capabilities":[{"id":"invoke_function","description_for_ai":"Invoke a Lambda function synchronously or asynchronously. Returns function response.","intent":["run function","invoke lambda","serverless function","trigger code","execute function"],"endpoint":"POST https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/invocations","input":{"FunctionName":{"type":"string","description":"Function name or ARN","required":true},"Payload":{"type":"object","description":"JSON payload to pass to function","required":false},"InvocationType":{"type":"string","description":"RequestResponse (sync) or Event (async) or DryRun","default":"RequestResponse"}},"output":{"type":"function_response","fields":["StatusCode","Payload","FunctionError","LogResult"]},"realtime":true,"requires_auth":true}],"agent_hints":{"sdk":"Use AWS SDK (boto3/aws-sdk) for easier auth. Raw HTTP requires SigV4 signing.","free_forever":"1M invocations/month free forever — not just trial. Best serverless free tier.","cold_start":"First invocation after idle period has ~100ms cold start. Provisioned concurrency eliminates this."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "aws-lambda",
+    "name": "AWS Lambda API",
+    "description_for_ai": "Serverless compute. Run code without servers. Pay per 100ms execution. 1M free invocations/month forever. Supports Node.js, Python, Java, Go, Ruby. Use for event-driven functions, APIs, automation, processing.",
+    "url": "https://aws.amazon.com/lambda",
+    "api_base": "https://lambda.{region}.amazonaws.com",
+    "category": "developer_serverless",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.aws.amazon.com/lambda/latest/dg/API_Reference.html"
+  },
+  "auth": {
+    "type": "aws_sig_v4",
+    "anonymous_access": false,
+    "how_to_get": "AWS account at https://aws.amazon.com",
+    "cost": "Free forever: 1M requests/month, 400K GB-seconds/month"
+  },
+  "capabilities": [
+    {
+      "id": "invoke_function",
+      "description_for_ai": "Invoke a Lambda function synchronously or asynchronously. Returns function response.",
+      "intent": [
+        "run function",
+        "invoke lambda",
+        "serverless function",
+        "trigger code",
+        "execute function"
+      ],
+      "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/invocations",
+      "input": {
+        "FunctionName": {
+          "type": "string",
+          "description": "Function name or ARN",
+          "required": true
+        },
+        "Payload": {
+          "type": "object",
+          "description": "JSON payload to pass to function",
+          "required": false
+        },
+        "InvocationType": {
+          "type": "string",
+          "description": "RequestResponse (sync) or Event (async) or DryRun",
+          "default": "RequestResponse"
+        }
+      },
+      "output": {
+        "type": "function_response",
+        "fields": [
+          "StatusCode",
+          "Payload",
+          "FunctionError",
+          "LogResult"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "sdk": "Use AWS SDK (boto3/aws-sdk) for easier auth. Raw HTTP requires SigV4 signing.",
+    "free_forever": "1M invocations/month free forever — not just trial. Best serverless free tier.",
+    "cold_start": "First invocation after idle period has ~100ms cold start. Provisioned concurrency eliminates this."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
