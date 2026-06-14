@@ -6,7 +6,7 @@
     "description_for_ai": "Issue and project tracking. Create, update, search issues. Sprints, boards, epics, comments, attachments. Used by 65K+ companies. Use for software project management, bug tracking, agile workflows.",
     "url": "https://atlassian.com/software/jira",
     "api_base": "https://{domain}.atlassian.net/rest/api/3",
-    "category": "developer_project",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
