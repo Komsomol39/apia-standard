@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "get_products",
-      "description_for_ai": "Get products from WooCommerce store.",
+      "description_for_ai": "Get products from WooCommerce store with prices, stock status, images, categories, and attributes.",
       "intent": [
         "woocommerce products",
         "wordpress store products",
@@ -33,15 +33,52 @@
       "input": {
         "per_page": {
           "type": "integer",
+          "description": "Results per page, max 100",
           "default": 20
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         },
         "status": {
           "type": "string",
+          "description": "publish, draft, pending, private, trash",
           "default": "publish"
         },
         "search": {
           "type": "string",
+          "description": "Search products by name or SKU",
           "required": false
+        },
+        "category": {
+          "type": "string",
+          "description": "Category ID to filter by",
+          "required": false
+        },
+        "stock_status": {
+          "type": "string",
+          "description": "instock, outofstock, onbackorder",
+          "required": false
+        },
+        "min_price": {
+          "type": "string",
+          "description": "Minimum price filter",
+          "required": false
+        },
+        "max_price": {
+          "type": "string",
+          "description": "Maximum price filter",
+          "required": false
+        },
+        "orderby": {
+          "type": "string",
+          "description": "date, title, price, popularity, rating",
+          "default": "date"
+        },
+        "order": {
+          "type": "string",
+          "description": "asc or desc",
+          "default": "desc"
         }
       },
       "output": {
@@ -61,7 +98,7 @@
     },
     {
       "id": "create_order",
-      "description_for_ai": "Create a new order in WooCommerce store.",
+      "description_for_ai": "Create a new WooCommerce order with customer info, line items, shipping, and payment method.",
       "intent": [
         "create order",
         "new order",
@@ -72,17 +109,48 @@
       "input": {
         "payment_method": {
           "type": "string",
+          "description": "Payment method ID: bacs (bank transfer), cheque, cod (cash on delivery), stripe, paypal",
           "required": true
+        },
+        "payment_method_title": {
+          "type": "string",
+          "description": "Human-readable payment method name",
+          "required": false
+        },
+        "set_paid": {
+          "type": "boolean",
+          "description": "true to mark order as paid immediately",
+          "default": false
         },
         "billing": {
           "type": "object",
-          "description": "{first_name, last_name, email, address_1, city, country}",
+          "description": "{first_name, last_name, email, phone, address_1, city, state, postcode, country: 'US'}",
           "required": true
+        },
+        "shipping": {
+          "type": "object",
+          "description": "Same structure as billing, for delivery address",
+          "required": false
         },
         "line_items": {
           "type": "array",
-          "description": "[{product_id, quantity}]",
+          "description": "[{product_id: 123, quantity: 2, variation_id: 456}]",
           "required": true
+        },
+        "shipping_lines": {
+          "type": "array",
+          "description": "[{method_id: 'flat_rate', method_title: 'Flat Rate', total: '5.00'}]",
+          "required": false
+        },
+        "coupon_lines": {
+          "type": "array",
+          "description": "[{code: 'DISCOUNT10'}]",
+          "required": false
+        },
+        "customer_id": {
+          "type": "integer",
+          "description": "Existing customer ID (0 for guest)",
+          "default": 0
         }
       },
       "output": {
@@ -103,5 +171,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "auth": "Generate keys: WooCommerce → Settings → Advanced → REST API. Use Consumer Key + Secret as basic auth.",
+    "domain": "Replace {domain} with your WordPress site domain e.g. myshop.com. HTTPS required for production.",
+    "webhooks": "Set up order/product webhooks in WooCommerce → Settings → Advanced → Webhooks for real-time events.",
+    "pagination": "Use page and per_page params. Total pages in X-WP-TotalPages response header."
   }
 }
