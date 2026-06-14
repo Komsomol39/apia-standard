@@ -6,7 +6,7 @@
     "description_for_ai": "Shippo — multi-carrier shipping API connecting to 85+ carriers worldwide including USPS, UPS, FedEx, DHL, Canada Post, Australia Post, and regional carriers. Generate labels, compare rates, track packages. Free 30 labels/month. Used by 100K+ Shopify and WooCommerce merchants.",
     "url": "https://goshippo.com",
     "api_base": "https://api.goshippo.com",
-    "category": "logistics_shipping",
+    "category": "logistics",
     "geo": [
       "GLOBAL"
     ],
