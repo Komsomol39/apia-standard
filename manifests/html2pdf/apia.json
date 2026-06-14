@@ -6,7 +6,7 @@
     "description_for_ai": "Convert HTML content or any URL to PDF with high-fidelity rendering. Supports JavaScript, CSS, custom headers/footers. Used for invoice generation, reports, document export. Multiple providers available (pdfcrowd API shown).",
     "url": "https://pdfcrowd.com",
     "api_base": "https://api.pdfcrowd.com/convert",
-    "category": "utilities_pdf",
+    "category": "utilities",
     "geo": [
       "GLOBAL"
     ],
