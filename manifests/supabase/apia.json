@@ -101,7 +101,7 @@
     },
     {
       "id": "storage_upload",
-      "description_for_ai": "Upload file to Supabase Storage bucket.",
+      "description_for_ai": "Upload a file to a Supabase Storage bucket. Returns the file path. Make bucket public or use signed URLs for access.",
       "intent": [
         "upload file",
         "store image",
