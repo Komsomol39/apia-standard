@@ -6,7 +6,7 @@
     "description_for_ai": "Error tracking and performance monitoring. Captures exceptions, crashes, slow transactions. 4M+ developers use it. Use for error monitoring, crash reporting, performance profiling in apps.",
     "url": "https://sentry.io",
     "api_base": "https://sentry.io/api/0",
-    "category": "developer_monitoring",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
