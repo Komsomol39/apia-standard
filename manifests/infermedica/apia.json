@@ -1,1 +1,113 @@
-{"apia":"1.0","service":{"id":"infermedica","name":"Infermedica API","description_for_ai":"AI-powered symptom checker and medical triage API. Identify possible conditions from symptoms. Used by 100+ healthcare companies. Use for preliminary symptom assessment, triage, health apps. Always recommend consulting a doctor.","url":"https://infermedica.com","api_base":"https://api.infermedica.com/v3","category":"healthcare_ai","geo":["GLOBAL"],"language":"en","docs":"https://developer.infermedica.com/docs"},"auth":{"type":"apikey","anonymous_access":false,"header":"App-Id + App-Key","how_to_get":"Register at https://developer.infermedica.com","cost":"Free sandbox. Production pricing on request"},"capabilities":[{"id":"parse_symptoms","description_for_ai":"Extract symptoms from natural language text. Use to convert user description to structured symptom IDs.","intent":["parse symptoms","extract symptoms from text","symptom recognition","what are my symptoms"],"endpoint":"POST https://api.infermedica.com/v3/parse","input":{"text":{"type":"string","description":"Natural language symptom description e.g. I have headache and fever","required":true},"age":{"type":"object","description":"{value: 30, unit: year}","required":false},"sex":{"type":"string","description":"male or female","required":false}},"output":{"type":"parsed","fields":["mentions[].id","mentions[].name","mentions[].common_name","mentions[].orth"]},"realtime":true,"requires_auth":true},{"id":"diagnose","description_for_ai":"Get possible diagnoses based on symptoms. Returns conditions with probability scores. Always show medical disclaimer.","intent":["possible diagnosis","what disease","symptom checker","medical triage","possible conditions"],"endpoint":"POST https://api.infermedica.com/v3/diagnosis","input":{"sex":{"type":"string","description":"male or female","required":true},"age":{"type":"object","description":"{value: N, unit: year}","required":true},"evidence":{"type":"array","description":"[{id: symptom_id, choice_id: present/absent/unknown, initial: true}]","required":true}},"output":{"type":"diagnosis","fields":["conditions[].name","conditions[].probability","conditions[].common_name","should_stop"]},"realtime":true,"requires_auth":true}],"agent_hints":{"disclaimer":"ALWAYS add: This is not medical advice. Consult a healthcare professional.","flow":"1) parse_symptoms to get IDs from text. 2) diagnose with those IDs. 3) Show results with disclaimer."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "infermedica",
+    "name": "Infermedica API",
+    "description_for_ai": "AI-powered symptom checker and medical triage API. Identify possible conditions from symptoms. Used by 100+ healthcare companies. Use for preliminary symptom assessment, triage, health apps. Always recommend consulting a doctor.",
+    "url": "https://infermedica.com",
+    "api_base": "https://api.infermedica.com/v3",
+    "category": "healthcare_ai",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developer.infermedica.com/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "App-Id + App-Key",
+    "how_to_get": "Register at https://developer.infermedica.com",
+    "cost": "Free sandbox. Production pricing on request"
+  },
+  "capabilities": [
+    {
+      "id": "parse_symptoms",
+      "description_for_ai": "Extract symptoms from natural language text. Use to convert user description to structured symptom IDs.",
+      "intent": [
+        "parse symptoms",
+        "extract symptoms from text",
+        "symptom recognition",
+        "what are my symptoms"
+      ],
+      "endpoint": "POST https://api.infermedica.com/v3/parse",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Natural language symptom description e.g. I have headache and fever",
+          "required": true
+        },
+        "age": {
+          "type": "object",
+          "description": "{value: 30, unit: year}",
+          "required": false
+        },
+        "sex": {
+          "type": "string",
+          "description": "male or female",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "parsed",
+        "fields": [
+          "mentions[].id",
+          "mentions[].name",
+          "mentions[].common_name",
+          "mentions[].orth"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "diagnose",
+      "description_for_ai": "Get possible diagnoses based on symptoms. Returns conditions with probability scores. Always show medical disclaimer.",
+      "intent": [
+        "possible diagnosis",
+        "what disease",
+        "symptom checker",
+        "medical triage",
+        "possible conditions"
+      ],
+      "endpoint": "POST https://api.infermedica.com/v3/diagnosis",
+      "input": {
+        "sex": {
+          "type": "string",
+          "description": "male or female",
+          "required": true
+        },
+        "age": {
+          "type": "object",
+          "description": "{value: N, unit: year}",
+          "required": true
+        },
+        "evidence": {
+          "type": "array",
+          "description": "[{id: symptom_id, choice_id: present/absent/unknown, initial: true}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "diagnosis",
+        "fields": [
+          "conditions[].name",
+          "conditions[].probability",
+          "conditions[].common_name",
+          "should_stop"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "disclaimer": "ALWAYS add: This is not medical advice. Consult a healthcare professional.",
+    "flow": "1) parse_symptoms to get IDs from text. 2) diagnose with those IDs. 3) Show results with disclaimer."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
