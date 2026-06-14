@@ -1,1 +1,80 @@
-{"apia":"1.0","service":{"id":"zoominfo","name":"ZoomInfo API","description_for_ai":"Enterprise B2B data platform. 100M+ business professionals, 20M+ companies with org charts, technographic data, buying intent signals. Most comprehensive B2B database. Enterprise sales intelligence.","url":"https://zoominfo.com","api_base":"https://api.zoominfo.com","category":"sales_intelligence","geo":["GLOBAL"],"language":"en","docs":"https://api-docs.zoominfo.com/"},"auth":{"type":"jwt","anonymous_access":false,"how_to_get":"Enterprise license required. Contact sales@zoominfo.com","cost":"Enterprise pricing. Starts from $15K/year"},"capabilities":[{"id":"search_contacts","description_for_ai":"Search B2B contacts with advanced filters: job function, level, company size, revenue, technology used.","intent":["B2B contacts","enterprise leads","executive contacts","enterprise prospecting","company directory"],"endpoint":"POST https://api.zoominfo.com/search/contact","input":{"rpp":{"type":"integer","description":"Records per page","default":25},"jobFunction":{"type":"array","description":"Function: Finance, Engineering, Marketing, Sales, HR","required":false},"managementLevel":{"type":"array","description":"C-Suite, VP, Director, Manager","required":false},"companyRevenue":{"type":"array","description":"Revenue ranges","required":false}},"output":{"type":"list<contact>","fields":["firstName","lastName","emailAddress","phone","jobTitle","companyName","companyRevenue"]},"realtime":true,"requires_auth":true}],"agent_hints":{"enterprise_only":"ZoomInfo is enterprise-only. Not suitable for startups. Consider Apollo.io or Hunter.io for smaller budgets."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "zoominfo",
+    "name": "ZoomInfo API",
+    "description_for_ai": "Enterprise B2B data platform. 100M+ business professionals, 20M+ companies with org charts, technographic data, buying intent signals. Most comprehensive B2B database. Enterprise sales intelligence.",
+    "url": "https://zoominfo.com",
+    "api_base": "https://api.zoominfo.com",
+    "category": "sales_intelligence",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://api-docs.zoominfo.com/"
+  },
+  "auth": {
+    "type": "jwt",
+    "anonymous_access": false,
+    "how_to_get": "Enterprise license required. Contact sales@zoominfo.com",
+    "cost": "Enterprise pricing. Starts from $15K/year"
+  },
+  "capabilities": [
+    {
+      "id": "search_contacts",
+      "description_for_ai": "Search B2B contacts with advanced filters: job function, level, company size, revenue, technology used.",
+      "intent": [
+        "B2B contacts",
+        "enterprise leads",
+        "executive contacts",
+        "enterprise prospecting",
+        "company directory"
+      ],
+      "endpoint": "POST https://api.zoominfo.com/search/contact",
+      "input": {
+        "rpp": {
+          "type": "integer",
+          "description": "Records per page",
+          "default": 25
+        },
+        "jobFunction": {
+          "type": "array",
+          "description": "Function: Finance, Engineering, Marketing, Sales, HR",
+          "required": false
+        },
+        "managementLevel": {
+          "type": "array",
+          "description": "C-Suite, VP, Director, Manager",
+          "required": false
+        },
+        "companyRevenue": {
+          "type": "array",
+          "description": "Revenue ranges",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<contact>",
+        "fields": [
+          "firstName",
+          "lastName",
+          "emailAddress",
+          "phone",
+          "jobTitle",
+          "companyName",
+          "companyRevenue"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "enterprise_only": "ZoomInfo is enterprise-only. Not suitable for startups. Consider Apollo.io or Hunter.io for smaller budgets."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
