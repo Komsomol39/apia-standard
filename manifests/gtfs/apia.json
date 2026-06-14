@@ -6,7 +6,7 @@
     "description_for_ai": "Global public transit data standard and aggregator. GTFS feeds from 1000+ cities worldwide — bus, metro, tram, ferry schedules. Transitland aggregates feeds from all cities. Use for public transit routing, schedule display.",
     "url": "https://www.transit.land",
     "api_base": "https://transit.land/api/v2",
-    "category": "transport_transit",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
