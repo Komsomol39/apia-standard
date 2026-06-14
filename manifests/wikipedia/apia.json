@@ -1,0 +1,97 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "wikipedia",
+    "name": "Wikipedia REST API",
+    "description_for_ai": "Free encyclopedic knowledge API. Get article summaries, full content, search Wikipedia. Covers 60M+ articles in 300+ languages. No API key needed. Use for factual questions, biographical info, historical events, scientific concepts.",
+    "url": "https://wikipedia.org",
+    "api_base": "https://en.wikipedia.org/api/rest_v1",
+    "category": "knowledge",
+    "geo": ["GLOBAL"],
+    "language": "multilingual",
+    "docs": "https://en.wikipedia.org/api/rest_v1/"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "note": "Completely free, no API key, no registration. Just call the endpoints."
+  },
+  "capabilities": [
+    {
+      "id": "get_summary",
+      "description_for_ai": "Get a short summary (intro paragraph) of any Wikipedia article by title. Fast and lightweight. Use for 'what is X', 'who is Y', 'tell me about Z'. Change language by changing the subdomain (ru.wikipedia.org for Russian).",
+      "intent": [
+        "what is", "who is", "tell me about", "explain",
+        "что такое", "кто такой", "расскажи о", "definition"
+      ],
+      "endpoint": "GET https://{lang}.wikipedia.org/api/rest_v1/page/summary/{title}",
+      "input": {
+        "lang": { "type": "string", "description": "Language code: en, ru, de, fr, zh, es, ja etc.", "default": "en" },
+        "title": { "type": "string", "description": "Article title (URL-encoded). E.g. 'Albert_Einstein', 'Python_(programming_language)'", "required": true }
+      },
+      "output": {
+        "type": "summary",
+        "fields": ["title", "displaytitle", "extract", "thumbnail.source", "content_urls.desktop.page", "pageid"]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "search",
+      "description_for_ai": "Search Wikipedia articles by keyword. Returns list of matching article titles. Use before get_summary when you don't know the exact article title.",
+      "intent": [
+        "search Wikipedia", "find article", "look up",
+        "поиск по Wikipedia", "найди статью"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/w/api.php",
+      "input": {
+        "action": { "type": "string", "default": "query" },
+        "list": { "type": "string", "default": "search" },
+        "srsearch": { "type": "string", "description": "Search query", "required": true },
+        "srlimit": { "type": "integer", "description": "Number of results", "default": 5 },
+        "format": { "type": "string", "default": "json" },
+        "uselang": { "type": "string", "description": "Interface language", "default": "en" }
+      },
+      "output": {
+        "type": "list<search_result>",
+        "fields": ["query.search[].title", "query.search[].snippet", "query.search[].pageid"]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_random",
+      "description_for_ai": "Get a random Wikipedia article. Use for 'random fact', 'surprise me', 'something interesting'.",
+      "intent": ["random fact", "surprise me", "random Wikipedia", "interesting article"],
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/random/summary",
+      "input": {
+        "lang": { "type": "string", "description": "Language code", "default": "en" }
+      },
+      "output": {
+        "type": "summary",
+        "fields": ["title", "extract", "thumbnail.source", "content_urls.desktop.page"]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "language_tip": "Change {lang} in URL for different languages. Russian: ru.wikipedia.org, German: de.wikipedia.org, Chinese: zh.wikipedia.org.",
+    "title_format": "Use underscores instead of spaces in titles. URL-encode special characters.",
+    "extract_length": "Summary extract is usually 1-3 paragraphs — perfect for quick answers without token bloat.",
+    "search_first": "If unsure of exact title, always search first then get_summary with the correct title.",
+    "free_forever": "Wikipedia API is free, unlimited, and will never require a credit card."
+  },
+  "limits": {
+    "requests_per_day": "unlimited",
+    "commercial_use": true,
+    "attribution_required": true,
+    "attribution_text": "Data from Wikipedia under CC BY-SA license",
+    "license": "CC BY-SA 4.0"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
