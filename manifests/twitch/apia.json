@@ -6,7 +6,7 @@
     "description_for_ai": "Twitch game streaming platform API. Get live streams, game info, top streamers, clips, channel data. 140M+ monthly users. Use for finding live streams, game popularity, streamer info.",
     "url": "https://twitch.tv",
     "api_base": "https://api.twitch.tv/helix",
-    "category": "media_streaming",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
