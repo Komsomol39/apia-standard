@@ -1,2 +1,127 @@
 {
-  "apia":"1.0","service":{"id":"unsplash","name":"Unsplash API","description_for_ai":"Free high-quality stock photos API. 5M+ professional photos. Search by keyword, get random photo, download. Free tier: 50 requests/hour. Perfect for adding visual content to apps.","url":"https://unsplash.com","api_base":"https://api.unsplash.com","category":"media_images","geo":["GLOBAL"],"language":"en","docs":"https://unsplash.com/documentation"},"auth":{"type":"apikey","anonymous_access":false,"header":"Authorization: Client-ID YOUR_ACCESS_KEY","how_to_get":"Register at https://unsplash.com/developers — free","cost":"Free: 50 req/hour. Production: unlimited with approval"},"capabilities":[{"id":"search_photos","description_for_ai":"Search Unsplash for free high-quality stock photos by keyword. Returns image URLs in multiple sizes.","intent":["find image","stock photo","free image","photo of","background image","картинка"],"endpoint":"GET https://api.unsplash.com/search/photos","input":{"query":{"type":"string","required":true},"page":{"type":"integer","default":1},"per_page":{"type":"integer","default":10,"max":30},"orientation":{"type":"string","description":"landscape, portrait, squarish","required":false},"color":{"type":"string","description":"black_and_white, black, white, yellow, orange, red, purple, magenta, green, teal, blue","required":false}},"output":{"type":"list<photo>","fields":["id","urls.regular","urls.thumb","urls.full","description","user.name","width","height"]},"realtime":false,"requires_auth":true},{"id":"random_photo","description_for_ai":"Get a random high-quality photo, optionally filtered by keyword.","intent":["random photo","random image","surprise image","random background"],"endpoint":"GET https://api.unsplash.com/photos/random","input":{"query":{"type":"string","description":"Filter by topic","required":false},"orientation":{"type":"string","required":false},"count":{"type":"integer","description":"Number of photos","default":1,"max":30}},"output":{"type":"photo","fields":["id","urls.regular","urls.full","description","user.name"]},"realtime":false,"requires_auth":true}],"agent_hints":{"attribution":"Must credit photographer: Photo by {user.name} on Unsplash. Link to photo URL.","sizes":"urls.thumb (small), urls.regular (1080px), urls.full (max), urls.raw (original)."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "unsplash",
+    "name": "Unsplash API",
+    "description_for_ai": "Free high-quality stock photos API. 5M+ professional photos. Search by keyword, get random photo, download. Free tier: 50 requests/hour. Perfect for adding visual content to apps.",
+    "url": "https://unsplash.com",
+    "api_base": "https://api.unsplash.com",
+    "category": "media_images",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://unsplash.com/documentation"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Authorization: Client-ID YOUR_ACCESS_KEY",
+    "how_to_get": "Register at https://unsplash.com/developers — free",
+    "cost": "Free: 50 req/hour. Production: unlimited with approval"
+  },
+  "capabilities": [
+    {
+      "id": "search_photos",
+      "description_for_ai": "Search Unsplash for free high-quality stock photos by keyword. Returns image URLs in multiple sizes.",
+      "intent": [
+        "find image",
+        "stock photo",
+        "free image",
+        "photo of",
+        "background image",
+        "картинка"
+      ],
+      "endpoint": "GET https://api.unsplash.com/search/photos",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 10,
+          "max": 30
+        },
+        "orientation": {
+          "type": "string",
+          "description": "landscape, portrait, squarish",
+          "required": false
+        },
+        "color": {
+          "type": "string",
+          "description": "black_and_white, black, white, yellow, orange, red, purple, magenta, green, teal, blue",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<photo>",
+        "fields": [
+          "id",
+          "urls.regular",
+          "urls.thumb",
+          "urls.full",
+          "description",
+          "user.name",
+          "width",
+          "height"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "random_photo",
+      "description_for_ai": "Get a random high-quality photo, optionally filtered by keyword.",
+      "intent": [
+        "random photo",
+        "random image",
+        "surprise image",
+        "random background"
+      ],
+      "endpoint": "GET https://api.unsplash.com/photos/random",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Filter by topic",
+          "required": false
+        },
+        "orientation": {
+          "type": "string",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of photos",
+          "default": 1,
+          "max": 30
+        }
+      },
+      "output": {
+        "type": "photo",
+        "fields": [
+          "id",
+          "urls.regular",
+          "urls.full",
+          "description",
+          "user.name"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "attribution": "Must credit photographer: Photo by {user.name} on Unsplash. Link to photo URL.",
+    "sizes": "urls.thumb (small), urls.regular (1080px), urls.full (max), urls.raw (original)."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
