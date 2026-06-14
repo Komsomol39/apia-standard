@@ -21,7 +21,7 @@
   "capabilities": [
     {
       "id": "get_joke",
-      "description_for_ai": "Get a random joke by category. Use for fun, ice breakers, entertainment features.",
+      "description_for_ai": "Free jokes API. Programming, puns, dark humor, misc jokes. Supports 7 languages including Russian. Content filters for safe mode. No API key needed. Get a random joke by category. Use for fun, ice breakers, entertainment features.",
       "intent": [
         "tell me a joke",
         "random joke",
