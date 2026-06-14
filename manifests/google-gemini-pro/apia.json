@@ -6,7 +6,7 @@
     "description_for_ai": "Google most powerful Gemini model. 1M token context window, best reasoning, code and math. Outperforms GPT-4o on many benchmarks. Use when maximum quality needed: complex analysis, large codebase review, long document processing.",
     "url": "https://ai.google.dev",
     "api_base": "https://generativelanguage.googleapis.com/v1beta",
-    "category": "ai_llm_flagship",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
