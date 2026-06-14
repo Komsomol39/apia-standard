@@ -1,1 +1,101 @@
-{"apia":"1.0","service":{"id":"facebook-graph","name":"Facebook Graph API","description_for_ai":"Facebook and Instagram platform API. Pages, posts, ads, user data, events, groups. 3B+ users. Manage Facebook Pages, run ads, get insights. Requires app review for most endpoints.","url":"https://facebook.com","api_base":"https://graph.facebook.com/v20.0","category":"social_media","geo":["GLOBAL"],"language":"en","docs":"https://developers.facebook.com/docs/graph-api"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Create app at https://developers.facebook.com/apps","cost":"Free"},"capabilities":[{"id":"get_page_posts","description_for_ai":"Get posts from a Facebook Page with engagement metrics.","intent":["facebook posts","page content","facebook feed","social media posts","facebook page"],"endpoint":"GET https://graph.facebook.com/v20.0/{page_id}/posts","input":{"page_id":{"type":"string","required":true},"fields":{"type":"string","description":"message,created_time,likes.summary(true),comments.summary(true),shares","default":"message,created_time"},"limit":{"type":"integer","default":10}},"output":{"type":"list<post>","fields":["id","message","created_time","likes.summary.total_count","comments.summary.total_count"]},"realtime":true,"requires_auth":true},{"id":"publish_post","description_for_ai":"Publish a post to a Facebook Page.","intent":["post to facebook","publish on facebook","facebook page post","share on facebook"],"endpoint":"POST https://graph.facebook.com/v20.0/{page_id}/feed","input":{"page_id":{"type":"string","required":true},"message":{"type":"string","required":true},"link":{"type":"string","required":false}},"output":{"type":"post","fields":["id"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "facebook-graph",
+    "name": "Facebook Graph API",
+    "description_for_ai": "Facebook and Instagram platform API. Pages, posts, ads, user data, events, groups. 3B+ users. Manage Facebook Pages, run ads, get insights. Requires app review for most endpoints.",
+    "url": "https://facebook.com",
+    "api_base": "https://graph.facebook.com/v20.0",
+    "category": "social_media",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.facebook.com/docs/graph-api"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Create app at https://developers.facebook.com/apps",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "get_page_posts",
+      "description_for_ai": "Get posts from a Facebook Page with engagement metrics.",
+      "intent": [
+        "facebook posts",
+        "page content",
+        "facebook feed",
+        "social media posts",
+        "facebook page"
+      ],
+      "endpoint": "GET https://graph.facebook.com/v20.0/{page_id}/posts",
+      "input": {
+        "page_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "message,created_time,likes.summary(true),comments.summary(true),shares",
+          "default": "message,created_time"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<post>",
+        "fields": [
+          "id",
+          "message",
+          "created_time",
+          "likes.summary.total_count",
+          "comments.summary.total_count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "publish_post",
+      "description_for_ai": "Publish a post to a Facebook Page.",
+      "intent": [
+        "post to facebook",
+        "publish on facebook",
+        "facebook page post",
+        "share on facebook"
+      ],
+      "endpoint": "POST https://graph.facebook.com/v20.0/{page_id}/feed",
+      "input": {
+        "page_id": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        },
+        "link": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "post",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
