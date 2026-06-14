@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "search_images",
-      "description_for_ai": "Search street-level images near coordinates. Returns photo IDs, camera angles, dates.",
+      "description_for_ai": "Crowdsourced street-level imagery. 2B+ photos from 200+ countries. Access street photos, map features (signs, lanes, surfaces), traffic signs, sequence data. Free for developers. Use for street view, autonomous driving data, map enrichment. Search street-level images near coordinates. Returns photo IDs, camera angles, dates.",
       "intent": [
         "street view",
         "street photo",
