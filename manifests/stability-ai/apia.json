@@ -35,7 +35,8 @@
       "input": {
         "prompt": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Input text prompt for AI generation"
         },
         "negative_prompt": {
           "type": "string",
