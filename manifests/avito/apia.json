@@ -1,1 +1,119 @@
-{"apia":"1.0","service":{"id":"avito","name":"Авито API (Россия)","description_for_ai":"Крупнейший классифайд России. API для бизнеса: управление объявлениями (недвижимость, авто, товары, услуги, работа), чаты с покупателями, статистика, авторизация через Авито. 60M+ уникальных пользователей в месяц.","url":"https://avito.ru","api_base":"https://api.avito.ru","category":"classifieds","geo":["RU"],"language":"ru","docs":"https://developers.avito.ru/"},"auth":{"type":"oauth2_client_credentials","anonymous_access":false,"token_url":"https://api.avito.ru/token","how_to_get":"Зарегистрировать приложение на https://developers.avito.ru","cost":"Бесплатно для базового доступа"},"capabilities":[{"id":"get_items","description_for_ai":"Получить список объявлений пользователя или компании.","intent":["объявления Авито","мои объявления","управление объявлениями","публикации Авито"],"endpoint":"GET https://api.avito.ru/core/v1/items","input":{"status":{"type":"string","description":"active, removed, blocked","required":false},"per_page":{"type":"integer","default":25},"page":{"type":"integer","default":1}},"output":{"type":"list<item>","fields":["id","title","status","price","category.id","address"]},"realtime":true,"requires_auth":true},{"id":"search_items","description_for_ai":"Поиск объявлений на Авито по ключевому слову и категории. Публичный поиск.","intent":["найти на Авито","поиск объявлений","купить авто","аренда квартиры","товары Авито","классифайд"],"endpoint":"GET https://api.avito.ru/v1/ads","input":{"query":{"type":"string","required":false},"categoryId":{"type":"integer","description":"9=Недвижимость, 4=Авто, 1=Электроника","required":false},"locationId":{"type":"integer","description":"637640=Москва, 638587=СПб","required":false},"priceMin":{"type":"integer","required":false},"priceMax":{"type":"integer","required":false}},"output":{"type":"list<ad>","fields":["id","title","price.value","location.name","category.name","images[0]"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "avito",
+    "name": "Авито API (Россия)",
+    "description_for_ai": "Крупнейший классифайд России. API для бизнеса: управление объявлениями (недвижимость, авто, товары, услуги, работа), чаты с покупателями, статистика, авторизация через Авито. 60M+ уникальных пользователей в месяц.",
+    "url": "https://avito.ru",
+    "api_base": "https://api.avito.ru",
+    "category": "classifieds",
+    "geo": [
+      "RU"
+    ],
+    "language": "ru",
+    "docs": "https://developers.avito.ru/"
+  },
+  "auth": {
+    "type": "oauth2_client_credentials",
+    "anonymous_access": false,
+    "token_url": "https://api.avito.ru/token",
+    "how_to_get": "Зарегистрировать приложение на https://developers.avito.ru",
+    "cost": "Бесплатно для базового доступа"
+  },
+  "capabilities": [
+    {
+      "id": "get_items",
+      "description_for_ai": "Получить список объявлений пользователя или компании.",
+      "intent": [
+        "объявления Авито",
+        "мои объявления",
+        "управление объявлениями",
+        "публикации Авито"
+      ],
+      "endpoint": "GET https://api.avito.ru/core/v1/items",
+      "input": {
+        "status": {
+          "type": "string",
+          "description": "active, removed, blocked",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 25
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<item>",
+        "fields": [
+          "id",
+          "title",
+          "status",
+          "price",
+          "category.id",
+          "address"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_items",
+      "description_for_ai": "Поиск объявлений на Авито по ключевому слову и категории. Публичный поиск.",
+      "intent": [
+        "найти на Авито",
+        "поиск объявлений",
+        "купить авто",
+        "аренда квартиры",
+        "товары Авито",
+        "классифайд"
+      ],
+      "endpoint": "GET https://api.avito.ru/v1/ads",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": false
+        },
+        "categoryId": {
+          "type": "integer",
+          "description": "9=Недвижимость, 4=Авто, 1=Электроника",
+          "required": false
+        },
+        "locationId": {
+          "type": "integer",
+          "description": "637640=Москва, 638587=СПб",
+          "required": false
+        },
+        "priceMin": {
+          "type": "integer",
+          "required": false
+        },
+        "priceMax": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<ad>",
+        "fields": [
+          "id",
+          "title",
+          "price.value",
+          "location.name",
+          "category.name",
+          "images[0]"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
