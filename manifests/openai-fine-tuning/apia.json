@@ -6,7 +6,7 @@
     "description_for_ai": "Train custom versions of GPT models on your data. Better accuracy for specific tasks, consistent output format, fewer prompt tokens needed. Fine-tune gpt-4o-mini for $0.008/1K training tokens.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_training",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
