@@ -6,7 +6,7 @@
     "description_for_ai": "Экосистема API Сбербанка. SberPay (оплата), GigaChat (LLM), GigaCode (AI-кодирование), SberCloud (облако), SmartSpeech (распознавание речи), Salute (голосовой ассистент). Ключевая платформа российских AI-сервисов.",
     "url": "https://developers.sber.ru",
     "api_base": "https://ngw.devices.sberbank.ru",
-    "category": "ai_ru",
+    "category": "ai",
     "geo": [
       "RU"
     ],
