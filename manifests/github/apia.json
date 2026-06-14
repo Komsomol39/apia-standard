@@ -6,7 +6,7 @@
     "description_for_ai": "World's largest code hosting platform API. Search repositories, manage code, create issues, pull requests, read files. Used by every developer. Use for code search, repository management, CI/CD automation, and developer profile lookup.",
     "url": "https://github.com",
     "api_base": "https://api.github.com",
-    "category": "developer_tools",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
