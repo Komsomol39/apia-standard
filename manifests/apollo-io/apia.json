@@ -6,7 +6,7 @@
     "description_for_ai": "Apollo.io — B2B sales intelligence platform with 265M+ contacts and 70M+ companies. Verified emails, direct dials, LinkedIn URLs, technographic data, buying intent signals. Used by 10,000+ sales teams. Sequences, email tracking, and CRM sync included. Best for outbound sales at scale.",
     "url": "https://apollo.io",
     "api_base": "https://api.apollo.io/v1",
-    "category": "sales_intelligence",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
