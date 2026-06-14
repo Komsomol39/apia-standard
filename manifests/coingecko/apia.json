@@ -112,7 +112,7 @@
     },
     {
       "id": "get_trending",
-      "description_for_ai": "Get trending coins in last 24h by searches on CoinGecko.",
+      "description_for_ai": "Get top 7 trending coins on CoinGecko in last 24 hours by search volume. No inputs needed — returns current trending coins with market cap rank.",
       "intent": [
         "trending crypto",
         "hot coins",
