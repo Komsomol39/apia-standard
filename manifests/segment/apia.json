@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "track",
-      "description_for_ai": "Track a user event and send to all connected destinations simultaneously. One call, 450+ integrations.",
+      "description_for_ai": "Track a user event and send to all 450+ connected destinations simultaneously. One call routes to analytics, CRM, email, ads, and more.",
       "intent": [
         "track event",
         "unified analytics",
@@ -34,28 +34,39 @@
       "input": {
         "userId": {
           "type": "string",
-          "description": "User identifier",
-          "required": true
+          "description": "Unique user identifier (your internal ID). Use anonymousId for pre-login users.",
+          "required": false
+        },
+        "anonymousId": {
+          "type": "string",
+          "description": "Anonymous user ID (UUID) for users without an account. Use one or the other with userId.",
+          "required": false
         },
         "event": {
           "type": "string",
-          "description": "Event name",
+          "description": "Event name. Use noun+verb pattern: 'Order Completed', 'Product Added', 'User Signed Up', 'Page Viewed'",
           "required": true
         },
         "properties": {
           "type": "object",
+          "description": "Event properties: {revenue: 29.99, currency: 'USD', product_id: 'SKU-123', category: 'Electronics'}",
           "required": false
         },
         "timestamp": {
           "type": "string",
-          "description": "ISO 8601",
+          "description": "ISO 8601 event time. Defaults to server receive time.",
+          "required": false
+        },
+        "context": {
+          "type": "object",
+          "description": "{ip: '1.2.3.4', locale: 'en-US', userAgent: '...', page: {url, title, referrer}}",
           "required": false
         }
       },
       "output": {
         "type": "success",
         "fields": [
-          "success"
+          "HTTP 200 with empty body on success"
         ]
       },
       "realtime": true,
@@ -63,7 +74,7 @@
     },
     {
       "id": "identify",
-      "description_for_ai": "Update user profile traits: name, email, plan, company. Synced to CRM and analytics tools.",
+      "description_for_ai": "Update user profile traits in Segment. Syncs to CRM, email tools, and analytics. Call after login or whenever user attributes change.",
       "intent": [
         "identify user",
         "user profile",
@@ -75,18 +86,29 @@
       "input": {
         "userId": {
           "type": "string",
+          "description": "Your internal user ID",
           "required": true
         },
         "traits": {
           "type": "object",
-          "description": "{email, name, company, plan, created_at}",
+          "description": "User attributes: {email, name, firstName, lastName, phone, company: {name, id}, plan: 'pro', createdAt: '2024-01-01', address: {city, country}}",
           "required": true
+        },
+        "context": {
+          "type": "object",
+          "description": "Request context: {ip, locale, timezone}",
+          "required": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "ISO 8601 time of identification",
+          "required": false
         }
       },
       "output": {
         "type": "success",
         "fields": [
-          "success"
+          "HTTP 200 with empty body on success"
         ]
       },
       "realtime": true,
