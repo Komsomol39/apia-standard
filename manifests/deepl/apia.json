@@ -1,0 +1,76 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "deepl",
+    "name": "DeepL Translate API",
+    "description_for_ai": "Highest quality machine translation API. Supports 30+ languages with neural machine translation. Better than Google Translate for European languages. Free tier: 500,000 characters/month. Use when user needs to translate text between languages.",
+    "url": "https://deepl.com",
+    "api_base": "https://api-free.deepl.com/v2",
+    "category": "translation",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://www.deepl.com/docs-api"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Authorization: DeepL-Auth-Key YOUR_KEY",
+    "how_to_get": "Register at https://www.deepl.com/pro-api — free tier available",
+    "cost": "Free: 500K chars/month. Pro: $5.49/month for 1M chars"
+  },
+  "capabilities": [
+    {
+      "id": "translate_text",
+      "description_for_ai": "Translate text from one language to another. Use for 'translate this to English', 'how do you say X in German', 'translate the document'. Supports 30+ languages. Auto-detects source language.",
+      "intent": [
+        "translate", "translation", "how do you say",
+        "translate to English", "переведи", "перевод"
+      ],
+      "endpoint": "POST https://api-free.deepl.com/v2/translate",
+      "input": {
+        "text": { "type": "array<string>", "description": "Array of texts to translate. E.g. ['Hello world', 'How are you?']", "required": true },
+        "target_lang": { "type": "string", "description": "Target language code: EN-US, EN-GB, DE, FR, ES, IT, NL, PL, RU, ZH, JA, KO etc.", "required": true },
+        "source_lang": { "type": "string", "description": "Source language (auto-detected if omitted)", "required": false },
+        "formality": { "type": "string", "description": "default, more (formal), less (informal), prefer_more, prefer_less", "required": false }
+      },
+      "output": {
+        "type": "list<translation>",
+        "fields": ["detected_source_language", "text"]
+      },
+      "realtime": true,
+      "requires_auth": true,
+      "rate_limit": "500K chars/month free"
+    },
+    {
+      "id": "get_languages",
+      "description_for_ai": "Get list of supported languages. Use to show available translation directions to user.",
+      "intent": ["supported languages", "what languages", "available translations"],
+      "endpoint": "GET https://api-free.deepl.com/v2/languages",
+      "input": {
+        "type": { "type": "string", "description": "source or target", "default": "target" }
+      },
+      "output": {
+        "type": "list<language>",
+        "fields": ["language", "name", "supports_formality"]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "lang_codes": "English: EN-US or EN-GB. Russian: RU. German: DE. French: FR. Chinese: ZH. Japanese: JA. Korean: KO.",
+    "auto_detect": "Omit source_lang to let DeepL auto-detect — works well for most cases.",
+    "formality_tip": "Formality parameter only works for some languages (DE, FR, IT, ES, NL, PL, PT, RU). Use 'more' for business texts.",
+    "batch_tip": "Send multiple texts in one request as an array — much more efficient than multiple single requests."
+  },
+  "limits": {
+    "free_chars_per_month": 500000,
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
