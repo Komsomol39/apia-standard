@@ -486,11 +486,18 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 ## Get Started in 5 Minutes
 
 ```bash
-# Download the full index (257 APIs)
+# 1. Download the machine-readable index (257 APIs, 26 categories)
 curl https://raw.githubusercontent.com/Komsomol39/apia-standard/main/registry.json
+
+# 2. Run the demo agent (requires ANTHROPIC_API_KEY)
+pip install anthropic
+python demo_agent.py
 ```
 
-See **[QUICKSTART.md](QUICKSTART.md)** for usage examples: system prompt injection, dynamic discovery, OpenAI function calling, LangChain tools.
+The demo agent discovers APIs from the registry and builds API calls automatically.
+
+See **[QUICKSTART.md](QUICKSTART.md)** for code examples: system prompt injection, dynamic discovery, OpenAI function calling, LangChain tools.  
+See **[demo_agent.py](demo_agent.py)** for a working end-to-end example.
 
 ---
 
@@ -514,4 +521,4 @@ See **[QUICKSTART.md](QUICKSTART.md)** for usage examples: system prompt injecti
 
 💬 [Discussions](../../discussions) · 🐛 [Issues](../../issues) · [CONTRIBUTING.md](CONTRIBUTING.md)
 
-**APIA · 257 manifests · 4 languages · Open source · June 2026**
+**APIA · 257 manifests · 26 categories · 4 languages · Open source · June 2026**
