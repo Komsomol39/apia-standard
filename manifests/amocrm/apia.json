@@ -25,7 +25,7 @@
   "capabilities": [
     {
       "id": "get_leads",
-      "description_for_ai": "Получить сделки из воронки продаж amoCRM с фильтрами по статусу, ответственному, дате.",
+      "description_for_ai": "Get CRM leads (сделки) from amoCRM pipeline. Filter by status, pipeline, responsible manager, and date ranges.",
       "intent": [
         "сделки amoCRM",
         "воронка продаж",
@@ -37,33 +37,61 @@
       "input": {
         "limit": {
           "type": "integer",
-          "default": 50,
-          "max": 250
+          "description": "Results per page, max 250",
+          "default": 50
         },
         "page": {
           "type": "integer",
+          "description": "Page number (1-indexed)",
           "default": 1
+        },
+        "with": {
+          "type": "string",
+          "description": "Related entities to include: contacts, companies, catalog_elements. Comma-separated.",
+          "required": false
         },
         "filter[statuses][][pipeline_id]": {
           "type": "integer",
+          "description": "Filter by pipeline ID",
+          "required": false
+        },
+        "filter[statuses][][id]": {
+          "type": "integer",
+          "description": "Filter by specific status/stage ID",
           "required": false
         },
         "filter[responsible_user_id]": {
+          "type": "array",
+          "description": "Filter by responsible manager user IDs",
+          "required": false
+        },
+        "filter[created_at][from]": {
           "type": "integer",
+          "description": "Created after Unix timestamp",
+          "required": false
+        },
+        "filter[created_at][to]": {
+          "type": "integer",
+          "description": "Created before Unix timestamp",
+          "required": false
+        },
+        "order[created_at]": {
+          "type": "string",
+          "description": "Sort by creation date: asc or desc",
           "required": false
         }
       },
       "output": {
         "type": "list<lead>",
         "fields": [
-          "id",
-          "name",
-          "price",
-          "status_id",
-          "pipeline_id",
-          "responsible_user_id",
-          "created_at",
-          "updated_at"
+          "_embedded.leads[0].id",
+          "_embedded.leads[0].name",
+          "_embedded.leads[0].price",
+          "_embedded.leads[0].status_id",
+          "_embedded.leads[0].pipeline_id",
+          "_embedded.leads[0].responsible_user_id",
+          "_embedded.leads[0].created_at",
+          "_page_count"
         ]
       },
       "realtime": true,
@@ -71,7 +99,7 @@
     },
     {
       "id": "create_lead",
-      "description_for_ai": "Create a new sales deal (сделка) in amoCRM CRM pipeline with title, budget, stage, and responsible manager.",
+      "description_for_ai": "Create a new CRM deal (сделка) in amoCRM with name, budget, pipeline stage, responsible manager, and custom fields.",
       "intent": [
         "добавить сделку",
         "новый лид",
@@ -82,32 +110,47 @@
       "input": {
         "name": {
           "type": "string",
+          "description": "Deal/lead name — should describe the opportunity",
           "required": true
         },
         "price": {
           "type": "integer",
+          "description": "Deal value/budget amount in account currency",
           "required": false
         },
         "pipeline_id": {
           "type": "integer",
+          "description": "Pipeline ID to create deal in. Default pipeline if not specified.",
           "required": false
         },
         "status_id": {
           "type": "integer",
+          "description": "Stage/status ID within the pipeline",
           "required": false
         },
         "responsible_user_id": {
           "type": "integer",
+          "description": "Manager user ID to assign deal to",
+          "required": false
+        },
+        "custom_fields_values": {
+          "type": "array",
+          "description": "[{field_id: 123, values: [{value: 'Field value'}]}] for custom CRM fields",
+          "required": false
+        },
+        "_embedded": {
+          "type": "object",
+          "description": "{contacts: [{id: contact_id}], companies: [{id: company_id}]} to link contacts/companies",
           "required": false
         }
       },
       "output": {
         "type": "list<lead>",
         "fields": [
-          "id",
-          "name",
-          "price",
-          "status_id"
+          "_embedded.leads[0].id",
+          "_embedded.leads[0].name",
+          "_embedded.leads[0].price",
+          "_embedded.leads[0].request_id"
         ]
       },
       "realtime": true,
