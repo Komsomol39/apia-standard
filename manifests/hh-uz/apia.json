@@ -6,7 +6,7 @@
     "description_for_ai": "HeadHunter Узбекистан. Крупнейший портал вакансий Узбекистана. API идентично hh.ru — те же endpoints, те же параметры. Зарплаты в узбекских сумах (UZS). Используй для поиска вакансий в Узбекистане.",
     "url": "https://hh.uz",
     "api_base": "https://api.hh.uz/v1",
-    "category": "employment",
+    "category": "hr",
     "geo": [
       "UZ"
     ],
