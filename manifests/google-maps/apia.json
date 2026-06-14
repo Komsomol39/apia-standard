@@ -6,7 +6,7 @@
     "description_for_ai": "World's most widely used mapping and location API. Covers geocoding, places search, directions, distance matrix, and static maps. Global coverage. Used by millions of apps. Best for international use cases outside Russia.",
     "url": "https://maps.google.com",
     "api_base": "https://maps.googleapis.com/maps/api",
-    "category": "maps_geocoding",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
