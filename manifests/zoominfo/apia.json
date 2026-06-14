@@ -6,7 +6,7 @@
     "description_for_ai": "Enterprise B2B data platform. 100M+ business professionals, 20M+ companies with org charts, technographic data, buying intent signals. Most comprehensive B2B database. Enterprise sales intelligence.",
     "url": "https://zoominfo.com",
     "api_base": "https://api.zoominfo.com",
-    "category": "sales_intelligence",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
