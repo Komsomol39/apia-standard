@@ -7,7 +7,9 @@
     "url": "https://mistral.ai",
     "api_base": "https://api.mistral.ai/v1",
     "category": "ai_llm",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://docs.mistral.ai"
   },
@@ -22,18 +24,48 @@
     {
       "id": "chat_completion",
       "description_for_ai": "OpenAI-compatible chat completions. Drop-in replacement for OpenAI API — same format, different base URL. Best for European languages and cost-efficient production.",
-      "intent": ["generate text", "chat completion", "European languages", "cheap LLM", "code generation", "mistral"],
+      "intent": [
+        "generate text",
+        "chat completion",
+        "European languages",
+        "cheap LLM",
+        "code generation",
+        "mistral"
+      ],
       "endpoint": "POST https://api.mistral.ai/v1/chat/completions",
       "input": {
-        "model": { "type": "string", "description": "mistral-small-latest (cheap), mistral-large-latest (powerful), codestral-latest (code)", "required": true },
-        "messages": { "type": "array", "description": "Same format as OpenAI: [{role, content}]", "required": true },
-        "temperature": { "type": "float", "default": 0.7 },
-        "max_tokens": { "type": "integer", "required": false },
-        "tools": { "type": "array", "required": false }
+        "model": {
+          "type": "string",
+          "description": "mistral-small-latest (cheap), mistral-large-latest (powerful), codestral-latest (code)",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "Same format as OpenAI: [{role, content}]",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0.7,
+          "description": "Randomness 0.0-1.0: lower=deterministic, higher=creative"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false,
+          "description": "Maximum number of tokens to generate in response"
+        },
+        "tools": {
+          "type": "array",
+          "required": false
+        }
       },
       "output": {
         "type": "completion",
-        "fields": ["choices[0].message.content", "usage.prompt_tokens", "usage.completion_tokens"]
+        "fields": [
+          "choices[0].message.content",
+          "usage.prompt_tokens",
+          "usage.completion_tokens"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -41,15 +73,42 @@
     {
       "id": "code_completion",
       "description_for_ai": "Code-specific completion using Codestral. Optimized for 80+ programming languages. Best Mistral model for coding tasks.",
-      "intent": ["write code", "code completion", "programming", "debug code", "codestral"],
+      "intent": [
+        "write code",
+        "code completion",
+        "programming",
+        "debug code",
+        "codestral"
+      ],
       "endpoint": "POST https://codestral.mistral.ai/v1/fim/completions",
       "input": {
-        "model": { "type": "string", "default": "codestral-latest" },
-        "prompt": { "type": "string", "description": "Code before cursor", "required": true },
-        "suffix": { "type": "string", "description": "Code after cursor (for fill-in-the-middle)", "required": false },
-        "max_tokens": { "type": "integer", "default": 1024 }
+        "model": {
+          "type": "string",
+          "default": "codestral-latest",
+          "description": "AI/ML model identifier to use for this request"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Code before cursor",
+          "required": true
+        },
+        "suffix": {
+          "type": "string",
+          "description": "Code after cursor (for fill-in-the-middle)",
+          "required": false
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 1024,
+          "description": "Maximum number of tokens to generate in response"
+        }
       },
-      "output": { "type": "completion", "fields": ["choices[0].message.content"] },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
       "realtime": true,
       "requires_auth": true
     }
