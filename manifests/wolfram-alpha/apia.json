@@ -1,1 +1,101 @@
-{"apia":"1.0","service":{"id":"wolfram-alpha","name":"Wolfram Alpha API","description_for_ai":"Computational knowledge engine. Answers math, science, geography, history, statistics questions with step-by-step solutions. Solves equations, computes integrals, converts units, plots functions. Use for math homework, scientific calculations, factual queries.","url":"https://wolframalpha.com","api_base":"https://api.wolframalpha.com","category":"education_knowledge","geo":["GLOBAL"],"language":"en","docs":"https://products.wolframalpha.com/api/documentation/"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"appid","param_location":"query","how_to_get":"Get key at https://developer.wolframalpha.com/access","cost":"Free: 2000 calls/month. Paid from $20/month"},"capabilities":[{"id":"query","description_for_ai":"Answer any factual or computational query with step-by-step results. Math equations, unit conversions, science facts, statistics, geographic data.","intent":["solve math","calculate","unit conversion","scientific query","compute integral","solve equation","math homework","конвертировать единицы","решить уравнение"],"endpoint":"GET https://api.wolframalpha.com/v2/query","input":{"input":{"type":"string","description":"Natural language query e.g. integrate x^2 dx, distance from Moscow to Beijing, derivative of sin(x)","required":true},"format":{"type":"string","default":"plaintext"},"output":{"type":"string","default":"json"},"units":{"type":"string","description":"metric or imperial","default":"metric"}},"output":{"type":"query_result","fields":["queryresult.pods[0].subpods[0].plaintext","queryresult.pods[1].subpods[0].plaintext"]},"realtime":false,"requires_auth":true},{"id":"simple_query","description_for_ai":"Get a simple one-line answer to a factual question. Faster and cheaper than full query.","intent":["quick answer","simple calculation","fast fact"],"endpoint":"GET https://api.wolframalpha.com/v1/result","input":{"i":{"type":"string","description":"Simple query e.g. speed of light, capital of France, 2+2","required":true}},"output":{"type":"string","fields":["plain text answer"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "wolfram-alpha",
+    "name": "Wolfram Alpha API",
+    "description_for_ai": "Computational knowledge engine. Answers math, science, geography, history, statistics questions with step-by-step solutions. Solves equations, computes integrals, converts units, plots functions. Use for math homework, scientific calculations, factual queries.",
+    "url": "https://wolframalpha.com",
+    "api_base": "https://api.wolframalpha.com",
+    "category": "education_knowledge",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://products.wolframalpha.com/api/documentation/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "appid",
+    "param_location": "query",
+    "how_to_get": "Get key at https://developer.wolframalpha.com/access",
+    "cost": "Free: 2000 calls/month. Paid from $20/month"
+  },
+  "capabilities": [
+    {
+      "id": "query",
+      "description_for_ai": "Answer any factual or computational query with step-by-step results. Math equations, unit conversions, science facts, statistics, geographic data.",
+      "intent": [
+        "solve math",
+        "calculate",
+        "unit conversion",
+        "scientific query",
+        "compute integral",
+        "solve equation",
+        "math homework",
+        "конвертировать единицы",
+        "решить уравнение"
+      ],
+      "endpoint": "GET https://api.wolframalpha.com/v2/query",
+      "input": {
+        "input": {
+          "type": "string",
+          "description": "Natural language query e.g. integrate x^2 dx, distance from Moscow to Beijing, derivative of sin(x)",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "plaintext"
+        },
+        "output": {
+          "type": "string",
+          "default": "json"
+        },
+        "units": {
+          "type": "string",
+          "description": "metric or imperial",
+          "default": "metric"
+        }
+      },
+      "output": {
+        "type": "query_result",
+        "fields": [
+          "queryresult.pods[0].subpods[0].plaintext",
+          "queryresult.pods[1].subpods[0].plaintext"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "simple_query",
+      "description_for_ai": "Get a simple one-line answer to a factual question. Faster and cheaper than full query.",
+      "intent": [
+        "quick answer",
+        "simple calculation",
+        "fast fact"
+      ],
+      "endpoint": "GET https://api.wolframalpha.com/v1/result",
+      "input": {
+        "i": {
+          "type": "string",
+          "description": "Simple query e.g. speed of light, capital of France, 2+2",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "string",
+        "fields": [
+          "plain text answer"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
