@@ -1,0 +1,81 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "egrul-fns",
+    "name": "ЕГРЮЛ / ЕГРИП (ФНС России)",
+    "description_for_ai": "Государственный реестр юридических лиц и индивидуальных предпринимателей России. Используй для проверки компании по ИНН или ОГРН: статус, дата регистрации, адрес, руководители, виды деятельности. Данные официальные — от ФНС России.",
+    "url": "https://egrul.nalog.ru",
+    "api_base": "https://api-fns.ru/api",
+    "category": "business_registry",
+    "geo": ["RU"],
+    "language": "ru",
+    "docs": "https://api-fns.ru/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "key",
+    "param_location": "query",
+    "how_to_get": "Зарегистрироваться на https://api-fns.ru/",
+    "cost": "бесплатно до 100 запросов/сутки"
+  },
+  "capabilities": [
+    {
+      "id": "get_company_by_inn",
+      "description_for_ai": "Получить полную информацию о юридическом лице или ИП по ИНН. Используй для проверки контрагента, подтверждения существования компании, получения официального адреса и руководителей.",
+      "intent": [
+        "проверить компанию", "информация по ИНН", "что за организация",
+        "проверить контрагента", "реквизиты компании", "руководитель организации",
+        "адрес юрлица", "статус компании"
+      ],
+      "endpoint": "GET https://api-fns.ru/api/egr",
+      "input": {
+        "req": { "type": "string", "description": "ИНН (10 или 12 цифр) или ОГРН (13 или 15 цифр)", "required": true },
+        "key": { "type": "string", "description": "API ключ", "required": true }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "ЮЛ.НаимСокрЮЛ", "ЮЛ.ИННЮЛ", "ЮЛ.ОГРН",
+          "ЮЛ.СтатусЮЛ", "ЮЛ.ДатаОГРН", "ЮЛ.АдресРФ",
+          "ЮЛ.СведРук.ФИО", "ЮЛ.СведОКВЭД"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true,
+      "rate_limit": "100/day бесплатно"
+    },
+    {
+      "id": "search_company",
+      "description_for_ai": "Поиск организаций по названию. Используй когда пользователь знает название компании но не знает ИНН.",
+      "intent": ["найти компанию по названию", "поиск организации", "найти ИНН по названию"],
+      "endpoint": "GET https://api-fns.ru/api/search",
+      "input": {
+        "req": { "type": "string", "description": "Название организации или ИП", "required": true },
+        "key": { "type": "string", "required": true }
+      },
+      "output": {
+        "type": "list<company>",
+        "fields": ["НаимСокрЮЛ", "ИННЮЛ", "ОГРН", "СтатусЮЛ", "АдресРФ"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "inn_tip": "ИНН юрлица — 10 цифр, ИНН ИП — 12 цифр. ОГРН юрлица — 13 цифр, ОГРНИП — 15 цифр.",
+    "status_tip": "Проверяй поле СтатусЮЛ — если 'Недействующее', компания ликвидирована.",
+    "alternative": "Также можно использовать официальный сервис ФНС напрямую: https://egrul.nalog.ru — но там нет API, только веб-форма."
+  },
+  "limits": {
+    "free_requests_per_day": 100,
+    "commercial_use": true,
+    "attribution_required": false,
+    "data_source": "Официальные данные ФНС России (ЕГРЮЛ/ЕГРИП)"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
