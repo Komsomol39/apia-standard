@@ -7,7 +7,9 @@
     "url": "https://openweathermap.org",
     "api_base": "https://api.openweathermap.org/data/2.5",
     "category": "weather",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://openweathermap.org/api"
   },
@@ -22,22 +24,59 @@
   "capabilities": [
     {
       "id": "current_weather",
-      "description_for_ai": "Get current weather for any city or coordinates. Use for 'what's the weather now', 'is it raining in London', 'temperature in Tokyo'. Returns real-time conditions.",
+      "description_for_ai": "Get current weather conditions for any city or coordinates: temperature, humidity, wind speed, cloud cover, visibility, weather description and icon.",
       "intent": [
-        "current weather", "what's the weather", "temperature now",
-        "is it raining", "weather today", "погода сейчас"
+        "current weather",
+        "what's the weather",
+        "temperature now",
+        "is it raining",
+        "weather today",
+        "погода сейчас"
       ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/weather",
       "input": {
-        "q": { "type": "string", "description": "City name. E.g. 'London', 'Moscow,ru', 'New York,us'", "required": false },
-        "lat": { "type": "float", "description": "Latitude", "required": false },
-        "lon": { "type": "float", "description": "Longitude", "required": false },
-        "units": { "type": "string", "description": "metric (Celsius), imperial (Fahrenheit), standard (Kelvin)", "default": "metric" },
-        "lang": { "type": "string", "description": "Response language: en, ru, de, zh_cn etc.", "default": "en" }
+        "q": {
+          "type": "string",
+          "description": "City name e.g. 'Moscow', 'London,GB', 'New York,US'. Use country code for disambiguation.",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "description": "Latitude (-90 to 90). Use with lon for coordinate-based lookup.",
+          "required": false
+        },
+        "lon": {
+          "type": "float",
+          "description": "Longitude (-180 to 180)",
+          "required": false
+        },
+        "units": {
+          "type": "string",
+          "description": "metric (Celsius, m/s), imperial (Fahrenheit, mph), standard (Kelvin)",
+          "default": "metric"
+        },
+        "lang": {
+          "type": "string",
+          "description": "Language for description: en, ru, de, fr, es, zh_cn, ja, etc.",
+          "default": "en"
+        }
       },
       "output": {
         "type": "weather",
-        "fields": ["main.temp", "main.feels_like", "main.humidity", "weather[0].description", "wind.speed", "visibility", "sys.sunrise", "sys.sunset", "name"]
+        "fields": [
+          "main.temp",
+          "main.feels_like",
+          "main.humidity",
+          "main.pressure",
+          "weather[0].description",
+          "weather[0].icon",
+          "wind.speed",
+          "wind.deg",
+          "clouds.all",
+          "visibility",
+          "name",
+          "sys.country"
+        ]
       },
       "realtime": true,
       "requires_auth": true,
@@ -45,23 +84,57 @@
     },
     {
       "id": "forecast_5day",
-      "description_for_ai": "5-day weather forecast with 3-hour intervals for any location. Use for 'weather this week', 'will it rain tomorrow', 'weekend forecast'.",
+      "description_for_ai": "Get 5-day weather forecast in 3-hour intervals (40 data points). Returns temperature, precipitation probability, wind, and conditions.",
       "intent": [
-        "weather forecast", "will it rain", "weekend weather",
-        "weather tomorrow", "5 day forecast", "прогноз погоды"
+        "weather forecast",
+        "will it rain",
+        "weekend weather",
+        "weather tomorrow",
+        "5 day forecast",
+        "прогноз погоды"
       ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/forecast",
       "input": {
-        "q": { "type": "string", "description": "City name", "required": false },
-        "lat": { "type": "float", "required": false },
-        "lon": { "type": "float", "required": false },
-        "units": { "type": "string", "default": "metric" },
-        "cnt": { "type": "integer", "description": "Number of timestamps (max 40)", "default": 40 },
-        "lang": { "type": "string", "default": "en" }
+        "q": {
+          "type": "string",
+          "description": "City name e.g. 'Moscow' or 'Paris,FR'",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "required": false
+        },
+        "lon": {
+          "type": "float",
+          "required": false
+        },
+        "units": {
+          "type": "string",
+          "description": "metric, imperial, or standard",
+          "default": "metric"
+        },
+        "lang": {
+          "type": "string",
+          "default": "en"
+        },
+        "cnt": {
+          "type": "integer",
+          "description": "Number of timestamps (max 40 = 5 days × 8 per day)",
+          "required": false
+        }
       },
       "output": {
-        "type": "list<forecast>",
-        "fields": ["dt_txt", "main.temp", "main.humidity", "weather[0].description", "wind.speed", "pop"]
+        "type": "forecast",
+        "fields": [
+          "list[0].dt_txt",
+          "list[0].main.temp",
+          "list[0].main.humidity",
+          "list[0].weather[0].description",
+          "list[0].wind.speed",
+          "list[0].pop (precipitation probability 0-1)",
+          "city.name",
+          "city.country"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -69,15 +142,33 @@
     {
       "id": "air_quality",
       "description_for_ai": "Air quality index (AQI) and pollutant data for any coordinates. Use for 'air quality in Beijing', 'is it safe to jog outside', 'pollution level'.",
-      "intent": ["air quality", "AQI", "pollution", "smog", "safe to exercise outside"],
+      "intent": [
+        "air quality",
+        "AQI",
+        "pollution",
+        "smog",
+        "safe to exercise outside"
+      ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/air_pollution",
       "input": {
-        "lat": { "type": "float", "required": true },
-        "lon": { "type": "float", "required": true }
+        "lat": {
+          "type": "float",
+          "required": true
+        },
+        "lon": {
+          "type": "float",
+          "required": true
+        }
       },
       "output": {
         "type": "air_quality",
-        "fields": ["list[0].main.aqi", "list[0].components.pm2_5", "list[0].components.pm10", "list[0].components.no2", "list[0].components.o3"]
+        "fields": [
+          "list[0].main.aqi",
+          "list[0].components.pm2_5",
+          "list[0].components.pm10",
+          "list[0].components.no2",
+          "list[0].components.o3"
+        ]
       },
       "realtime": true,
       "requires_auth": true
