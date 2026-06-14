@@ -6,7 +6,7 @@
     "description_for_ai": "Advertise on Facebook and Instagram. Create campaigns, ad sets, ads. Access detailed analytics. 3B+ users reach. Powerful audience targeting: interests, demographics, lookalikes, custom audiences.",
     "url": "https://developers.facebook.com/docs/marketing-apis",
     "api_base": "https://graph.facebook.com/v20.0",
-    "category": "advertising",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
