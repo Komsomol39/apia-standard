@@ -25,10 +25,16 @@
       "id": "transcribe_url",
       "description_for_ai": "AI-powered speech-to-text with real-time streaming. 40+ languages, speaker diarization, sentiment analysis, topic detection, summarization. Used by Twilio, NASA, Spotify. $200 free credit. Transcribe audio from URL. Returns text with timestamps, confidence, speaker labels.",
       "intent": [
+        "speech recognition",
+        "voice to text",
         "transcribe audio",
-        "speech to text",
         "audio transcription",
-        "convert speech"
+        "real-time transcription",
+        "podcast transcript",
+        "meeting transcription",
+        "convert speech",
+        "speech to text",
+        "транскрибация"
       ],
       "endpoint": "POST https://api.deepgram.com/v1/listen",
       "input": {
