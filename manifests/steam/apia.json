@@ -1,0 +1,105 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "steam",
+    "name": "Steam Web API",
+    "description_for_ai": "Valve's gaming platform API. Access game info, player profiles, owned games, achievements, current player counts, and game reviews. Free and partially open without a key. Use for game lookup, player stats, achievement tracking, or checking how many people are playing a game right now.",
+    "url": "https://store.steampowered.com",
+    "api_base": "https://api.steampowered.com",
+    "category": "gaming",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://steamcommunity.com/dev"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": true,
+    "anonymous_capabilities": ["get_app_details", "get_player_count"],
+    "param_name": "key",
+    "param_location": "query",
+    "how_to_get": "https://steamcommunity.com/dev/apikey — free, instant",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "get_app_details",
+      "description_for_ai": "Get full details of a Steam game: name, description, price, genres, release date, screenshots, system requirements. Use for 'tell me about game X', 'what is Half-Life 2', 'game description'. No API key needed.",
+      "intent": ["game info", "tell me about game", "what is this game", "game description", "game price", "игра в стиме"],
+      "endpoint": "GET https://store.steampowered.com/api/appdetails",
+      "input": {
+        "appids": { "type": "integer", "description": "Steam App ID. E.g. 730=CS2, 570=Dota2, 440=TF2, 292030=Witcher3", "required": true },
+        "l": { "type": "string", "description": "Language: english, russian, german etc.", "default": "english" }
+      },
+      "output": {
+        "type": "game",
+        "fields": ["name", "short_description", "price_overview.final_formatted", "genres", "release_date.date", "developers", "publishers", "platforms", "metacritic.score", "recommendations.total"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_player_count",
+      "description_for_ai": "Get current number of players in a Steam game right now. Use for 'how many people are playing CS2', 'is Dota 2 still popular'.",
+      "intent": ["how many players", "player count", "is game popular", "concurrent players", "сколько играет"],
+      "endpoint": "GET https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/",
+      "input": {
+        "appid": { "type": "integer", "description": "Steam App ID", "required": true }
+      },
+      "output": {
+        "type": "player_count",
+        "fields": ["response.player_count"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_owned_games",
+      "description_for_ai": "Get list of games owned by a Steam user with playtime. Requires the user's Steam ID and their profile to be public.",
+      "intent": ["games owned", "steam library", "how many hours", "playtime", "игры пользователя"],
+      "endpoint": "GET https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/",
+      "input": {
+        "key": { "type": "string", "description": "Steam API key", "required": true },
+        "steamid": { "type": "string", "description": "64-bit Steam ID of the user", "required": true },
+        "include_appinfo": { "type": "boolean", "default": true },
+        "include_played_free_games": { "type": "boolean", "default": true }
+      },
+      "output": {
+        "type": "list<game>",
+        "fields": ["appid", "name", "playtime_forever", "playtime_2weeks"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_achievements",
+      "description_for_ai": "Get achievement completion percentages for a game globally. Shows which achievements are rare or common.",
+      "intent": ["achievements", "game achievements", "how rare is achievement", "достижения"],
+      "endpoint": "GET https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/",
+      "input": {
+        "gameid": { "type": "integer", "description": "Steam App ID", "required": true }
+      },
+      "output": {
+        "type": "list<achievement>",
+        "fields": ["name", "percent"]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "popular_appids": "CS2=730, Dota2=570, TF2=440, Witcher3=292030, GTA5=271590, Cyberpunk2077=1091500, Elden Ring=1245620, Baldur's Gate 3=1086940",
+    "steamid_tip": "Steam IDs are 17-digit numbers. Users can find theirs at steamid.io or in their Steam profile URL.",
+    "no_key_endpoints": "get_app_details and get_player_count work without a key — great for read-only game info apps.",
+    "playtime_unit": "playtime_forever is in minutes. Divide by 60 for hours."
+  },
+  "limits": {
+    "requests_per_day": 100000,
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
