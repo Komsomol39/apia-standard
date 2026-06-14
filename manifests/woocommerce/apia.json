@@ -1,2 +1,107 @@
 {
-  "apia":"1.0","service":{"id":"woocommerce","name":"WooCommerce REST API","description_for_ai":"WooCommerce powers 30% of all online stores. REST API to manage products, orders, customers, inventory on any WordPress site with WooCommerce installed.","url":"https://woocommerce.com","api_base":"https://{domain}/wp-json/wc/v3","category":"ecommerce","geo":["GLOBAL"],"language":"en","docs":"https://woocommerce.github.io/woocommerce-rest-api-docs/"},"auth":{"type":"basic_auth","anonymous_access":false,"note":"Use Consumer Key and Consumer Secret generated in WooCommerce settings","how_to_get":"WooCommerce → Settings → Advanced → REST API","cost":"Free (part of WooCommerce plugin)"},"capabilities":[{"id":"get_products","description_for_ai":"Get products from WooCommerce store.","intent":["woocommerce products","wordpress store products","get catalog"],"endpoint":"GET https://{domain}/wp-json/wc/v3/products","input":{"per_page":{"type":"integer","default":20},"status":{"type":"string","default":"publish"},"search":{"type":"string","required":false}},"output":{"type":"list<product>","fields":["id","name","price","regular_price","stock_status","images[0].src","categories"]},"realtime":true,"requires_auth":true},{"id":"create_order","description_for_ai":"Create a new order in WooCommerce store.","intent":["create order","new order","place order","woocommerce order"],"endpoint":"POST https://{domain}/wp-json/wc/v3/orders","input":{"payment_method":{"type":"string","required":true},"billing":{"type":"object","description":"{first_name, last_name, email, address_1, city, country}","required":true},"line_items":{"type":"array","description":"[{product_id, quantity}]","required":true}},"output":{"type":"order","fields":["id","number","total","status","order_key"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "woocommerce",
+    "name": "WooCommerce REST API",
+    "description_for_ai": "WooCommerce powers 30% of all online stores. REST API to manage products, orders, customers, inventory on any WordPress site with WooCommerce installed.",
+    "url": "https://woocommerce.com",
+    "api_base": "https://{domain}/wp-json/wc/v3",
+    "category": "ecommerce",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://woocommerce.github.io/woocommerce-rest-api-docs/"
+  },
+  "auth": {
+    "type": "basic_auth",
+    "anonymous_access": false,
+    "note": "Use Consumer Key and Consumer Secret generated in WooCommerce settings",
+    "how_to_get": "WooCommerce → Settings → Advanced → REST API",
+    "cost": "Free (part of WooCommerce plugin)"
+  },
+  "capabilities": [
+    {
+      "id": "get_products",
+      "description_for_ai": "Get products from WooCommerce store.",
+      "intent": [
+        "woocommerce products",
+        "wordpress store products",
+        "get catalog"
+      ],
+      "endpoint": "GET https://{domain}/wp-json/wc/v3/products",
+      "input": {
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        },
+        "status": {
+          "type": "string",
+          "default": "publish"
+        },
+        "search": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<product>",
+        "fields": [
+          "id",
+          "name",
+          "price",
+          "regular_price",
+          "stock_status",
+          "images[0].src",
+          "categories"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_order",
+      "description_for_ai": "Create a new order in WooCommerce store.",
+      "intent": [
+        "create order",
+        "new order",
+        "place order",
+        "woocommerce order"
+      ],
+      "endpoint": "POST https://{domain}/wp-json/wc/v3/orders",
+      "input": {
+        "payment_method": {
+          "type": "string",
+          "required": true
+        },
+        "billing": {
+          "type": "object",
+          "description": "{first_name, last_name, email, address_1, city, country}",
+          "required": true
+        },
+        "line_items": {
+          "type": "array",
+          "description": "[{product_id, quantity}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
+          "id",
+          "number",
+          "total",
+          "status",
+          "order_key"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
