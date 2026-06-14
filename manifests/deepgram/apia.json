@@ -44,7 +44,8 @@
         },
         "language": {
           "type": "string",
-          "default": "en"
+          "default": "en",
+          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
         },
         "punctuate": {
           "type": "boolean",
