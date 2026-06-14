@@ -1,1 +1,87 @@
-{"apia":"1.0","service":{"id":"arxiv","name":"arXiv API","description_for_ai":"Free access to 2M+ preprint research papers in physics, mathematics, computer science, AI, biology, economics. No API key needed. Real-time preprints before peer review. Best source for latest AI research.","url":"https://arxiv.org","api_base":"https://export.arxiv.org/api","category":"science_preprints","geo":["GLOBAL"],"language":"en","docs":"https://info.arxiv.org/help/api/index.html"},"auth":{"type":"none","anonymous_access":true,"cost":"Free forever"},"capabilities":[{"id":"search","description_for_ai":"Search arXiv preprints by keyword, author, title, abstract. Best for latest AI/ML/CS research papers.","intent":["research papers","preprints","latest AI research","scientific papers","arXiv","computer science papers","machine learning papers"],"endpoint":"GET https://export.arxiv.org/api/query","input":{"search_query":{"type":"string","description":"Search query with field prefixes: all:keyword, ti:title, au:author, abs:abstract, cat:cs.AI","required":true},"max_results":{"type":"integer","default":10,"max":100},"start":{"type":"integer","description":"Pagination offset","default":0},"sortBy":{"type":"string","description":"relevance, lastUpdatedDate, submittedDate","default":"relevance"},"sortOrder":{"type":"string","description":"ascending, descending","default":"descending"}},"output":{"type":"feed","fields":["entry.title","entry.summary","entry.author.name","entry.published","entry.id","entry.link.href"]},"realtime":false,"requires_auth":false}],"agent_hints":{"categories":"cs.AI=AI, cs.LG=Machine Learning, cs.CL=NLP, cs.CV=Computer Vision, cs.RO=Robotics, quant-ph=Quantum Physics, math=Mathematics","latest_ai":"For latest AI papers: search_query=cat:cs.AI&sortBy=submittedDate&sortOrder=descending","response_format":"Returns Atom XML. Parse entry elements for papers."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "arxiv",
+    "name": "arXiv API",
+    "description_for_ai": "Free access to 2M+ preprint research papers in physics, mathematics, computer science, AI, biology, economics. No API key needed. Real-time preprints before peer review. Best source for latest AI research.",
+    "url": "https://arxiv.org",
+    "api_base": "https://export.arxiv.org/api",
+    "category": "science_preprints",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://info.arxiv.org/help/api/index.html"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "Free forever"
+  },
+  "capabilities": [
+    {
+      "id": "search",
+      "description_for_ai": "Search arXiv preprints by keyword, author, title, abstract. Best for latest AI/ML/CS research papers.",
+      "intent": [
+        "research papers",
+        "preprints",
+        "latest AI research",
+        "scientific papers",
+        "arXiv",
+        "computer science papers",
+        "machine learning papers"
+      ],
+      "endpoint": "GET https://export.arxiv.org/api/query",
+      "input": {
+        "search_query": {
+          "type": "string",
+          "description": "Search query with field prefixes: all:keyword, ti:title, au:author, abs:abstract, cat:cs.AI",
+          "required": true
+        },
+        "max_results": {
+          "type": "integer",
+          "default": 10,
+          "max": 100
+        },
+        "start": {
+          "type": "integer",
+          "description": "Pagination offset",
+          "default": 0
+        },
+        "sortBy": {
+          "type": "string",
+          "description": "relevance, lastUpdatedDate, submittedDate",
+          "default": "relevance"
+        },
+        "sortOrder": {
+          "type": "string",
+          "description": "ascending, descending",
+          "default": "descending"
+        }
+      },
+      "output": {
+        "type": "feed",
+        "fields": [
+          "entry.title",
+          "entry.summary",
+          "entry.author.name",
+          "entry.published",
+          "entry.id",
+          "entry.link.href"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "categories": "cs.AI=AI, cs.LG=Machine Learning, cs.CL=NLP, cs.CV=Computer Vision, cs.RO=Robotics, quant-ph=Quantum Physics, math=Mathematics",
+    "latest_ai": "For latest AI papers: search_query=cat:cs.AI&sortBy=submittedDate&sortOrder=descending",
+    "response_format": "Returns Atom XML. Parse entry elements for papers."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
