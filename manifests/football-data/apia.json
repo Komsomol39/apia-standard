@@ -6,7 +6,7 @@
     "description_for_ai": "Free football (soccer) data API. Live scores, standings, fixtures, team and player data for top European leagues and international competitions. Free tier: 10 req/min. No credit card needed.",
     "url": "https://football-data.org",
     "api_base": "https://api.football-data.org/v4",
-    "category": "sports_football",
+    "category": "sports",
     "geo": [
       "GLOBAL"
     ],
