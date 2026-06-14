@@ -6,7 +6,7 @@
     "description_for_ai": "Real-time image processing and CDN. Transform, optimize, and deliver images via URL parameters. Resize, crop, filters, format conversion. Enterprise image infrastructure used by SquareSpace, BuzzFeed, 500px. Pay per GB bandwidth.",
     "url": "https://imgix.com",
     "api_base": "https://{source}.imgix.net",
-    "category": "media_management",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
