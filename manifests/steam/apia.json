@@ -7,14 +7,19 @@
     "url": "https://store.steampowered.com",
     "api_base": "https://api.steampowered.com",
     "category": "gaming",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://steamcommunity.com/dev"
   },
   "auth": {
     "type": "apikey",
     "anonymous_access": true,
-    "anonymous_capabilities": ["get_app_details", "get_player_count"],
+    "anonymous_capabilities": [
+      "get_app_details",
+      "get_player_count"
+    ],
     "param_name": "key",
     "param_location": "query",
     "how_to_get": "https://steamcommunity.com/dev/apikey — free, instant",
@@ -24,15 +29,41 @@
     {
       "id": "get_app_details",
       "description_for_ai": "Get full details of a Steam game: name, description, price, genres, release date, screenshots, system requirements. Use for 'tell me about game X', 'what is Half-Life 2', 'game description'. No API key needed.",
-      "intent": ["game info", "tell me about game", "what is this game", "game description", "game price", "игра в стиме"],
+      "intent": [
+        "game info",
+        "tell me about game",
+        "what is this game",
+        "game description",
+        "game price",
+        "игра в стиме"
+      ],
       "endpoint": "GET https://store.steampowered.com/api/appdetails",
       "input": {
-        "appids": { "type": "integer", "description": "Steam App ID. E.g. 730=CS2, 570=Dota2, 440=TF2, 292030=Witcher3", "required": true },
-        "l": { "type": "string", "description": "Language: english, russian, german etc.", "default": "english" }
+        "appids": {
+          "type": "integer",
+          "description": "Steam App ID. E.g. 730=CS2, 570=Dota2, 440=TF2, 292030=Witcher3",
+          "required": true
+        },
+        "l": {
+          "type": "string",
+          "description": "Language: english, russian, german etc.",
+          "default": "english"
+        }
       },
       "output": {
         "type": "game",
-        "fields": ["name", "short_description", "price_overview.final_formatted", "genres", "release_date.date", "developers", "publishers", "platforms", "metacritic.score", "recommendations.total"]
+        "fields": [
+          "name",
+          "short_description",
+          "price_overview.final_formatted",
+          "genres",
+          "release_date.date",
+          "developers",
+          "publishers",
+          "platforms",
+          "metacritic.score",
+          "recommendations.total"
+        ]
       },
       "realtime": true,
       "requires_auth": false
@@ -40,14 +71,26 @@
     {
       "id": "get_player_count",
       "description_for_ai": "Get current number of players in a Steam game right now. Use for 'how many people are playing CS2', 'is Dota 2 still popular'.",
-      "intent": ["how many players", "player count", "is game popular", "concurrent players", "сколько играет"],
+      "intent": [
+        "how many players",
+        "player count",
+        "is game popular",
+        "concurrent players",
+        "сколько играет"
+      ],
       "endpoint": "GET https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/",
       "input": {
-        "appid": { "type": "integer", "description": "Steam App ID", "required": true }
+        "appid": {
+          "type": "integer",
+          "description": "Steam App ID",
+          "required": true
+        }
       },
       "output": {
         "type": "player_count",
-        "fields": ["response.player_count"]
+        "fields": [
+          "response.player_count"
+        ]
       },
       "realtime": true,
       "requires_auth": false
@@ -55,17 +98,42 @@
     {
       "id": "get_owned_games",
       "description_for_ai": "Get list of games owned by a Steam user with playtime. Requires the user's Steam ID and their profile to be public.",
-      "intent": ["games owned", "steam library", "how many hours", "playtime", "игры пользователя"],
+      "intent": [
+        "games owned",
+        "steam library",
+        "how many hours",
+        "playtime",
+        "игры пользователя"
+      ],
       "endpoint": "GET https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/",
       "input": {
-        "key": { "type": "string", "description": "Steam API key", "required": true },
-        "steamid": { "type": "string", "description": "64-bit Steam ID of the user", "required": true },
-        "include_appinfo": { "type": "boolean", "default": true },
-        "include_played_free_games": { "type": "boolean", "default": true }
+        "key": {
+          "type": "string",
+          "description": "Key identifier or lookup key",
+          "required": true
+        },
+        "steamid": {
+          "type": "string",
+          "description": "64-bit Steam ID of the user",
+          "required": true
+        },
+        "include_appinfo": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_played_free_games": {
+          "type": "boolean",
+          "default": true
+        }
       },
       "output": {
         "type": "list<game>",
-        "fields": ["appid", "name", "playtime_forever", "playtime_2weeks"]
+        "fields": [
+          "appid",
+          "name",
+          "playtime_forever",
+          "playtime_2weeks"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -73,14 +141,26 @@
     {
       "id": "get_achievements",
       "description_for_ai": "Get achievement completion percentages for a game globally. Shows which achievements are rare or common.",
-      "intent": ["achievements", "game achievements", "how rare is achievement", "достижения"],
+      "intent": [
+        "achievements",
+        "game achievements",
+        "how rare is achievement",
+        "достижения"
+      ],
       "endpoint": "GET https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/",
       "input": {
-        "gameid": { "type": "integer", "description": "Steam App ID", "required": true }
+        "gameid": {
+          "type": "integer",
+          "description": "Steam App ID",
+          "required": true
+        }
       },
       "output": {
         "type": "list<achievement>",
-        "fields": ["name", "percent"]
+        "fields": [
+          "name",
+          "percent"
+        ]
       },
       "realtime": false,
       "requires_auth": false
