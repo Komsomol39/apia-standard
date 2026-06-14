@@ -6,7 +6,7 @@
     "description_for_ai": "Jamstack hosting platform. Deploy static sites, Next.js, Gatsby. Edge functions, serverless, forms, auth, split testing. Free tier very generous. Used by 3M+ developers. Use for frontend deployment, static hosting.",
     "url": "https://netlify.com",
     "api_base": "https://api.netlify.com/api/v1",
-    "category": "developer_hosting",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
