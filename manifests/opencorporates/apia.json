@@ -1,1 +1,73 @@
-{"apia":"1.0","service":{"id":"opencorporates","name":"OpenCorporates API","description_for_ai":"Largest open database of company information. 200M+ companies from 140+ jurisdictions worldwide. Company registration, officers, filings. Use for global business verification, KYC, due diligence.","url":"https://opencorporates.com","api_base":"https://api.opencorporates.com/v0.4","category":"business_registry","geo":["GLOBAL"],"language":"en","docs":"https://api.opencorporates.com/documentation/API-Reference"},"auth":{"type":"apikey","anonymous_access":true,"anonymous_limits":"10 req/min","param_name":"api_token","param_location":"query","how_to_get":"Register at https://opencorporates.com/users/sign_in","cost":"Free basic. Enterprise from $400/month"},"capabilities":[{"id":"search_companies","description_for_ai":"Search companies globally by name and jurisdiction. Find company registration numbers worldwide.","intent":["global company search","international business","company verification","find company worldwide","corporate registry"],"endpoint":"GET https://api.opencorporates.com/v0.4/companies/search","input":{"q":{"type":"string","description":"Company name","required":true},"jurisdiction_code":{"type":"string","description":"Country/state code e.g. us, gb, de, ru, cn","required":false},"inactive":{"type":"boolean","description":"Include inactive companies","default":false}},"output":{"type":"list<company>","fields":["companies[0].company.name","companies[0].company.company_number","companies[0].company.jurisdiction_code","companies[0].company.incorporation_date","companies[0].company.current_status"]},"realtime":false,"requires_auth":false}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "opencorporates",
+    "name": "OpenCorporates API",
+    "description_for_ai": "Largest open database of company information. 200M+ companies from 140+ jurisdictions worldwide. Company registration, officers, filings. Use for global business verification, KYC, due diligence.",
+    "url": "https://opencorporates.com",
+    "api_base": "https://api.opencorporates.com/v0.4",
+    "category": "business_registry",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://api.opencorporates.com/documentation/API-Reference"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": true,
+    "anonymous_limits": "10 req/min",
+    "param_name": "api_token",
+    "param_location": "query",
+    "how_to_get": "Register at https://opencorporates.com/users/sign_in",
+    "cost": "Free basic. Enterprise from $400/month"
+  },
+  "capabilities": [
+    {
+      "id": "search_companies",
+      "description_for_ai": "Search companies globally by name and jurisdiction. Find company registration numbers worldwide.",
+      "intent": [
+        "global company search",
+        "international business",
+        "company verification",
+        "find company worldwide",
+        "corporate registry"
+      ],
+      "endpoint": "GET https://api.opencorporates.com/v0.4/companies/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Company name",
+          "required": true
+        },
+        "jurisdiction_code": {
+          "type": "string",
+          "description": "Country/state code e.g. us, gb, de, ru, cn",
+          "required": false
+        },
+        "inactive": {
+          "type": "boolean",
+          "description": "Include inactive companies",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "list<company>",
+        "fields": [
+          "companies[0].company.name",
+          "companies[0].company.company_number",
+          "companies[0].company.jurisdiction_code",
+          "companies[0].company.incorporation_date",
+          "companies[0].company.current_status"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
