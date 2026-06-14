@@ -1,1 +1,108 @@
-{"apia":"1.0","service":{"id":"tesla","name":"Tesla Fleet API","description_for_ai":"Official Tesla vehicle API. Get vehicle state, location, charging status. Control: lock/unlock, climate, horn, lights, charging. Requires Tesla account and vehicle access.","url":"https://developer.tesla.com","api_base":"https://fleet-api.prd.na.vn.cloud.tesla.com/api/1","category":"iot_automotive","geo":["GLOBAL"],"language":"en","docs":"https://developer.tesla.com/docs/fleet-api"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Register at https://developer.tesla.com","cost":"Free for personal use. Commercial requires approval"},"capabilities":[{"id":"get_vehicle_data","description_for_ai":"Get comprehensive Tesla vehicle data: location, speed, battery level, charging state, climate, lock status, odometer.","intent":["tesla battery","car location","vehicle status","charging status","is car locked","tesla data","заряд машины"],"endpoint":"GET https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/{id}/vehicle_data","input":{"id":{"type":"string","description":"Vehicle ID from list_vehicles","required":true},"endpoints":{"type":"string","description":"Comma-separated data categories: charge_state,climate_state,drive_state,location_data,vehicle_state","required":false}},"output":{"type":"vehicle_data","fields":["charge_state.battery_level","charge_state.charging_state","drive_state.latitude","drive_state.longitude","drive_state.speed","climate_state.inside_temp","vehicle_state.locked","vehicle_state.odometer"]},"realtime":true,"requires_auth":true},{"id":"send_command","description_for_ai":"Send command to Tesla vehicle: lock/unlock, honk horn, flash lights, start/stop climate, open trunk.","intent":["lock tesla","unlock car","remote start","climate control","flash lights","honk horn","open trunk"],"endpoint":"POST https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/{id}/command/{command}","input":{"id":{"type":"string","required":true},"command":{"type":"string","description":"door_lock, door_unlock, honk_horn, flash_lights, remote_start_drive, auto_conditioning_start, auto_conditioning_stop, charge_start, charge_stop","required":true}},"output":{"type":"command_result","fields":["result","reason"]},"realtime":true,"requires_auth":true}],"agent_hints":{"wake":"Vehicle may be asleep — call /wake_up first if commands fail.","polling":"Real-time streaming available via WebSocket at streaming.vn.teslamotors.com"},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "tesla",
+    "name": "Tesla Fleet API",
+    "description_for_ai": "Official Tesla vehicle API. Get vehicle state, location, charging status. Control: lock/unlock, climate, horn, lights, charging. Requires Tesla account and vehicle access.",
+    "url": "https://developer.tesla.com",
+    "api_base": "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1",
+    "category": "iot_automotive",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developer.tesla.com/docs/fleet-api"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://developer.tesla.com",
+    "cost": "Free for personal use. Commercial requires approval"
+  },
+  "capabilities": [
+    {
+      "id": "get_vehicle_data",
+      "description_for_ai": "Get comprehensive Tesla vehicle data: location, speed, battery level, charging state, climate, lock status, odometer.",
+      "intent": [
+        "tesla battery",
+        "car location",
+        "vehicle status",
+        "charging status",
+        "is car locked",
+        "tesla data",
+        "заряд машины"
+      ],
+      "endpoint": "GET https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/{id}/vehicle_data",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Vehicle ID from list_vehicles",
+          "required": true
+        },
+        "endpoints": {
+          "type": "string",
+          "description": "Comma-separated data categories: charge_state,climate_state,drive_state,location_data,vehicle_state",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "vehicle_data",
+        "fields": [
+          "charge_state.battery_level",
+          "charge_state.charging_state",
+          "drive_state.latitude",
+          "drive_state.longitude",
+          "drive_state.speed",
+          "climate_state.inside_temp",
+          "vehicle_state.locked",
+          "vehicle_state.odometer"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_command",
+      "description_for_ai": "Send command to Tesla vehicle: lock/unlock, honk horn, flash lights, start/stop climate, open trunk.",
+      "intent": [
+        "lock tesla",
+        "unlock car",
+        "remote start",
+        "climate control",
+        "flash lights",
+        "honk horn",
+        "open trunk"
+      ],
+      "endpoint": "POST https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/{id}/command/{command}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "command": {
+          "type": "string",
+          "description": "door_lock, door_unlock, honk_horn, flash_lights, remote_start_drive, auto_conditioning_start, auto_conditioning_stop, charge_start, charge_stop",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "command_result",
+        "fields": [
+          "result",
+          "reason"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "wake": "Vehicle may be asleep — call /wake_up first if commands fail.",
+    "polling": "Real-time streaming available via WebSocket at streaming.vn.teslamotors.com"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
