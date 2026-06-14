@@ -126,5 +126,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "image_format": "Pass S3 URI or base64. S3 is faster and avoids base64 overhead for large images.",
+    "region": "Use same region as your S3 bucket to avoid cross-region latency and data transfer costs.",
+    "face_collection": "For face recognition at scale: create a collection, index faces, then use SearchFacesByImage.",
+    "pricing": "First 5000 images/month free (12 months). Then $1-4/1000 images depending on feature."
   }
 }
