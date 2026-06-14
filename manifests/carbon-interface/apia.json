@@ -6,7 +6,7 @@
     "description_for_ai": "Calculate carbon emissions for flights, driving, shipping, electricity. Returns CO2 equivalent in grams/kg. Use for carbon footprint calculators, sustainability apps, ESG reporting.",
     "url": "https://carboninterface.com",
     "api_base": "https://www.carboninterface.com/api/v1",
-    "category": "environment_carbon",
+    "category": "environment",
     "geo": [
       "GLOBAL"
     ],
