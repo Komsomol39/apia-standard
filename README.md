@@ -1,25 +1,49 @@
 # APIA — API for AI Agents
 
-> **Открытый стандарт описания публичных API в формате понятном AI-агентам.**
+> **Open standard for describing public APIs in a format that AI agents understand natively.**
 
-Вдохновлён тем, что SOAP сделал для enterprise-контрактов в 2000-х — но создан для эпохи AI-агентов.
+🇷🇺 [Русский](docs/README.ru.md) · 🇨🇳 [中文](docs/README.zh.md) · 🇩🇪 [Deutsch](docs/README.de.md)
 
----
-
-## Зачем это нужно?
-
-Сегодня AI-агент который хочет помочь пользователю найти работу рядом с домой, узнать расписание автобуса и найти открытую аптеку — должен отдельно разбираться в каждом API. У каждого свой формат, своя авторизация, своя пагинация.
-
-**APIA решает это одним файлом `apia.json`** — машиночитаемым манифестом который говорит AI-агенту:
-- 🧠 **Что** умеет сервис (на языке понятном LLM, не разработчику)
-- 🌍 **Где** работает (география, язык)
-- 🔑 **Как** авторизоваться
-- ⚡ **Когда** данные живые, а когда кэш
-- 💡 **Подсказки** как правильно использовать API в реальных сценариях
+Inspired by what SOAP did for enterprise contracts in the 2000s — built for the AI agent era.
 
 ---
 
-## Как выглядит apia.json
+## The Problem
+
+An AI agent helping a user find a job near their location, check a bus schedule, and find an open pharmacy needs to separately learn each API. Every service has its own format, its own auth, its own pagination. There is no shared contract.
+
+**APIA solves this with a single `apia.json` manifest** — a machine-readable file that tells any AI agent:
+
+- 🧠 **What** the service can do (written for LLMs, not developers)
+- 🌍 **Where** it works (geography, language)
+- 🔑 **How** to authenticate
+- ⚡ **Whether** data is realtime or cached
+- 💡 **Hints** on how to use the API correctly in real-world scenarios
+
+---
+
+## How It Works
+
+```
+User: "Find me a Python job near me with salary above 80k"
+        ↓
+Agent reads APIA registry
+        ↓
+Finds hh-ru → capability: search_vacancies
+        ↓
+Maps intent to API parameters:
+  text="Python", lat=55.75, lng=37.61, salary=80000
+        ↓
+Calls HH.ru API → returns results
+        ↓
+Agent answers user
+```
+
+No hardcoded integration. No custom training. Just the manifest.
+
+---
+
+## Quick Example
 
 ```json
 {
@@ -27,100 +51,85 @@
   "service": {
     "id": "hh-ru",
     "name": "HeadHunter",
-    "description_for_ai": "Крупнейшая российская биржа труда. Используй для поиска вакансий по ключевым словам, городу или координатам пользователя.",
+    "description_for_ai": "Largest Russian job board. Use to search vacancies by keyword, city or user coordinates. Returns salary, employer, schedule, remote status.",
     "category": "employment",
     "geo": ["RU", "BY", "KZ"]
   },
   "capabilities": [
     {
       "id": "search_vacancies",
-      "description_for_ai": "Поиск вакансий по ключевому слову и геолокации.",
-      "intent": ["найти работу", "вакансии рядом", "ищу работу"],
+      "description_for_ai": "Search job vacancies by keyword and geolocation. Use for requests like 'find Python developer jobs near me' or 'courier vacancies in Kazan with salary above 50000'.",
+      "intent": ["find job", "vacancies nearby", "looking for work"],
       "endpoint": "GET https://api.hh.ru/vacancies",
       "realtime": true,
       "requires_auth": false
     }
   ],
   "agent_hints": {
-    "geo_flow": "Если пользователь говорит 'рядом' — передай lat/lng. Если называет город — сначала get_areas чтобы найти area_id."
+    "geo_flow": "If user says 'near me' — pass lat/lng. If user names a city — call get_areas first to find area_id."
   }
 }
 ```
 
-Ключевое отличие от OpenAPI — поля `description_for_ai`, `intent` и `agent_hints` написаны **для LLM**, а не для разработчика.
+Key difference from OpenAPI: `description_for_ai`, `intent` and `agent_hints` are written **for LLMs**, not for developers.
 
 ---
 
-## Как AI-агент использует APIA
+## Registry
 
-```
-Пользователь: "Найди мне работу Python-разработчика рядом"
-        ↓
-Агент читает реестр APIA
-        ↓
-Находит hh-ru → capability: search_vacancies
-        ↓
-Маппит намерение на параметры API:
-  text="Python", lat=55.75, lng=37.61, radius=20
-        ↓
-Вызывает HH.ru API → получает результаты
-        ↓
-Отвечает пользователю
-```
-
-Никакой ручной интеграции. Никакого дополнительного обучения. Только манифест.
+| Service | Category | Capabilities | Auth | API Version | Last Verified | Status |
+|---|---|---|---|---|---|---|
+| [hh.ru](manifests/hh-ru/apia.json) | Employment | 5 | OAuth2 / Anonymous | v1 | 2026-06-14 | ✅ Ready |
+| [SuperJob](manifests/superjob/apia.json) | Employment | 4 | API Key / Anonymous | v2.0 | 2026-06-14 | ✅ Ready |
+| [trudvsem.ru](manifests/trudvsem/apia.json) | Employment (Gov) | 4 | None | v1 | 2026-06-14 | ✅ Ready |
+| [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport | 5 | API Key | v3.0 | 2026-06-14 | ✅ Ready |
+| [Яндекс.Карты](manifests/yandex-maps/apia.json) | Maps / Geocoding | 3 | API Key | v1.x | 2026-06-14 | ✅ Ready |
+| [2GIS](manifests/2gis/apia.json) | Maps / POI | 4 | API Key | v3.0 | 2026-06-14 | ✅ Ready |
+| [data.mos.ru](manifests/data-mos-ru/apia.json) | City Data (Moscow) | 3 | API Key | v1 | 2026-06-14 | ✅ Ready |
+| SuperJob Resume | Employment | — | — | — | — | 🔜 Needs contributor |
+| ЕГРЮЛ / ФНС | Business Registry | — | — | — | — | 🔜 Needs contributor |
+| Госуслуги | Gov Services | — | — | — | — | 🔜 Needs contributor |
+| ФИАС | Address Registry | — | — | — | — | 🔜 Needs contributor |
+| hh.kz | Employment (KZ) | — | — | — | — | 🔜 Needs contributor |
 
 ---
 
-## Реестр российских API
+## Compatibility
 
-| Сервис | Категория | Capabilities | Авторизация | Статус |
-|---|---|---|---|---|
-| [hh.ru](manifests/hh-ru/apia.json) | Занятость | 5 | OAuth2 / без авторизации | ✅ Готов |
-| [trudvsem.ru](manifests/trudvsem/apia.json) | Занятость (гос.) | 4 | Без авторизации | ✅ Готов |
-| [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Транспорт | 5 | API key (бесплатно) | ✅ Готов |
-| [2GIS](manifests/2gis/apia.json) | Карты / POI | 4 | API key (демо бесплатно) | ✅ Готов |
-| SuperJob | Занятость | — | — | 🔜 Нужен контрибьютор |
-| data.mos.ru | Городские данные | — | — | 🔜 Нужен контрибьютор |
-| Яндекс.Карты | Карты | — | — | 🔜 Нужен контрибьютор |
-| ЕГР ЗАГС | Гос. данные | — | — | 🔜 Нужен контрибьютор |
+APIA works alongside existing standards — it doesn't replace them:
+
+| Standard | Relationship |
+|---|---|
+| **MCP** (Anthropic) | APIA manifests can be auto-converted to MCP tool definitions |
+| **OpenAPI / Swagger** | APIA references existing OpenAPI specs, not replaces them |
+| **OpenClaw skills** | APIA manifests convert to `SKILL.md` automatically |
 
 ---
 
-## Совместимость
+## How to Contribute
 
-APIA работает рядом с существующими стандартами, не заменяя их:
+1. Fork this repository
+2. Create folder `manifests/{service-id}/`
+3. Add `apia.json` following the [HH.ru example](manifests/hh-ru/apia.json)
+4. Key rule: write `description_for_ai` and `intent` as if explaining to an AI agent, not a developer
+5. Open a Pull Request
 
-- **MCP** (Anthropic Model Context Protocol) — манифесты APIA можно конвертировать в MCP tool definitions
-- **OpenAPI / Swagger** — APIA ссылается на существующие спецификации
-- **OpenClaw skills** — манифесты APIA конвертируются в `SKILL.md` автоматически
+### Writing description_for_ai
 
----
+❌ **Bad:** *"Endpoint for retrieving a paginated list of vacancies with filtering"*
 
-## Как добавить API в реестр
-
-1. Форкни этот репозиторий
-2. Создай папку `manifests/{service-id}/`
-3. Добавь файл `apia.json` по [шаблону](manifests/hh-ru/apia.json)
-4. Главное правило: `description_for_ai` и `intent` пиши как будто объясняешь AI-агенту, а не разработчику
-5. Открой Pull Request
-
-### Что писать в description_for_ai
-
-❌ Плохо: *"Endpoint для получения списка вакансий с фильтрацией"*
-
-✅ Хорошо: *"Поиск вакансий по ключевому слову и геолокации. Используй когда пользователь говорит 'найди работу рядом' или 'вакансии Python-разработчика в Казани'"*
+✅ **Good:** *"Search job vacancies by keyword and geolocation. Use when user says 'find work nearby' or 'Python developer jobs in Kazan'"*
 
 ---
 
-## Присоединяйся
+## Discussions & Support
 
-- 💬 Обсуждение: [GitHub Discussions](../../discussions)
-- 🐛 Баги и предложения: [Issues](../../issues)
-- 📖 Документация: в процессе
-
-**APIA — open source проект.** Не аффилирован ни с одним API-провайдером.
+- 💬 [GitHub Discussions](../../discussions) — ideas and questions
+- 🐛 [Issues](../../issues) — bugs and proposals
+- 🌐 OpenClaw Discord — `#showcase` channel
 
 ---
 
-*Создан в июне 2026 как часть инициативы по стандартизации российских публичных API для AI-агентов.*
+**APIA is open source. Not affiliated with any API provider.**
+
+*Started June 2026 as an initiative to standardize Russian public APIs for AI agents.*
