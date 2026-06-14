@@ -1,0 +1,72 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "avito-jobs",
+    "name": "Авито.Работа",
+    "description_for_ai": "Раздел вакансий крупнейшей платформы объявлений России. Особенно силён в рабочих и сервисных профессиях: курьеры, грузчики, охранники, строители, продавцы. Публичного поискового API нет — только API для работодателей (управление вакансиями, отклики). Для поиска вакансий соискателями используй hh.ru или SuperJob.",
+    "url": "https://www.avito.ru/rossiya/vakansii",
+    "api_base": "https://api.avito.ru",
+    "category": "employment",
+    "geo": ["RU"],
+    "language": "ru",
+    "docs": "https://developers.avito.ru/api-catalog/job/documentation",
+    "access_note": "⚠️ API только для работодателей. Поиск вакансий для соискателей через API недоступен."
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Зарегистрировать приложение на https://developers.avito.ru/",
+    "oauth_url": "https://api.avito.ru/token",
+    "cost": "бесплатно для базового доступа"
+  },
+  "capabilities": [
+    {
+      "id": "get_vacancies_employer",
+      "description_for_ai": "Получить список вакансий работодателя. Только для работодателей — управление своими вакансиями. Не для поиска вакансий соискателями.",
+      "intent": ["мои вакансии на авито", "управление вакансиями авито", "отклики авито"],
+      "endpoint": "GET https://api.avito.ru/job/v1/vacancies/",
+      "input": {
+        "status": { "type": "string", "description": "active, closed, archived", "required": false },
+        "per_page": { "type": "integer", "default": 25 },
+        "page": { "type": "integer", "default": 1 }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": ["id", "title", "status", "responses_count", "url", "created_at"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_responses",
+      "description_for_ai": "Получить отклики на вакансию работодателя.",
+      "intent": ["отклики на вакансию авито", "кандидаты авито"],
+      "endpoint": "GET https://api.avito.ru/job/v1/vacancies/{vacancy_id}/responses/",
+      "input": {
+        "vacancy_id": { "type": "string", "required": true },
+        "status": { "type": "string", "description": "new, viewed, invited, rejected", "required": false }
+      },
+      "output": {
+        "type": "list<response>",
+        "fields": ["id", "status", "created_at", "resume.title", "resume.name"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "contributor_notes": {
+    "status": "Нужен контрибьютор — документация закрытая, нужен реальный опыт работы с API",
+    "complexity": "Средняя",
+    "useful_links": [
+      "https://developers.avito.ru/api-catalog/job/documentation",
+      "https://developers.avito.ru/"
+    ],
+    "what_to_document": "Полный список методов для работодателей, формат откликов, статусы вакансий"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14",
+    "completeness": "partial"
+  }
+}
