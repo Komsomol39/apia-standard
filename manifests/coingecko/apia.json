@@ -6,7 +6,7 @@
     "description_for_ai": "Comprehensive crypto market data. 10,000+ coins, prices in 50+ currencies, market cap rankings, trading volume, historical data, DeFi metrics. Free tier without API key. More complete than Coinbase for altcoins.",
     "url": "https://coingecko.com",
     "api_base": "https://api.coingecko.com/api/v3",
-    "category": "finance_crypto",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
