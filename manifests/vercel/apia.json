@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "list_deployments",
-      "description_for_ai": "Get recent deployments with status, URL, branch, commit info.",
+      "description_for_ai": "Get recent Vercel deployments with build status, URL, and git commit info. Use for CI/CD monitoring and deployment tracking.",
       "intent": [
         "deployment status",
         "list deployments",
@@ -35,27 +35,40 @@
       "input": {
         "limit": {
           "type": "integer",
+          "description": "Max deployments to return, default 20",
           "default": 20
         },
         "projectId": {
           "type": "string",
+          "description": "Filter by specific project ID (optional)",
           "required": false
         },
         "state": {
           "type": "string",
-          "description": "BUILDING, ERROR, INITIALIZING, QUEUED, READY, CANCELED",
+          "description": "Filter by state: BUILDING, ERROR, INITIALIZING, QUEUED, READY, CANCELED",
+          "required": false
+        },
+        "teamId": {
+          "type": "string",
+          "description": "Team ID for team deployments",
+          "required": false
+        },
+        "target": {
+          "type": "string",
+          "description": "Filter by environment: production or preview",
           "required": false
         }
       },
       "output": {
         "type": "list<deployment>",
         "fields": [
-          "id",
-          "url",
-          "state",
-          "createdAt",
-          "meta.githubCommitMessage",
-          "meta.githubCommitRef"
+          "deployments[0].uid",
+          "deployments[0].url",
+          "deployments[0].state",
+          "deployments[0].createdAt",
+          "deployments[0].meta.githubCommitMessage",
+          "deployments[0].meta.githubCommitRef",
+          "deployments[0].name"
         ]
       },
       "realtime": true,
@@ -63,7 +76,7 @@
     },
     {
       "id": "create_deployment",
-      "description_for_ai": "Create and deploy a new Vercel deployment from git source or uploaded files.",
+      "description_for_ai": "Deploy a project to Vercel from a git repository. Returns deployment object with URL. Deployment builds asynchronously.",
       "intent": [
         "deploy to vercel",
         "new deployment",
@@ -73,21 +86,32 @@
       "input": {
         "name": {
           "type": "string",
-          "description": "Project name",
+          "description": "Project name on Vercel",
           "required": true
         },
         "gitSource": {
           "type": "object",
-          "description": "{type: github, repoId, ref}",
+          "description": "{type: 'github', repoId: '123456', ref: 'main'} for GitHub deploy. Also supports 'gitlab' and 'bitbucket'.",
           "required": false
         },
         "files": {
           "type": "array",
-          "description": "Files to deploy",
+          "description": "Files to deploy directly: [{file: 'path/to/file.js', data: 'content', encoding: 'utf-8'}]",
           "required": false
         },
         "projectSettings": {
           "type": "object",
+          "description": "{framework: 'nextjs'|'vite'|'create-react-app', buildCommand: 'npm run build', outputDirectory: 'dist'}",
+          "required": false
+        },
+        "env": {
+          "type": "array",
+          "description": "[{key: 'API_URL', value: 'https://api.example.com', type: 'plain'|'secret'}] environment variables",
+          "required": false
+        },
+        "target": {
+          "type": "string",
+          "description": "Deployment environment: production or preview",
           "required": false
         }
       },
@@ -96,7 +120,8 @@
         "fields": [
           "id",
           "url",
-          "readyState"
+          "readyState",
+          "createdAt"
         ]
       },
       "realtime": true,
