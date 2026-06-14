@@ -24,13 +24,18 @@
       "id": "search_hotels",
       "description_for_ai": "Hotel and accommodation search. 28M+ listings worldwide. Prices, availability, reviews, photos. Partner API requires approval. Use for travel apps, hotel booking, accommodation search. Search hotels by location and dates. Returns availability, prices, ratings, facilities.",
       "intent": [
+        "find accommodation",
+        "hotel near me",
+        "отели",
+        "hotel prices",
         "find hotel",
+        "забронировать гостиницу",
+        "hotel deals",
+        "забронировать отель",
         "book accommodation",
         "hotel search",
         "where to stay",
-        "hotel prices",
-        "hotel near me",
-        "забронировать отель"
+        "hotel booking"
       ],
       "endpoint": "POST https://demandapi.booking.com/3.1/accommodations/search",
       "input": {
