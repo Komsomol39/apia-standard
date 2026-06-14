@@ -1,1 +1,150 @@
-{"apia":"1.0","service":{"id":"notion-api","name":"Notion API","description_for_ai":"Notion workspace API. Read and write pages, databases, blocks. Create documents, manage tasks, query databases. 30M+ users. Use for note-taking apps, project management, knowledge bases, documentation tools.","url":"https://notion.so","api_base":"https://api.notion.com/v1","category":"productivity","geo":["GLOBAL"],"language":"en","docs":"https://developers.notion.com/reference/intro"},"auth":{"type":"bearer_token","anonymous_access":false,"header":"Authorization: Bearer {token}","how_to_get":"Create integration at https://www.notion.so/my-integrations","cost":"Free"},"capabilities":[{"id":"query_database","description_for_ai":"Query a Notion database with filters and sorts. Returns pages matching criteria with all properties.","intent":["notion database","query notion","filter notion","get notion data","notion tasks","notion projects"],"endpoint":"POST https://api.notion.com/v1/databases/{database_id}/query","input":{"database_id":{"type":"string","required":true},"filter":{"type":"object","description":"Filter conditions object","required":false},"sorts":{"type":"array","description":"Sort conditions","required":false},"page_size":{"type":"integer","default":100}},"output":{"type":"list<page>","fields":["results[0].id","results[0].properties","results[0].url"]},"realtime":true,"requires_auth":true},{"id":"create_page","description_for_ai":"Create a new page in Notion workspace or database.","intent":["create notion page","add to notion","new note","write to notion","notion page"],"endpoint":"POST https://api.notion.com/v1/pages","input":{"parent":{"type":"object","description":"{database_id: id} or {page_id: id}","required":true},"properties":{"type":"object","description":"Page properties matching database schema","required":true},"children":{"type":"array","description":"Page content blocks","required":false}},"output":{"type":"page","fields":["id","url","properties"]},"realtime":true,"requires_auth":true},{"id":"search","description_for_ai":"Search pages and databases in Notion workspace by keyword.","intent":["search notion","find in notion","notion search","look up note"],"endpoint":"POST https://api.notion.com/v1/search","input":{"query":{"type":"string","required":false},"filter":{"type":"object","description":"{property: object, value: page|database}","required":false},"sort":{"type":"object","description":"{direction: ascending|descending, timestamp: last_edited_time}","required":false}},"output":{"type":"list<result>","fields":["results[0].object","results[0].id","results[0].url","results[0].properties"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "notion-api",
+    "name": "Notion API",
+    "description_for_ai": "Notion workspace API. Read and write pages, databases, blocks. Create documents, manage tasks, query databases. 30M+ users. Use for note-taking apps, project management, knowledge bases, documentation tools.",
+    "url": "https://notion.so",
+    "api_base": "https://api.notion.com/v1",
+    "category": "productivity",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.notion.com/reference/intro"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer {token}",
+    "how_to_get": "Create integration at https://www.notion.so/my-integrations",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "query_database",
+      "description_for_ai": "Query a Notion database with filters and sorts. Returns pages matching criteria with all properties.",
+      "intent": [
+        "notion database",
+        "query notion",
+        "filter notion",
+        "get notion data",
+        "notion tasks",
+        "notion projects"
+      ],
+      "endpoint": "POST https://api.notion.com/v1/databases/{database_id}/query",
+      "input": {
+        "database_id": {
+          "type": "string",
+          "required": true
+        },
+        "filter": {
+          "type": "object",
+          "description": "Filter conditions object",
+          "required": false
+        },
+        "sorts": {
+          "type": "array",
+          "description": "Sort conditions",
+          "required": false
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "list<page>",
+        "fields": [
+          "results[0].id",
+          "results[0].properties",
+          "results[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_page",
+      "description_for_ai": "Create a new page in Notion workspace or database.",
+      "intent": [
+        "create notion page",
+        "add to notion",
+        "new note",
+        "write to notion",
+        "notion page"
+      ],
+      "endpoint": "POST https://api.notion.com/v1/pages",
+      "input": {
+        "parent": {
+          "type": "object",
+          "description": "{database_id: id} or {page_id: id}",
+          "required": true
+        },
+        "properties": {
+          "type": "object",
+          "description": "Page properties matching database schema",
+          "required": true
+        },
+        "children": {
+          "type": "array",
+          "description": "Page content blocks",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "page",
+        "fields": [
+          "id",
+          "url",
+          "properties"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search",
+      "description_for_ai": "Search pages and databases in Notion workspace by keyword.",
+      "intent": [
+        "search notion",
+        "find in notion",
+        "notion search",
+        "look up note"
+      ],
+      "endpoint": "POST https://api.notion.com/v1/search",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": false
+        },
+        "filter": {
+          "type": "object",
+          "description": "{property: object, value: page|database}",
+          "required": false
+        },
+        "sort": {
+          "type": "object",
+          "description": "{direction: ascending|descending, timestamp: last_edited_time}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<result>",
+        "fields": [
+          "results[0].object",
+          "results[0].id",
+          "results[0].url",
+          "results[0].properties"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
