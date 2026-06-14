@@ -1,0 +1,103 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "openweathermap",
+    "name": "OpenWeatherMap",
+    "description_for_ai": "World's most popular weather API. Use for current weather, forecasts and historical data for any city or coordinates. Returns temperature, humidity, wind, pressure, precipitation, sunrise/sunset. Free tier: 1000 calls/day. Used by 5M+ developers worldwide.",
+    "url": "https://openweathermap.org",
+    "api_base": "https://api.openweathermap.org/data/2.5",
+    "category": "weather",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://openweathermap.org/api"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "appid",
+    "param_location": "query",
+    "how_to_get": "Register at https://openweathermap.org/api — free tier available instantly",
+    "cost": "Free: 1000 calls/day. Paid plans from $40/month"
+  },
+  "capabilities": [
+    {
+      "id": "current_weather",
+      "description_for_ai": "Get current weather for any city or coordinates. Use for 'what's the weather now', 'is it raining in London', 'temperature in Tokyo'. Returns real-time conditions.",
+      "intent": [
+        "current weather", "what's the weather", "temperature now",
+        "is it raining", "weather today", "погода сейчас"
+      ],
+      "endpoint": "GET https://api.openweathermap.org/data/2.5/weather",
+      "input": {
+        "q": { "type": "string", "description": "City name. E.g. 'London', 'Moscow,ru', 'New York,us'", "required": false },
+        "lat": { "type": "float", "description": "Latitude", "required": false },
+        "lon": { "type": "float", "description": "Longitude", "required": false },
+        "units": { "type": "string", "description": "metric (Celsius), imperial (Fahrenheit), standard (Kelvin)", "default": "metric" },
+        "lang": { "type": "string", "description": "Response language: en, ru, de, zh_cn etc.", "default": "en" }
+      },
+      "output": {
+        "type": "weather",
+        "fields": ["main.temp", "main.feels_like", "main.humidity", "weather[0].description", "wind.speed", "visibility", "sys.sunrise", "sys.sunset", "name"]
+      },
+      "realtime": true,
+      "requires_auth": true,
+      "rate_limit": "1000/day free"
+    },
+    {
+      "id": "forecast_5day",
+      "description_for_ai": "5-day weather forecast with 3-hour intervals for any location. Use for 'weather this week', 'will it rain tomorrow', 'weekend forecast'.",
+      "intent": [
+        "weather forecast", "will it rain", "weekend weather",
+        "weather tomorrow", "5 day forecast", "прогноз погоды"
+      ],
+      "endpoint": "GET https://api.openweathermap.org/data/2.5/forecast",
+      "input": {
+        "q": { "type": "string", "description": "City name", "required": false },
+        "lat": { "type": "float", "required": false },
+        "lon": { "type": "float", "required": false },
+        "units": { "type": "string", "default": "metric" },
+        "cnt": { "type": "integer", "description": "Number of timestamps (max 40)", "default": 40 },
+        "lang": { "type": "string", "default": "en" }
+      },
+      "output": {
+        "type": "list<forecast>",
+        "fields": ["dt_txt", "main.temp", "main.humidity", "weather[0].description", "wind.speed", "pop"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "air_quality",
+      "description_for_ai": "Air quality index (AQI) and pollutant data for any coordinates. Use for 'air quality in Beijing', 'is it safe to jog outside', 'pollution level'.",
+      "intent": ["air quality", "AQI", "pollution", "smog", "safe to exercise outside"],
+      "endpoint": "GET https://api.openweathermap.org/data/2.5/air_pollution",
+      "input": {
+        "lat": { "type": "float", "required": true },
+        "lon": { "type": "float", "required": true }
+      },
+      "output": {
+        "type": "air_quality",
+        "fields": ["list[0].main.aqi", "list[0].components.pm2_5", "list[0].components.pm10", "list[0].components.no2", "list[0].components.o3"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "geo_flow": "Always prefer lat/lon over city name for accuracy. City names can be ambiguous ('Springfield' exists in 34 US states).",
+    "units_tip": "Use metric for most countries (Celsius). Use imperial only if user explicitly mentions Fahrenheit.",
+    "aqi_scale": "AQI: 1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor.",
+    "pop_field": "In forecast, 'pop' = probability of precipitation (0.0 to 1.0). Multiply by 100 for percentage."
+  },
+  "limits": {
+    "free_calls_per_day": 1000,
+    "commercial_use": true,
+    "attribution_required": true,
+    "attribution_text": "Powered by OpenWeatherMap"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
