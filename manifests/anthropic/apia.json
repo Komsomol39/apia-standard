@@ -6,7 +6,7 @@
     "description_for_ai": "Anthropic Claude — family of frontier AI assistants. Claude Sonnet 4.5 for best coding and reasoning, Claude Haiku 4.5 for fast cheap tasks. Supports text, vision (images/PDFs), tool use, extended thinking. 200K token context. Best for: complex analysis, coding, long document processing, multilingual tasks including Russian.",
     "url": "https://anthropic.com",
     "api_base": "https://api.anthropic.com/v1",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
