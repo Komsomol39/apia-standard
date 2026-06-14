@@ -6,7 +6,7 @@
     "description_for_ai": "Russia and CIS largest social network API. 100M+ users. Access user profiles, posts, groups, messages, photos and videos. Essential for Russia-focused apps. Use for social login, posting content, reading group posts, user profile lookup.",
     "url": "https://vk.com",
     "api_base": "https://api.vk.com/method",
-    "category": "social_media",
+    "category": "social",
     "geo": [
       "RU",
       "BY",
