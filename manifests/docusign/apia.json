@@ -3,7 +3,7 @@
   "service": {
     "id": "docusign",
     "name": "DocuSign eSignature API",
-    "description_for_ai": "Electronic signature platform. Send documents for signature, track status, download signed docs. Legally binding in 180+ countries. Used by 1M+ customers. Use for contract signing, document workflows, agreement automation.",
+    "description_for_ai": "DocuSign eSignature API — world's #1 electronic signature platform. Legally binding in 180+ countries. Send documents for digital signature via email or embedded signing. Track signature status, auto-remind signers, download signed PDFs. 1M+ customers including 15 of Fortune 100.",
     "url": "https://docusign.com",
     "api_base": "https://demo.docusign.net/restapi/v2.1",
     "category": "legal_esign",
