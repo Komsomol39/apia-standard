@@ -86,7 +86,7 @@
         },
         "currency": {
           "type": "string",
-          "description": "Currency code",
+          "description": "ISO 4217 currency code: USD, EUR, GBP, RUB",
           "default": "USD"
         },
         "pickup_time": {
