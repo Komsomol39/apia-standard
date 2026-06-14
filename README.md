@@ -75,23 +75,25 @@ No hardcoded integration. No custom training. Just the manifest.
 
 ## Registry
 
-| Service | Category | Capabilities | Auth | API Version | Last Verified | Status |
-|---|---|---|---|---|---|---|
-| [hh.ru](manifests/hh-ru/apia.json) | Employment | 5 | OAuth2 / Anon | v1 | 2026-06-14 | ✅ Ready |
-| [hh.kz](manifests/hh-kz/apia.json) | Employment (KZ) | 3 | OAuth2 / Anon | v1 | 2026-06-14 | ✅ Ready |
-| [SuperJob](manifests/superjob/apia.json) | Employment | 4 | API Key / Anon | v2.0 | 2026-06-14 | ✅ Ready |
-| [SuperJob Resumes](manifests/superjob-resumes/apia.json) | Resumes | 2 | OAuth2 | v2.0 | 2026-06-14 | ✅ Ready |
-| [trudvsem.ru](manifests/trudvsem/apia.json) | Employment (Gov) | 4 | None | v1 | 2026-06-14 | ✅ Ready |
-| [ЕГРЮЛ / ФНС](manifests/egrul-fns/apia.json) | Business Registry | 2 | API Key | v1 | 2026-06-14 | ✅ Ready |
-| [ФИАС / ГАР](manifests/fias/apia.json) | Address Registry | 2 | None | v1 | 2026-06-14 | ✅ Ready |
-| [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport | 5 | API Key | v3.0 | 2026-06-14 | ✅ Ready |
-| [Яндекс.Карты](manifests/yandex-maps/apia.json) | Maps / Geocoding | 3 | API Key | v1.x | 2026-06-14 | ✅ Ready |
-| [2GIS](manifests/2gis/apia.json) | Maps / POI | 4 | API Key | v3.0 | 2026-06-14 | ✅ Ready |
-| [data.mos.ru](manifests/data-mos-ru/apia.json) | City Data (Moscow) | 3 | API Key | v1 | 2026-06-14 | ✅ Ready |
-| Госуслуги | Gov Services | — | — | — | — | 🔜 Needs contributor |
-| hh.by | Employment (BY) | — | — | — | — | 🔜 Needs contributor |
-| Авито Работа | Employment | — | — | — | — | 🔜 Needs contributor |
-| ДубльГИС (BY/KZ) | Maps / POI | — | — | — | — | 🔜 Needs contributor |
+| Service | Category | Cap. | Auth | API Ver. | Docs | Last Verified | Status |
+|---|---|---|---|---|---|---|---|
+| [hh.ru](manifests/hh-ru/apia.json) | Employment RU | 5 | OAuth2/Anon | v1 | [docs](https://github.com/hhru/api) | 2026-06-14 | ✅ Ready |
+| [hh.kz](manifests/hh-kz/apia.json) | Employment KZ | 3 | OAuth2/Anon | v1 | [docs](https://dev.hh.kz/) | 2026-06-14 | ✅ Ready |
+| [hh.by](manifests/hh-by/apia.json) | Employment BY | 3 | OAuth2/Anon | v1 | [docs](https://github.com/hhru/api) | 2026-06-14 | ✅ Ready |
+| [SuperJob](manifests/superjob/apia.json) | Employment RU | 4 | API Key/Anon | v2.0 | [docs](https://api.superjob.ru/) | 2026-06-14 | ✅ Ready |
+| [SuperJob Resumes](manifests/superjob-resumes/apia.json) | Resumes | 2 | OAuth2 | v2.0 | [docs](https://api.superjob.ru/) | 2026-06-14 | ✅ Ready |
+| [trudvsem.ru](manifests/trudvsem/apia.json) | Employment Gov | 4 | None | v1 | [docs](https://trudvsem.ru/opendata/api) | 2026-06-14 | ✅ Ready |
+| [Авито.Работа](manifests/avito-jobs/apia.json) | Employment RU | 2 | OAuth2 | v1 | [docs](https://developers.avito.ru/api-catalog/job/documentation) | 2026-06-14 | ⚠️ Partial |
+| [ЕГРЮЛ/ФНС](manifests/egrul-fns/apia.json) | Business Registry | 2 | API Key | v1 | [docs](https://api-fns.ru/) | 2026-06-14 | ✅ Ready |
+| [ФИАС/ГАР](manifests/fias/apia.json) | Address Registry | 2 | None | v1 | [docs](https://fias.nalog.ru/) | 2026-06-14 | ✅ Ready |
+| [Госуслуги](manifests/gosuslugi/apia.json) | Gov Services | 1 | ЕСИА/OAuth2 | v1 | [docs](https://partners.gosuslugi.ru/catalog/api_for_gu) | 2026-06-14 | ⚠️ Partial |
+| [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport | 5 | API Key | v3.0 | [docs](https://yandex.ru/dev/rasp/doc/ru/) | 2026-06-14 | ✅ Ready |
+| [Яндекс.Карты](manifests/yandex-maps/apia.json) | Maps/Geocoding | 3 | API Key | v1.x | [docs](https://yandex.ru/dev/maps/) | 2026-06-14 | ✅ Ready |
+| [2GIS](manifests/2gis/apia.json) | Maps/POI RU | 4 | API Key | v3.0 | [docs](https://docs.2gis.com/en/api/search/overview) | 2026-06-14 | ✅ Ready |
+| [2GIS CIS](manifests/2gis-cis/apia.json) | Maps/POI BY+KZ | 2 | API Key | v3.0 | [docs](https://docs.2gis.com/en/api/search/overview) | 2026-06-14 | ✅ Ready |
+| [data.mos.ru](manifests/data-mos-ru/apia.json) | City Data Moscow | 3 | API Key | v1 | [docs](https://data.mos.ru/developers/documentation) | 2026-06-14 | ✅ Ready |
+
+> ⚠️ Partial = manifest exists with docs links, needs contributor to complete
 
 ---
 
@@ -121,8 +123,6 @@ No hardcoded integration. No custom training. Just the manifest.
 
 ---
 
-## Discussions & Support
-
 - 💬 [GitHub Discussions](../../discussions)
 - 🐛 [Issues](../../issues)
 - 🌐 OpenClaw Discord — `#showcase`
@@ -131,4 +131,4 @@ No hardcoded integration. No custom training. Just the manifest.
 
 **APIA is open source. Not affiliated with any API provider.**
 
-*Started June 2026 · 11 manifests · 4 languages*
+*Started June 2026 · 15 manifests · 4 languages*
