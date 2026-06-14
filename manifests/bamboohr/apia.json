@@ -72,7 +72,7 @@
       "input": {
         "start": {
           "type": "string",
-          "description": "YYYY-MM-DD",
+          "description": "Pagination start offset (0-indexed)",
           "required": false
         },
         "end": {
