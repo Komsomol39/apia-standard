@@ -1,1 +1,68 @@
-{"apia":"1.0","service":{"id":"google-vision","name":"Google Cloud Vision API","description_for_ai":"Analyze images with Google AI. Detect objects, faces, text (OCR), logos, landmarks, explicit content, colors. Very accurate OCR for documents. 1000 units free/month.","url":"https://cloud.google.com/vision","api_base":"https://vision.googleapis.com/v1","category":"ai_vision","geo":["GLOBAL"],"language":"en","docs":"https://cloud.google.com/vision/docs"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"key","param_location":"query","how_to_get":"Enable Vision API at https://console.cloud.google.com","cost":"Free: 1000 units/month. Then $1.50/1000 for labels, $3.50/1000 for OCR"},"capabilities":[{"id":"annotate_image","description_for_ai":"Analyze image for labels, objects, text, faces, landmarks, logos, explicit content. Send base64 or Google Cloud Storage URI.","intent":["image analysis","OCR","detect objects","read text from image","face detection","logo detection","explicit content","image labels"],"endpoint":"POST https://vision.googleapis.com/v1/images:annotate","input":{"requests":{"type":"array","description":"[{image: {content: base64 or source: {imageUri}}, features: [{type: LABEL_DETECTION, maxResults: 10}, {type: TEXT_DETECTION}, {type: FACE_DETECTION}, {type: OBJECT_LOCALIZATION}]}]","required":true}},"output":{"type":"annotations","fields":["responses[0].labelAnnotations[0].description","responses[0].fullTextAnnotation.text","responses[0].faceAnnotations[0].joyLikelihood","responses[0].localizedObjectAnnotations[0].name"]},"realtime":true,"requires_auth":true}],"agent_hints":{"feature_types":"LABEL_DETECTION=general labels, TEXT_DETECTION=OCR, DOCUMENT_TEXT_DETECTION=structured OCR, FACE_DETECTION=faces, OBJECT_LOCALIZATION=bounding boxes, LOGO_DETECTION=brand logos, LANDMARK_DETECTION=places, SAFE_SEARCH_DETECTION=explicit content","vs_gemini":"For complex image understanding use Gemini Vision. For specific tasks (OCR, logos, explicit detection) use Vision API."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "google-vision",
+    "name": "Google Cloud Vision API",
+    "description_for_ai": "Analyze images with Google AI. Detect objects, faces, text (OCR), logos, landmarks, explicit content, colors. Very accurate OCR for documents. 1000 units free/month.",
+    "url": "https://cloud.google.com/vision",
+    "api_base": "https://vision.googleapis.com/v1",
+    "category": "ai_vision",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://cloud.google.com/vision/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "key",
+    "param_location": "query",
+    "how_to_get": "Enable Vision API at https://console.cloud.google.com",
+    "cost": "Free: 1000 units/month. Then $1.50/1000 for labels, $3.50/1000 for OCR"
+  },
+  "capabilities": [
+    {
+      "id": "annotate_image",
+      "description_for_ai": "Analyze image for labels, objects, text, faces, landmarks, logos, explicit content. Send base64 or Google Cloud Storage URI.",
+      "intent": [
+        "image analysis",
+        "OCR",
+        "detect objects",
+        "read text from image",
+        "face detection",
+        "logo detection",
+        "explicit content",
+        "image labels"
+      ],
+      "endpoint": "POST https://vision.googleapis.com/v1/images:annotate",
+      "input": {
+        "requests": {
+          "type": "array",
+          "description": "[{image: {content: base64 or source: {imageUri}}, features: [{type: LABEL_DETECTION, maxResults: 10}, {type: TEXT_DETECTION}, {type: FACE_DETECTION}, {type: OBJECT_LOCALIZATION}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "annotations",
+        "fields": [
+          "responses[0].labelAnnotations[0].description",
+          "responses[0].fullTextAnnotation.text",
+          "responses[0].faceAnnotations[0].joyLikelihood",
+          "responses[0].localizedObjectAnnotations[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "feature_types": "LABEL_DETECTION=general labels, TEXT_DETECTION=OCR, DOCUMENT_TEXT_DETECTION=structured OCR, FACE_DETECTION=faces, OBJECT_LOCALIZATION=bounding boxes, LOGO_DETECTION=brand logos, LANDMARK_DETECTION=places, SAFE_SEARCH_DETECTION=explicit content",
+    "vs_gemini": "For complex image understanding use Gemini Vision. For specific tasks (OCR, logos, explicit detection) use Vision API."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
