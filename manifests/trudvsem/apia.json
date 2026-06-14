@@ -165,9 +165,11 @@
     },
     {
       "id": "search_by_company_ogrn",
-      "description_for_ai": "Вакансии конкретного работодателя по ОГРН.",
+      "description_for_ai": "Search government job vacancies on trudvsem.ru by company OGRN (basic registration number). Returns vacancies from that specific employer.",
       "intent": [
-        "вакансии компании по ОГРН"
+        "вакансии по ОГРН",
+        "работодатель ОГРН",
+        "вакансии компании государство"
       ],
       "endpoint": "GET http://opendata.trudvsem.ru/api/v1/vacancies/company/ogrn/{ogrn}",
       "input": {
