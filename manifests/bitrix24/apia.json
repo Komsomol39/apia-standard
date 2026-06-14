@@ -26,7 +26,7 @@
   "capabilities": [
     {
       "id": "crm_lead_list",
-      "description_for_ai": "Получить список лидов CRM Битрикс24.",
+      "description_for_ai": "Get CRM leads from Bitrix24. Filter by status, responsible user, date. Returns ID, title, name, phone, email, status.",
       "intent": [
         "лиды Битрикс",
         "CRM Битрикс24",
@@ -37,18 +37,23 @@
       "input": {
         "filter": {
           "type": "object",
-          "description": "{STATUS_ID: NEW, ASSIGNED_BY_ID: 1}",
+          "description": "Filter by fields: {STATUS_ID: 'NEW', ASSIGNED_BY_ID: 1, >DATE_CREATE: '2024-01-01'}. Empty {} returns all.",
           "required": false
         },
         "select": {
           "type": "array",
-          "description": "Fields to return",
+          "description": "Fields to return: ['ID','TITLE','NAME','LAST_NAME','PHONE','EMAIL','STATUS_ID','ASSIGNED_BY_ID','DATE_CREATE']",
           "required": false
         },
         "order": {
           "type": "object",
-          "description": "{DATE_CREATE: DESC}",
+          "description": "Sort: {DATE_CREATE: 'DESC'} or {TITLE: 'ASC'}",
           "required": false
+        },
+        "start": {
+          "type": "integer",
+          "description": "Pagination offset (50 per page)",
+          "default": 0
         }
       },
       "output": {
@@ -69,7 +74,7 @@
     },
     {
       "id": "task_add",
-      "description_for_ai": "Создать задачу в Битрикс24.",
+      "description_for_ai": "Create a new task in Bitrix24. Assign to user, set deadline, add description and checklist items.",
       "intent": [
         "создать задачу",
         "добавить задачу Битрикс",
@@ -80,7 +85,7 @@
       "input": {
         "fields": {
           "type": "object",
-          "description": "{TITLE, DESCRIPTION, RESPONSIBLE_ID, DEADLINE}",
+          "description": "{TITLE: 'Task name' (required), RESPONSIBLE_ID: user_id, DESCRIPTION: 'Details', DEADLINE: '2024-12-31T18:00:00+03:00', PRIORITY: 0|1|2, GROUP_ID: group_id, PARENT_ID: parent_task_id}",
           "required": true
         }
       },
@@ -99,5 +104,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "auth": "Use webhook or OAuth. Webhook: Settings → Developer resources → Inbound webhooks. Scope: task, crm.",
+    "portal": "Replace {portal} with your Bitrix24 subdomain e.g. mycompany.bitrix24.ru",
+    "pagination": "All list methods return 50 items max. Use start=50, 100, 150... to paginate.",
+    "ru_market": "Most popular all-in-one business platform in Russia and CIS. Includes CRM, tasks, HR, documents, chat."
   }
 }
