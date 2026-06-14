@@ -45,7 +45,7 @@
         },
         "radius": {
           "type": "integer",
-          "description": "Meters from ll",
+          "description": "Search radius in meters (unless otherwise specified)",
           "default": 500
         },
         "categories": {
@@ -61,7 +61,8 @@
         "limit": {
           "type": "integer",
           "default": 10,
-          "max": 50
+          "max": 50,
+          "description": "Maximum number of results to return"
         }
       },
       "output": {
