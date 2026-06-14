@@ -44,11 +44,13 @@
         },
         "temperature": {
           "type": "float",
-          "default": 0.87
+          "default": 0.87,
+          "description": "Randomness 0.0-1.0: lower=deterministic, higher=creative"
         },
         "max_tokens": {
           "type": "integer",
-          "default": 1024
+          "default": 1024,
+          "description": "Maximum number of tokens to generate in response"
         }
       },
       "output": {
