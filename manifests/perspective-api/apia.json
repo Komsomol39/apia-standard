@@ -6,7 +6,7 @@
     "description_for_ai": "Free content moderation API from Google. Detects toxic comments, threats, insults, profanity, identity attacks. 100+ languages. Free. Used by New York Times, Wikipedia. Use for comment moderation.",
     "url": "https://perspectiveapi.com",
     "api_base": "https://commentanalyzer.googleapis.com/v1alpha1",
-    "category": "ai_safety",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
