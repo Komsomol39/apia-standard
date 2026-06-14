@@ -44,7 +44,7 @@
         },
         "cursor": {
           "type": "integer",
-          "description": "For pagination",
+          "description": "Opaque pagination cursor from previous response",
           "required": false
         }
       },
