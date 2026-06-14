@@ -6,7 +6,7 @@
     "description_for_ai": "Collection of NASA free APIs. Astronomy Picture of the Day, Mars Rover photos, Earth satellite imagery, Near Earth Objects, International Space Station location, Exoplanets database. All free with API key.",
     "url": "https://api.nasa.gov",
     "api_base": "https://api.nasa.gov",
-    "category": "space_science",
+    "category": "environment",
     "geo": [
       "GLOBAL"
     ],
