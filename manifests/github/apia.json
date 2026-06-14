@@ -7,7 +7,9 @@
     "url": "https://github.com",
     "api_base": "https://api.github.com",
     "category": "developer_tools",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://docs.github.com/en/rest"
   },
@@ -23,21 +25,55 @@
   "capabilities": [
     {
       "id": "search_repositories",
-      "description_for_ai": "Search GitHub repositories by keyword, language, stars, or topic. Use for 'find Python ML libraries', 'popular React components', 'open source alternatives to X'.",
+      "description_for_ai": "Search GitHub repositories by keyword, language, stars, topics, and more. Returns repo details, stats, and clone URLs.",
       "intent": [
-        "find repository", "search GitHub", "open source library",
-        "find code", "popular projects", "GitHub repos"
+        "find repository",
+        "search GitHub",
+        "open source library",
+        "find code",
+        "popular projects",
+        "GitHub repos"
       ],
       "endpoint": "GET https://api.github.com/search/repositories",
       "input": {
-        "q": { "type": "string", "description": "Search query. Supports qualifiers: language:python, stars:>1000, topic:machine-learning", "required": true },
-        "sort": { "type": "string", "description": "stars, forks, updated", "default": "stars" },
-        "order": { "type": "string", "description": "desc or asc", "default": "desc" },
-        "per_page": { "type": "integer", "default": 10, "max": 100 }
+        "q": {
+          "type": "string",
+          "description": "Search query with qualifiers: 'machine learning language:python stars:>1000', 'topic:react created:>2024-01-01', 'org:google tensorflow'",
+          "required": true
+        },
+        "sort": {
+          "type": "string",
+          "description": "stars, forks, help-wanted-issues, updated. Default: best-match",
+          "required": false
+        },
+        "order": {
+          "type": "string",
+          "description": "asc or desc",
+          "default": "desc"
+        },
+        "per_page": {
+          "type": "integer",
+          "description": "Results per page, max 100",
+          "default": 30
+        },
+        "page": {
+          "type": "integer",
+          "description": "Page number for pagination",
+          "default": 1
+        }
       },
       "output": {
-        "type": "list<repository>",
-        "fields": ["full_name", "description", "stargazers_count", "language", "html_url", "topics", "updated_at", "license.name"]
+        "type": "search_results",
+        "fields": [
+          "total_count",
+          "items[0].full_name",
+          "items[0].description",
+          "items[0].stargazers_count",
+          "items[0].language",
+          "items[0].clone_url",
+          "items[0].topics",
+          "items[0].updated_at"
+        ]
       },
       "realtime": true,
       "requires_auth": false
@@ -45,15 +81,39 @@
     {
       "id": "get_repository",
       "description_for_ai": "Get full details of a specific GitHub repository by owner and name.",
-      "intent": ["repo details", "repository info", "GitHub project info", "stars count"],
+      "intent": [
+        "repo details",
+        "repository info",
+        "GitHub project info",
+        "stars count"
+      ],
       "endpoint": "GET https://api.github.com/repos/{owner}/{repo}",
       "input": {
-        "owner": { "type": "string", "description": "Repository owner username or org", "required": true },
-        "repo": { "type": "string", "description": "Repository name", "required": true }
+        "owner": {
+          "type": "string",
+          "description": "Repository owner username or org",
+          "required": true
+        },
+        "repo": {
+          "type": "string",
+          "description": "Repository name",
+          "required": true
+        }
       },
       "output": {
         "type": "repository",
-        "fields": ["full_name", "description", "stargazers_count", "forks_count", "open_issues_count", "language", "topics", "license", "created_at", "updated_at"]
+        "fields": [
+          "full_name",
+          "description",
+          "stargazers_count",
+          "forks_count",
+          "open_issues_count",
+          "language",
+          "topics",
+          "license",
+          "created_at",
+          "updated_at"
+        ]
       },
       "realtime": true,
       "requires_auth": false
@@ -61,19 +121,50 @@
     {
       "id": "create_file",
       "description_for_ai": "Create or update a file in a GitHub repository. Use to write code, configs, or documents directly to a repo.",
-      "intent": ["create file in GitHub", "push file to repo", "write to repository", "commit file"],
+      "intent": [
+        "create file in GitHub",
+        "push file to repo",
+        "write to repository",
+        "commit file"
+      ],
       "endpoint": "PUT https://api.github.com/repos/{owner}/{repo}/contents/{path}",
       "input": {
-        "owner": { "type": "string", "required": true },
-        "repo": { "type": "string", "required": true },
-        "path": { "type": "string", "description": "File path in repo. E.g. 'src/main.py'", "required": true },
-        "message": { "type": "string", "description": "Commit message", "required": true },
-        "content": { "type": "string", "description": "File content encoded in Base64", "required": true },
-        "sha": { "type": "string", "description": "SHA of existing file (required for updates)", "required": false }
+        "owner": {
+          "type": "string",
+          "required": true
+        },
+        "repo": {
+          "type": "string",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "description": "File path in repo. E.g. 'src/main.py'",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "description": "Commit message",
+          "required": true
+        },
+        "content": {
+          "type": "string",
+          "description": "File content encoded in Base64",
+          "required": true
+        },
+        "sha": {
+          "type": "string",
+          "description": "SHA of existing file (required for updates)",
+          "required": false
+        }
       },
       "output": {
         "type": "commit",
-        "fields": ["content.html_url", "commit.sha", "commit.message"]
+        "fields": [
+          "content.html_url",
+          "commit.sha",
+          "commit.message"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -81,14 +172,33 @@
     {
       "id": "get_user",
       "description_for_ai": "Get public profile of a GitHub user: bio, repos count, followers, location.",
-      "intent": ["GitHub profile", "developer info", "user profile", "who is this developer"],
+      "intent": [
+        "GitHub profile",
+        "developer info",
+        "user profile",
+        "who is this developer"
+      ],
       "endpoint": "GET https://api.github.com/users/{username}",
       "input": {
-        "username": { "type": "string", "required": true }
+        "username": {
+          "type": "string",
+          "required": true
+        }
       },
       "output": {
         "type": "user",
-        "fields": ["login", "name", "bio", "public_repos", "followers", "following", "location", "company", "blog", "created_at"]
+        "fields": [
+          "login",
+          "name",
+          "bio",
+          "public_repos",
+          "followers",
+          "following",
+          "location",
+          "company",
+          "blog",
+          "created_at"
+        ]
       },
       "realtime": true,
       "requires_auth": false
