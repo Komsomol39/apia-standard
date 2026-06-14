@@ -6,7 +6,7 @@
     "description_for_ai": "Free CRM with 1.7M+ companies using it. Contacts, companies, deals, tickets, emails. Marketing automation, sales pipeline, customer support. Free tier very generous. Use for CRM integration, lead management, sales automation.",
     "url": "https://hubspot.com",
     "api_base": "https://api.hubapi.com",
-    "category": "crm",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
