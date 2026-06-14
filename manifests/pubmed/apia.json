@@ -6,7 +6,7 @@
     "description_for_ai": "Free access to 35M+ biomedical research articles. Search by keyword, author, journal, MeSH terms. Get abstracts, full text links, citations. No API key needed for basic access. Essential for medical and scientific research.",
     "url": "https://pubmed.ncbi.nlm.nih.gov",
     "api_base": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
-    "category": "science_research",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
