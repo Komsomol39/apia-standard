@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "get_listing",
-      "description_for_ai": "Get listing details: description, photos, price, availability, reviews, host info.",
+      "description_for_ai": "Vacation rental and short-term accommodation platform. 7M+ listings in 220+ countries. Unique stays: houses, apartments, villas, treehouses. Official API very restricted — primarily for property managers and analytics partners. Get listing details: description, photos, price, availability, reviews, host info.",
       "intent": [
         "airbnb listing",
         "rental details",
