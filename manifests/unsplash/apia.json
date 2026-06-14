@@ -36,16 +36,19 @@
       "input": {
         "query": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Search query string"
         },
         "page": {
           "type": "integer",
-          "default": 1
+          "default": 1,
+          "description": "Page number for pagination (1-indexed)"
         },
         "per_page": {
           "type": "integer",
           "default": 10,
-          "max": 30
+          "max": 30,
+          "description": "Results per page. Check API docs for maximum allowed."
         },
         "orientation": {
           "type": "string",
