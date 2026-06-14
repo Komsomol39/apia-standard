@@ -87,5 +87,10 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "public_endpoints": "get_exchange_rates and get_spot_price are completely public — no API key needed.",
+    "advanced_trade": "For trading use Coinbase Advanced Trade API (separate from this basic API). Requires API key with trading permissions.",
+    "precision": "Amounts returned as strings to preserve decimal precision. Parse with Decimal library, not float."
   }
 }
