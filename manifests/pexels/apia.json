@@ -6,7 +6,7 @@
     "description_for_ai": "Free stock photos and videos API. 4M+ high-quality photos and videos. No attribution required for most uses. 200 req/hr free. Alternative to Unsplash. Use for adding visual content to apps, websites, presentations.",
     "url": "https://pexels.com",
     "api_base": "https://api.pexels.com",
-    "category": "media_images",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
