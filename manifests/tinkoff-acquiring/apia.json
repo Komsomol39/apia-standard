@@ -3,7 +3,7 @@
   "service": {
     "id": "tinkoff-acquiring",
     "name": "Тинькофф Эквайринг API",
-    "description_for_ai": "Платёжный шлюз Тинькофф банка для приёма онлайн-платежей в России. Поддерживает карты Visa/Mastercard/МИР, Tinkoff Pay, СБП. Популярен среди российских интернет-магазинов. Интеграция через форму или JavaScript SDK.",
+    "description_for_ai": "Платёжный шлюз Тинькофф банка для приёма онлайн-платежей. Поддерживает карты Visa/Mastercard/МИР, Tinkoff Pay, СБП (Система быстрых платежей), BNPL (купи сейчас, плати потом). Популярен среди российских интернет-магазинов и сервисов. Не требует абонентской платы.",
     "url": "https://www.tinkoff.ru/kassa/",
     "api_base": "https://securepay.tinkoff.ru/v2",
     "category": "payments",
@@ -65,6 +65,46 @@
           "PaymentId",
           "Status",
           "PaymentURL"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_payment_status",
+      "description_for_ai": "Check current status of a Tinkoff payment by PaymentId. Returns status: NEW, FORM_SHOWED, AUTHORIZING, 3DS_CHECKING, AUTHORIZED, CONFIRMING, CONFIRMED, REVERSING, REVERSED, REFUNDING, REFUNDED, CANCELED, REJECTED.",
+      "intent": [
+        "статус платежа Тинькофф",
+        "оплата прошла",
+        "проверить платёж",
+        "payment status Tinkoff"
+      ],
+      "endpoint": "POST https://securepay.tinkoff.ru/v2/GetState",
+      "input": {
+        "TerminalKey": {
+          "type": "string",
+          "description": "Ключ терминала",
+          "required": true
+        },
+        "PaymentId": {
+          "type": "string",
+          "description": "ID платежа из ответа init_payment",
+          "required": true
+        },
+        "Token": {
+          "type": "string",
+          "description": "SHA-256 хеш параметров для авторизации",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "payment_state",
+        "fields": [
+          "PaymentId",
+          "Status",
+          "Amount",
+          "OrderId",
+          "Message"
         ]
       },
       "realtime": true,
