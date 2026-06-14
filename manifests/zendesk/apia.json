@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "create_ticket",
-      "description_for_ai": "Create a customer support ticket. Assign to agent, set priority and tags.",
+      "description_for_ai": "Create a new customer support ticket with all metadata. Automatically creates customer contact if email doesn't exist.",
       "intent": [
         "create support ticket",
         "customer issue",
@@ -33,10 +33,60 @@
       ],
       "endpoint": "POST https://{subdomain}.zendesk.com/api/v2/tickets",
       "input": {
-        "ticket": {
-          "type": "object",
-          "description": "{subject: string, comment: {body: string}, requester: {name, email}, priority: urgent|high|normal|low, tags: []}",
+        "subject": {
+          "type": "string",
+          "description": "Ticket subject/title — brief description of issue",
           "required": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed issue description (first comment body). HTML supported.",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "description": "Customer's email address — creates contact automatically if new",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Customer's full name",
+          "required": false
+        },
+        "priority": {
+          "type": "string",
+          "description": "urgent, high, normal, or low",
+          "default": "normal"
+        },
+        "status": {
+          "type": "string",
+          "description": "new, open, pending, hold, solved, or closed",
+          "default": "new"
+        },
+        "type": {
+          "type": "string",
+          "description": "Ticket type: problem, incident, question, or task",
+          "required": false
+        },
+        "tags": {
+          "type": "array",
+          "description": "Array of tag strings for categorization and routing",
+          "required": false
+        },
+        "assignee_id": {
+          "type": "integer",
+          "description": "Agent ID to assign ticket to. Get IDs from GET /users?role=agent",
+          "required": false
+        },
+        "group_id": {
+          "type": "integer",
+          "description": "Support group ID for team routing",
+          "required": false
+        },
+        "custom_fields": {
+          "type": "array",
+          "description": "[{id: field_id, value: 'field_value'}] for custom ticket fields",
+          "required": false
         }
       },
       "output": {
@@ -46,6 +96,7 @@
           "ticket.url",
           "ticket.status",
           "ticket.priority",
+          "ticket.requester_id",
           "ticket.created_at"
         ]
       },
@@ -54,7 +105,7 @@
     },
     {
       "id": "list_tickets",
-      "description_for_ai": "Get list of support tickets with filters by status, assignee, priority.",
+      "description_for_ai": "List support tickets with flexible filters. Use for queue management, SLA monitoring, and reporting dashboards.",
       "intent": [
         "open tickets",
         "support queue",
@@ -66,23 +117,43 @@
       "input": {
         "status": {
           "type": "string",
-          "description": "new, open, pending, hold, solved, closed",
+          "description": "Filter by status: new, open, pending, hold, solved, closed",
+          "required": false
+        },
+        "assignee_id": {
+          "type": "integer",
+          "description": "Filter by assigned agent ID",
+          "required": false
+        },
+        "group_id": {
+          "type": "integer",
+          "description": "Filter by support group ID",
+          "required": false
+        },
+        "priority": {
+          "type": "string",
+          "description": "Filter by priority: urgent, high, normal, low",
           "required": false
         },
         "sort_by": {
           "type": "string",
-          "description": "created_at, updated_at, priority",
+          "description": "Field to sort by: created_at, updated_at, priority, status, id",
           "default": "created_at"
         },
         "sort_order": {
           "type": "string",
-          "description": "asc or desc",
+          "description": "Sort direction: asc or desc",
           "default": "desc"
         },
         "per_page": {
           "type": "integer",
-          "default": 25,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "description": "Results per page, max 100",
+          "default": 25
+        },
+        "page": {
+          "type": "integer",
+          "description": "Page number",
+          "default": 1
         }
       },
       "output": {
@@ -92,8 +163,11 @@
           "tickets[0].subject",
           "tickets[0].status",
           "tickets[0].priority",
+          "tickets[0].requester_id",
+          "tickets[0].assignee_id",
           "tickets[0].created_at",
-          "tickets[0].requester_id"
+          "tickets[0].updated_at",
+          "count"
         ]
       },
       "realtime": true,
