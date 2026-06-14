@@ -1,1 +1,115 @@
-{"apia":"1.0","service":{"id":"world-bank","name":"World Bank API","description_for_ai":"Free economic and development data for 200+ countries. GDP, population, poverty, education, health indicators from 1960 to present. No API key needed. Use for economic research, data visualization, country comparisons.","url":"https://data.worldbank.org","api_base":"https://api.worldbank.org/v2","category":"economics_data","geo":["GLOBAL"],"language":"en","docs":"https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation"},"auth":{"type":"none","anonymous_access":true,"cost":"Free forever"},"capabilities":[{"id":"get_indicator","description_for_ai":"Get economic indicator data for countries and years. GDP, inflation, unemployment, exports, population, education, health.","intent":["GDP data","economic data","country statistics","development indicators","population data","unemployment rate","world bank data"],"endpoint":"GET https://api.worldbank.org/v2/country/{country}/indicator/{indicator}","input":{"country":{"type":"string","description":"ISO 2-letter country code or all for all countries. e.g. RU, US, DE, CN","required":true},"indicator":{"type":"string","description":"NY.GDP.MKTP.CD=GDP, SP.POP.TOTL=Population, FP.CPI.TOTL.ZG=Inflation, SL.UEM.TOTL.ZS=Unemployment","required":true},"format":{"type":"string","default":"json"},"date":{"type":"string","description":"Year range e.g. 2010:2023","required":false},"per_page":{"type":"integer","default":50}},"output":{"type":"list<data_point>","fields":["[1][0].country.value","[1][0].date","[1][0].value"]},"realtime":false,"requires_auth":false},{"id":"search_indicators","description_for_ai":"Search available World Bank indicators by keyword.","intent":["find indicator","economic metric","World Bank indicators list"],"endpoint":"GET https://api.worldbank.org/v2/indicator","input":{"format":{"type":"string","default":"json"},"per_page":{"type":"integer","default":20},"source":{"type":"string","required":false}},"output":{"type":"list<indicator>","fields":["[1][0].id","[1][0].name","[1][0].sourceNote"]},"realtime":false,"requires_auth":false}],"agent_hints":{"common_indicators":"NY.GDP.MKTP.CD=GDP current USD, SP.POP.TOTL=Total population, FP.CPI.TOTL.ZG=Inflation %, SL.UEM.TOTL.ZS=Unemployment %, SE.ADT.LITR.ZS=Literacy rate","response_format":"Response is array of 2 elements: [0]=metadata, [1]=data array"},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "world-bank",
+    "name": "World Bank API",
+    "description_for_ai": "Free economic and development data for 200+ countries. GDP, population, poverty, education, health indicators from 1960 to present. No API key needed. Use for economic research, data visualization, country comparisons.",
+    "url": "https://data.worldbank.org",
+    "api_base": "https://api.worldbank.org/v2",
+    "category": "economics_data",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "Free forever"
+  },
+  "capabilities": [
+    {
+      "id": "get_indicator",
+      "description_for_ai": "Get economic indicator data for countries and years. GDP, inflation, unemployment, exports, population, education, health.",
+      "intent": [
+        "GDP data",
+        "economic data",
+        "country statistics",
+        "development indicators",
+        "population data",
+        "unemployment rate",
+        "world bank data"
+      ],
+      "endpoint": "GET https://api.worldbank.org/v2/country/{country}/indicator/{indicator}",
+      "input": {
+        "country": {
+          "type": "string",
+          "description": "ISO 2-letter country code or all for all countries. e.g. RU, US, DE, CN",
+          "required": true
+        },
+        "indicator": {
+          "type": "string",
+          "description": "NY.GDP.MKTP.CD=GDP, SP.POP.TOTL=Population, FP.CPI.TOTL.ZG=Inflation, SL.UEM.TOTL.ZS=Unemployment",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "json"
+        },
+        "date": {
+          "type": "string",
+          "description": "Year range e.g. 2010:2023",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<data_point>",
+        "fields": [
+          "[1][0].country.value",
+          "[1][0].date",
+          "[1][0].value"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "search_indicators",
+      "description_for_ai": "Search available World Bank indicators by keyword.",
+      "intent": [
+        "find indicator",
+        "economic metric",
+        "World Bank indicators list"
+      ],
+      "endpoint": "GET https://api.worldbank.org/v2/indicator",
+      "input": {
+        "format": {
+          "type": "string",
+          "default": "json"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        },
+        "source": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<indicator>",
+        "fields": [
+          "[1][0].id",
+          "[1][0].name",
+          "[1][0].sourceNote"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "common_indicators": "NY.GDP.MKTP.CD=GDP current USD, SP.POP.TOTL=Total population, FP.CPI.TOTL.ZG=Inflation %, SL.UEM.TOTL.ZS=Unemployment %, SE.ADT.LITR.ZS=Literacy rate",
+    "response_format": "Response is array of 2 elements: [0]=metadata, [1]=data array"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
