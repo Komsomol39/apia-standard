@@ -1,1 +1,78 @@
-{"apia":"1.0","service":{"id":"facebook-ads","name":"Meta Ads API (Facebook/Instagram Ads)","description_for_ai":"Advertise on Facebook and Instagram. Create campaigns, ad sets, ads. Access detailed analytics. 3B+ users reach. Powerful audience targeting: interests, demographics, lookalikes, custom audiences.","url":"https://developers.facebook.com/docs/marketing-apis","api_base":"https://graph.facebook.com/v20.0","category":"advertising","geo":["GLOBAL"],"language":"en","docs":"https://developers.facebook.com/docs/marketing-api/reference/"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Create app at https://developers.facebook.com/apps — requires ad account","cost":"Free API. Ad spend charged per campaign"},"capabilities":[{"id":"get_ad_insights","description_for_ai":"Get Facebook/Instagram ad performance: reach, impressions, clicks, spend, conversions, ROAS by campaign, ad set, or ad.","intent":["facebook ads performance","instagram ads","social media advertising","ad metrics","ad spend ROI","social ads report"],"endpoint":"GET https://graph.facebook.com/v20.0/{ad_account_id}/insights","input":{"level":{"type":"string","description":"campaign, adset, ad, account","required":true},"fields":{"type":"string","description":"impressions,clicks,spend,reach,conversions,ctr,cpm,cpc,roas","required":true},"date_preset":{"type":"string","description":"last_7d, last_30d, last_month, this_month","required":false},"time_range":{"type":"object","description":"{since: YYYY-MM-DD, until: YYYY-MM-DD}","required":false}},"output":{"type":"insights","fields":["data[0].campaign_name","data[0].impressions","data[0].clicks","data[0].spend","data[0].reach","data[0].ctr","data[0].cpc"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "facebook-ads",
+    "name": "Meta Ads API (Facebook/Instagram Ads)",
+    "description_for_ai": "Advertise on Facebook and Instagram. Create campaigns, ad sets, ads. Access detailed analytics. 3B+ users reach. Powerful audience targeting: interests, demographics, lookalikes, custom audiences.",
+    "url": "https://developers.facebook.com/docs/marketing-apis",
+    "api_base": "https://graph.facebook.com/v20.0",
+    "category": "advertising",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.facebook.com/docs/marketing-api/reference/"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Create app at https://developers.facebook.com/apps — requires ad account",
+    "cost": "Free API. Ad spend charged per campaign"
+  },
+  "capabilities": [
+    {
+      "id": "get_ad_insights",
+      "description_for_ai": "Get Facebook/Instagram ad performance: reach, impressions, clicks, spend, conversions, ROAS by campaign, ad set, or ad.",
+      "intent": [
+        "facebook ads performance",
+        "instagram ads",
+        "social media advertising",
+        "ad metrics",
+        "ad spend ROI",
+        "social ads report"
+      ],
+      "endpoint": "GET https://graph.facebook.com/v20.0/{ad_account_id}/insights",
+      "input": {
+        "level": {
+          "type": "string",
+          "description": "campaign, adset, ad, account",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "impressions,clicks,spend,reach,conversions,ctr,cpm,cpc,roas",
+          "required": true
+        },
+        "date_preset": {
+          "type": "string",
+          "description": "last_7d, last_30d, last_month, this_month",
+          "required": false
+        },
+        "time_range": {
+          "type": "object",
+          "description": "{since: YYYY-MM-DD, until: YYYY-MM-DD}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "insights",
+        "fields": [
+          "data[0].campaign_name",
+          "data[0].impressions",
+          "data[0].clicks",
+          "data[0].spend",
+          "data[0].reach",
+          "data[0].ctr",
+          "data[0].cpc"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
