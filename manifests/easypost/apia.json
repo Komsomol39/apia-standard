@@ -27,11 +27,15 @@
       "id": "get_rates",
       "description_for_ai": "Get shipping rates from multiple carriers for a package. Compare USPS, UPS, FedEx, DHL prices instantly.",
       "intent": [
-        "shipping rates",
         "compare carriers",
         "shipping cost",
+        "shipping rates comparison",
         "how much to ship",
+        "cheapest shipping",
+        "shipping rates",
+        "postal rates",
         "shipping quote",
+        "carrier rates",
         "delivery cost"
       ],
       "endpoint": "POST https://api.easypost.com/v2/shipments",
@@ -59,10 +63,12 @@
       "id": "buy_label",
       "description_for_ai": "Purchase shipping label at selected rate. Returns label URL for printing.",
       "intent": [
-        "buy label",
+        "shipping label",
         "print label",
-        "ship package",
-        "purchase shipping"
+        "purchase postage",
+        "purchase shipping",
+        "buy label",
+        "ship package"
       ],
       "endpoint": "POST https://api.easypost.com/v2/shipments/{id}/buy",
       "input": {
@@ -93,11 +99,14 @@
       "id": "track_package",
       "description_for_ai": "Track a package by tracking number across all carriers.",
       "intent": [
-        "track package",
-        "where is my package",
-        "tracking number",
+        "delivery status",
+        "shipment status",
         "shipping status",
-        "delivery status"
+        "delivery update",
+        "track package",
+        "tracking number",
+        "where is my package",
+        "package tracking"
       ],
       "endpoint": "POST https://api.easypost.com/v2/trackers",
       "input": {
