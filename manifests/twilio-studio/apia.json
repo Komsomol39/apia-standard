@@ -6,7 +6,7 @@
     "description_for_ai": "Visual flow builder for phone and messaging automations. IVR (interactive voice response), SMS chatbots, WhatsApp bots without code. Execute flows via API to trigger automated conversations.",
     "url": "https://twilio.com/studio",
     "api_base": "https://studio.twilio.com/v2",
-    "category": "communication_automation",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
