@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "invoke_function",
-      "description_for_ai": "Invoke a Lambda function synchronously or asynchronously. Returns function response.",
+      "description_for_ai": "Serverless compute. Run code without servers. Pay per 100ms execution. 1M free invocations/month forever. Supports Node.js, Python, Java, Go, Ruby. Use for event-driven functions, APIs, automation, processing. Invoke a Lambda function synchronously or asynchronously. Returns function response.",
       "intent": [
         "run function",
         "invoke lambda",
