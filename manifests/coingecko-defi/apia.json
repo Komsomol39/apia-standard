@@ -84,5 +84,10 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "free": "Most DeFi endpoints free on demo tier. Pro tier needed for on-chain data and higher limits.",
+    "ids": "Use /coins/list to get exact coin IDs. DeFi: uniswap, aave, compound, curve-dao-token, maker",
+    "tvl": "TVL (Total Value Locked) data from DeFiLlama API (defillama.com/docs) is more comprehensive."
   }
 }
