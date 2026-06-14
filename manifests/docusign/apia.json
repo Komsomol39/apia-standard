@@ -24,12 +24,16 @@
       "id": "send_envelope",
       "description_for_ai": "Send document for electronic signature. Returns envelope ID to track status.",
       "intent": [
-        "send for signature",
         "document signing",
-        "esign",
+        "send for signature",
+        "eSign document",
         "contract signature",
+        "отправить на подпись",
+        "contract signing",
+        "digital signature",
         "sign document",
-        "подпись документа"
+        "подпись документа",
+        "esign"
       ],
       "endpoint": "POST https://demo.docusign.net/restapi/v2.1/accounts/{accountId}/envelopes",
       "input": {
@@ -73,10 +77,12 @@
       "id": "get_envelope",
       "description_for_ai": "Check the signing status of a DocuSign envelope. Returns completed timestamp when all parties have signed.",
       "intent": [
-        "signature status",
+        "signing status",
         "document signed",
-        "envelope status",
-        "signing progress"
+        "envelope progress",
+        "signature status",
+        "signing progress",
+        "envelope status"
       ],
       "endpoint": "GET https://demo.docusign.net/restapi/v2.1/accounts/{accountId}/envelopes/{envelopeId}",
       "input": {
