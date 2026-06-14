@@ -6,7 +6,7 @@
     "description_for_ai": "European AI company with strong open-weight models. Best for: code generation (Codestral), multilingual European tasks, cost-efficient production. OpenAI-compatible API. Mistral Small is one of the cheapest quality models. Strong on French, German, Spanish, Italian.",
     "url": "https://mistral.ai",
     "api_base": "https://api.mistral.ai/v1",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
