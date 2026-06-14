@@ -118,5 +118,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "subdomain": "Replace {subdomain} with your amoCRM subdomain e.g. mycompany.amocrm.ru",
+    "oauth": "Use OAuth2 long-lived token from account settings. Refresh tokens expire in 3 months.",
+    "leads_vs_contacts": "amoCRM uses Leads (сделки) for sales pipeline and Contacts for people. Link them via associations.",
+    "webhooks": "Configure webhooks in account for real-time updates on lead/contact changes."
   }
 }
