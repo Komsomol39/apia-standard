@@ -1,1 +1,122 @@
-{"apia":"1.0","service":{"id":"amocrm","name":"amoCRM API (Россия/СНГ)","description_for_ai":"Самая популярная CRM-система в России и СНГ. Сделки, контакты, компании, воронка продаж. Интеграция с мессенджерами и телефонией. Используй для управления продажами, лидами, клиентской базой в России.","url":"https://amocrm.ru","api_base":"https://{subdomain}.amocrm.ru/api/v4","category":"crm","geo":["RU","BY","KZ","UA"],"language":"ru","docs":"https://www.amocrm.ru/developers/content/crm_platform/api-reference"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Создать интеграцию в настройках аккаунта amoCRM","cost":"Базовый: 499 руб/пользователь/месяц. 14 дней бесплатно."},"capabilities":[{"id":"get_leads","description_for_ai":"Получить сделки из воронки продаж amoCRM с фильтрами по статусу, ответственному, дате.","intent":["сделки amoCRM","воронка продаж","лиды CRM","клиенты amoCRM","продажи России"],"endpoint":"GET https://{subdomain}.amocrm.ru/api/v4/leads","input":{"limit":{"type":"integer","default":50,"max":250},"page":{"type":"integer","default":1},"filter[statuses][][pipeline_id]":{"type":"integer","required":false},"filter[responsible_user_id]":{"type":"integer","required":false}},"output":{"type":"list<lead>","fields":["id","name","price","status_id","pipeline_id","responsible_user_id","created_at","updated_at"]},"realtime":true,"requires_auth":true},{"id":"create_lead","description_for_ai":"Создать новую сделку в amoCRM.","intent":["добавить сделку","новый лид","создать клиента","добавить в CRM"],"endpoint":"POST https://{subdomain}.amocrm.ru/api/v4/leads","input":{"name":{"type":"string","required":true},"price":{"type":"integer","required":false},"pipeline_id":{"type":"integer","required":false},"status_id":{"type":"integer","required":false},"responsible_user_id":{"type":"integer","required":false}},"output":{"type":"list<lead>","fields":["id","name","price","status_id"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "amocrm",
+    "name": "amoCRM API (Россия/СНГ)",
+    "description_for_ai": "Самая популярная CRM-система в России и СНГ. Сделки, контакты, компании, воронка продаж. Интеграция с мессенджерами и телефонией. Используй для управления продажами, лидами, клиентской базой в России.",
+    "url": "https://amocrm.ru",
+    "api_base": "https://{subdomain}.amocrm.ru/api/v4",
+    "category": "crm",
+    "geo": [
+      "RU",
+      "BY",
+      "KZ",
+      "UA"
+    ],
+    "language": "ru",
+    "docs": "https://www.amocrm.ru/developers/content/crm_platform/api-reference"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Создать интеграцию в настройках аккаунта amoCRM",
+    "cost": "Базовый: 499 руб/пользователь/месяц. 14 дней бесплатно."
+  },
+  "capabilities": [
+    {
+      "id": "get_leads",
+      "description_for_ai": "Получить сделки из воронки продаж amoCRM с фильтрами по статусу, ответственному, дате.",
+      "intent": [
+        "сделки amoCRM",
+        "воронка продаж",
+        "лиды CRM",
+        "клиенты amoCRM",
+        "продажи России"
+      ],
+      "endpoint": "GET https://{subdomain}.amocrm.ru/api/v4/leads",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 50,
+          "max": 250
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "filter[statuses][][pipeline_id]": {
+          "type": "integer",
+          "required": false
+        },
+        "filter[responsible_user_id]": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<lead>",
+        "fields": [
+          "id",
+          "name",
+          "price",
+          "status_id",
+          "pipeline_id",
+          "responsible_user_id",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_lead",
+      "description_for_ai": "Создать новую сделку в amoCRM.",
+      "intent": [
+        "добавить сделку",
+        "новый лид",
+        "создать клиента",
+        "добавить в CRM"
+      ],
+      "endpoint": "POST https://{subdomain}.amocrm.ru/api/v4/leads",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "price": {
+          "type": "integer",
+          "required": false
+        },
+        "pipeline_id": {
+          "type": "integer",
+          "required": false
+        },
+        "status_id": {
+          "type": "integer",
+          "required": false
+        },
+        "responsible_user_id": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<lead>",
+        "fields": [
+          "id",
+          "name",
+          "price",
+          "status_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
