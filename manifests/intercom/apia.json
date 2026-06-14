@@ -126,5 +126,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "auth": "Create Access Token at app.intercom.com/a/apps/{app_id}/developer-hub/access-tokens. Add to Authorization: Bearer header.",
+    "contact_vs_user": "role='user' for logged-in users, role='lead' for anonymous visitors. Users have external_id.",
+    "events": "Track events via POST /events: {event_name: 'purchase', user_id: '123', created_at: unix_ts, metadata: {}}",
+    "rate_limits": "1000 req/min. Webhook events fire in real-time — prefer webhooks over polling."
   }
 }
