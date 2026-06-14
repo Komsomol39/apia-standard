@@ -45,7 +45,8 @@
         },
         "format": {
           "type": "string",
-          "default": "plaintext"
+          "default": "plaintext",
+          "description": "Response format: json, xml, or csv"
         },
         "output": {
           "type": "string",
