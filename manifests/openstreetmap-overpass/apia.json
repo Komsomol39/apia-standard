@@ -1,1 +1,69 @@
-{"apia":"1.0","service":{"id":"openstreetmap-overpass","name":"OpenStreetMap Overpass API","description_for_ai":"Query OpenStreetMap data using Overpass QL. Find any geographic features: restaurants, hospitals, bus stops, parks, buildings, roads. Most detailed free map data. No API key needed.","url":"https://overpass-api.de","api_base":"https://overpass-api.de/api","category":"maps_data","geo":["GLOBAL"],"language":"en","docs":"https://wiki.openstreetmap.org/wiki/Overpass_API"},"auth":{"type":"none","anonymous_access":true,"cost":"Free — please respect rate limits"},"capabilities":[{"id":"query","description_for_ai":"Query OSM data for geographic features near coordinates or in bounding box. Find any type of place: restaurants, hospitals, schools, ATMs, parks.","intent":["find places OSM","nearby amenities","map data query","geographic features","open data map","hospitals near","school nearby","park location"],"endpoint":"POST https://overpass-api.de/api/interpreter","input":{"data":{"type":"string","description":"Overpass QL query e.g. [out:json];node[amenity=restaurant](around:500,55.75,37.62);out;","required":true}},"output":{"type":"osm_data","fields":["elements[0].type","elements[0].id","elements[0].lat","elements[0].lon","elements[0].tags.name","elements[0].tags.amenity"]},"realtime":false,"requires_auth":false}],"agent_hints":{"query_template":"[out:json];node[KEY=VALUE](around:RADIUS_M,LAT,LON);out body; — finds nodes with tag near point","common_amenities":"restaurant, cafe, hospital, pharmacy, school, bank, atm, parking, fuel, supermarket, bus_stop","radius":"around:500 = 500 meters. Use larger radius for sparse areas.","slow":"Complex queries can take 30+ seconds. Add timeout: [out:json][timeout:60]"},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "openstreetmap-overpass",
+    "name": "OpenStreetMap Overpass API",
+    "description_for_ai": "Query OpenStreetMap data using Overpass QL. Find any geographic features: restaurants, hospitals, bus stops, parks, buildings, roads. Most detailed free map data. No API key needed.",
+    "url": "https://overpass-api.de",
+    "api_base": "https://overpass-api.de/api",
+    "category": "maps_data",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://wiki.openstreetmap.org/wiki/Overpass_API"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "Free — please respect rate limits"
+  },
+  "capabilities": [
+    {
+      "id": "query",
+      "description_for_ai": "Query OSM data for geographic features near coordinates or in bounding box. Find any type of place: restaurants, hospitals, schools, ATMs, parks.",
+      "intent": [
+        "find places OSM",
+        "nearby amenities",
+        "map data query",
+        "geographic features",
+        "open data map",
+        "hospitals near",
+        "school nearby",
+        "park location"
+      ],
+      "endpoint": "POST https://overpass-api.de/api/interpreter",
+      "input": {
+        "data": {
+          "type": "string",
+          "description": "Overpass QL query e.g. [out:json];node[amenity=restaurant](around:500,55.75,37.62);out;",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "osm_data",
+        "fields": [
+          "elements[0].type",
+          "elements[0].id",
+          "elements[0].lat",
+          "elements[0].lon",
+          "elements[0].tags.name",
+          "elements[0].tags.amenity"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "query_template": "[out:json];node[KEY=VALUE](around:RADIUS_M,LAT,LON);out body; — finds nodes with tag near point",
+    "common_amenities": "restaurant, cafe, hospital, pharmacy, school, bank, atm, parking, fuel, supermarket, bus_stop",
+    "radius": "around:500 = 500 meters. Use larger radius for sparse areas.",
+    "slow": "Complex queries can take 30+ seconds. Add timeout: [out:json][timeout:60]"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
