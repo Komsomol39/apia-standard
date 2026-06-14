@@ -25,10 +25,14 @@
       "id": "create_shipment",
       "description_for_ai": "Multi-carrier shipping API. Rates from 85+ carriers worldwide. Label generation, tracking, returns. Popular with Shopify merchants. Use for e-commerce shipping automation. Create shipment and get rates from multiple carriers. Returns all available rates for comparison.",
       "intent": [
+        "shipping labels",
+        "multi-carrier shipping",
+        "compare shipping",
         "shipping rates",
         "create shipment",
-        "shipping labels",
-        "carrier rates"
+        "Shippo labels",
+        "carrier rates",
+        "shipping API"
       ],
       "endpoint": "POST https://api.goshippo.com/shipments/",
       "input": {
