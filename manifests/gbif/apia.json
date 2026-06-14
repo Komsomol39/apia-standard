@@ -6,7 +6,7 @@
     "description_for_ai": "Global Biodiversity Information Facility. 2.4B+ species occurrence records. All species on Earth with location, taxonomy, images. Completely free. Use for nature apps, biodiversity research, species identification.",
     "url": "https://gbif.org",
     "api_base": "https://api.gbif.org/v1",
-    "category": "biodiversity",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
