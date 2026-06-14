@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "search_papers",
-      "description_for_ai": "Search academic papers with metadata, citations count, open access links.",
+      "description_for_ai": "Search 220M+ academic papers by keyword. Returns title, abstract, citation count, authors, and open access PDF links.",
       "intent": [
         "find research paper",
         "academic search",
@@ -37,32 +37,51 @@
       "input": {
         "query": {
           "type": "string",
+          "description": "Search query — supports natural language: 'transformer attention mechanism', 'COVID vaccine efficacy', 'reinforcement learning robotics'",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "title,abstract,authors,year,citationCount,openAccessPdf,url",
+          "description": "Comma-separated fields: title,abstract,authors,year,citationCount,openAccessPdf,externalIds,venue,referenceCount,s2FieldsOfStudy",
           "default": "title,abstract,year,citationCount"
         },
         "limit": {
           "type": "integer",
+          "description": "Results per page, max 100",
           "default": 10
         },
         "offset": {
           "type": "integer",
+          "description": "Pagination offset",
           "default": 0
+        },
+        "publicationTypes": {
+          "type": "string",
+          "description": "Filter by type: JournalArticle, Conference, Review, Book, Dataset",
+          "required": false
+        },
+        "year": {
+          "type": "string",
+          "description": "Year filter: '2023', '2020-2024', '-2020' (before 2020), '2020-' (after 2020)",
+          "required": false
+        },
+        "openAccessPdf": {
+          "type": "string",
+          "description": "Pass empty string to filter only open access papers with free PDF",
+          "required": false
         }
       },
       "output": {
         "type": "list<paper>",
         "fields": [
-          "paperId",
-          "title",
-          "abstract",
-          "year",
-          "citationCount",
-          "authors[0].name",
-          "openAccessPdf.url"
+          "data[0].paperId",
+          "data[0].title",
+          "data[0].abstract",
+          "data[0].year",
+          "data[0].citationCount",
+          "data[0].openAccessPdf.url",
+          "data[0].authors[0].name",
+          "total"
         ]
       },
       "realtime": false,
@@ -70,7 +89,7 @@
     },
     {
       "id": "get_paper_recommendations",
-      "description_for_ai": "Get recommended papers similar to a given paper. Great for literature discovery.",
+      "description_for_ai": "Get AI-powered paper recommendations similar to given papers. Excellent for literature discovery and finding related work.",
       "intent": [
         "similar papers",
         "related research",
@@ -81,26 +100,32 @@
       "input": {
         "positivePaperIds": {
           "type": "array",
-          "description": "Array of paper IDs to base recommendations on",
+          "description": "Semantic Scholar paper IDs to base recommendations on. Pass 1-5 papers you want similar papers to.",
           "required": true
         },
         "negativePaperIds": {
           "type": "array",
+          "description": "Paper IDs to EXCLUDE from recommendations — papers you don't want similar to",
           "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Number of recommendations to return, max 100",
           "default": 10
+        },
+        "fields": {
+          "type": "string",
+          "description": "Fields to include in results",
+          "default": "title,abstract,year,citationCount"
         }
       },
       "output": {
         "type": "list<paper>",
         "fields": [
-          "paperId",
-          "title",
-          "abstract",
-          "year",
-          "citationCount"
+          "recommendedPapers[0].paperId",
+          "recommendedPapers[0].title",
+          "recommendedPapers[0].abstract",
+          "recommendedPapers[0].citationCount"
         ]
       },
       "realtime": false,
