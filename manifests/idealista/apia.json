@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "search",
-      "description_for_ai": "Search properties in Spain, Italy or Portugal for sale or rent.",
+      "description_for_ai": "Leading property portal in Spain, Italy and Portugal. Buy and rent listings. Official API for real estate professionals. Use for property search in Southern Europe. Search properties in Spain, Italy or Portugal for sale or rent.",
       "intent": [
         "property Spain",
         "apartment Madrid",
