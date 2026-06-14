@@ -1,1 +1,71 @@
-{"apia":"1.0","service":{"id":"mapillary","name":"Mapillary API (Meta)","description_for_ai":"Crowdsourced street-level imagery. 2B+ photos from 200+ countries. Access street photos, map features (signs, lanes, surfaces), traffic signs, sequence data. Free for developers. Use for street view, autonomous driving data, map enrichment.","url":"https://mapillary.com","api_base":"https://graph.mapillary.com","category":"maps_imagery","geo":["GLOBAL"],"language":"en","docs":"https://www.mapillary.com/developer/api-documentation"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"access_token","param_location":"query","how_to_get":"Register at https://www.mapillary.com/app/settings/developers","cost":"Free for non-commercial"},"capabilities":[{"id":"search_images","description_for_ai":"Search street-level images near coordinates. Returns photo IDs, camera angles, dates.","intent":["street view","street photo","location photo","road images","street imagery"],"endpoint":"GET https://graph.mapillary.com/images","input":{"bbox":{"type":"string","description":"min_lon,min_lat,max_lon,max_lat bounding box","required":true},"limit":{"type":"integer","default":10},"fields":{"type":"string","description":"id,thumb_2048_url,geometry,captured_at,compass_angle","required":false}},"output":{"type":"list<image>","fields":["data[0].id","data[0].thumb_2048_url","data[0].geometry.coordinates","data[0].captured_at","data[0].compass_angle"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "mapillary",
+    "name": "Mapillary API (Meta)",
+    "description_for_ai": "Crowdsourced street-level imagery. 2B+ photos from 200+ countries. Access street photos, map features (signs, lanes, surfaces), traffic signs, sequence data. Free for developers. Use for street view, autonomous driving data, map enrichment.",
+    "url": "https://mapillary.com",
+    "api_base": "https://graph.mapillary.com",
+    "category": "maps_imagery",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://www.mapillary.com/developer/api-documentation"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "access_token",
+    "param_location": "query",
+    "how_to_get": "Register at https://www.mapillary.com/app/settings/developers",
+    "cost": "Free for non-commercial"
+  },
+  "capabilities": [
+    {
+      "id": "search_images",
+      "description_for_ai": "Search street-level images near coordinates. Returns photo IDs, camera angles, dates.",
+      "intent": [
+        "street view",
+        "street photo",
+        "location photo",
+        "road images",
+        "street imagery"
+      ],
+      "endpoint": "GET https://graph.mapillary.com/images",
+      "input": {
+        "bbox": {
+          "type": "string",
+          "description": "min_lon,min_lat,max_lon,max_lat bounding box",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "fields": {
+          "type": "string",
+          "description": "id,thumb_2048_url,geometry,captured_at,compass_angle",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<image>",
+        "fields": [
+          "data[0].id",
+          "data[0].thumb_2048_url",
+          "data[0].geometry.coordinates",
+          "data[0].captured_at",
+          "data[0].compass_angle"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
