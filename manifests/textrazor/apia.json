@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "analyze",
-      "description_for_ai": "Extract entities, topics, relations from text. Identifies people, places, organizations, dates with Wikipedia links.",
+      "description_for_ai": "Deep NLP analysis. Entity extraction, relation detection, topic classification, sentiment, dependency parsing, coreference resolution. 500 req/day free. Use for text understanding, information extraction, document analysis. Extract entities, topics, relations from text. Identifies people, places, organizations, dates with Wikipedia links.",
       "intent": [
         "extract entities",
         "NLP analysis",
