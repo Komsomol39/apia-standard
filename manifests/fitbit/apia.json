@@ -55,13 +55,17 @@
     },
     {
       "id": "get_sleep",
-      "description_for_ai": "Get sleep data: duration, stages (deep/light/REM/awake), efficiency score.",
+      "description_for_ai": "Get Fitbit sleep data: total duration, sleep efficiency score, and breakdown by stage (deep, light, REM, awake) with timestamps.",
       "intent": [
-        "sleep data",
-        "sleep quality",
         "sleep stages",
+        "sleep tracking",
+        "сон данные",
         "REM sleep",
-        "sleep tracking"
+        "sleep analysis",
+        "sleep data",
+        "sleep duration",
+        "sleep quality score",
+        "sleep quality"
       ],
       "endpoint": "GET https://api.fitbit.com/1.2/user/-/sleep/date/{date}.json",
       "input": {
