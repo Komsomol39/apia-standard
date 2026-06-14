@@ -131,7 +131,8 @@
         },
         "lng": {
           "type": "float",
-          "required": false
+          "required": false,
+          "description": "Longitude coordinate (decimal degrees, -180 to 180)"
         }
       },
       "output": {
