@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "capture_screenshot",
-      "description_for_ai": "Capture screenshot of any URL. Returns image URL or binary. Use for website previews, monitoring, OG image generation.",
+      "description_for_ai": "Capture website screenshots via API. Full page, viewport, mobile/desktop. Convert URLs to PNG/JPEG/PDF. Used for website monitoring, thumbnails, content archiving. 100 screenshots/month free. Capture screenshot of any URL. Returns image URL or binary. Use for website previews, monitoring, OG image generation.",
       "intent": [
         "screenshot website",
         "capture URL",
