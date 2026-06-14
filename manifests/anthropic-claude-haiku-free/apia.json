@@ -44,7 +44,8 @@
         },
         "max_tokens": {
           "type": "integer",
-          "required": true
+          "required": true,
+          "description": "Maximum number of tokens to generate in response"
         }
       },
       "output": {
