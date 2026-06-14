@@ -83,7 +83,7 @@
     },
     {
       "id": "create_order",
-      "description_for_ai": "Создать заказ на доставку СДЭК.",
+      "description_for_ai": "Create a СДЭК shipping order with sender/recipient addresses, package dimensions, and selected tariff. Returns order UUID for tracking.",
       "intent": [
         "создать заказ СДЭК",
         "оформить доставку",
@@ -130,7 +130,7 @@
     },
     {
       "id": "track_order",
-      "description_for_ai": "Отследить заказ СДЭК по номеру.",
+      "description_for_ai": "Track a СДЭК shipment by order number or your internal order ID. Returns current status and delivery history.",
       "intent": [
         "трек СДЭК",
         "отследить посылку",
@@ -166,5 +166,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "oauth": "Get token: POST https://api.cdek.ru/v2/oauth/token with grant_type=client_credentials + client_id + client_secret",
+    "test": "Test environment: api.edu.cdek.ru/v2. Test credentials: clientId=EMscd6r9JnFiQ3bLoyjJY6eM78JV9wbo, clientSecret=PjLZkKBHEiLK3Qdv3cjmczNkCa2F8VU0",
+    "tariff_codes": "Common tariffs: 136=Посылка склад-склад, 137=Посылка склад-дверь, 138=Посылка дверь-склад, 139=Посылка дверь-дверь",
+    "cities": "Get city codes from GET /location/cities?country_codes=RU&city=Москва. Use code field in from_location/to_location."
   }
 }
