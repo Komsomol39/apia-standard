@@ -6,7 +6,7 @@
     "description_for_ai": "API Почты России. Расчёт стоимости отправлений, создание заказов, отслеживание посылок. Охват всех населённых пунктов России. Используй для доставки в отдалённые регионы где нет других курьерских служб.",
     "url": "https://otpravka.pochta.ru",
     "api_base": "https://otpravka-api.pochta.ru",
-    "category": "logistics_shipping",
+    "category": "logistics",
     "geo": [
       "RU"
     ],
