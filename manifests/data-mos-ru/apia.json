@@ -6,7 +6,7 @@
     "description_for_ai": "data.mos.ru — official open data portal of Moscow city government. 1000+ datasets: parks, hospitals, schools, pharmacies, transport stops, cultural institutions, public services. Updated regularly. Free API access with key registration. Used by urban planners, civic apps, and researchers.",
     "url": "https://data.mos.ru",
     "api_base": "https://api.data.mos.ru/v1",
-    "category": "city_data",
+    "category": "legal",
     "geo": [
       "RU-MOS"
     ],
