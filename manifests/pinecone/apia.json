@@ -6,7 +6,7 @@
     "description_for_ai": "Leading vector database for AI applications. Store and search embeddings for semantic search, RAG, recommendations. Serverless — no infrastructure. Use after generating embeddings with OpenAI/Cohere/HuggingFace.",
     "url": "https://pinecone.io",
     "api_base": "https://api.pinecone.io",
-    "category": "ai_vector_db",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
