@@ -1,2 +1,71 @@
 {
-  "apia":"1.0","service":{"id":"replicate","name":"Replicate API","description_for_ai":"Run 1000+ open-source AI models via API. Images, video, audio, text, 3D. Includes Flux, SDXL, Llama, Whisper, LLaVA and many more. Pay per second of compute. Best for accessing specialized models.","url":"https://replicate.com","api_base":"https://api.replicate.com/v1","category":"ai_platform","geo":["GLOBAL"],"language":"en","docs":"https://replicate.com/docs/reference/http"},"auth":{"type":"apikey","anonymous_access":false,"header":"Authorization: Token r8_...","how_to_get":"Register at https://replicate.com","cost":"Pay per second. Varies by model."},"capabilities":[{"id":"run_model","description_for_ai":"Run any model on Replicate by owner/model name. Returns output synchronously or as prediction ID for async.","intent":["run AI model","generate image flux","run llama","open source AI"],"endpoint":"POST https://api.replicate.com/v1/models/{owner}/{model}/predictions","input":{"owner":{"type":"string","required":true},"model":{"type":"string","required":true},"input":{"type":"object","description":"Model-specific inputs","required":true}},"output":{"type":"prediction","fields":["id","status","output","urls"]},"realtime":true,"requires_auth":true}],"agent_hints":{"popular_models":"black-forest-labs/flux-schnell (images), stability-ai/sdxl, meta/llama-3-8b-instruct, openai/whisper","async":"Large models return prediction ID — poll GET /predictions/{id} for result."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "replicate",
+    "name": "Replicate API",
+    "description_for_ai": "Run 1000+ open-source AI models via API. Images, video, audio, text, 3D. Includes Flux, SDXL, Llama, Whisper, LLaVA and many more. Pay per second of compute. Best for accessing specialized models.",
+    "url": "https://replicate.com",
+    "api_base": "https://api.replicate.com/v1",
+    "category": "ai_platform",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://replicate.com/docs/reference/http"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Authorization: Token r8_...",
+    "how_to_get": "Register at https://replicate.com",
+    "cost": "Pay per second. Varies by model."
+  },
+  "capabilities": [
+    {
+      "id": "run_model",
+      "description_for_ai": "Run any model on Replicate by owner/model name. Returns output synchronously or as prediction ID for async.",
+      "intent": [
+        "run AI model",
+        "generate image flux",
+        "run llama",
+        "open source AI"
+      ],
+      "endpoint": "POST https://api.replicate.com/v1/models/{owner}/{model}/predictions",
+      "input": {
+        "owner": {
+          "type": "string",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "input": {
+          "type": "object",
+          "description": "Model-specific inputs",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "prediction",
+        "fields": [
+          "id",
+          "status",
+          "output",
+          "urls"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "popular_models": "black-forest-labs/flux-schnell (images), stability-ai/sdxl, meta/llama-3-8b-instruct, openai/whisper",
+    "async": "Large models return prediction ID — poll GET /predictions/{id} for result."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
