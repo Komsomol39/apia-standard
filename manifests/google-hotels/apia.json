@@ -3,7 +3,7 @@
   "service": {
     "id": "google-hotels",
     "name": "Google Hotels (via SERP API)",
-    "description_for_ai": "Access Google Hotels search results programmatically. Prices, availability, ratings for hotels worldwide. Google aggregates prices from booking sites. Use for hotel price comparison and travel planning.",
+    "description_for_ai": "Google Hotels search results via SerpAPI. Get hotel prices, availability, ratings from Google's aggregated booking data (Booking.com, Expedia, Hotels.com, and 100+ more). Best for comparing hotel prices across booking platforms.",
     "url": "https://serpapi.com",
     "api_base": "https://serpapi.com/search",
     "category": "travel_hotels",
@@ -79,6 +79,47 @@
           "properties[0].rate_per_night.lowest",
           "properties[0].total_rate.lowest",
           "properties[0].images[0].thumbnail"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_hotel_details",
+      "description_for_ai": "Get detailed info for a specific hotel: all prices across booking sites, amenities, photos, reviews summary, and location.",
+      "intent": [
+        "hotel prices",
+        "compare booking sites",
+        "hotel details",
+        "hotel amenities",
+        "hotel reviews"
+      ],
+      "endpoint": "GET https://serpapi.com/search",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "google_hotels"
+        },
+        "property_token": {
+          "type": "string",
+          "description": "Hotel property token from search_hotels results",
+          "required": true
+        },
+        "api_key": {
+          "type": "string",
+          "description": "SerpAPI key",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "hotel",
+        "fields": [
+          "prices[0].source",
+          "prices[0].rate_per_night.lowest",
+          "prices[0].total_rate.lowest",
+          "amenities",
+          "reviews.rating",
+          "reviews.count"
         ]
       },
       "realtime": true,
