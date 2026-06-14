@@ -1,2 +1,99 @@
 {
-  "apia":"1.0","service":{"id":"mailchimp","name":"Mailchimp API","description_for_ai":"Email marketing platform API. Manage subscriber lists, send campaigns, automate email sequences, track open rates. 500 contacts and 1000 emails/month free. Best for marketing emails and newsletters.","url":"https://mailchimp.com","api_base":"https://{dc}.api.mailchimp.com/3.0","category":"communication_email","geo":["GLOBAL"],"language":"en","docs":"https://mailchimp.com/developer/marketing/api/"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"Get API key at https://mailchimp.com/account/api — free account available","cost":"Free: 500 contacts, 1K emails/month. Essentials from $13/month"},"capabilities":[{"id":"add_subscriber","description_for_ai":"Add or update email subscriber in a list. Use for newsletter signup, lead capture.","intent":["add subscriber","newsletter signup","email list","subscribe","добавить в рассылку"],"endpoint":"POST https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members","input":{"list_id":{"type":"string","required":true},"email_address":{"type":"string","required":true},"status":{"type":"string","description":"subscribed, pending, unsubscribed","default":"subscribed"},"merge_fields":{"type":"object","description":"{FNAME, LNAME} etc.","required":false},"tags":{"type":"array","required":false}},"output":{"type":"member","fields":["id","email_address","status","list_id"]},"realtime":true,"requires_auth":true},{"id":"send_campaign","description_for_ai":"Send email campaign to all subscribers in a list.","intent":["send newsletter","email campaign","bulk email","рассылка"],"endpoint":"POST https://{dc}.api.mailchimp.com/3.0/campaigns/{campaign_id}/actions/send","input":{"campaign_id":{"type":"string","required":true}},"output":{"type":"empty","fields":[]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "mailchimp",
+    "name": "Mailchimp API",
+    "description_for_ai": "Email marketing platform API. Manage subscriber lists, send campaigns, automate email sequences, track open rates. 500 contacts and 1000 emails/month free. Best for marketing emails and newsletters.",
+    "url": "https://mailchimp.com",
+    "api_base": "https://{dc}.api.mailchimp.com/3.0",
+    "category": "communication_email",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://mailchimp.com/developer/marketing/api/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "Get API key at https://mailchimp.com/account/api — free account available",
+    "cost": "Free: 500 contacts, 1K emails/month. Essentials from $13/month"
+  },
+  "capabilities": [
+    {
+      "id": "add_subscriber",
+      "description_for_ai": "Add or update email subscriber in a list. Use for newsletter signup, lead capture.",
+      "intent": [
+        "add subscriber",
+        "newsletter signup",
+        "email list",
+        "subscribe",
+        "добавить в рассылку"
+      ],
+      "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members",
+      "input": {
+        "list_id": {
+          "type": "string",
+          "required": true
+        },
+        "email_address": {
+          "type": "string",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "subscribed, pending, unsubscribed",
+          "default": "subscribed"
+        },
+        "merge_fields": {
+          "type": "object",
+          "description": "{FNAME, LNAME} etc.",
+          "required": false
+        },
+        "tags": {
+          "type": "array",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "member",
+        "fields": [
+          "id",
+          "email_address",
+          "status",
+          "list_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_campaign",
+      "description_for_ai": "Send email campaign to all subscribers in a list.",
+      "intent": [
+        "send newsletter",
+        "email campaign",
+        "bulk email",
+        "рассылка"
+      ],
+      "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/campaigns/{campaign_id}/actions/send",
+      "input": {
+        "campaign_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": []
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
