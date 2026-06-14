@@ -51,14 +51,14 @@ No hardcoded integration. No custom training. Just the manifest.
   "service": {
     "id": "hh-ru",
     "name": "HeadHunter",
-    "description_for_ai": "Largest Russian job board. Use to search vacancies by keyword, city or user coordinates. Returns salary, employer, schedule, remote status.",
+    "description_for_ai": "Largest Russian job board. Use to search vacancies by keyword, city or user coordinates.",
     "category": "employment",
     "geo": ["RU", "BY", "KZ"]
   },
   "capabilities": [
     {
       "id": "search_vacancies",
-      "description_for_ai": "Search job vacancies by keyword and geolocation. Use for requests like 'find Python developer jobs near me' or 'courier vacancies in Kazan with salary above 50000'.",
+      "description_for_ai": "Search job vacancies by keyword and geolocation. Use for requests like 'find Python developer jobs near me'.",
       "intent": ["find job", "vacancies nearby", "looking for work"],
       "endpoint": "GET https://api.hh.ru/vacancies",
       "realtime": true,
@@ -66,12 +66,10 @@ No hardcoded integration. No custom training. Just the manifest.
     }
   ],
   "agent_hints": {
-    "geo_flow": "If user says 'near me' — pass lat/lng. If user names a city — call get_areas first to find area_id."
+    "geo_flow": "If user says 'near me' — pass lat/lng. If user names a city — call get_areas first."
   }
 }
 ```
-
-Key difference from OpenAPI: `description_for_ai`, `intent` and `agent_hints` are written **for LLMs**, not for developers.
 
 ---
 
@@ -79,24 +77,25 @@ Key difference from OpenAPI: `description_for_ai`, `intent` and `agent_hints` ar
 
 | Service | Category | Capabilities | Auth | API Version | Last Verified | Status |
 |---|---|---|---|---|---|---|
-| [hh.ru](manifests/hh-ru/apia.json) | Employment | 5 | OAuth2 / Anonymous | v1 | 2026-06-14 | ✅ Ready |
-| [SuperJob](manifests/superjob/apia.json) | Employment | 4 | API Key / Anonymous | v2.0 | 2026-06-14 | ✅ Ready |
+| [hh.ru](manifests/hh-ru/apia.json) | Employment | 5 | OAuth2 / Anon | v1 | 2026-06-14 | ✅ Ready |
+| [hh.kz](manifests/hh-kz/apia.json) | Employment (KZ) | 3 | OAuth2 / Anon | v1 | 2026-06-14 | ✅ Ready |
+| [SuperJob](manifests/superjob/apia.json) | Employment | 4 | API Key / Anon | v2.0 | 2026-06-14 | ✅ Ready |
+| [SuperJob Resumes](manifests/superjob-resumes/apia.json) | Resumes | 2 | OAuth2 | v2.0 | 2026-06-14 | ✅ Ready |
 | [trudvsem.ru](manifests/trudvsem/apia.json) | Employment (Gov) | 4 | None | v1 | 2026-06-14 | ✅ Ready |
+| [ЕГРЮЛ / ФНС](manifests/egrul-fns/apia.json) | Business Registry | 2 | API Key | v1 | 2026-06-14 | ✅ Ready |
+| [ФИАС / ГАР](manifests/fias/apia.json) | Address Registry | 2 | None | v1 | 2026-06-14 | ✅ Ready |
 | [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport | 5 | API Key | v3.0 | 2026-06-14 | ✅ Ready |
 | [Яндекс.Карты](manifests/yandex-maps/apia.json) | Maps / Geocoding | 3 | API Key | v1.x | 2026-06-14 | ✅ Ready |
 | [2GIS](manifests/2gis/apia.json) | Maps / POI | 4 | API Key | v3.0 | 2026-06-14 | ✅ Ready |
 | [data.mos.ru](manifests/data-mos-ru/apia.json) | City Data (Moscow) | 3 | API Key | v1 | 2026-06-14 | ✅ Ready |
-| SuperJob Resume | Employment | — | — | — | — | 🔜 Needs contributor |
-| ЕГРЮЛ / ФНС | Business Registry | — | — | — | — | 🔜 Needs contributor |
 | Госуслуги | Gov Services | — | — | — | — | 🔜 Needs contributor |
-| ФИАС | Address Registry | — | — | — | — | 🔜 Needs contributor |
-| hh.kz | Employment (KZ) | — | — | — | — | 🔜 Needs contributor |
+| hh.by | Employment (BY) | — | — | — | — | 🔜 Needs contributor |
+| Авито Работа | Employment | — | — | — | — | 🔜 Needs contributor |
+| ДубльГИС (BY/KZ) | Maps / POI | — | — | — | — | 🔜 Needs contributor |
 
 ---
 
 ## Compatibility
-
-APIA works alongside existing standards — it doesn't replace them:
 
 | Standard | Relationship |
 |---|---|
@@ -124,12 +123,12 @@ APIA works alongside existing standards — it doesn't replace them:
 
 ## Discussions & Support
 
-- 💬 [GitHub Discussions](../../discussions) — ideas and questions
-- 🐛 [Issues](../../issues) — bugs and proposals
-- 🌐 OpenClaw Discord — `#showcase` channel
+- 💬 [GitHub Discussions](../../discussions)
+- 🐛 [Issues](../../issues)
+- 🌐 OpenClaw Discord — `#showcase`
 
 ---
 
 **APIA is open source. Not affiliated with any API provider.**
 
-*Started June 2026 as an initiative to standardize Russian public APIs for AI agents.*
+*Started June 2026 · 11 manifests · 4 languages*
