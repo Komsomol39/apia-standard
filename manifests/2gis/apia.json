@@ -7,7 +7,18 @@
     "url": "https://2gis.ru",
     "api_base": "https://catalog.api.2gis.com/3.0",
     "category": "maps_poi",
-    "geo": ["RU", "BY", "KZ", "KG", "UZ", "AE", "CZ", "CL", "IT", "CY"],
+    "geo": [
+      "RU",
+      "BY",
+      "KZ",
+      "KG",
+      "UZ",
+      "AE",
+      "CZ",
+      "CL",
+      "IT",
+      "CY"
+    ],
     "language": "ru",
     "docs": "https://docs.2gis.com/en/api/search/overview"
   },
@@ -24,23 +35,72 @@
       "id": "search_places",
       "description_for_ai": "Поиск организаций и мест по запросу рядом с координатами. Основной метод для запросов 'найди аптеку рядом', 'кафе поблизости', 'банкомат рядом со мной', 'магазины в этом районе'. Возвращает название, адрес, часы работы, телефон.",
       "intent": [
-        "найди рядом", "что есть поблизости", "магазин рядом",
-        "кафе рядом", "аптека рядом", "банк рядом", "где поесть",
-        "организации рядом", "найди место", "открытые магазины"
+        "найди рядом",
+        "что есть поблизости",
+        "магазин рядом",
+        "кафе рядом",
+        "аптека рядом",
+        "банк рядом",
+        "где поесть",
+        "организации рядом",
+        "найди место",
+        "открытые магазины"
       ],
       "endpoint": "GET https://catalog.api.2gis.com/3.0/items",
       "input": {
-        "q": { "type": "string", "description": "Поисковый запрос. Например: 'аптека', 'кофе', 'супермаркет', 'банкомат Сбербанк'", "required": true },
-        "point": { "type": "string", "description": "Координаты центра поиска в формате 'lng,lat'. Например: '37.6156,55.7522'", "required": false },
-        "radius": { "type": "integer", "description": "Радиус поиска в метрах", "default": 500, "max": 50000 },
-        "sort": { "type": "string", "description": "distance — сортировать по расстоянию от point", "default": "distance" },
-        "fields": { "type": "string", "description": "Дополнительные поля: items.schedule,items.contact_groups,items.rubrics,items.reviews", "required": false },
-        "page_size": { "type": "integer", "description": "Количество результатов", "default": 10, "max": 50 },
-        "locale": { "type": "string", "description": "Язык ответа: ru_RU, en_US", "default": "ru_RU" }
+        "q": {
+          "type": "string",
+          "description": "Поисковый запрос. Например: 'аптека', 'кофе', 'супермаркет', 'банкомат Сбербанк'",
+          "required": true
+        },
+        "point": {
+          "type": "string",
+          "description": "Координаты центра поиска в формате 'lng,lat'. Например: '37.6156,55.7522'",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Радиус поиска в метрах",
+          "default": 500,
+          "max": 50000
+        },
+        "sort": {
+          "type": "string",
+          "description": "distance — сортировать по расстоянию от point",
+          "default": "distance"
+        },
+        "fields": {
+          "type": "string",
+          "description": "Дополнительные поля: items.schedule,items.contact_groups,items.rubrics,items.reviews",
+          "required": false
+        },
+        "page_size": {
+          "type": "integer",
+          "description": "Количество результатов",
+          "default": 10,
+          "max": 50
+        },
+        "locale": {
+          "type": "string",
+          "description": "Язык ответа: ru_RU, en_US",
+          "default": "ru_RU"
+        }
       },
       "output": {
         "type": "list<place>",
-        "fields": ["id", "name", "address.name", "address.building_name", "point.lat", "point.lon", "schedule", "contact_groups.contacts", "rubrics.name", "rating", "reviews.general_rating"]
+        "fields": [
+          "id",
+          "name",
+          "address.name",
+          "address.building_name",
+          "point.lat",
+          "point.lon",
+          "schedule",
+          "contact_groups.contacts",
+          "rubrics.name",
+          "rating",
+          "reviews.general_rating"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -49,19 +109,46 @@
       "id": "geocode",
       "description_for_ai": "Прямое и обратное геокодирование. Прямое: адрес → координаты. Обратное: координаты → адрес. Используй когда нужно определить адрес по координатам пользователя или найти координаты по названию улицы.",
       "intent": [
-        "адрес по координатам", "координаты адреса", "что за адрес",
-        "где находится улица", "определить адрес", "геокодировать"
+        "адрес по координатам",
+        "координаты адреса",
+        "что за адрес",
+        "где находится улица",
+        "определить адрес",
+        "геокодировать"
       ],
       "endpoint": "GET https://catalog.api.2gis.com/3.0/items/geocode",
       "input": {
-        "q": { "type": "string", "description": "Адрес для прямого геокодирования. Например: 'Москва, Тверская 1'", "required": false },
-        "lat": { "type": "float", "description": "Широта для обратного геокодирования", "required": false },
-        "lon": { "type": "float", "description": "Долгота для обратного геокодирования", "required": false },
-        "fields": { "type": "string", "description": "items.point,items.geometry.centroid,items.adm_div,items.address", "required": false }
+        "q": {
+          "type": "string",
+          "description": "Адрес для прямого геокодирования. Например: 'Москва, Тверская 1'",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "description": "Широта для обратного геокодирования",
+          "required": false
+        },
+        "lon": {
+          "type": "float",
+          "description": "Долгота для обратного геокодирования",
+          "required": false
+        },
+        "fields": {
+          "type": "string",
+          "description": "items.point,items.geometry.centroid,items.adm_div,items.address",
+          "required": false
+        }
       },
       "output": {
         "type": "list<geo_object>",
-        "fields": ["name", "full_name", "point.lat", "point.lon", "address.name", "adm_div"]
+        "fields": [
+          "name",
+          "full_name",
+          "point.lat",
+          "point.lon",
+          "address.name",
+          "adm_div"
+        ]
       },
       "realtime": false,
       "requires_auth": true
@@ -69,16 +156,37 @@
     {
       "id": "suggest",
       "description_for_ai": "Автодополнение поискового запроса. Используй для подсказок когда пользователь вводит название организации или адрес — возвращает список вариантов.",
-      "intent": ["подсказки поиска", "автодополнение", "варианты адреса"],
+      "intent": [
+        "подсказки поиска",
+        "автодополнение",
+        "варианты адреса"
+      ],
       "endpoint": "GET https://catalog.api.2gis.com/3.0/suggests",
       "input": {
-        "q": { "type": "string", "description": "Частичный запрос пользователя", "required": true },
-        "point": { "type": "string", "description": "Координаты для приоритизации результатов 'lng,lat'", "required": false },
-        "locale": { "type": "string", "default": "ru_RU" }
+        "q": {
+          "type": "string",
+          "description": "Частичный запрос пользователя",
+          "required": true
+        },
+        "point": {
+          "type": "string",
+          "description": "Координаты для приоритизации результатов 'lng,lat'",
+          "required": false
+        },
+        "locale": {
+          "type": "string",
+          "default": "ru_RU",
+          "description": "Locale code: en-US, ru-RU, de-DE, fr-FR, etc."
+        }
       },
       "output": {
         "type": "list<suggest>",
-        "fields": ["name", "full_name", "type", "id"]
+        "fields": [
+          "name",
+          "full_name",
+          "type",
+          "id"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -86,15 +194,37 @@
     {
       "id": "get_place_by_id",
       "description_for_ai": "Полная информация об организации по её ID. Используй после search_places когда пользователь хочет подробности: все телефоны, полное расписание, сайт, описание.",
-      "intent": ["подробнее об организации", "контакты", "часы работы", "сайт компании", "телефон"],
+      "intent": [
+        "подробнее об организации",
+        "контакты",
+        "часы работы",
+        "сайт компании",
+        "телефон"
+      ],
       "endpoint": "GET https://catalog.api.2gis.com/3.0/items/{object_id}",
       "input": {
-        "object_id": { "type": "string", "description": "ID объекта из результатов search_places", "required": true },
-        "fields": { "type": "string", "description": "items.schedule,items.contact_groups,items.description,items.reviews,items.attribute_groups", "required": false }
+        "object_id": {
+          "type": "string",
+          "description": "ID объекта из результатов search_places",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "items.schedule,items.contact_groups,items.description,items.reviews,items.attribute_groups",
+          "required": false
+        }
       },
       "output": {
         "type": "place",
-        "fields": ["name", "address.name", "schedule", "contact_groups", "description", "reviews.general_rating", "attribute_groups"]
+        "fields": [
+          "name",
+          "address.name",
+          "schedule",
+          "contact_groups",
+          "description",
+          "reviews.general_rating",
+          "attribute_groups"
+        ]
       },
       "realtime": true,
       "requires_auth": true
