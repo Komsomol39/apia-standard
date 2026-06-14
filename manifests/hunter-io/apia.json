@@ -3,7 +3,7 @@
   "service": {
     "id": "hunter-io",
     "name": "Hunter.io API",
-    "description_for_ai": "Find and verify professional email addresses. Domain search finds all emails at a company. Email finder gets email for a specific person. Email verification checks deliverability. Used for B2B prospecting and outreach.",
+    "description_for_ai": "Hunter.io — email finder and verification API for B2B outreach. Find verified professional email addresses from domain names, full names, or LinkedIn profiles. Email validation with deliverability check. 25 free searches/month. Used by 3M+ sales and marketing professionals.",
     "url": "https://hunter.io",
     "api_base": "https://api.hunter.io/v2",
     "category": "data_enrichment",
