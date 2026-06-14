@@ -37,7 +37,7 @@
         },
         "search": {
           "type": "string",
-          "description": "Search term",
+          "description": "Search keywords or query string",
           "required": true
         },
         "language": {
@@ -47,16 +47,18 @@
         },
         "type": {
           "type": "string",
-          "description": "item, property",
+          "description": "Filter or specify item type",
           "default": "item"
         },
         "limit": {
           "type": "integer",
-          "default": 10
+          "default": 10,
+          "description": "Maximum number of results to return"
         },
         "format": {
           "type": "string",
-          "default": "json"
+          "default": "json",
+          "description": "Response format: json, xml, or csv"
         }
       },
       "output": {
@@ -90,7 +92,8 @@
         },
         "format": {
           "type": "string",
-          "default": "json"
+          "default": "json",
+          "description": "Response format: json, xml, or csv"
         }
       },
       "output": {
