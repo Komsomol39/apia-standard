@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "get_deals",
-      "description_for_ai": "Get sales deals from pipeline with value, stage, owner, close date.",
+      "description_for_ai": "Get sales deals from Pipedrive pipeline. Filter by status, stage, owner. Returns deal value, close date, and associated contacts/companies.",
       "intent": [
         "sales deals",
         "pipeline deals",
@@ -36,20 +36,38 @@
       "input": {
         "status": {
           "type": "string",
-          "description": "open, won, lost, all",
+          "description": "open, won, lost, or all. Default open.",
           "default": "open"
         },
         "stage_id": {
           "type": "integer",
+          "description": "Pipeline stage ID to filter by. Get stage IDs from GET /stages",
           "required": false
         },
         "user_id": {
           "type": "integer",
+          "description": "Filter by owner/assignee user ID",
+          "required": false
+        },
+        "filter_id": {
+          "type": "integer",
+          "description": "Apply a saved filter by its ID",
           "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Results per page, max 500",
           "default": 100
+        },
+        "start": {
+          "type": "integer",
+          "description": "Pagination offset",
+          "default": 0
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort field and direction e.g. 'add_time DESC', 'value ASC'",
+          "required": false
         }
       },
       "output": {
@@ -61,10 +79,12 @@
           "currency",
           "status",
           "stage_id",
-          "person_id",
-          "org_id",
+          "person_id.name",
+          "org_id.name",
           "close_time",
-          "won_time"
+          "won_time",
+          "expected_close_date",
+          "owner_name"
         ]
       },
       "realtime": true,
@@ -72,7 +92,7 @@
     },
     {
       "id": "create_deal",
-      "description_for_ai": "Create a new sales deal in Pipedrive CRM with value, close date, and associate it with contacts and organizations.",
+      "description_for_ai": "Create a new sales deal in Pipedrive pipeline with value, close date, and links to contacts/organizations.",
       "intent": [
         "new deal",
         "add opportunity",
@@ -83,31 +103,47 @@
       "input": {
         "title": {
           "type": "string",
+          "description": "Deal title/name",
           "required": true
         },
         "value": {
           "type": "number",
+          "description": "Deal monetary value",
           "required": false
         },
         "currency": {
           "type": "string",
+          "description": "3-letter currency code e.g. USD, EUR, RUB",
           "default": "USD"
         },
         "person_id": {
           "type": "integer",
+          "description": "Contact person ID to link deal to",
           "required": false
         },
         "org_id": {
           "type": "integer",
+          "description": "Organization ID to link deal to",
           "required": false
         },
         "stage_id": {
           "type": "integer",
+          "description": "Pipeline stage ID. First stage is default.",
           "required": false
         },
         "close_time": {
           "type": "string",
-          "description": "YYYY-MM-DD",
+          "description": "Expected close date YYYY-MM-DD",
+          "required": false
+        },
+        "user_id": {
+          "type": "integer",
+          "description": "Owner user ID. Defaults to API token owner.",
+          "required": false
+        },
+        "pipeline_id": {
+          "type": "integer",
+          "description": "Pipeline ID. Default pipeline if not specified.",
           "required": false
         }
       },
