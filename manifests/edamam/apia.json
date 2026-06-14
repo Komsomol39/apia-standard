@@ -42,7 +42,8 @@
         },
         "type": {
           "type": "string",
-          "default": "public"
+          "default": "public",
+          "description": "Filter or specify item type"
         },
         "diet": {
           "type": "string",
@@ -93,7 +94,8 @@
       "input": {
         "title": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Title or name string"
         },
         "ingr": {
           "type": "array",
