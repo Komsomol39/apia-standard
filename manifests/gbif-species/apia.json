@@ -23,13 +23,17 @@
       "id": "search_species",
       "description_for_ai": "Search species by scientific or common name. Returns taxonomy, status, common names in multiple languages.",
       "intent": [
-        "species info",
-        "animal taxonomy",
         "plant species",
+        "wildlife taxonomy",
         "what is this animal",
+        "animal taxonomy",
+        "latin name lookup",
+        "species info",
+        "biodiversity",
+        "what is this species",
+        "common name species",
         "species classification",
-        "latin name",
-        "common name species"
+        "latin name"
       ],
       "endpoint": "GET https://api.gbif.org/v1/species/search",
       "input": {
@@ -77,10 +81,13 @@
       "description_for_ai": "Get full species details including common names in all languages and media.",
       "intent": [
         "species details",
-        "animal common name",
         "plant image",
+        "animal common name",
+        "sound of animal",
         "species media",
-        "sound of animal"
+        "plant species info",
+        "common name",
+        "animal info"
       ],
       "endpoint": "GET https://api.gbif.org/v1/species/{usageKey}",
       "input": {
