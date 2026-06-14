@@ -60,7 +60,7 @@
         },
         "q": {
           "type": "integer",
-          "description": "Quality 0-100",
+          "description": "Search query or filter expression",
           "default": 75
         },
         "fm": {
