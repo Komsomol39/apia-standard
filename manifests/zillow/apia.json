@@ -3,7 +3,7 @@
   "service": {
     "id": "zillow",
     "name": "Zillow API (Bridge Interactive)",
-    "description_for_ai": "US real estate data. Property details, home values (Zestimate), listing info, neighborhood data. 135M+ US properties. Use for property search, home value estimates, real estate market data.",
+    "description_for_ai": "Zillow Real Estate API via Bridge Interactive. US property database with 135M+ homes — Zestimate home values, listing prices, sold data, rental estimates. Neighborhood data, school ratings, walk scores. Used by mortgage lenders, real estate platforms, and investment tools.",
     "url": "https://zillow.com",
     "api_base": "https://api.bridgedataoutput.com/api/v2/zora/core",
     "category": "real_estate",
