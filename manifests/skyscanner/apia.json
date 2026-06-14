@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "create_search",
-      "description_for_ai": "Create a flight search session and get live prices from airlines. Returns session ID for polling results.",
+      "description_for_ai": "Flight price search across 1200+ airlines. Live prices, price calendars, route suggestions. Used by millions of travelers. Requires partnership for full access. Use for flight price comparison, cheapest dates, route search. Create a flight search session and get live prices from airlines. Returns session ID for polling results.",
       "intent": [
         "find flights",
         "flight prices",
@@ -38,7 +38,8 @@
         "query": {
           "type": "object",
           "description": "{market: UK, locale: en-GB, currency: GBP, queryLegs: [{originPlaceId: {iata: LHR}, destinationPlaceId: {iata: JFK}, date: {year, month, day}}], adults: 1, cabinClass: CABIN_CLASS_ECONOMY}",
-          "required": true
+          "required": true,
+          "note": "See description for full object structure"
         }
       },
       "output": {
