@@ -3,7 +3,7 @@
   "service": {
     "id": "attom",
     "name": "ATTOM Property Data API",
-    "description_for_ai": "Comprehensive US property data. 155M+ properties with assessment values, sales history, mortgage data, foreclosures, school ratings, neighborhood demographics, natural hazard scores.",
+    "description_for_ai": "ATTOM Property Data API — comprehensive US property intelligence. 155M+ properties with assessment values, ownership history, sales transactions, mortgage data, foreclosures, school ratings, natural hazard scores, and neighborhood demographics. Used by real estate, mortgage, and insurance companies.",
     "url": "https://attomdata.com",
     "api_base": "https://api.gateway.attomdata.com/propertyapi/v1.0.0",
     "category": "real_estate_data",
