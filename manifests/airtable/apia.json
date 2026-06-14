@@ -1,1 +1,118 @@
-{"apia":"1.0","service":{"id":"airtable","name":"Airtable API","description_for_ai":"Flexible database-spreadsheet hybrid. Tables, records, views, formulas, attachments. 300K+ companies use it. Use for data management, project tracking, CRM-lite, content calendars, inventory.","url":"https://airtable.com","api_base":"https://api.airtable.com/v0","category":"productivity_database","geo":["GLOBAL"],"language":"en","docs":"https://airtable.com/developers/web/api/introduction"},"auth":{"type":"bearer_token","anonymous_access":false,"header":"Authorization: Bearer pat...","how_to_get":"Create token at https://airtable.com/create/tokens","cost":"Free: unlimited bases, 1000 records/base. Team: $20/month"},"capabilities":[{"id":"list_records","description_for_ai":"Get records from Airtable table with fields and optional filters.","intent":["airtable records","get data","table rows","airtable list","spreadsheet data"],"endpoint":"GET https://api.airtable.com/v0/{base_id}/{table_name}","input":{"base_id":{"type":"string","required":true},"table_name":{"type":"string","required":true},"filterByFormula":{"type":"string","description":"Airtable formula e.g. {Status}=Done","required":false},"maxRecords":{"type":"integer","default":100},"sort":{"type":"array","description":"[{field: Name, direction: asc}]","required":false},"view":{"type":"string","description":"View name to use","required":false}},"output":{"type":"list<record>","fields":["records[0].id","records[0].fields","records[0].createdTime"]},"realtime":true,"requires_auth":true},{"id":"create_record","description_for_ai":"Create new record in Airtable table.","intent":["add record","new row","create entry","insert data","add to airtable"],"endpoint":"POST https://api.airtable.com/v0/{base_id}/{table_name}","input":{"base_id":{"type":"string","required":true},"table_name":{"type":"string","required":true},"fields":{"type":"object","description":"Field values as key-value pairs","required":true}},"output":{"type":"record","fields":["id","fields","createdTime"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "airtable",
+    "name": "Airtable API",
+    "description_for_ai": "Flexible database-spreadsheet hybrid. Tables, records, views, formulas, attachments. 300K+ companies use it. Use for data management, project tracking, CRM-lite, content calendars, inventory.",
+    "url": "https://airtable.com",
+    "api_base": "https://api.airtable.com/v0",
+    "category": "productivity_database",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://airtable.com/developers/web/api/introduction"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer pat...",
+    "how_to_get": "Create token at https://airtable.com/create/tokens",
+    "cost": "Free: unlimited bases, 1000 records/base. Team: $20/month"
+  },
+  "capabilities": [
+    {
+      "id": "list_records",
+      "description_for_ai": "Get records from Airtable table with fields and optional filters.",
+      "intent": [
+        "airtable records",
+        "get data",
+        "table rows",
+        "airtable list",
+        "spreadsheet data"
+      ],
+      "endpoint": "GET https://api.airtable.com/v0/{base_id}/{table_name}",
+      "input": {
+        "base_id": {
+          "type": "string",
+          "required": true
+        },
+        "table_name": {
+          "type": "string",
+          "required": true
+        },
+        "filterByFormula": {
+          "type": "string",
+          "description": "Airtable formula e.g. {Status}=Done",
+          "required": false
+        },
+        "maxRecords": {
+          "type": "integer",
+          "default": 100
+        },
+        "sort": {
+          "type": "array",
+          "description": "[{field: Name, direction: asc}]",
+          "required": false
+        },
+        "view": {
+          "type": "string",
+          "description": "View name to use",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<record>",
+        "fields": [
+          "records[0].id",
+          "records[0].fields",
+          "records[0].createdTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_record",
+      "description_for_ai": "Create new record in Airtable table.",
+      "intent": [
+        "add record",
+        "new row",
+        "create entry",
+        "insert data",
+        "add to airtable"
+      ],
+      "endpoint": "POST https://api.airtable.com/v0/{base_id}/{table_name}",
+      "input": {
+        "base_id": {
+          "type": "string",
+          "required": true
+        },
+        "table_name": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "Field values as key-value pairs",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "record",
+        "fields": [
+          "id",
+          "fields",
+          "createdTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
