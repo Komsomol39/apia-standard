@@ -6,7 +6,7 @@
     "description_for_ai": "Customer support platform. Manage tickets, users, organizations, knowledge base articles, chat. Used by Airbnb, Shopify, Slack for customer service. Use for support ticket management, customer service automation.",
     "url": "https://zendesk.com",
     "api_base": "https://{subdomain}.zendesk.com/api/v2",
-    "category": "customer_support",
+    "category": "support",
     "geo": [
       "GLOBAL"
     ],
