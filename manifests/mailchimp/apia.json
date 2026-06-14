@@ -52,7 +52,8 @@
         },
         "tags": {
           "type": "array",
-          "required": false
+          "required": false,
+          "description": "Comma-separated or array of tag names"
         }
       },
       "output": {
