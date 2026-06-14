@@ -38,7 +38,8 @@
       "input": {
         "model": {
           "type": "string",
-          "default": "gemini-2.5-flash"
+          "default": "gemini-2.5-flash",
+          "description": "AI/ML model identifier to use for this request"
         },
         "contents": {
           "type": "array",
