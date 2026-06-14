@@ -1,1 +1,108 @@
-{"apia":"1.0","service":{"id":"carbon-interface","name":"Carbon Interface API","description_for_ai":"Calculate carbon emissions for flights, driving, shipping, electricity. Returns CO2 equivalent in grams/kg. Use for carbon footprint calculators, sustainability apps, ESG reporting.","url":"https://carboninterface.com","api_base":"https://www.carboninterface.com/api/v1","category":"environment_carbon","geo":["GLOBAL"],"language":"en","docs":"https://docs.carboninterface.com"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"Register at https://www.carboninterface.com/users/sign_up — free tier","cost":"Free: 100 estimates/month. Paid from $50/month"},"capabilities":[{"id":"flight_estimate","description_for_ai":"Calculate CO2 emissions for a flight between airports. Returns carbon kg per passenger.","intent":["flight carbon","carbon footprint flight","CO2 emissions","environmental impact flight","carbon calculator","углеродный след полёта"],"endpoint":"POST https://www.carboninterface.com/api/v1/estimates","input":{"type":{"type":"string","default":"flight"},"passengers":{"type":"integer","default":1},"legs":{"type":"array","description":"[{departure_airport: JFK, destination_airport: LHR}]","required":true}},"output":{"type":"estimate","fields":["data.attributes.carbon_kg","data.attributes.carbon_mt","data.attributes.distance_value","data.attributes.distance_unit"]},"realtime":false,"requires_auth":true},{"id":"vehicle_estimate","description_for_ai":"Calculate CO2 emissions for driving a specific vehicle over a distance.","intent":["driving carbon","car emissions","CO2 driving","vehicle footprint"],"endpoint":"POST https://www.carboninterface.com/api/v1/estimates","input":{"type":{"type":"string","default":"vehicle"},"distance_unit":{"type":"string","description":"km or mi","required":true},"distance_value":{"type":"number","required":true},"vehicle_model_id":{"type":"string","description":"Get from /vehicle_makes endpoint","required":true}},"output":{"type":"estimate","fields":["data.attributes.carbon_kg","data.attributes.carbon_mt"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "carbon-interface",
+    "name": "Carbon Interface API",
+    "description_for_ai": "Calculate carbon emissions for flights, driving, shipping, electricity. Returns CO2 equivalent in grams/kg. Use for carbon footprint calculators, sustainability apps, ESG reporting.",
+    "url": "https://carboninterface.com",
+    "api_base": "https://www.carboninterface.com/api/v1",
+    "category": "environment_carbon",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.carboninterface.com"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://www.carboninterface.com/users/sign_up — free tier",
+    "cost": "Free: 100 estimates/month. Paid from $50/month"
+  },
+  "capabilities": [
+    {
+      "id": "flight_estimate",
+      "description_for_ai": "Calculate CO2 emissions for a flight between airports. Returns carbon kg per passenger.",
+      "intent": [
+        "flight carbon",
+        "carbon footprint flight",
+        "CO2 emissions",
+        "environmental impact flight",
+        "carbon calculator",
+        "углеродный след полёта"
+      ],
+      "endpoint": "POST https://www.carboninterface.com/api/v1/estimates",
+      "input": {
+        "type": {
+          "type": "string",
+          "default": "flight"
+        },
+        "passengers": {
+          "type": "integer",
+          "default": 1
+        },
+        "legs": {
+          "type": "array",
+          "description": "[{departure_airport: JFK, destination_airport: LHR}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "estimate",
+        "fields": [
+          "data.attributes.carbon_kg",
+          "data.attributes.carbon_mt",
+          "data.attributes.distance_value",
+          "data.attributes.distance_unit"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "vehicle_estimate",
+      "description_for_ai": "Calculate CO2 emissions for driving a specific vehicle over a distance.",
+      "intent": [
+        "driving carbon",
+        "car emissions",
+        "CO2 driving",
+        "vehicle footprint"
+      ],
+      "endpoint": "POST https://www.carboninterface.com/api/v1/estimates",
+      "input": {
+        "type": {
+          "type": "string",
+          "default": "vehicle"
+        },
+        "distance_unit": {
+          "type": "string",
+          "description": "km or mi",
+          "required": true
+        },
+        "distance_value": {
+          "type": "number",
+          "required": true
+        },
+        "vehicle_model_id": {
+          "type": "string",
+          "description": "Get from /vehicle_makes endpoint",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "estimate",
+        "fields": [
+          "data.attributes.carbon_kg",
+          "data.attributes.carbon_mt"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
