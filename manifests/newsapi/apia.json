@@ -3,7 +3,7 @@
   "service": {
     "id": "newsapi",
     "name": "NewsAPI",
-    "description_for_ai": "Search news articles from 150,000+ sources worldwide in real-time. Current headlines, topic search, source filtering. Free: 100 requests/day. Use for news monitoring, topic research, current events.",
+    "description_for_ai": "NewsAPI — real-time news aggregation from 150,000+ sources worldwide. Search articles by keyword, source, category, country, and language. Top headlines and archived articles. Free for development with 100 req/day. Perfect for news monitoring, sentiment analysis, content curation.",
     "url": "https://newsapi.org",
     "api_base": "https://newsapi.org/v2",
     "category": "news",
