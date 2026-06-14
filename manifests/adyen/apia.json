@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "create_payment",
-      "description_for_ai": "Process payment with card, Apple Pay, Google Pay, local payment methods. Enterprise-grade checkout.",
+      "description_for_ai": "Enterprise global payments platform. Used by Uber, Spotify, Microsoft, McDonald. 200+ payment methods, 40+ currencies. Unified commerce across online, mobile, POS. Use for large-scale global payment processing. Process payment with card, Apple Pay, Google Pay, local payment methods. Enterprise-grade checkout.",
       "intent": [
         "process payment",
         "enterprise checkout",
@@ -35,12 +35,14 @@
         "amount": {
           "type": "object",
           "description": "{currency: USD, value: 1000} (value in minor units, 1000=10.00)",
-          "required": true
+          "required": true,
+          "note": "See description for full object structure"
         },
         "paymentMethod": {
           "type": "object",
           "description": "{type: scheme, number, expiryMonth, expiryYear, holderName, cvc} or {type: googlepay, ...}",
-          "required": true
+          "required": true,
+          "note": "See description for full object structure"
         },
         "reference": {
           "type": "string",
