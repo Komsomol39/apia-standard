@@ -1,1 +1,92 @@
-{"apia":"1.0","service":{"id":"google-hotels","name":"Google Hotels (via SERP API)","description_for_ai":"Access Google Hotels search results programmatically. Prices, availability, ratings for hotels worldwide. Google aggregates prices from booking sites. Use for hotel price comparison and travel planning.","url":"https://serpapi.com","api_base":"https://serpapi.com/search","category":"travel_hotels","geo":["GLOBAL"],"language":"en","docs":"https://serpapi.com/google-hotels-api"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"api_key","param_location":"query","how_to_get":"Register at https://serpapi.com — 100 free searches/month","cost":"Free: 100/month. Basic: $50/month 5000 searches"},"capabilities":[{"id":"search_hotels","description_for_ai":"Search hotels on Google Hotels with prices and availability. Returns hotel listings from Google with prices from multiple booking sites.","intent":["google hotels","hotel prices","book hotel","accommodation search","hotel deals","cheap hotels"],"endpoint":"GET https://serpapi.com/search","input":{"engine":{"type":"string","default":"google_hotels"},"q":{"type":"string","description":"Hotel search query e.g. hotels in Paris","required":true},"check_in_date":{"type":"string","description":"YYYY-MM-DD","required":true},"check_out_date":{"type":"string","description":"YYYY-MM-DD","required":true},"adults":{"type":"integer","default":2},"currency":{"type":"string","default":"USD"},"gl":{"type":"string","description":"Country code: us, ru, de","default":"us"}},"output":{"type":"list<hotel>","fields":["properties[0].name","properties[0].description","properties[0].overall_rating","properties[0].reviews","properties[0].rate_per_night.lowest","properties[0].total_rate.lowest","properties[0].images[0].thumbnail"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "google-hotels",
+    "name": "Google Hotels (via SERP API)",
+    "description_for_ai": "Access Google Hotels search results programmatically. Prices, availability, ratings for hotels worldwide. Google aggregates prices from booking sites. Use for hotel price comparison and travel planning.",
+    "url": "https://serpapi.com",
+    "api_base": "https://serpapi.com/search",
+    "category": "travel_hotels",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://serpapi.com/google-hotels-api"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "api_key",
+    "param_location": "query",
+    "how_to_get": "Register at https://serpapi.com — 100 free searches/month",
+    "cost": "Free: 100/month. Basic: $50/month 5000 searches"
+  },
+  "capabilities": [
+    {
+      "id": "search_hotels",
+      "description_for_ai": "Search hotels on Google Hotels with prices and availability. Returns hotel listings from Google with prices from multiple booking sites.",
+      "intent": [
+        "google hotels",
+        "hotel prices",
+        "book hotel",
+        "accommodation search",
+        "hotel deals",
+        "cheap hotels"
+      ],
+      "endpoint": "GET https://serpapi.com/search",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "google_hotels"
+        },
+        "q": {
+          "type": "string",
+          "description": "Hotel search query e.g. hotels in Paris",
+          "required": true
+        },
+        "check_in_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "check_out_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "adults": {
+          "type": "integer",
+          "default": 2
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "gl": {
+          "type": "string",
+          "description": "Country code: us, ru, de",
+          "default": "us"
+        }
+      },
+      "output": {
+        "type": "list<hotel>",
+        "fields": [
+          "properties[0].name",
+          "properties[0].description",
+          "properties[0].overall_rating",
+          "properties[0].reviews",
+          "properties[0].rate_per_night.lowest",
+          "properties[0].total_rate.lowest",
+          "properties[0].images[0].thumbnail"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
