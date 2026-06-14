@@ -78,7 +78,7 @@
     },
     {
       "id": "send_sms",
-      "description_for_ai": "Send SMS via Brevo. Available in 180+ countries.",
+      "description_for_ai": "Send transactional SMS message via Brevo to any phone number worldwide. Supports 180+ countries.",
       "intent": [
         "send SMS Brevo",
         "SMS marketing",
@@ -119,5 +119,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "api_key": "Get API key: account.brevo.com → SMTP & API → API Keys → Create a new API key",
+    "sender_name": "SMS sender name: max 11 alphanumeric chars (no spaces). Register with carriers for best deliverability.",
+    "free_plan": "Free plan: 300 emails/day unlimited contacts. SMS is pay-per-message (~0.5-2 cents depending on country).",
+    "templates": "Create email templates in Brevo UI, then reference by templateId in send_email for personalized campaigns."
   }
 }
