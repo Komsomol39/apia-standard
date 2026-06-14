@@ -7,7 +7,9 @@
     "url": "https://discord.com",
     "api_base": "https://discord.com/api/v10",
     "category": "social_media_gaming",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://discord.com/developers/docs/intro"
   },
@@ -21,16 +23,44 @@
     {
       "id": "send_message",
       "description_for_ai": "Send a message to a Discord channel. Supports rich embeds with title, description, color, fields, and images. Use for notifications, alerts, or bot responses.",
-      "intent": ["send discord message", "discord notification", "post to discord channel", "discord alert", "сообщение в дискорд"],
+      "intent": [
+        "send discord message",
+        "discord message",
+        "сообщение в дискорд",
+        "discord notification",
+        "bot message",
+        "discord alert",
+        "server message",
+        "post in channel",
+        "post to discord channel"
+      ],
       "endpoint": "POST https://discord.com/api/v10/channels/{channel_id}/messages",
       "input": {
-        "channel_id": { "type": "string", "description": "Discord channel ID (18-digit number)", "required": true },
-        "content": { "type": "string", "description": "Plain text message", "required": false },
-        "embeds": { "type": "array", "description": "Rich embed objects with title, description, color, fields", "required": false }
+        "channel_id": {
+          "type": "string",
+          "description": "Discord channel ID (18-digit number)",
+          "required": true
+        },
+        "content": {
+          "type": "string",
+          "description": "Plain text message",
+          "required": false
+        },
+        "embeds": {
+          "type": "array",
+          "description": "Rich embed objects with title, description, color, fields",
+          "required": false
+        }
       },
       "output": {
         "type": "message",
-        "fields": ["id", "channel_id", "content", "timestamp", "author.username"]
+        "fields": [
+          "id",
+          "channel_id",
+          "content",
+          "timestamp",
+          "author.username"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -38,15 +68,32 @@
     {
       "id": "get_guild_info",
       "description_for_ai": "Get information about a Discord server (guild): name, member count, channels, roles.",
-      "intent": ["discord server info", "guild members", "server details"],
+      "intent": [
+        "discord server info",
+        "guild members",
+        "server details"
+      ],
       "endpoint": "GET https://discord.com/api/v10/guilds/{guild_id}",
       "input": {
-        "guild_id": { "type": "string", "required": true },
-        "with_counts": { "type": "boolean", "default": true }
+        "guild_id": {
+          "type": "string",
+          "required": true
+        },
+        "with_counts": {
+          "type": "boolean",
+          "default": true
+        }
       },
       "output": {
         "type": "guild",
-        "fields": ["id", "name", "approximate_member_count", "approximate_presence_count", "description", "features"]
+        "fields": [
+          "id",
+          "name",
+          "approximate_member_count",
+          "approximate_presence_count",
+          "description",
+          "features"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -54,15 +101,38 @@
     {
       "id": "send_webhook",
       "description_for_ai": "Send a message via Discord webhook — no bot token needed, just a webhook URL. Simplest way to post notifications to Discord. Use for CI/CD alerts, monitoring, or any one-way notification.",
-      "intent": ["discord webhook", "simple discord notification", "post to discord", "discord alert no bot"],
+      "intent": [
+        "discord webhook",
+        "simple discord notification",
+        "post to discord",
+        "discord alert no bot"
+      ],
       "endpoint": "POST {webhook_url}",
       "input": {
-        "webhook_url": { "type": "string", "description": "Full webhook URL from Discord channel settings", "required": true },
-        "content": { "type": "string", "description": "Message text", "required": false },
-        "username": { "type": "string", "description": "Override bot display name", "required": false },
-        "embeds": { "type": "array", "required": false }
+        "webhook_url": {
+          "type": "string",
+          "description": "Full webhook URL from Discord channel settings",
+          "required": true
+        },
+        "content": {
+          "type": "string",
+          "description": "Message text",
+          "required": false
+        },
+        "username": {
+          "type": "string",
+          "description": "Override bot display name",
+          "required": false
+        },
+        "embeds": {
+          "type": "array",
+          "required": false
+        }
       },
-      "output": { "type": "empty", "fields": [] },
+      "output": {
+        "type": "empty",
+        "fields": []
+      },
       "realtime": true,
       "requires_auth": false
     }
