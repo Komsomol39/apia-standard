@@ -119,5 +119,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "auth": "Use API token (not password): id.atlassian.com/manage-profile/security/api-tokens. Format: email:token in base64.",
+    "jql_examples": "Useful JQL: 'project=MYPROJ AND status!=Done ORDER BY created DESC', 'assignee=currentUser() AND sprint in openSprints()'",
+    "pagination": "Use maxResults and startAt for pagination. Total in response.total field.",
+    "custom_fields": "Custom fields have IDs like customfield_10001. Get full list via GET /rest/api/3/field"
   }
 }
