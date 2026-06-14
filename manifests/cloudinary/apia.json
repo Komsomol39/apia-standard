@@ -1,1 +1,144 @@
-{"apia":"1.0","service":{"id":"cloudinary","name":"Cloudinary API","description_for_ai":"Cloud image and video management. Upload, transform (resize, crop, filter, optimize), deliver via CDN. AI-powered smart cropping, background removal, face detection. 25GB free storage, 25GB bandwidth. Used by Reddit, Vimeo, Ebay.","url":"https://cloudinary.com","api_base":"https://api.cloudinary.com/v1_1/{cloud_name}","category":"media_management","geo":["GLOBAL"],"language":"en","docs":"https://cloudinary.com/documentation/image_upload_api_reference"},"auth":{"type":"apikey","anonymous_access":false,"note":"API key + secret in request signature","how_to_get":"Register at https://cloudinary.com — free tier generous","cost":"Free: 25GB storage + 25GB bandwidth/month. Plus: $89/month"},"capabilities":[{"id":"upload_image","description_for_ai":"Upload image to Cloudinary. Returns CDN URL with transformation support. Use for storing user uploads, product images.","intent":["upload image","store image","image hosting","CDN image","image upload","media storage"],"endpoint":"POST https://api.cloudinary.com/v1_1/{cloud_name}/image/upload","input":{"file":{"type":"string","description":"Image URL, base64, or file path","required":true},"public_id":{"type":"string","description":"Custom filename/path in Cloudinary","required":false},"folder":{"type":"string","description":"Folder to organize images","required":false},"transformation":{"type":"string","description":"Transformations to apply on upload","required":false},"tags":{"type":"string","description":"Comma-separated tags","required":false}},"output":{"type":"upload","fields":["public_id","secure_url","url","format","width","height","bytes","created_at"]},"realtime":true,"requires_auth":true},{"id":"transform_image","description_for_ai":"Generate transformed image URL without re-uploading. Resize, crop, format convert, apply filters via URL parameters.","intent":["resize image","crop image","image transform","thumbnail","optimize image","convert format","webp image"],"endpoint":"GET https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_id}","input":{"cloud_name":{"type":"string","required":true},"public_id":{"type":"string","required":true},"width":{"type":"integer","required":false},"height":{"type":"integer","required":false},"crop":{"type":"string","description":"fill, fit, thumb, scale, pad","required":false},"format":{"type":"string","description":"jpg, png, webp, avif, auto","required":false},"quality":{"type":"string","description":"auto, auto:best, 80","required":false}},"output":{"type":"url","fields":["transformed_image_url"]},"realtime":true,"requires_auth":false}],"agent_hints":{"url_transform":"Transformations are embedded in URL: https://res.cloudinary.com/CLOUD/image/upload/w_300,h_300,c_fill/IMAGE_ID","auto_format":"Use f_auto,q_auto for automatic best format and quality selection — reduces file size 50-80%."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "cloudinary",
+    "name": "Cloudinary API",
+    "description_for_ai": "Cloud image and video management. Upload, transform (resize, crop, filter, optimize), deliver via CDN. AI-powered smart cropping, background removal, face detection. 25GB free storage, 25GB bandwidth. Used by Reddit, Vimeo, Ebay.",
+    "url": "https://cloudinary.com",
+    "api_base": "https://api.cloudinary.com/v1_1/{cloud_name}",
+    "category": "media_management",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://cloudinary.com/documentation/image_upload_api_reference"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "note": "API key + secret in request signature",
+    "how_to_get": "Register at https://cloudinary.com — free tier generous",
+    "cost": "Free: 25GB storage + 25GB bandwidth/month. Plus: $89/month"
+  },
+  "capabilities": [
+    {
+      "id": "upload_image",
+      "description_for_ai": "Upload image to Cloudinary. Returns CDN URL with transformation support. Use for storing user uploads, product images.",
+      "intent": [
+        "upload image",
+        "store image",
+        "image hosting",
+        "CDN image",
+        "image upload",
+        "media storage"
+      ],
+      "endpoint": "POST https://api.cloudinary.com/v1_1/{cloud_name}/image/upload",
+      "input": {
+        "file": {
+          "type": "string",
+          "description": "Image URL, base64, or file path",
+          "required": true
+        },
+        "public_id": {
+          "type": "string",
+          "description": "Custom filename/path in Cloudinary",
+          "required": false
+        },
+        "folder": {
+          "type": "string",
+          "description": "Folder to organize images",
+          "required": false
+        },
+        "transformation": {
+          "type": "string",
+          "description": "Transformations to apply on upload",
+          "required": false
+        },
+        "tags": {
+          "type": "string",
+          "description": "Comma-separated tags",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "upload",
+        "fields": [
+          "public_id",
+          "secure_url",
+          "url",
+          "format",
+          "width",
+          "height",
+          "bytes",
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "transform_image",
+      "description_for_ai": "Generate transformed image URL without re-uploading. Resize, crop, format convert, apply filters via URL parameters.",
+      "intent": [
+        "resize image",
+        "crop image",
+        "image transform",
+        "thumbnail",
+        "optimize image",
+        "convert format",
+        "webp image"
+      ],
+      "endpoint": "GET https://res.cloudinary.com/{cloud_name}/image/upload/{transformations}/{public_id}",
+      "input": {
+        "cloud_name": {
+          "type": "string",
+          "required": true
+        },
+        "public_id": {
+          "type": "string",
+          "required": true
+        },
+        "width": {
+          "type": "integer",
+          "required": false
+        },
+        "height": {
+          "type": "integer",
+          "required": false
+        },
+        "crop": {
+          "type": "string",
+          "description": "fill, fit, thumb, scale, pad",
+          "required": false
+        },
+        "format": {
+          "type": "string",
+          "description": "jpg, png, webp, avif, auto",
+          "required": false
+        },
+        "quality": {
+          "type": "string",
+          "description": "auto, auto:best, 80",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "url",
+        "fields": [
+          "transformed_image_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "url_transform": "Transformations are embedded in URL: https://res.cloudinary.com/CLOUD/image/upload/w_300,h_300,c_fill/IMAGE_ID",
+    "auto_format": "Use f_auto,q_auto for automatic best format and quality selection — reduces file size 50-80%."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
