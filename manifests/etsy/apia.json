@@ -24,12 +24,18 @@
       "id": "find_all_listings",
       "description_for_ai": "Handmade, vintage, and craft marketplace API. 90M+ active buyers. Listing management, order processing, shop analytics, shipping profiles. Use for Etsy seller automation, shop management, marketplace integration. Search Etsy listings by keyword and filters. Returns handmade, vintage, and craft items.",
       "intent": [
-        "etsy listings",
         "handmade items",
+        "custom products",
+        "craft products",
         "vintage products",
-        "craft marketplace",
         "etsy shop",
-        "custom products"
+        "hand-made",
+        "craft marketplace",
+        "etsy search",
+        "vintage items",
+        "handmade marketplace",
+        "custom gifts",
+        "etsy listings"
       ],
       "endpoint": "GET https://openapi.etsy.com/v3/application/listings/active",
       "input": {
