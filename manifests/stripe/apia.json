@@ -6,8 +6,10 @@
     "description_for_ai": "World's leading payment processing API. Accept credit cards, bank transfers, crypto. Used by millions of businesses. Use when user needs to charge a customer, create a payment link, check payment status, or manage subscriptions.",
     "url": "https://stripe.com",
     "api_base": "https://api.stripe.com/v1",
-    "category": "payments",
-    "geo": ["GLOBAL"],
+    "category": "finance",
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://stripe.com/docs/api"
   },
@@ -23,19 +25,46 @@
       "id": "create_payment_intent",
       "description_for_ai": "Create a payment intent to charge a customer. Returns a client_secret used by the frontend to confirm payment. Core method for accepting one-time payments.",
       "intent": [
-        "charge customer", "accept payment", "process payment",
-        "create invoice", "collect money", "online payment"
+        "charge customer",
+        "accept payment",
+        "process payment",
+        "create invoice",
+        "collect money",
+        "online payment"
       ],
       "endpoint": "POST https://api.stripe.com/v1/payment_intents",
       "input": {
-        "amount": { "type": "integer", "description": "Amount in smallest currency unit (cents for USD, kopeks for RUB). E.g. 2000 = $20.00", "required": true },
-        "currency": { "type": "string", "description": "ISO 4217 currency code: usd, eur, rub, kzt etc.", "required": true },
-        "description": { "type": "string", "description": "Payment description", "required": false },
-        "metadata": { "type": "object", "description": "Key-value pairs for your own tracking", "required": false }
+        "amount": {
+          "type": "integer",
+          "description": "Amount in smallest currency unit (cents for USD, kopeks for RUB). E.g. 2000 = $20.00",
+          "required": true
+        },
+        "currency": {
+          "type": "string",
+          "description": "ISO 4217 currency code: usd, eur, rub, kzt etc.",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Payment description",
+          "required": false
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Key-value pairs for your own tracking",
+          "required": false
+        }
       },
       "output": {
         "type": "payment_intent",
-        "fields": ["id", "client_secret", "amount", "currency", "status", "created"]
+        "fields": [
+          "id",
+          "client_secret",
+          "amount",
+          "currency",
+          "status",
+          "created"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -44,17 +73,34 @@
       "id": "create_payment_link",
       "description_for_ai": "Create a shareable payment link that customers can open in their browser. Easiest way to collect payment — no code needed on frontend.",
       "intent": [
-        "payment link", "share payment page", "send invoice link",
-        "checkout link", "payment URL"
+        "payment link",
+        "share payment page",
+        "send invoice link",
+        "checkout link",
+        "payment URL"
       ],
       "endpoint": "POST https://api.stripe.com/v1/payment_links",
       "input": {
-        "line_items[0][price]": { "type": "string", "description": "Price ID from your Stripe dashboard", "required": true },
-        "line_items[0][quantity]": { "type": "integer", "description": "Quantity", "default": 1 }
+        "line_items[0][price]": {
+          "type": "string",
+          "description": "Price ID from your Stripe dashboard",
+          "required": true
+        },
+        "line_items[0][quantity]": {
+          "type": "integer",
+          "description": "Quantity",
+          "default": 1
+        }
       },
       "output": {
         "type": "payment_link",
-        "fields": ["id", "url", "active", "currency", "amount"]
+        "fields": [
+          "id",
+          "url",
+          "active",
+          "currency",
+          "amount"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -62,14 +108,31 @@
     {
       "id": "get_payment",
       "description_for_ai": "Retrieve payment status and details by payment intent ID. Use to check if a payment was successful.",
-      "intent": ["payment status", "was payment successful", "check payment", "payment details"],
+      "intent": [
+        "payment status",
+        "was payment successful",
+        "check payment",
+        "payment details"
+      ],
       "endpoint": "GET https://api.stripe.com/v1/payment_intents/{id}",
       "input": {
-        "id": { "type": "string", "description": "Payment Intent ID starting with 'pi_'", "required": true }
+        "id": {
+          "type": "string",
+          "description": "Payment Intent ID starting with 'pi_'",
+          "required": true
+        }
       },
       "output": {
         "type": "payment_intent",
-        "fields": ["id", "status", "amount", "currency", "payment_method", "created", "metadata"]
+        "fields": [
+          "id",
+          "status",
+          "amount",
+          "currency",
+          "payment_method",
+          "created",
+          "metadata"
+        ]
       },
       "realtime": true,
       "requires_auth": true
