@@ -1,0 +1,2025 @@
+# APIA Registry — Known Public APIs
+> Community reference list. Add your API by opening a Pull Request.
+
+## AI & Machine Learning
+
+- OpenAI (GPT, DALL-E, Whisper, Embeddings)
+- Anthropic Claude (Haiku, Sonnet, Opus)
+- Google Gemini (Flash, Pro, Ultra)
+- Mistral AI (Small, Large, Codestral)
+- DeepSeek (V3, R1 Reasoner)
+- xAI Grok (Mini, Pro, Live Search)
+- Meta Llama API (via Together AI)
+- Cohere (Command, Embed, Rerank)
+- AI21 Labs (Jamba, Jurassic)
+- Stability AI (Stable Diffusion, SDXL)
+- Midjourney API (unofficial wrappers)
+- Replicate (1000+ open models)
+- Hugging Face Inference API
+- Together AI (open models hosting)
+- Fireworks AI (fast inference)
+- Groq (ultra-fast inference)
+- Perplexity AI (search + LLM)
+- You.com API
+- AWS Bedrock (multi-model)
+- Azure OpenAI Service
+- Google Vertex AI
+- IBM Watson (NLP, Speech, Vision)
+- Amazon Comprehend (NLP)
+- Amazon Rekognition (Vision)
+- Google Cloud Vision API
+- Google Cloud Natural Language
+- Microsoft Azure Cognitive Services
+- Clarifai (Vision AI)
+- AssemblyAI (Speech-to-text)
+- Deepgram (Speech AI)
+- ElevenLabs (Text-to-Speech)
+- Murf AI (TTS)
+- Play.ht (TTS)
+- LOVO AI (TTS)
+- OpenAI TTS
+- Google Cloud TTS
+- Amazon Polly (TTS)
+- Azure Cognitive Speech
+- Speechify API
+- Rev AI (Transcription)
+- Otter.ai API
+- Whisper API (OpenAI)
+- Suno AI (Music generation)
+- Udio API (Music)
+- RunwayML (Video generation)
+- Pika Labs API
+- Luma AI (Video)
+- Synthesia (AI Video)
+- HeyGen (AI Avatar Video)
+- D-ID (AI Talking Head)
+- Tavus (Personalized Video AI)
+- Descript API
+- Adobe Firefly API
+- Canva API
+- Remove.bg API (Background removal)
+- Clipdrop API (Image editing)
+- PhotoRoom API
+- DeepAI (Various AI tools)
+- NightCafe API
+- Leonardo.ai API
+- OpenRouter (AI aggregator)
+- LiteLLM (AI proxy)
+- Portkey AI (AI gateway)
+- LangChain API
+- LlamaIndex API
+- Pinecone (Vector DB)
+- Weaviate (Vector DB)
+- Qdrant (Vector DB)
+- Chroma (Vector DB)
+- Milvus (Vector DB)
+- Zilliz Cloud (Vector DB)
+- Vectara (RAG platform)
+- Kendra (AWS RAG)
+- Cohere Embed (Embeddings)
+- Voyage AI (Embeddings)
+- Jina AI (Embeddings + Reranker)
+- Nomic Embed
+- BGE Embeddings (via APIs)
+- Weights & Biases API (ML tracking)
+- MLflow API
+- Neptune.ai API
+- Roboflow API (Computer Vision)
+- Scale AI API (Data labeling)
+- Labelbox API
+- Snorkel AI API
+- DataRobot API
+- H2O.ai API
+- Vertex AI AutoML
+- AWS SageMaker API
+- Azure ML API
+
+## Maps & Geolocation
+
+- Google Maps Platform (Geocoding, Places, Directions)
+- Яндекс.Карты API (Russia/CIS)
+- 2GIS API (Russia/CIS/World)
+- OpenStreetMap / Nominatim (free geocoding)
+- Mapbox API (Maps, Geocoding, Navigation)
+- HERE Maps API
+- TomTom Maps API
+- Apple MapKit JS
+- Bing Maps API
+- OpenRouteService (Routing)
+- GraphHopper (Routing)
+- OSRM (Open Source Routing Machine)
+- Valhalla (Routing engine)
+- Pelias (Open geocoder)
+- Photon (OpenStreetMap geocoder)
+- What3Words API
+- Plus Codes API (Google)
+- Geocodio API
+- SmartyStreets (Address validation)
+- PostGrid (Address validation)
+- Lob API (Address verification)
+- USPS Address API
+- Royal Mail PAF API
+- CartoDB/CARTO API
+- Mapillary API (Street imagery)
+- Strava Segments API (Running routes)
+- AllTrails API
+- Foursquare Places API
+- Yelp Fusion API (Places/Reviews)
+- TripAdvisor Content API
+- Google Places API (New)
+- Overpass API (OSM data queries)
+- GeoServer WFS/WMS
+- ArcGIS REST API (Esri)
+- QGIS Server API
+- Mapzen API (archived but popular)
+- OpenCage Geocoder
+- LocationIQ API
+- PositionStack API
+- ipstack (IP Geolocation)
+- ip-api (IP Geolocation, free)
+- ipinfo.io API
+- ipgeolocation.io
+- MaxMind GeoIP2
+- Abstract IP Geolocation
+- Clearbit Reveal (IP to company)
+- GeoIP API (various providers)
+- OpenAQ API (Air quality + geo)
+- Terraclimate API
+- Google Earth Engine API
+- NASA Earthdata API
+- Copernicus Climate API
+- USGS National Map API
+- Natural Earth API
+- World Bank Geocoder
+- Postcodes.io (UK postcodes)
+- Data.gov.uk Postcodes
+- Canada Post Address Complete
+- Australian Geocoder
+- ФИАС / ГАР API (Russia)
+- КЛАДР API (Russia, legacy)
+- DaData API (Russia address validation)
+- SuggestionAPI (Russia addresses)
+
+## Weather
+
+- OpenWeatherMap API
+- WeatherAPI.com
+- Visual Crossing Weather API
+- Tomorrow.io (ClimaCell) API
+- AccuWeather API
+- Weather.gov API (US Gov, free)
+- Meteomatics API
+- Weatherbit API
+- Xweather (AerisWeather) API
+- Weatherstack API
+- Open-Meteo API (free, no key)
+- Bright Sky API (Germany, DWD data)
+- Meteostat API (Historical weather)
+- NOAA Climate Data Online API
+- NASA POWER API (Solar/Wind)
+- Copernicus Atmosphere API
+- ECMWF API (Global forecasts)
+- Яндекс.Погода API
+- Гисметео API
+- Windy API
+- RainViewer API (Radar, free)
+- OpenSnowMap API
+- Surf forecast API (Surfline)
+- PurpleAir API (Air quality sensors)
+- IQAir API
+- Breezometer API
+- AirVisual API
+- AmbeeData API (Environment)
+- Solcast API (Solar forecasting)
+- Solargis API
+- Climate TRACE API
+- Carbon Interface API
+- Electricity Maps API
+- UK Met Office DataPoint API
+- Environment Canada Weather API
+- Bureau of Meteorology Australia API
+- Hong Kong Observatory API
+- JMA Japan Meteorological API
+- Flightradar24 API (Aviation weather)
+- Aviation Weather API (aviationweather.gov)
+
+## Finance & Payments
+
+- Stripe API (Payments)
+- PayPal API
+- Square API
+- Braintree API (PayPal company)
+- Adyen API
+- Checkout.com API
+- Klarna API
+- Afterpay API
+- Revolut Business API
+- Wise (TransferWise) API
+- YooKassa API (Россия)
+- Тинькофф Acquiring API
+- Сбербанк Эквайринг API
+- Robokassa API (Россия)
+- CloudPayments API (Россия)
+- Payler API (Россия)
+- WebMoney API (Россия/СНГ)
+- QIWI API (Россия)
+- Monobank API (Украина)
+- ПриватБанк API
+- Plaid API (Bank connectivity)
+- Yodlee API (Financial data)
+- MX Technologies API
+- Truelayer API (Open Banking)
+- Nordigen/GoCardless API
+- Salt Edge API
+- Budget Insight API
+- Flinks API (Canada)
+- Belvo API (LATAM)
+- Finicity API (Mastercard)
+- Alpha Vantage API (Stocks)
+- Polygon.io API (Market data)
+- Finnhub API (Financial data)
+- Yahoo Finance API (unofficial)
+- IEX Cloud API (Market data)
+- Quandl/Nasdaq Data Link API
+- Intrinio API (Financial data)
+- Tiingo API
+- Morningstar API
+- Bloomberg API
+- Refinitiv (Reuters) API
+- FactSet API
+- S&P Global Market Intelligence API
+- Interactive Brokers API
+- Alpaca Trading API
+- TD Ameritrade API
+- Robinhood API (unofficial)
+- Binance API (Crypto)
+- Coinbase API
+- Kraken API (Crypto)
+- FTX API (archived)
+- Bybit API (Crypto)
+- OKX API (Crypto)
+- Huobi/HTX API (Crypto)
+- KuCoin API (Crypto)
+- Bitfinex API
+- BitMEX API
+- Deribit API (Crypto derivatives)
+- CoinGecko API (Crypto data)
+- CoinMarketCap API
+- CryptoCompare API
+- Messari API (Crypto research)
+- Glassnode API (On-chain data)
+- Nansen API
+- Dune Analytics API
+- The Graph API (Web3)
+- Alchemy API (Web3)
+- Infura API (Web3)
+- Moralis API (Web3)
+- Etherscan API
+- BscScan API
+- Polygonscan API
+- OpenSea API (NFTs)
+- Rarible API
+- ExchangeRate-API
+- Open Exchange Rates API
+- Fixer.io API
+- CurrencyLayer API
+- XE Currency API
+- OANDA Exchange Rates API
+- ECB Exchange Rates API (free)
+- ЦБ РФ API (Курсы валют, free)
+- Stripe Connect API
+- Stripe Climate API
+- Stripe Treasury API
+- GoCardless API (Direct Debit)
+- Dwolla API (ACH payments)
+- Marqeta API (Card issuing)
+- Lithic API (Card issuing)
+- Unit API (Banking-as-a-service)
+- Synapse API
+- Bond API (Fintech infra)
+- Galileo API
+- i2c API
+- FIS API
+- Fiserv API
+- Jack Henry API
+- Temenos API
+- Mambu API (Core banking)
+- Thought Machine API
+- 10x API
+- Treasury Prime API
+
+## Employment & Jobs
+
+- hh.ru API (Russia)
+- hh.kz API (Kazakhstan)
+- hh.by API (Belarus)
+- hh.uz API (Uzbekistan)
+- SuperJob API (Russia)
+- Авито.Работа API (Russia)
+- trudvsem.ru / Работа в России API
+- Zarplata.ru API (Russia)
+- Rabota.ru API (Russia)
+- HeadHunter Group API
+- LinkedIn Jobs API
+- Indeed API
+- Glassdoor API
+- ZipRecruiter API
+- CareerBuilder API
+- Monster API
+- Dice API (Tech jobs)
+- GitHub Jobs API (deprecated)
+- Stack Overflow Jobs API (deprecated)
+- Adzuna API
+- Reed UK API
+- TotalJobs API (UK)
+- Jobsite API (UK)
+- CV-Library API (UK)
+- Seek API (Australia)
+- Jora API (Australia)
+- XING API (Germany/DACH)
+- StepStone API (Germany)
+- Monster.de API
+- JobScout24 API
+- InfoJobs API (Spain/Italy)
+- Infojobs.net API
+- Emploi.fr API
+- Pôle Emploi API (France)
+- Job.nl API
+- Nationale Vacaturebank API
+- Pracuj.pl API (Poland)
+- Hipo.ro API (Romania)
+- Robota.ua API (Ukraine)
+- Work.ua API (Ukraine)
+- OLX Jobs API (CEE)
+- Jooble API (Global)
+- Neuvoo/Talent.com API
+- Jobbio API
+- Wellfound (AngelList) API (Startups)
+- Lever API (ATS)
+- Greenhouse API (ATS)
+- Workday API (HR)
+- SAP SuccessFactors API
+- BambooHR API
+- Personio API (Germany)
+- Workable API (ATS)
+- Jobvite API
+- iCIMS API
+- Taleo API (Oracle)
+- Cornerstone OnDemand API
+- ADP Workforce API
+- Upwork API (Freelance)
+- Fiverr API (Freelance)
+- Toptal API
+- Freelancer.com API
+- Guru.com API
+- PeoplePerHour API
+- Malt API (France/Europe)
+- 99designs API
+
+## Transport & Travel
+
+- Amadeus API (Flights, Hotels, POI)
+- Skyscanner API
+- Kiwi.com API
+- Google Flights (via Amadeus)
+- FlightAware API
+- FlightRadar24 API
+- AviationStack API
+- OpenSky Network API (free)
+- ADS-B Exchange API
+- IATA NDC API
+- Sabre GDS API
+- Travelport GDS API
+- Expedia API
+- Booking.com API
+- Airbnb API (limited)
+- Hotels.com API
+- Trivago API
+- Hostelworld API
+- TripAdvisor API
+- Яндекс.Расписания API
+- РЖД API (Russia rail, unofficial)
+- Туту.ру API (Russia)
+- Kupibilet API (Russia)
+- Aviasales API (Russia)
+- Momondo API
+- Rome2rio API
+- GoEuro/Omio API
+- Trainline API (UK/Europe)
+- National Rail API (UK)
+- Deutsche Bahn API
+- SNCF API (France)
+- Renfe API (Spain)
+- Trenitalia API (Italy)
+- NS API (Netherlands)
+- OBB API (Austria)
+- SBB API (Switzerland)
+- Translink API (Canada)
+- MTA API (New York)
+- CTA API (Chicago)
+- BART API (San Francisco)
+- TfL API (London)
+- RATP API (Paris)
+- BVG API (Berlin)
+- MVG API (Munich)
+- Uber API
+- Lyft API
+- Bolt API (Europe)
+- Яндекс.Такси API
+- Citymobil API (Russia)
+- inDriver API
+- Gett API
+- Wheely API
+- Lime API (Scooters)
+- Bird API (Scooters)
+- Tier API (Scooters)
+- Voi API (Scooters)
+- Santander Cycles API (London)
+- Vélib API (Paris)
+- Московский велопрокат API
+- GTFS (General Transit Feed Spec) — standard
+- Transitland API
+- OpenTripPlanner API
+- HERE Public Transit API
+- Google Maps Transit API
+- Waze API (Navigation)
+- Moovit API (Transit)
+- Citymapper API
+- Commute.org API
+- Getaround API (Car sharing)
+- Turo API (Car rental P2P)
+- Enterprise Car Rental API
+- Hertz API
+- Avis/Budget API
+- Rentalcars.com API
+- car2go / Share Now API
+- BlaBlaCar API (Rideshare)
+- Karos API (Carpooling)
+- Zipcar API
+- Cargo Ship tracking (MarineTraffic API)
+- Vessel Finder API
+- AIS Hub API
+- ShipStation API
+- EasyPost API (Shipping)
+- Shippo API
+- Stamps.com API
+- Pitney Bowes API
+- DHL API
+- FedEx API
+- UPS API
+- USPS API
+- Royal Mail API
+- DPD API (Europe)
+- Hermes API (Europe)
+- GLS API (Europe)
+- СДЭК API (Russia)
+- Boxberry API (Russia)
+- DPD Russia API
+- Почта России API
+- Яндекс.Доставка API
+- OZON Rocket API
+- WB Delivery API
+
+## Social Media & Communication
+
+- Twitter/X API v2
+- xAI Grok API (Live X search)
+- Facebook Graph API
+- Instagram Graph API
+- Instagram Basic Display API
+- WhatsApp Business API
+- WhatsApp Cloud API (Meta)
+- Telegram Bot API
+- Telegram MTProto API
+- Discord API
+- Slack API
+- Microsoft Teams API (Graph)
+- Reddit API
+- LinkedIn API
+- Pinterest API
+- Snapchat Marketing API
+- TikTok API for Developers
+- YouTube Data API v3
+- YouTube Analytics API
+- Twitch API
+- VK API (ВКонтакте)
+- OK.ru API (Одноклассники)
+- Мой Мир API (Mail.ru)
+- Viber API
+- Line API (Asia)
+- WeChat API
+- Weibo API
+- Douyin API (TikTok China)
+- KakaoTalk API (Korea)
+- Naver API (Korea)
+- Mixi API (Japan)
+- Medium API
+- Tumblr API
+- Mastodon API (Fediverse)
+- Pleroma API
+- Pixelfed API
+- Bluesky AT Protocol API
+- Threads API (Meta)
+- BeReal API (unofficial)
+- Clubhouse API (unofficial)
+- Twitter Streaming API
+- Brandwatch API
+- Sprout Social API
+- Hootsuite API
+- Buffer API
+- Later API
+- Socialflow API
+- Agorapulse API
+- Mention API
+- Brand24 API
+- Keyhole API
+- Synthesio API
+- Meltwater API
+- Cision API (PR)
+- Twilio API (SMS/Voice)
+- Nexmo/Vonage API
+- MessageBird API
+- Plivo API
+- Sinch API
+- AWS SNS (Notifications)
+- Firebase Cloud Messaging
+- OneSignal API
+- Pusher API
+- Ably API
+- Stream API (Chat)
+- SendBird API
+- Cometchat API
+- Rocket.Chat API
+- Mattermost API
+- Zulip API
+- Matrix API (Element)
+- Signal API (unofficial)
+- Mailgun API
+- SendGrid API (Twilio)
+- Mailchimp API
+- Klaviyo API
+- ConvertKit API
+- ActiveCampaign API
+- HubSpot Email API
+- Brevo (Sendinblue) API
+- Postmark API
+- AWS SES API
+- SparkPost API
+- Mandrill API (Mailchimp transactional)
+- Resend API
+- Loops API
+
+## Developer Tools & DevOps
+
+- GitHub API
+- GitLab API
+- Bitbucket API
+- Azure DevOps API
+- Jira API (Atlassian)
+- Confluence API (Atlassian)
+- Linear API
+- Asana API
+- Trello API
+- Monday.com API
+- ClickUp API
+- Notion API
+- Airtable API
+- Coda API
+- Basecamp API
+- Todoist API
+- Wrike API
+- Teamwork API
+- Smartsheet API
+- Shortcut (Clubhouse) API
+- Height API
+- Plane API (open source)
+- AWS API (full suite)
+- Google Cloud APIs (full suite)
+- Azure APIs (full suite)
+- DigitalOcean API
+- Linode/Akamai Cloud API
+- Vultr API
+- Hetzner Cloud API
+- OVHcloud API
+- Cloudflare API
+- Fastly API
+- Akamai API
+- Vercel API
+- Netlify API
+- Railway API
+- Render API
+- Fly.io API
+- Heroku API
+- PlanetScale API (MySQL)
+- Supabase API (Postgres + Auth)
+- Neon API (Serverless Postgres)
+- CockroachDB API
+- MongoDB Atlas API
+- Fauna API
+- Upstash API (Redis/Kafka)
+- Redis Cloud API
+- Elasticache API (AWS)
+- Aiven API
+- Datadog API
+- New Relic API
+- Grafana API
+- Prometheus API
+- PagerDuty API
+- OpsGenie API
+- VictorOps/Splunk API
+- Incident.io API
+- Sentry API (Error tracking)
+- Rollbar API
+- Bugsnag API
+- LogRocket API
+- FullStory API
+- Hotjar API
+- PostHog API
+- Mixpanel API
+- Amplitude API
+- Segment API (CDP)
+- mParticle API
+- Rudderstack API
+- Heap API
+- LaunchDarkly API (Feature flags)
+- Split.io API
+- Unleash API (Feature flags, OSS)
+- ConfigCat API
+- Flagsmith API
+- CircleCI API
+- GitHub Actions API
+- GitLab CI API
+- Jenkins API
+- Travis CI API
+- Drone CI API
+- Buildkite API
+- TeamCity API
+- Semaphore CI API
+- Nx API (Monorepo)
+- Terraform Cloud API
+- Pulumi API
+- Ansible Tower/AWX API
+- HashiCorp Vault API
+- HashiCorp Consul API
+- Kubernetes API
+- Docker Hub API
+- DockerHub Registry API
+- Amazon ECR API
+- Google Container Registry API
+- JFrog Artifactory API
+- Nexus Repository API
+- SonarQube API (Code quality)
+- Snyk API (Security)
+- Veracode API
+- Checkmarx API
+- WhiteSource/Mend API
+- Dependabot API (via GitHub)
+- Socket.dev API (Supply chain security)
+- FOSSA API (License compliance)
+- Codacy API
+- Codecov API
+- Coveralls API
+- Swagger/OpenAPI (specification, not API)
+- Postman API
+- Insomnia API
+- Bruno API
+- RapidAPI Hub
+- APILayer
+- Apigee API (Google)
+- Kong API Gateway
+- Tyk API Gateway
+- AWS API Gateway
+- Azure API Management
+- Zuplo API
+
+## E-commerce & Retail
+
+- Shopify API
+- WooCommerce REST API
+- Magento/Adobe Commerce API
+- BigCommerce API
+- Squarespace Commerce API
+- Wix eCommerce API
+- PrestaShop API
+- OpenCart API
+- Salesforce Commerce Cloud API
+- SAP Commerce API
+- Amazon Marketplace API (MWS/SP-API)
+- Amazon Advertising API
+- Amazon Product API (PAAPI)
+- eBay API
+- Etsy API
+- AliExpress API
+- Alibaba Open Platform API
+- JD.com API (China)
+- Pinduoduo API (China)
+- Lazada API (SEA)
+- Tokopedia API (Indonesia)
+- Wildberries API (Russia)
+- Ozon API (Russia)
+- Яндекс.Маркет API
+- СберМегаМаркет API
+- AliExpress Russia API
+- Avito API (Russia)
+- CDEK API (Russia logistics)
+- DHL eCommerce API
+- ShipBob API (Fulfillment)
+- Flexport API (Logistics)
+- FreightQuote API
+- Stripe Checkout API
+- Square Commerce API
+- PayPal Commerce API
+- Klarna API
+- Afterpay/Clearpay API
+- Sezzle API
+- Affirm API
+- Loop API (Returns)
+- Returnly API
+- Narvar API
+- Route API (Package protection)
+- TaxJar API
+- Avalara API
+- Vertex Tax API
+- Vatstack API (VAT)
+- Vatlayer API
+- Shipstation API
+- Ordoro API
+- Linnworks API
+- ChannelAdvisor API
+- Feedonomics API
+- DataFeedWatch API
+- Prisync API (Price monitoring)
+- Wiser API (Price intelligence)
+- Skuuudle API
+- Keepa API (Amazon price history)
+- CamelCamelCamel API
+- Jungle Scout API
+- Helium 10 API
+- Viral Launch API
+- Google Shopping API
+- Facebook Commerce API
+- Instagram Shopping API
+- Pinterest Shopping API
+- TikTok Shop API
+- Snap Catalog API
+- Klaviyo Commerce API
+- Yotpo API (Reviews)
+- Bazaarvoice API
+- Trustpilot API
+- Reviews.io API
+- Stamped.io API
+- Okendo API
+- LoyaltyLion API
+- Smile.io API (Loyalty)
+- Yotpo Loyalty API
+- Gorgias API (eCommerce CS)
+- Zendesk Commerce API
+- Freshdesk API
+- Re:amaze API
+- Reamaze API
+
+## Healthcare & Medical
+
+- HL7 FHIR API (Healthcare standard)
+- Apple HealthKit API
+- Google Fit API
+- Samsung Health API
+- Fitbit API
+- Garmin Health API
+- Withings API
+- Oura Ring API
+- Whoop API
+- Epic FHIR API (EHR)
+- Cerner FHIR API
+- Athenahealth API
+- DrChrono API
+- PracticeFusion API
+- Allscripts API
+- NextGen Healthcare API
+- Meditech API
+- Veeva Vault API
+- Veradigm API
+- Change Healthcare API
+- Availity API
+- Waystar API
+- Optum API
+- Cigna API
+- Aetna API
+- Blue Cross Blue Shield API
+- Medicare API (CMS)
+- Medicaid API
+- NHS API (UK)
+- EHDI API (EU Health Data)
+- WHO API (World Health Organization)
+- CDC API (US Centers for Disease Control)
+- NIH Clinical Trials API (ClinicalTrials.gov)
+- PubMed API (NCBI)
+- DrugBank API
+- OpenFDA API (Drug/Device data)
+- RxNorm API (Drug naming)
+- NCI Thesaurus API (Cancer)
+- UMLS API (Medical terminology)
+- SNOMED CT API
+- ICD-10 API
+- CPT API (Medical codes)
+- Elation Health API
+- Healow API (Patient portal)
+- Doximity API (US doctors)
+- Zocdoc API (Appointments)
+- Doctolib API (France/Europe)
+- НМО API (Russia medical)
+- Gosuslugi Health API (Russia)
+- Veeva CRM API (Pharma)
+- IQVIA API (Pharma data)
+- Symphony Health API
+- Komodo Health API
+- Definitive Healthcare API
+- Arcadia API (Healthcare analytics)
+- Tempus API (Precision medicine)
+- Flatiron Health API
+- OMOP CDM API
+- i2b2 API
+- MDClone API
+- Infermedica API (Symptom checker)
+- Isabel DDx API
+- Ada Health API
+- Babylon Health API
+- Buoy Health API
+- Healthgrades API
+- WebMD API
+- Everyday Health API
+- MyFitnessPal API
+- Cronometer API
+- Nutritionix API
+- Edamam Nutrition API
+- USDA FoodData Central API (free)
+- Open Food Facts API (free)
+- Spoonacular API (Food)
+- Calorie Mama API
+
+## Education
+
+- Google Classroom API
+- Canvas LMS API
+- Blackboard API
+- Moodle API
+- D2L Brightspace API
+- Schoology API
+- PowerSchool API
+- Clever API (EdTech SSO)
+- ClassLink API
+- Remind API (School messaging)
+- Khan Academy API
+- Coursera API
+- edX API
+- Udemy API
+- Udacity API
+- Skillshare API
+- LinkedIn Learning API
+- Pluralsight API
+- DataCamp API
+- Codecademy API
+- freeCodeCamp API
+- Duolingo API (unofficial)
+- Rosetta Stone API
+- Babbel API
+- Memrise API
+- Busuu API
+- Drops API (Language learning)
+- Quizlet API
+- Anki API
+- Kahoot API
+- Mentimeter API
+- Padlet API
+- Nearpod API
+- Pear Deck API
+- Formative API
+- Socrative API
+- Google Forms API
+- Typeform API
+- SurveyMonkey API
+- Qualtrics API
+- JotForm API
+- Alchemer API
+- Pollfish API
+- SurveySparrow API
+- Wolfram Alpha API
+- Wolfram Language API
+- Symbolab API (Math)
+- Mathway API
+- Desmos API (Graphing)
+- GeoGebra API
+- PhET Simulations API
+- Scratch API
+- Code.org API
+- Repl.it API
+- Glitch API
+- CodePen API
+- JSFiddle API
+- Stack Overflow API
+- Stack Exchange API
+- Hacker News API (free)
+- DEV.to API
+- Hashnode API
+- Medium API
+- Substack API
+- Хабр API (Russia)
+- VC.ru API (Russia)
+- Tproger API (Russia)
+
+## Media & Entertainment
+
+- YouTube Data API v3
+- YouTube Analytics API
+- YouTube Reporting API
+- Vimeo API
+- Twitch API
+- Kick API (unofficial)
+- Dailymotion API
+- Rutube API (Russia)
+- ВКонтакте Video API
+- OK.ru Video API
+- Netflix API (internal, not public)
+- Disney+ API (internal)
+- HBO Max API (internal)
+- Hulu API
+- Amazon Prime Video API
+- Apple iTunes API
+- Spotify Web API
+- Apple Music API (MusicKit)
+- Deezer API
+- Tidal API
+- SoundCloud API
+- Bandcamp API
+- Discogs API (Music database)
+- MusicBrainz API (free)
+- Last.fm API
+- AcousticBrainz API
+- AudD Music Recognition API
+- ACRCloud API (Audio fingerprint)
+- Gracenote API (Music metadata)
+- Shazam API (unofficial)
+- AudioDB API
+- Genius API (Lyrics)
+- Musixmatch API (Lyrics)
+- LyricFind API
+- IMDB API (unofficial)
+- TMDB API (The Movie Database, free)
+- OMDb API (Movies)
+- Rotten Tomatoes API
+- Metacritic API (unofficial)
+- Letterboxd API
+- Trakt API (TV/Movie tracking)
+- JustWatch API
+- Reelgood API
+- TVmaze API (free)
+- TheTVDB API
+- Simkl API
+- AniList API (Anime)
+- MyAnimeList API
+- AniDB API
+- Kitsu API (Anime, free)
+- Crunchyroll API (unofficial)
+- Funimation API
+- MangaDex API (free)
+- Comixology API
+- Marvel Comics API
+- DC Comics API
+- Open Library API (Internet Archive, free)
+- Google Books API
+- Open Library API
+- Goodreads API (limited)
+- LibraryThing API
+- WorldCat API
+- DPLA API (Digital Public Library)
+- Europeana API (European Culture)
+- Rijksmuseum API (Netherlands, free)
+- The Metropolitan Museum API (free)
+- Harvard Art Museums API
+- Smithsonian API (free)
+- NASA API (Images, free)
+- ESA API
+- Hubble API
+- Astronomy Picture of the Day API (NASA, free)
+- Flickr API
+- 500px API
+- Unsplash API (free)
+- Pexels API (free)
+- Pixabay API (free)
+- Shutterstock API
+- Getty Images API
+- iStock API
+- Adobe Stock API
+- Giphy API
+- Tenor API
+- Imgflip API (Memes)
+- Reddit API (Images)
+- Imgur API
+- BoardGameGeek API
+- IGDB API (Games database)
+- Giant Bomb API (Games)
+- RAWG API (Games)
+- OpenCritic API (Games reviews)
+- Steam Web API
+- Epic Games API
+- PlayStation API
+- Xbox API
+- Nintendo API
+
+## Government & Open Data
+
+- data.gov API (USA)
+- data.gov.uk API (UK)
+- data.europa.eu API (EU)
+- Eurostat API
+- data.mos.ru API (Moscow)
+- data.gov.ru API (Russia)
+- Открытые данные Роструда API
+- Открытые данные ФНС API
+- Росстат API (Russia statistics)
+- ЦБ РФ API (Russia Central Bank)
+- Казначейство России API
+- ФАС API (Russia antimonopoly)
+- Госзакупки API / ЕИС (Russia procurement)
+- ФСТЭК API
+- МВД API (Russia, limited)
+- Минфин API (Russia)
+- data.gov.kz API (Kazakhstan)
+- data.gov.by API (Belarus)
+- data.gov.ua API (Ukraine)
+- Berlin Open Data API
+- Paris Open Data API
+- London Datastore API
+- NYC Open Data API
+- LA Open Data API
+- Chicago Data Portal API
+- San Francisco Open Data API
+- data.toronto.ca API
+- data.melbourne.vic.gov.au API
+- data.gov.au API (Australia)
+- Stats NZ API
+- Statistics Sweden SCB API
+- Statistics Norway API
+- Statistics Finland API
+- World Bank API (free)
+- IMF Data API (free)
+- OECD API (free)
+- UN Comtrade API (Trade data)
+- FAO API (Food/Agriculture)
+- WHO GHO API (Health data, free)
+- World Bank Indicators API
+- CIA World Factbook API (unofficial)
+- Our World in Data API
+- UN Data API
+- UNDP API
+- UNICEF Data API
+- OpenAlex API (Research papers, free)
+- Semantic Scholar API (free)
+- CrossRef API (DOI/Citations, free)
+- CORE API (Open access papers)
+- arXiv API (free)
+- PubMed API (NCBI, free)
+- Europe PMC API (free)
+- bioRxiv API
+- medRxiv API
+- Zenodo API (Research data)
+- Figshare API
+- Dryad API (Data repository)
+- PANGAEA API (Earth/Environment data)
+- GBIF API (Biodiversity, free)
+- iNaturalist API (free)
+- eBird API (Birds)
+- NOAA API (US weather/ocean)
+- NASA EOSDIS API
+- USGS API
+- NIST API
+- EPA API (Environmental data)
+- FDA API
+- FCC API
+- SEC EDGAR API (Financial filings, free)
+- Companies House API (UK, free)
+- OpenCorporates API
+- Wikidata API (free)
+- DBpedia API (free)
+- GeoNames API (free tier)
+- Natural Earth API (free)
+- OpenStreetMap Overpass API (free)
+- GADM API (Administrative boundaries)
+- NUTS API (EU regions)
+- US Census Bureau API (free)
+- Eurostat NUTS API
+
+## Business & CRM
+
+- Salesforce API
+- HubSpot API
+- Pipedrive API
+- Zoho CRM API
+- Microsoft Dynamics 365 API
+- SAP CRM API
+- Oracle CRM API
+- Freshsales API
+- Close CRM API
+- Copper CRM API
+- ActiveCampaign CRM API
+- Keap (Infusionsoft) API
+- Nutshell API
+- Nimble API
+- Streak API (Gmail CRM)
+- Insightly API
+- SugarCRM API
+- Monday Sales CRM API
+- Zendesk Sell API
+- Creatio API
+- Bitrix24 API (Russia/CIS)
+- amoCRM API (Russia/CIS)
+- RetailCRM API (Russia)
+- МойСклад API (Russia ERP)
+- 1С API (Russia ERP)
+- СБИС API (Russia)
+- Контур.Диадок API (Russia EDI)
+- Taxcom API (Russia)
+- Synergy CRM API (Russia)
+- Clearbit API (Company data)
+- ZoomInfo API
+- Apollo.io API
+- Lusha API
+- Hunter.io API (Email finder)
+- Snov.io API
+- RocketReach API
+- LeadIQ API
+- LinkedIn Sales Navigator API
+- Bombora API (Intent data)
+- G2 API (Software reviews)
+- Capterra API
+- Gartner API
+- Dun & Bradstreet API
+- Experian Business API
+- Equifax Business API
+- Moody's Analytics API
+- S&P Global API
+- Bureau van Dijk (Orbis) API
+- KONTUR.FOCUS API (Russia)
+- СПАРК API (Russia business data)
+- Rusprofile API (Russia)
+- Контур.Норматив API (Russia)
+- ФНС ЕГРЮЛ API (Russia)
+- ЕГРП API (Russia real estate)
+- Росреестр API (Russia)
+- DocuSign API (eSignature)
+- Adobe Sign API
+- HelloSign API (Dropbox)
+- PandaDoc API
+- Ironclad API (Contract management)
+- Concord API
+- ContractSafe API
+- Conga API
+- Nintex API
+- Formstack API
+- Cognito Forms API
+- 123FormBuilder API
+- Paperform API
+- Fillout API
+- Zapier API
+- Make (Integromat) API
+- n8n API
+- Workato API
+- Tray.io API
+- Celigo API
+- Boomi API
+- MuleSoft API
+- Informatica API
+- Talend API
+- Airbyte API
+- Fivetran API
+- Stitch API
+- dbt API
+- Snowflake API
+- Databricks API
+- Google BigQuery API
+- AWS Redshift API
+- Azure Synapse API
+- Looker API
+- Tableau API
+- Power BI API
+- Metabase API
+- Redash API
+- Mode Analytics API
+- Sigma Computing API
+- ThoughtSpot API
+- Domo API
+- Qlik API
+- MicroStrategy API
+- SAP BusinessObjects API
+- Sisense API
+
+## Cloud Storage & Files
+
+- Google Drive API
+- Google Docs API
+- Google Sheets API
+- Google Slides API
+- Google Forms API
+- Microsoft OneDrive API
+- Microsoft SharePoint API
+- Microsoft Excel API (Graph)
+- Microsoft Word API (Graph)
+- Dropbox API
+- Box API
+- Egnyte API
+- Citrix ShareFile API
+- AWS S3 API
+- Google Cloud Storage API
+- Azure Blob Storage API
+- Cloudflare R2 API
+- Backblaze B2 API
+- Wasabi API
+- MinIO API (S3-compatible)
+- Rclone API
+- Яндекс.Диск API (Russia)
+- Mail.ru Cloud API (Russia)
+- Облако@Mail.ru API
+- VK Teams API (Russia)
+- DocSpace API (Russia)
+- MegaCloud API
+- pCloud API
+- Sync.com API
+- Tresorit API
+- Cryptomator API
+- Nextcloud API
+- OwnCloud API
+- Seafile API
+- FTP API (generic)
+- SFTP API (generic)
+- WebDAV API (standard)
+- Notion API (Documents)
+- Coda API (Documents)
+- Confluence API (Docs)
+- GitBook API
+- Slab API
+- Guru API (Knowledge base)
+- Document360 API
+- Zendesk Guide API
+- Freshdesk Solutions API
+- Intercom Articles API
+- HelpScout Docs API
+- Tettra API
+- Bloomfire API
+- Sharepoint Online API
+- Adobe Document Cloud API
+- DocuSign Envelope API
+- ilovepdf API
+- PDF.co API
+- PDFshift API
+- Nutriadoc API
+- Apryse (PDFTron) API
+- Anvil API (PDF forms)
+- DocParser API
+- Docsumo API
+- Rossum API (Document AI)
+- Textract API (AWS OCR)
+- Google Document AI
+- Azure Form Recognizer
+- ABBYY FlexiCapture API
+- Kofax API
+- Nanonets API (OCR)
+- LlamaIndex API (Document parsing)
+- Unstructured API
+- Mathpix API (Math OCR)
+- Google Vision OCR API
+- Tesseract API (open source)
+- EasyOCR API (open source)
+
+## Security & Identity
+
+- Auth0 API
+- Okta API
+- Keycloak API (open source)
+- Firebase Auth API
+- Clerk API
+- Supabase Auth API
+- WorkOS API
+- Stytch API
+- Magic API (passwordless)
+- Descope API
+- AWS Cognito API
+- Azure AD B2C API
+- Google Identity Platform API
+- OneLogin API
+- Ping Identity API
+- ForgeRock API
+- Transmit Security API
+- Jumio API (KYC)
+- Onfido API (KYC/AML)
+- Veriff API (ID verification)
+- Persona API (KYC)
+- Stripe Identity API
+- Socure API (Identity fraud)
+- Sardine API (Fraud detection)
+- Seon API (Fraud prevention)
+- Signifyd API
+- Riskified API
+- Kount API
+- Emailage API
+- ThreatMetrix/LexisNexis API
+- BioCatch API (Behavioral biometrics)
+- Twilio Verify API (2FA)
+- Authy API
+- Google Authenticator API
+- Duo Security API
+- AWS MFA API
+- VirusTotal API
+- Shodan API
+- SecurityTrails API
+- Censys API
+- Recorded Future API
+- CrowdStrike API
+- SentinelOne API
+- Carbon Black API
+- Palo Alto Cortex API
+- Splunk API
+- IBM QRadar API
+- AlienVault API
+- ThreatConnect API
+- Anomali API
+- MISP API (open source)
+- OpenCTI API (open source)
+- Have I Been Pwned API (free)
+- PwnedPasswords API (free)
+- NordVPN API
+- Mullvad API
+- ProtonVPN API
+- Cloudflare Zero Trust API
+- Tailscale API
+- Zscaler API
+- Netskope API
+- Wiz API (Cloud security)
+- Orca Security API
+- Lacework API
+- Prisma Cloud API
+- Aqua Security API
+- Snyk API
+- Veracode API
+- Checkmarx API
+- SonarQube API
+- GitGuardian API
+- Trufflehog API (open source)
+- Gitleaks API (open source)
+- Infisical API (Secrets)
+- HashiCorp Vault API
+- AWS Secrets Manager API
+- Azure Key Vault API
+- Google Secret Manager API
+- 1Password Secrets API
+- Bitwarden API
+- Keeper API
+- LastPass API
+- Dashlane API
+- CyberArk API
+- BeyondTrust API
+- Delinea (Thycotic) API
+- Qualys API
+- Tenable/Nessus API
+- Rapid7 InsightVM API
+- Acunetix API
+- Burp Suite API
+- OWASP ZAP API (open source)
+- Nuclei API (open source)
+- Semgrep API
+
+## IoT & Hardware
+
+- AWS IoT Core API
+- Google Cloud IoT API
+- Azure IoT Hub API
+- IBM Watson IoT API
+- Particle API (IoT platform)
+- ThingSpeak API (IoT data)
+- Adafruit IO API
+- Blynk API
+- Arduino IoT Cloud API
+- Home Assistant API
+- OpenHAB API
+- Node-RED API
+- MQTT API (protocol)
+- CoAP API (protocol)
+- Zigbee2MQTT API
+- Philips Hue API
+- LIFX API
+- Nanoleaf API
+- Govee API
+- Shelly API
+- Tuya IoT API
+- SmartThings API (Samsung)
+- Amazon Alexa Skills API
+- Google Home API
+- Apple HomeKit API
+- Nest API (Google)
+- Ecobee API
+- Honeywell API
+- Ring API (Amazon)
+- Arlo API
+- Wyze API
+- Eufy API
+- Reolink API
+- Hikvision API
+- Dahua API
+- UniFi API (Ubiquiti)
+- TP-Link Kasa API
+- Sonos API
+- Bose API
+- Denon/Marantz HEOS API
+- Spotify Connect API
+- AirPlay API (Apple)
+- Chromecast API (Google)
+- Roku API
+- Fire TV API
+- Apple TV API
+- Nvidia Shield API
+- Tesla API
+- BMW ConnectedDrive API
+- Mercedes me API
+- Volkswagen Connect API
+- Ford Connected Vehicle API
+- GM OnStar API
+- Toyota SmartDeviceLink API
+- Volvo Cars API
+- Audi connect API
+- Porsche Connect API
+- Rivian API
+- Lucid Motors API
+- Polestar API
+- OBD-II API (diagnostics standard)
+- Geotab API (Fleet management)
+- Samsara API (Fleet + IoT)
+- Verizon Connect API
+- Spireon API
+- Motive (KeepTruckin) API
+- I.D. Systems API
+- Lytx API
+- Calamp API
+- Orbcomm API
+- Iridium API (Satellite IoT)
+- Swarm API (Satellite IoT)
+- Skylo API
+- Sigfox API (LPWAN)
+- LoRaWAN API (TTN, Helium)
+- Helium Network API
+- Semtech API
+- Nordic Semiconductor API
+- Bluetooth SIG API
+- NFC Forum API
+- RFID API (various vendors)
+- Zebra API (Barcode/RFID)
+- Honeywell Scanning API
+- Datalogic API
+- Zebra ZPL API (Label printing)
+- Brother API (Printing)
+- HP Print API
+- Google Cloud Print API (deprecated)
+- AirPrint API (Apple)
+
+## Real Estate
+
+- Zillow API
+- Realtor.com API
+- Redfin API (unofficial)
+- Trulia API
+- LoopNet API
+- CoStar API
+- Rightmove API (UK)
+- Zoopla API (UK)
+- OnTheMarket API (UK)
+- Immobilier.fr API (France)
+- SeLoger API (France)
+- Idealista API (Spain/Italy/Portugal)
+- Immonet API (Germany)
+- ImmobilienScout24 API
+- Willhaben API (Austria)
+- Hemnet API (Sweden)
+- FINN API (Norway real estate)
+- Boliga API (Denmark)
+- Авито Недвижимость API (Russia)
+- ЦИАН API (Russia)
+- Яндекс.Недвижимость API
+- ДомКлик API (Sber, Russia)
+- Этажи API (Russia)
+- Restate.ru API
+- N1 API (Russia)
+- ГисРКН API (Russia real estate register)
+- Росреестр API (Russia)
+- ЕГРП API (Russia)
+- ФИПС API (Russia IP registry)
+- MLS API (USA multiple listing)
+- RETS API (Real Estate Transaction Standard)
+- RESO Web API (Real estate standard)
+- Endpoint API
+- Spark API (MLS)
+- Bridge Interactive API (Zillow)
+- Estated API (Property data)
+- Attom Data API (Property)
+- CoreLogic API
+- First American API
+- DataTree API
+- Melissa Data API (Address/Property)
+- PropertyRadar API
+- PropStream API
+- BatchLeads API
+- DealMachine API
+- REIPro API
+- Mashvisor API (Investment)
+- Roofstock API
+- HomeUnion API
+- Rabbu API (Short-term rental data)
+- AirDNA API (Airbnb analytics)
+- Transparent API (STR data)
+- Mashboard API
+- Propmodo API
+- CommercialEdge API
+- VTS API (Commercial RE)
+- Yardi API
+- AppFolio API
+- Buildium API
+- Propertyware API
+- Rentec Direct API
+- TenantCloud API
+- Cozy API
+- Avail API
+- DoorLoop API
+- Hemlane API
+
+## Food & Restaurants
+
+- Yelp Fusion API
+- Google Places (Food) API
+- Foursquare Food API
+- TripAdvisor Restaurant API
+- OpenTable API
+- Resy API
+- SevenRooms API
+- Tock API
+- Zomato API
+- Swiggy API (India)
+- Zomato/Blinkit API (India)
+- Doordash API
+- Uber Eats API
+- Grubhub API
+- Instacart API
+- DoorDash Drive API
+- Deliveroo API (Europe)
+- Just Eat API (Europe)
+- Foodpanda API (Asia)
+- Grab Food API (SEA)
+- Яндекс.Еда API (Russia)
+- Delivery Club API (Russia)
+- СберМаркет API (Russia)
+- Самокат API (Russia)
+- Лавка API (Russia)
+- ВкусВилл API
+- Spoonacular API (Recipes)
+- Edamam Recipe API
+- Recipe-Food-Nutrition API
+- Open Food Facts API (free)
+- USDA FoodData Central API (free)
+- Nutritionix API
+- Calorie Ninjas API
+- FatSecret API
+- BigOven API
+- Yummly API
+- Food2Fork API
+- Tasty API (BuzzFeed)
+- ChefkochDE API
+- Marmiton API (France)
+- Allrecipes API
+- Epicurious API
+- Bon Appétit API
+- TheMealDB API (free)
+- CocktailDB API (free)
+- Open Brewery DB API (free)
+- PunkAPI (BrewDog beers, free)
+- Untappd API (Beer)
+- Distiller API (Spirits)
+- Vivino API (Wine)
+- Wine Enthusiast API
+- CellarTracker API
+- Barcode Lookup API (Food products)
+- Go-UPC API (Barcodes)
+- Buycott API
+- Open Beauty Facts API
+- Open Pet Food Facts API
+
+## Legal & Compliance
+
+- CourtListener API (US court data, free)
+- PACER API (US federal courts)
+- Case.law API (Harvard, free)
+- Casetext API
+- Westlaw API (Thomson Reuters)
+- LexisNexis API
+- Fastcase API
+- Clio API (Legal practice management)
+- MyCase API
+- PracticePanther API
+- Smokeball API
+- Filevine API
+- Litify API
+- DISCO API (eDiscovery)
+- Relativity API
+- Nuix API
+- Everlaw API
+- ContractPodAi API
+- Kira Systems API
+- Luminance API (Legal AI)
+- Legalzoom API
+- Rocket Lawyer API
+- Avvo API
+- Justia API (free)
+- Law.com API
+- Bloomberg Law API
+- vLex API
+- HeinOnline API
+- EDGAR SEC API (free)
+- OFAC Sanctions API (free)
+- EU Sanctions API
+- World-Check (Refinitiv) API
+- Dow Jones Risk & Compliance API
+- Acuris/Mergermarket API
+- Sayari API (Corporate risk)
+- Open Sanctions API
+- OpenCorporates API
+- Global Legal Entity Identifier API (GLEIF)
+- LEI API
+- SWIFT API (Financial messaging)
+- SEPA API (European payments)
+- PSD2 API (EU Open Banking)
+- FCA API (UK Financial regulator)
+- SEC API (US Securities)
+- FINRA API
+- CFTC API
+- UK Companies House API (free)
+- Irish Companies API
+- German Bundesanzeiger API
+- French SIRENE API
+- ФНС ЕГРЮЛ API (Russia)
+- Роспатент API (Russia IP)
+- ФИПС API (Russia patents)
+- Роскомнадзор API (Russia)
+- Россия КАД API (Court)
+- Электронное правосудие API (Russia)
+- ГАС «Правосудие» API
+
+## Agriculture & Environment
+
+- aWhere API (Agricultural weather)
+- The Climate Corporation API
+- FarmLogs API
+- Granular API
+- Trimble Agriculture API
+- John Deere Operations Center API
+- CNH Industrial API
+- AGCO API
+- Climate FieldView API
+- Indigo Ag API
+- ProducePay API
+- Commodity Weather Group API
+- DTN API (Agriculture data)
+- Maxar Agriculture API
+- Planet Labs API (Satellite imagery)
+- Satellogic API
+- Airbus OneAtlas API
+- Descartes Labs API
+- SkyFi API
+- UP42 API (Satellite data)
+- Sentinel Hub API (ESA, paid tier)
+- Google Earth Engine API
+- NASA Earthdata API (free)
+- USGS Earth Explorer API
+- Copernicus CLMS API
+- Global Forest Watch API
+- MapBiomas API
+- FAO GAEZ API
+- USDA NASS API (US crop statistics)
+- USDA ERS API (Economics)
+- World Agricultural Supply API
+- ICE Futures API (Commodities)
+- CME Group API (Commodities)
+- Quandl Commodities API
+- Index Mundi API (Commodities)
+- OpenAQ API (Air quality, free)
+- IQAir API
+- AirNow API (US, free)
+- PurpleAir API
+- AQICN API (free)
+- Climate TRACE API
+- Carbon Monitor API
+- Global Carbon Project API
+- Our World in Data CO2 API
+- Electricity Maps API
+- WattTime API
+- Tomorrow.io Grid API
+- Solcast Solar API
+- PVGIS API (EU Solar, free)
+- Wind data API (various)
+- NREL API (US Renewables, free)
+- Global Wind Atlas API
+- Ocean Health Index API
+- GBIF Biodiversity API (free)
+- iNaturalist API (free)
+- eBird API (Cornell, free)
+- IUCN Red List API
+- CITES API (Wildlife trade)
+- Global Fishing Watch API
+- AIS Marine Traffic API
+- OBIS API (Ocean biodiversity)
+- EMODnet API (European Marine)
+- Copernicus Marine API
+- NOAA CoastWatch API (free)
+
+## Sports & Fitness
+
+- Strava API
+- Garmin Connect API
+- Fitbit API
+- Apple HealthKit API
+- Google Fit API
+- Polar Flow API
+- Suunto API
+- Wahoo Fitness API
+- TrainingPeaks API
+- Final Surge API
+- Today's Plan API
+- Peloton API (unofficial)
+- Zwift API
+- SportsData.io API
+- SportRadar API
+- Stats Perform (Opta) API
+- Gracenote Sports API
+- ESPN API
+- The Sports DB API (free tier)
+- API-Football API
+- Football-Data.org API (free)
+- OpenLigaDB API (Germany, free)
+- LiveScore API
+- Sofascore API (unofficial)
+- WhoScored API
+- Transfermarkt API (unofficial)
+- FotMob API
+- NBA API (official)
+- NBA Stats API (free, unofficial)
+- NFL API
+- MLB Stats API (free)
+- NHL API (free)
+- MLS API
+- ATP Tennis API
+- WTA Tennis API
+- Tennis Abstract API
+- F1 API (Ergast, free)
+- OpenF1 API (free)
+- NASCAR API
+- MotoGP API
+- UCI Cycling API
+- World Athletics API
+- Olympics API
+- FIFA API (official)
+- UEFA API
+- Premier League API
+- LaLiga API
+- Bundesliga API
+- Serie A API
+- Ligue 1 API
+- Champions League API
+- Cricket Data API
+- Cricinfo (ESPNcricinfo) API
+- CricAPI
+- Basketball Reference API
+- Pro Football Reference API
+- Baseball Reference API
+- Hockey Reference API
+- FiveThirtyEight API
+- BetExplorer API
+- Odds API
+- The Odds API
+- BetFair API
+- William Hill API
+- Bet365 API
+- DraftKings API
+- FanDuel API
+- Underdog Fantasy API
+
+## News & Media Monitoring
+
+- NewsAPI.org
+- GNews API
+- Bing News Search API
+- Google News API (unofficial)
+- New York Times API (free)
+- Guardian API (free)
+- Reuters API
+- AP News API
+- Bloomberg API
+- Financial Times API
+- Wall Street Journal API
+- Washington Post API
+- BBC News API
+- CNN API
+- Al Jazeera API
+- DW (Deutsche Welle) API
+- France 24 API
+- Euronews API
+- ТАСС API (Russia)
+- РИА Новости API (Russia)
+- Интерфакс API (Russia)
+- Коммерсантъ API (Russia)
+- Ведомости API (Russia)
+- RBC API (Russia)
+- Медуза API (Russia/Latvia)
+- Meduza API
+- The Bell API (Russia)
+- MediaZona API (Russia)
+- Mediazona API
+- Meltwater Media API
+- Cision API
+- PR Newswire API
+- Business Wire API
+- GlobeNewswire API
+- PRLog API
+- Brandwatch API
+- Mention API
+- Brand24 API
+- Keyhole API
+- Talkwalker API
+- Synthesio API
+- Pulsar API
+- Audiense API
+- Sprout Social API
+- Hootsuite Insights API
+- Socialbakers API
+- Emplifi API
+- Khoros API
+- Traackr API (Influencer)
+- HYPR API (Influencer)
+- Upfluence API
+- AspireIQ API
+- Grin API
+- CreatorIQ API
+- Mavrck API
+- Later Influence API
+- IZEA API
+- Klear API
+- Affable.ai API
+- HypeAuditor API
+- Heepsy API
+- NinjaOutreach API
+- BuzzSumo API
+- Buzzstream API
+- Muck Rack API
+- Prowly API
+- Prezly API
+- Mynewsdesk API
+
+## Miscellaneous APIs (Free & Fun)
+
+- OpenLibrary API (Books, free)
+- PokéAPI (Pokémon, free)
+- Rick and Morty API (free)
+- SWAPI (Star Wars, free)
+- Marvel Comics API
+- DC Comics API (unofficial)
+- JokeAPI (free)
+- Official Joke API (free)
+- Numbers API (Math facts, free)
+- Random User API (free)
+- UUID Generator API
+- Lorem Ipsum API
+- Faker API (test data)
+- IP Echo API (free)
+- Bored API (Activity ideas, free)
+- Advice Slip API (free)
+- Kanye Rest API (free, quotes)
+- Quotable API (free, quotes)
+- ZenQuotes API
+- Forismatic API (Quotes)
+- Inspiration API
+- Daily Affirmations API
+- icanhazdadjoke API (free)
+- Chuck Norris API (free)
+- Trump Quotes API
+- Open Trivia DB API (free)
+- Jeopardy API (free)
+- Wordnik API (English words)
+- Oxford Dictionaries API
+- Merriam-Webster API
+- Cambridge Dictionary API
+- Free Dictionary API (free)
+- Datamuse API (Word relations, free)
+- Word Association API
+- Rhymes API
+- LanguageTool API (Grammar check, free tier)
+- Grammarly API
+- ProWritingAid API
+- Hemingway App API
+- Readability Score API
+- Text Razor API (NLP)
+- MonkeyLearn API (NLP)
+- MeaningCloud API
+- Dandelion API (NLP)
+- NLTK API (Python library)
+- spaCy API
+- Stanza API
+- Hugging Face Transformers API
+- Perspective API (Google, toxicity, free)
+- Hive Moderation API
+- Microsoft Content Moderator API
+- OpenAI Moderation API
+- Anthropic Claude Moderation
+- AWS Rekognition Moderation
+- QR Code Generator API (free)
+- ZXing API (QR decode)
+- GoQR.me API (free)
+- QRickit API
+- Barcode Spider API
+- Barcodelookup API
+- IsbnDB API
+- Open Library ISBN API (free)
+- Google Books ISBN API (free)
+- ColorMind API (Color palette, free)
+- Color API (free)
+- The Color API (free)
+- Colormind API
+- HTML Color Codes API
+- CoinGecko API (Crypto, free tier)
+- CoinDesk API (Bitcoin, free)
+- MoonPhase API (free)
+- AstronomyAPI
+- NASA Astronomy APOD API (free)
+- Solar System OpenData API
+- Space-Track API (Satellites, free)
+- n2yo API (Satellite tracking)
+- Heavens-Above API
+- ISS Location API (free)
+- SpaceX API (Unofficial, free)
+- Launch Library API (free)
+- Open Notify API (ISS, free)
+- Sunrise Sunset API (free)
+- Holiday API
+- Abstract Holidays API
+- Calendarific API
+- HolidayAPI.com
+- TimeZoneDB API (free tier)
+- WorldTimeAPI (free)
+- Timeapi.io (free)
+- IP Timezone API
+- Public Holidays API (Nager.Date, free)
+- Countries API (RestCountries.com, free)
+- Nationalize.io (free)
+- Agify.io (free, name→age)
+- Genderize.io (free, name→gender)
+- RandomUser.me API (free)
+- UI Faces API
+- This Person Does Not Exist API
+- DiceBear Avatars API (free)
+- Adorable Avatars API
+- RoboHash API (free)
+- Lorem Picsum API (free)
+- PlaceHolder.com API
+- Placeimg API
+- Picsum Photos API (free)
+- Dog API (free)
+- Cat API (free)
+- Fox API (free)
+- Shibe.online API (Doge, free)
+- RandomFox API (free)
+- PlaceDog API
+- HTTP Cats API (free)
+- HTTP Status Dogs API (free)
+- Corporate Ipsum API
+- Bacon Ipsum API (free)
+- Hipster Ipsum API (free)
+- Pirate Weather API (free)
+- Frankfurter API (Currency, free)
+- ExchangeRatesAPI.io (free tier)
+- CurrencyBeacon API
+- IP-API (free tier)
+- Geolocation API (browser built-in)
+- WebAuthn API (browser built-in)
+- Web Speech API (browser built-in)
+- MediaRecorder API (browser built-in)
+- WebRTC API (browser built-in)
+- WebSockets API (browser built-in)
+- IndexedDB API (browser built-in)
+- Cache API (browser built-in)
+- Notifications API (browser built-in)
+- Vibration API (browser built-in)
+- Battery Status API (browser built-in)
+- Generic Sensor API (browser built-in)
+- Clipboard API (browser built-in)
+- Screen Wake Lock API (browser built-in)
+- File System Access API (browser built-in)
+- Payment Request API (browser built-in)
+- Credential Management API (browser built-in)
+
+---
+
+**Total listed: 1945 APIs**
+
+*This list is a starting point — thousands more exist. Help us document them all.*
