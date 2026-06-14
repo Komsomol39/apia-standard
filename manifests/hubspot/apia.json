@@ -23,43 +23,53 @@
   "capabilities": [
     {
       "id": "get_contacts",
-      "description_for_ai": "Get CRM contacts with properties: email, name, phone, company, lifecycle stage.",
+      "description_for_ai": "Get CRM contacts with properties. Supports filtering, sorting, and pagination. Returns up to 100 contacts per page.",
       "intent": [
         "get contacts",
         "CRM contacts",
         "customer list",
-        "leads",
+        "leads list",
         "contact search",
         "клиенты CRM"
       ],
-      "endpoint": "GET https://api.hubapi.com/crm/v3/objects/contacts",
+      "endpoint": "POST https://api.hubapi.com/crm/v3/objects/contacts/search",
       "input": {
-        "limit": {
-          "type": "integer",
-          "default": 10,
-          "max": 100
-        },
-        "properties": {
-          "type": "string",
-          "description": "Comma-separated property names: email,firstname,lastname,phone,company",
-          "required": false
-        },
         "filterGroups": {
           "type": "array",
-          "description": "Filter conditions",
+          "description": "[{filters: [{propertyName: 'email', operator: 'EQ', value: 'test@example.com'}]}] — filter by any property. Operators: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, NOT_CONTAINS_TOKEN",
+          "required": false
+        },
+        "properties": {
+          "type": "array",
+          "description": "List of property names to return: ['email', 'firstname', 'lastname', 'phone', 'company', 'lifecyclestage', 'hs_lead_status']",
+          "required": false
+        },
+        "sorts": {
+          "type": "array",
+          "description": "[{propertyName: 'createdate', direction: 'DESCENDING'}]",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Results per page, max 100",
+          "default": 10
+        },
+        "after": {
+          "type": "string",
+          "description": "Pagination cursor from previous paging.next.after",
           "required": false
         }
       },
       "output": {
         "type": "list<contact>",
         "fields": [
-          "id",
-          "properties.email",
-          "properties.firstname",
-          "properties.lastname",
-          "properties.phone",
-          "properties.company",
-          "properties.lifecyclestage"
+          "results[0].id",
+          "results[0].properties.email",
+          "results[0].properties.firstname",
+          "results[0].properties.lastname",
+          "results[0].properties.phone",
+          "results[0].properties.lifecyclestage",
+          "paging.next.after"
         ]
       },
       "realtime": true,
@@ -67,18 +77,19 @@
     },
     {
       "id": "create_contact",
-      "description_for_ai": "Create new CRM contact with properties.",
+      "description_for_ai": "Create a new CRM contact with email, name, phone, and any custom properties.",
       "intent": [
         "add contact",
         "new lead",
         "create customer",
-        "add to CRM"
+        "add to CRM",
+        "new contact HubSpot"
       ],
       "endpoint": "POST https://api.hubapi.com/crm/v3/objects/contacts",
       "input": {
         "properties": {
           "type": "object",
-          "description": "{email, firstname, lastname, phone, company}",
+          "description": "Contact properties: {email: 'user@example.com', firstname: 'John', lastname: 'Doe', phone: '+1234567890', company: 'Acme Inc', lifecyclestage: 'lead', hs_lead_status: 'NEW'}",
           "required": true
         }
       },
@@ -86,7 +97,8 @@
         "type": "contact",
         "fields": [
           "id",
-          "properties"
+          "properties.email",
+          "properties.createdate"
         ]
       },
       "realtime": true,
@@ -94,19 +106,25 @@
     },
     {
       "id": "create_deal",
-      "description_for_ai": "Create a sales deal in HubSpot pipeline.",
+      "description_for_ai": "Create a sales deal in HubSpot pipeline with amount, stage, and close date.",
       "intent": [
         "create deal",
         "sales opportunity",
         "new deal",
-        "pipeline deal"
+        "pipeline entry",
+        "HubSpot deal"
       ],
       "endpoint": "POST https://api.hubapi.com/crm/v3/objects/deals",
       "input": {
         "properties": {
           "type": "object",
-          "description": "{dealname, amount, dealstage, closedate, pipeline}",
+          "description": "{dealname: 'Enterprise License', amount: '50000', dealstage: 'presentationscheduled', closedate: '2024-03-31', pipeline: 'default', hubspot_owner_id: 'owner_id'}",
           "required": true
+        },
+        "associations": {
+          "type": "array",
+          "description": "Link to contacts/companies: [{types: [{associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 3}], to: {id: 'contact_id'}}]",
+          "required": false
         }
       },
       "output": {
@@ -126,5 +144,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "auth": "Create Private App in HubSpot: Settings → Integrations → Private Apps → Create. Scopes needed: crm.objects.contacts.read/write, crm.objects.deals.read/write",
+    "free_crm": "HubSpot CRM is genuinely free for unlimited contacts and deals. API included.",
+    "pagination": "Use search API (POST) instead of list API (GET) for filtering. Paginate with paging.next.after cursor.",
+    "properties": "Get all available properties via GET /crm/v3/properties/contacts — HubSpot has 100s of built-in + unlimited custom."
   }
 }
