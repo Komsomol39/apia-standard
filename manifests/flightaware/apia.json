@@ -25,11 +25,15 @@
       "id": "get_flight",
       "description_for_ai": "Get real-time status of a specific flight by flight number. Returns departure/arrival times, gate, delay status, aircraft type.",
       "intent": [
-        "flight status",
-        "track flight",
-        "is flight delayed",
         "flight arrival time",
+        "flight ETA",
+        "track flight",
         "flight tracker",
+        "flight status",
+        "рейс статус",
+        "flight delay",
+        "is flight delayed",
+        "is plane landed",
         "где самолёт"
       ],
       "endpoint": "GET https://aeroapi.flightaware.com/aeroapi/flights/{flight_id}",
@@ -61,11 +65,15 @@
     },
     {
       "id": "search_flights",
-      "description_for_ai": "Search flights between airports on a date. Returns schedule and real-time data.",
+      "description_for_ai": "Search for flights departing from or arriving at an airport. Returns scheduled and live flight data with status.",
       "intent": [
+        "arrivals at airport",
+        "flight schedule",
         "flights between cities",
+        "airport schedule",
         "schedule",
-        "departures from airport"
+        "departures from airport",
+        "рейсы аэропорта"
       ],
       "endpoint": "GET https://aeroapi.flightaware.com/aeroapi/airports/{airport_id}/flights",
       "input": {
