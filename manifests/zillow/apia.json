@@ -1,1 +1,98 @@
-{"apia":"1.0","service":{"id":"zillow","name":"Zillow API (Bridge Interactive)","description_for_ai":"US real estate data. Property details, home values (Zestimate), listing info, neighborhood data. 135M+ US properties. Use for property search, home value estimates, real estate market data.","url":"https://zillow.com","api_base":"https://api.bridgedataoutput.com/api/v2/zora/core","category":"real_estate","geo":["US"],"language":"en","docs":"https://bridgedataoutput.com/docs"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"access_token","param_location":"query","how_to_get":"Register at https://www.zillow.com/howto/api/APIOverview.htm or via Bridge Interactive","cost":"Free tier available"},"capabilities":[{"id":"search_properties","description_for_ai":"Search US properties by location, price, beds, baths, property type. Returns listing details with Zestimate home value.","intent":["find homes","property search","houses for sale","real estate listings","home prices","buy house","US property"],"endpoint":"GET https://api.bridgedataoutput.com/api/v2/zora/core/listings","input":{"near":{"type":"string","description":"Address or coordinates","required":false},"limit":{"type":"integer","default":10},"ListPrice_gte":{"type":"integer","description":"Minimum price","required":false},"ListPrice_lte":{"type":"integer","description":"Maximum price","required":false},"BedsTotal_gte":{"type":"integer","description":"Minimum bedrooms","required":false},"BathsTotal_gte":{"type":"integer","description":"Minimum bathrooms","required":false},"PropertyType":{"type":"string","description":"Residential, Commercial, Land","required":false}},"output":{"type":"list<property>","fields":["ListingId","ListPrice","BedsTotal","BathsTotal","BuildingAreaTotal","UnparsedAddress","Latitude","Longitude","StandardStatus","PublicRemarks"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "zillow",
+    "name": "Zillow API (Bridge Interactive)",
+    "description_for_ai": "US real estate data. Property details, home values (Zestimate), listing info, neighborhood data. 135M+ US properties. Use for property search, home value estimates, real estate market data.",
+    "url": "https://zillow.com",
+    "api_base": "https://api.bridgedataoutput.com/api/v2/zora/core",
+    "category": "real_estate",
+    "geo": [
+      "US"
+    ],
+    "language": "en",
+    "docs": "https://bridgedataoutput.com/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "access_token",
+    "param_location": "query",
+    "how_to_get": "Register at https://www.zillow.com/howto/api/APIOverview.htm or via Bridge Interactive",
+    "cost": "Free tier available"
+  },
+  "capabilities": [
+    {
+      "id": "search_properties",
+      "description_for_ai": "Search US properties by location, price, beds, baths, property type. Returns listing details with Zestimate home value.",
+      "intent": [
+        "find homes",
+        "property search",
+        "houses for sale",
+        "real estate listings",
+        "home prices",
+        "buy house",
+        "US property"
+      ],
+      "endpoint": "GET https://api.bridgedataoutput.com/api/v2/zora/core/listings",
+      "input": {
+        "near": {
+          "type": "string",
+          "description": "Address or coordinates",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "ListPrice_gte": {
+          "type": "integer",
+          "description": "Minimum price",
+          "required": false
+        },
+        "ListPrice_lte": {
+          "type": "integer",
+          "description": "Maximum price",
+          "required": false
+        },
+        "BedsTotal_gte": {
+          "type": "integer",
+          "description": "Minimum bedrooms",
+          "required": false
+        },
+        "BathsTotal_gte": {
+          "type": "integer",
+          "description": "Minimum bathrooms",
+          "required": false
+        },
+        "PropertyType": {
+          "type": "string",
+          "description": "Residential, Commercial, Land",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<property>",
+        "fields": [
+          "ListingId",
+          "ListPrice",
+          "BedsTotal",
+          "BathsTotal",
+          "BuildingAreaTotal",
+          "UnparsedAddress",
+          "Latitude",
+          "Longitude",
+          "StandardStatus",
+          "PublicRemarks"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
