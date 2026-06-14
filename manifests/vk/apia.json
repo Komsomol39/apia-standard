@@ -31,11 +31,15 @@
       "description_for_ai": "Search posts across VK by keyword. Use for monitoring mentions, finding trending content in Russia, sentiment analysis of Russian social media.",
       "intent": [
         "vk posts",
-        "поиск по вк",
-        "посты вконтакте",
+        "vk mentions",
+        "посты ВК",
+        "социальные сети Россия",
+        "VK posts search",
+        "ВКонтакте поиск",
         "упоминания вк",
         "russian social media",
-        "vk mentions"
+        "поиск по вк",
+        "посты вконтакте"
       ],
       "endpoint": "GET https://api.vk.com/method/newsfeed.search",
       "input": {
@@ -78,7 +82,7 @@
     },
     {
       "id": "get_user",
-      "description_for_ai": "Get VK user profile: name, photo, city, followers, friends count.",
+      "description_for_ai": "Get VK user profile: name, photo, city, followers count, bio, social links, and subscription info.",
       "intent": [
         "vk profile",
         "профиль вк",
