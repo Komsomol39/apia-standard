@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_user_videos",
-      "description_for_ai": "Get TikTok videos for authenticated user with view counts, likes, comments, shares.",
+      "description_for_ai": "TikTok creator data API. Get user videos, metrics, live stream info. Content publishing API for business accounts. 1.5B+ users. Use for TikTok analytics, content management, creator apps. Get TikTok videos for authenticated user with view counts, likes, comments, shares.",
       "intent": [
         "tiktok videos",
         "my tiktok",
