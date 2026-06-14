@@ -25,13 +25,18 @@
       "id": "text_to_speech",
       "description_for_ai": "Convert text to natural-sounding speech. Choose from 1000+ voices or clone a voice. Use for reading content aloud, voice assistants, audiobook narration.",
       "intent": [
-        "text to speech",
-        "TTS",
+        "generate voice",
+        "narrator voice",
+        "text to audio",
+        "озвучить текст",
+        "TTS API",
         "read aloud",
-        "voice synthesis",
-        "audiobook",
+        "text to speech",
         "voice assistant",
-        "озвучить текст"
+        "TTS",
+        "audiobook",
+        "голосовой синтез",
+        "voice synthesis"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
       "input": {
@@ -68,9 +73,10 @@
       "id": "get_voices",
       "description_for_ai": "Get list of available voices with their IDs and descriptions.",
       "intent": [
+        "voice options",
         "list voices",
-        "available voices",
-        "voice options"
+        "speech voices",
+        "available voices"
       ],
       "endpoint": "GET https://api.elevenlabs.io/v1/voices",
       "input": {},
