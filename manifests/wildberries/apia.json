@@ -65,7 +65,7 @@
     },
     {
       "id": "get_stocks",
-      "description_for_ai": "Получить остатки товаров на складах Wildberries.",
+      "description_for_ai": "Get current stock levels at Wildberries warehouses for all your products. Returns quantity available and in transit.",
       "intent": [
         "остатки WB",
         "склад Wildberries",
