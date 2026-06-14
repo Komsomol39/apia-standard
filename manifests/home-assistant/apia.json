@@ -6,7 +6,7 @@
     "description_for_ai": "Open-source home automation platform. Control 3000+ smart home devices: lights, switches, sensors, climate, media players, locks. Local API via REST. The most popular self-hosted smart home platform.",
     "url": "https://home-assistant.io",
     "api_base": "http://{ha_host}:8123/api",
-    "category": "iot_smarthome",
+    "category": "iot",
     "geo": [
       "GLOBAL"
     ],
