@@ -34,7 +34,8 @@
       "input": {
         "name": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Name identifier"
         },
         "instructions": {
           "type": "string",
@@ -43,7 +44,8 @@
         },
         "model": {
           "type": "string",
-          "default": "gpt-4o-mini"
+          "default": "gpt-4o-mini",
+          "description": "AI/ML model identifier to use for this request"
         },
         "tools": {
           "type": "array",
