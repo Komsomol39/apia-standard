@@ -1,0 +1,143 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "yandex-rasp",
+    "name": "Яндекс.Расписания",
+    "description_for_ai": "Расписание всех видов транспорта России: поезда, электрички, самолёты, автобусы, теплоходы, паромы. Используй для ответов на вопросы 'когда ближайший поезд', 'как добраться из А в Б', 'расписание электричек от станции'. Бесплатный API, требует ключ.",
+    "url": "https://rasp.yandex.ru",
+    "api_base": "https://api.rasp.yandex.net/v3.0",
+    "category": "transport",
+    "geo": ["RU", "BY", "KZ", "UA"],
+    "language": "ru",
+    "docs": "https://yandex.ru/dev/rasp/doc/ru/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "apikey",
+    "param_location": "query",
+    "how_to_get": "Написать на rasp-info@yandex-team.ru с описанием проекта и логином Яндекса",
+    "cost": "бесплатно"
+  },
+  "capabilities": [
+    {
+      "id": "search_between_stations",
+      "description_for_ai": "Расписание рейсов между двумя станциями на конкретную дату. Основной метод для запросов типа 'когда поезд из Москвы в Казань', 'автобусы из Екатеринбурга в Челябинск завтра'.",
+      "intent": [
+        "когда поезд", "расписание из А в Б", "как добраться",
+        "рейсы между городами", "автобус до города", "электричка до"
+      ],
+      "endpoint": "GET https://api.rasp.yandex.net/v3.0/search/",
+      "input": {
+        "from": { "type": "string", "description": "Код станции отправления. Например: s2000006 (Москва Ярославская). Получить через nearest_stations или station_list", "required": true },
+        "to": { "type": "string", "description": "Код станции назначения", "required": true },
+        "date": { "type": "string", "description": "Дата в формате YYYY-MM-DD. Если не указана — ближайшие рейсы", "required": false },
+        "transport_types": { "type": "string", "description": "plane, train, suburban, bus, water, helicopter. Можно несколько через запятую", "required": false },
+        "limit": { "type": "integer", "description": "Количество результатов", "default": 100 }
+      },
+      "output": {
+        "type": "list<segment>",
+        "fields": ["departure", "arrival", "duration", "thread.title", "thread.number", "thread.transport_type", "thread.carrier.title", "from.title", "to.title", "tickets_info.places"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_station_schedule",
+      "description_for_ai": "Расписание всех рейсов от конкретной станции. Используй когда пользователь хочет знать все отправления с определённой станции, а не маршрут между двумя точками.",
+      "intent": [
+        "расписание станции", "все рейсы с вокзала", "отправления с",
+        "когда следующая электричка", "поезда с Курского вокзала"
+      ],
+      "endpoint": "GET https://api.rasp.yandex.net/v3.0/schedule/",
+      "input": {
+        "station": { "type": "string", "description": "Код станции. Например: s9600213 (Курский вокзал Москва)", "required": true },
+        "date": { "type": "string", "description": "Дата YYYY-MM-DD", "required": false },
+        "transport_types": { "type": "string", "description": "plane, train, suburban, bus, water", "required": false },
+        "event": { "type": "string", "description": "departure (отправление) или arrival (прибытие)", "default": "departure" },
+        "direction": { "type": "string", "description": "Направление для пригородных поездов", "required": false }
+      },
+      "output": {
+        "type": "list<schedule_item>",
+        "fields": ["departure", "arrival", "thread.title", "thread.number", "thread.transport_type", "terminal", "platform"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "nearest_stations",
+      "description_for_ai": "Список станций ближайших к координатам пользователя. Используй первым когда пользователь говорит 'рядом со мной' или 'ближайшая станция' — чтобы найти коды станций для других запросов.",
+      "intent": [
+        "ближайшая станция", "станции рядом", "вокзал рядом со мной",
+        "откуда уехать", "остановки поблизости"
+      ],
+      "endpoint": "GET https://api.rasp.yandex.net/v3.0/nearest_stations/",
+      "input": {
+        "lat": { "type": "float", "description": "Широта пользователя", "required": true },
+        "lng": { "type": "float", "description": "Долгота пользователя", "required": true },
+        "distance": { "type": "integer", "description": "Радиус поиска в км", "default": 50 },
+        "transport_types": { "type": "string", "description": "plane, train, suburban, bus, water", "required": false }
+      },
+      "output": {
+        "type": "list<station>",
+        "fields": ["code", "title", "station_type", "transport_type", "lat", "lng", "distance"]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_thread",
+      "description_for_ai": "Полный маршрут конкретного рейса со всеми остановками и временем. Используй когда пользователь хочет знать все остановки поезда или автобуса.",
+      "intent": [
+        "все остановки поезда", "маршрут рейса", "где останавливается",
+        "промежуточные станции", "через какие города"
+      ],
+      "endpoint": "GET https://api.rasp.yandex.net/v3.0/thread/",
+      "input": {
+        "uid": { "type": "string", "description": "UID рейса из результатов search_between_stations", "required": true },
+        "date": { "type": "string", "description": "Дата YYYY-MM-DD", "required": false }
+      },
+      "output": {
+        "type": "thread",
+        "fields": ["title", "number", "carrier.title", "transport_type", "stops.station.title", "stops.departure", "stops.arrival", "stops.duration"]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "nearest_settlement",
+      "description_for_ai": "Найти ближайший населённый пункт к координатам. Используй чтобы определить город пользователя перед поиском станций.",
+      "intent": ["какой город рядом", "определить город по координатам"],
+      "endpoint": "GET https://api.rasp.yandex.net/v3.0/nearest_settlement/",
+      "input": {
+        "lat": { "type": "float", "required": true },
+        "lng": { "type": "float", "required": true },
+        "distance": { "type": "integer", "default": 50 }
+      },
+      "output": {
+        "type": "settlement",
+        "fields": ["code", "title", "lat", "lng"]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "geo_flow": "Когда пользователь говорит 'рядом' — сначала nearest_stations с координатами, получи code станции, затем search_between_stations или get_station_schedule.",
+    "station_codes": "Коды станций начинаются с 's' (s9600213). Коды городов начинаются с 'c' (c213 — Москва). Не путай их.",
+    "transport_tip": "Если пользователь не уточнил тип транспорта — не фильтруй, покажи все варианты. Пусть выберет сам.",
+    "date_tip": "Если пользователь говорит 'завтра' — конвертируй в YYYY-MM-DD. 'Сегодня' — текущая дата."
+  },
+  "limits": {
+    "requests_per_day": "не указано",
+    "commercial_use": true,
+    "attribution_required": true,
+    "attribution_text": "Данные предоставлены Яндекс.Расписаниями",
+    "contact": "rasp-info@yandex-team.ru"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
