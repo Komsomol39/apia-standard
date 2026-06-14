@@ -67,12 +67,12 @@
       "input": {
         "from_date": {
           "type": "string",
-          "description": "YYYY-MM-DD",
+          "description": "Start date filter: YYYY-MM-DD",
           "required": true
         },
         "to_date": {
           "type": "string",
-          "description": "YYYY-MM-DD",
+          "description": "End date filter: YYYY-MM-DD",
           "required": true
         },
         "event": {
