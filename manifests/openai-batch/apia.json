@@ -1,1 +1,75 @@
-{"apia":"1.0","service":{"id":"openai-batch","name":"OpenAI Batch API","description_for_ai":"Process large volumes of OpenAI API requests at 50% discount. Submit batch of requests, results ready within 24 hours. Perfect for bulk classification, embedding, analysis tasks. Same models as regular API.","url":"https://openai.com","api_base":"https://api.openai.com/v1","category":"ai_batch","geo":["GLOBAL"],"language":"en","docs":"https://platform.openai.com/docs/guides/batch"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"Same OpenAI API key","cost":"50% discount vs regular API. gpt-4o-mini: $0.075/$0.30 per 1M tokens"},"capabilities":[{"id":"create_batch","description_for_ai":"Submit batch of up to 50,000 API requests for 50% discount. Results ready within 24h. Use for bulk analysis, classification, embedding generation.","intent":["bulk AI processing","batch classification","50% discount AI","large scale AI","batch embed"],"endpoint":"POST https://api.openai.com/v1/batches","input":{"input_file_id":{"type":"string","description":"ID of JSONL file uploaded via Files API containing requests","required":true},"endpoint":{"type":"string","description":"/v1/chat/completions or /v1/embeddings","required":true},"completion_window":{"type":"string","description":"24h","default":"24h"}},"output":{"type":"batch","fields":["id","status","output_file_id","error_file_id","request_counts"]},"realtime":false,"requires_auth":true}],"agent_hints":{"workflow":"1) Create JSONL file with requests. 2) Upload via /v1/files. 3) Create batch with file_id. 4) Poll /v1/batches/{id} until completed. 5) Download output file.","jsonl_format":"Each line: {custom_id: req-1, method: POST, url: /v1/chat/completions, body: {model, messages, max_tokens}}","best_for":"Bulk tasks where you have 1000s of items: classification, translation, embedding, extraction."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "openai-batch",
+    "name": "OpenAI Batch API",
+    "description_for_ai": "Process large volumes of OpenAI API requests at 50% discount. Submit batch of requests, results ready within 24 hours. Perfect for bulk classification, embedding, analysis tasks. Same models as regular API.",
+    "url": "https://openai.com",
+    "api_base": "https://api.openai.com/v1",
+    "category": "ai_batch",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://platform.openai.com/docs/guides/batch"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "Same OpenAI API key",
+    "cost": "50% discount vs regular API. gpt-4o-mini: $0.075/$0.30 per 1M tokens"
+  },
+  "capabilities": [
+    {
+      "id": "create_batch",
+      "description_for_ai": "Submit batch of up to 50,000 API requests for 50% discount. Results ready within 24h. Use for bulk analysis, classification, embedding generation.",
+      "intent": [
+        "bulk AI processing",
+        "batch classification",
+        "50% discount AI",
+        "large scale AI",
+        "batch embed"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/batches",
+      "input": {
+        "input_file_id": {
+          "type": "string",
+          "description": "ID of JSONL file uploaded via Files API containing requests",
+          "required": true
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "/v1/chat/completions or /v1/embeddings",
+          "required": true
+        },
+        "completion_window": {
+          "type": "string",
+          "description": "24h",
+          "default": "24h"
+        }
+      },
+      "output": {
+        "type": "batch",
+        "fields": [
+          "id",
+          "status",
+          "output_file_id",
+          "error_file_id",
+          "request_counts"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "workflow": "1) Create JSONL file with requests. 2) Upload via /v1/files. 3) Create batch with file_id. 4) Poll /v1/batches/{id} until completed. 5) Download output file.",
+    "jsonl_format": "Each line: {custom_id: req-1, method: POST, url: /v1/chat/completions, body: {model, messages, max_tokens}}",
+    "best_for": "Bulk tasks where you have 1000s of items: classification, translation, embedding, extraction."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
