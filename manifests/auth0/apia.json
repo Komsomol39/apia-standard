@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_users",
-      "description_for_ai": "Get users from Auth0 tenant with profile info, login history, metadata.",
+      "description_for_ai": "Get users from Auth0 tenant with profile, login stats, and custom metadata. Filter by email, connection, or custom query.",
       "intent": [
         "get users",
         "user list",
@@ -34,23 +34,27 @@
       "input": {
         "page": {
           "type": "integer",
-          "default": 0,
-          "description": "Page number for pagination (1-indexed)"
+          "description": "Page number (0-indexed)",
+          "default": 0
         },
         "per_page": {
           "type": "integer",
-          "default": 50,
-          "max": 100,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "description": "Results per page, max 100",
+          "default": 50
         },
         "q": {
           "type": "string",
-          "description": "Lucene query e.g. email:user@example.com",
+          "description": "Lucene query syntax: 'email:user@example.com', 'logins_count:[5 TO *]', 'app_metadata.role:admin'",
           "required": false
         },
         "fields": {
           "type": "string",
-          "description": "Comma-separated fields to return",
+          "description": "Comma-separated fields to return: user_id,email,name,last_login,logins_count,app_metadata,user_metadata",
+          "required": false
+        },
+        "sort": {
+          "type": "string",
+          "description": "Sort by field:order e.g. 'last_login:-1' (newest first), 'email:1' (A-Z)",
           "required": false
         }
       },
@@ -63,8 +67,9 @@
           "picture",
           "last_login",
           "logins_count",
-          "user_metadata",
-          "app_metadata"
+          "created_at",
+          "user_metadata (custom user data)",
+          "app_metadata (roles, permissions)"
         ]
       },
       "realtime": true,
@@ -72,7 +77,7 @@
     },
     {
       "id": "create_user",
-      "description_for_ai": "Create a new user account in Auth0 with email, password, and optional metadata.",
+      "description_for_ai": "Create a new user in Auth0 database connection. Set email, password, and custom metadata.",
       "intent": [
         "create user",
         "register user",
@@ -83,28 +88,48 @@
       "input": {
         "connection": {
           "type": "string",
-          "description": "Connection name e.g. Username-Password-Authentication",
+          "description": "Database connection name: 'Username-Password-Authentication' (default), or custom connection name",
           "required": true
         },
         "email": {
           "type": "string",
+          "description": "User's email address (must be unique)",
           "required": true
         },
         "password": {
           "type": "string",
+          "description": "Password — must meet connection's password policy (min length, complexity)",
           "required": true
+        },
+        "email_verified": {
+          "type": "boolean",
+          "description": "Skip email verification if true",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "description": "User's display name",
+          "required": false
         },
         "user_metadata": {
           "type": "object",
+          "description": "Custom data editable by user: {preferences: {theme: 'dark'}, onboarding: {step: 1}}",
+          "required": false
+        },
+        "app_metadata": {
+          "type": "object",
+          "description": "App-managed data (not user-editable): {roles: ['admin'], plan: 'pro', tenant_id: 'abc123'}",
           "required": false
         }
       },
       "output": {
         "type": "user",
         "fields": [
-          "user_id",
+          "user_id (format: 'auth0|123456')",
           "email",
-          "created_at"
+          "name",
+          "created_at",
+          "identities"
         ]
       },
       "realtime": true,
