@@ -70,7 +70,7 @@
     },
     {
       "id": "create_user",
-      "description_for_ai": "Create new user in Auth0. Set password, email, metadata.",
+      "description_for_ai": "Create a new user account in Auth0 with email, password, and optional metadata.",
       "intent": [
         "create user",
         "register user",
