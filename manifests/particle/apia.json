@@ -6,7 +6,7 @@
     "description_for_ai": "IoT device management platform. Flash firmware, read sensor data, control Particle devices (Photon, Argon, Boron) remotely. Cloud API for IoT prototyping and production.",
     "url": "https://particle.io",
     "api_base": "https://api.particle.io/v1",
-    "category": "iot_platform",
+    "category": "iot",
     "geo": [
       "GLOBAL"
     ],
