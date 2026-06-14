@@ -1,1 +1,83 @@
-{"apia":"1.0","service":{"id":"openai-tts","name":"OpenAI Text-to-Speech API","description_for_ai":"High-quality text-to-speech. 6 voices, fast generation. $15/1M chars. Natural sounding speech in many languages. Use for reading text aloud, voice assistants, audiobook narration.","url":"https://openai.com","api_base":"https://api.openai.com/v1","category":"ai_speech","geo":["GLOBAL"],"language":"en","docs":"https://platform.openai.com/docs/guides/text-to-speech"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"OpenAI API key","cost":"tts-1: $15/1M chars. tts-1-hd: $30/1M chars"},"capabilities":[{"id":"create_speech","description_for_ai":"Convert text to speech audio. Returns mp3 audio file. 6 natural voices available.","intent":["text to speech","read aloud","voice synthesis","TTS","narrate text","озвучить","голосовой ответ"],"endpoint":"POST https://api.openai.com/v1/audio/speech","input":{"model":{"type":"string","description":"tts-1 (fast) or tts-1-hd (high quality)","default":"tts-1"},"input":{"type":"string","description":"Text to convert max 4096 chars","required":true},"voice":{"type":"string","description":"alloy (neutral), echo (male), fable (british), onyx (deep), nova (female), shimmer (soft female)","default":"nova"},"response_format":{"type":"string","description":"mp3, opus, aac, flac, wav, pcm","default":"mp3"},"speed":{"type":"float","description":"0.25 to 4.0 playback speed","default":1.0}},"output":{"type":"audio","fields":["audio/mpeg binary stream"]},"realtime":true,"requires_auth":true}],"agent_hints":{"voice_guide":"alloy=neutral balanced, echo=male warm, fable=British accent, onyx=deep authoritative, nova=friendly female, shimmer=soft female","streaming":"Response is streaming audio binary. For web: create Blob URL from response.","length":"Max 4096 chars per request. Split longer text into chunks."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "openai-tts",
+    "name": "OpenAI Text-to-Speech API",
+    "description_for_ai": "High-quality text-to-speech. 6 voices, fast generation. $15/1M chars. Natural sounding speech in many languages. Use for reading text aloud, voice assistants, audiobook narration.",
+    "url": "https://openai.com",
+    "api_base": "https://api.openai.com/v1",
+    "category": "ai_speech",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://platform.openai.com/docs/guides/text-to-speech"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "OpenAI API key",
+    "cost": "tts-1: $15/1M chars. tts-1-hd: $30/1M chars"
+  },
+  "capabilities": [
+    {
+      "id": "create_speech",
+      "description_for_ai": "Convert text to speech audio. Returns mp3 audio file. 6 natural voices available.",
+      "intent": [
+        "text to speech",
+        "read aloud",
+        "voice synthesis",
+        "TTS",
+        "narrate text",
+        "озвучить",
+        "голосовой ответ"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/speech",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "tts-1 (fast) or tts-1-hd (high quality)",
+          "default": "tts-1"
+        },
+        "input": {
+          "type": "string",
+          "description": "Text to convert max 4096 chars",
+          "required": true
+        },
+        "voice": {
+          "type": "string",
+          "description": "alloy (neutral), echo (male), fable (british), onyx (deep), nova (female), shimmer (soft female)",
+          "default": "nova"
+        },
+        "response_format": {
+          "type": "string",
+          "description": "mp3, opus, aac, flac, wav, pcm",
+          "default": "mp3"
+        },
+        "speed": {
+          "type": "float",
+          "description": "0.25 to 4.0 playback speed",
+          "default": 1.0
+        }
+      },
+      "output": {
+        "type": "audio",
+        "fields": [
+          "audio/mpeg binary stream"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "voice_guide": "alloy=neutral balanced, echo=male warm, fable=British accent, onyx=deep authoritative, nova=friendly female, shimmer=soft female",
+    "streaming": "Response is streaming audio binary. For web: create Blob URL from response.",
+    "length": "Max 4096 chars per request. Split longer text into chunks."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
