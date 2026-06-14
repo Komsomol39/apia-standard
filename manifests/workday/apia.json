@@ -6,7 +6,7 @@
     "description_for_ai": "Enterprise HR platform. Employee records, payroll, recruiting, time tracking, benefits, learning. Used by 10K+ organizations. Use for HR automation, employee data integration, talent management.",
     "url": "https://workday.com",
     "api_base": "https://{tenant}.workday.com/api",
-    "category": "hr_enterprise",
+    "category": "hr",
     "geo": [
       "GLOBAL"
     ],
