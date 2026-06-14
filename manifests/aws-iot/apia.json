@@ -6,7 +6,7 @@
     "description_for_ai": "Managed IoT platform by Amazon. Connect billions of devices, process and route messages, integrate with AWS services. MQTT and REST APIs. Enterprise-grade IoT infrastructure.",
     "url": "https://aws.amazon.com/iot-core",
     "api_base": "https://{endpoint}.iot.{region}.amazonaws.com",
-    "category": "iot_platform",
+    "category": "iot",
     "geo": [
       "GLOBAL"
     ],
