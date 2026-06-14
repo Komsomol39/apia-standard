@@ -1,1 +1,85 @@
-{"apia":"1.0","service":{"id":"etsy","name":"Etsy API","description_for_ai":"Handmade, vintage, and craft marketplace API. 90M+ active buyers. Listing management, order processing, shop analytics, shipping profiles. Use for Etsy seller automation, shop management, marketplace integration.","url":"https://etsy.com","api_base":"https://openapi.etsy.com/v3","category":"ecommerce","geo":["GLOBAL"],"language":"en","docs":"https://developers.etsy.com/documentation"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Register at https://www.etsy.com/developers","cost":"Free"},"capabilities":[{"id":"find_all_listings","description_for_ai":"Search Etsy listings by keyword and filters. Returns handmade, vintage, and craft items.","intent":["etsy listings","handmade items","vintage products","craft marketplace","etsy shop","custom products"],"endpoint":"GET https://openapi.etsy.com/v3/application/listings/active","input":{"keywords":{"type":"string","required":false},"limit":{"type":"integer","default":25},"offset":{"type":"integer","default":0},"sort_on":{"type":"string","description":"created, price, updated, score","default":"score"},"min_price":{"type":"number","required":false},"max_price":{"type":"number","required":false}},"output":{"type":"list<listing>","fields":["listing_id","title","description","price.amount","price.currency_code","url","state","images[0].url_fullxfull","shop_id"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "etsy",
+    "name": "Etsy API",
+    "description_for_ai": "Handmade, vintage, and craft marketplace API. 90M+ active buyers. Listing management, order processing, shop analytics, shipping profiles. Use for Etsy seller automation, shop management, marketplace integration.",
+    "url": "https://etsy.com",
+    "api_base": "https://openapi.etsy.com/v3",
+    "category": "ecommerce",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.etsy.com/documentation"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://www.etsy.com/developers",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "find_all_listings",
+      "description_for_ai": "Search Etsy listings by keyword and filters. Returns handmade, vintage, and craft items.",
+      "intent": [
+        "etsy listings",
+        "handmade items",
+        "vintage products",
+        "craft marketplace",
+        "etsy shop",
+        "custom products"
+      ],
+      "endpoint": "GET https://openapi.etsy.com/v3/application/listings/active",
+      "input": {
+        "keywords": {
+          "type": "string",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 25
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0
+        },
+        "sort_on": {
+          "type": "string",
+          "description": "created, price, updated, score",
+          "default": "score"
+        },
+        "min_price": {
+          "type": "number",
+          "required": false
+        },
+        "max_price": {
+          "type": "number",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<listing>",
+        "fields": [
+          "listing_id",
+          "title",
+          "description",
+          "price.amount",
+          "price.currency_code",
+          "url",
+          "state",
+          "images[0].url_fullxfull",
+          "shop_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
