@@ -1,39 +1,203 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/Komsomol39/apia-standard/blob/main/schema/apia-1.0.schema.json",
+  "$id": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/schema/apia-1.0.schema.json",
   "title": "APIA Manifest Schema v1.0",
-  "description": "Validates an APIA manifest file (apia.json)",
+  "description": "Validates an APIA manifest file (apia.json). See https://github.com/Komsomol39/apia-standard",
   "type": "object",
-  "required": ["apia", "service", "capabilities"],
+  "required": [
+    "apia",
+    "service",
+    "auth",
+    "capabilities",
+    "meta"
+  ],
+  "additionalProperties": false,
   "properties": {
     "apia": {
       "type": "string",
-      "description": "APIA standard version",
-      "enum": ["1.0"]
+      "enum": [
+        "1.0"
+      ],
+      "description": "APIA standard version"
     },
     "service": {
       "type": "object",
-      "required": ["id", "name", "description_for_ai", "category", "geo"],
+      "required": [
+        "id",
+        "name",
+        "description_for_ai",
+        "category",
+        "geo"
+      ],
+      "additionalProperties": false,
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Unique slug, lowercase, hyphens only" },
-        "name": { "type": "string" },
-        "description_for_ai": { "type": "string", "minLength": 20, "description": "Written for LLMs, not developers" },
-        "url": { "type": "string", "format": "uri" },
-        "api_base": { "type": "string" },
-        "category": { "type": "string" },
-        "geo": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-        "language": { "type": "string" },
-        "docs": { "type": "string", "format": "uri" }
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+          "description": "Unique slug, lowercase, hyphens only, no leading/trailing hyphens"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "description": "Human-readable service name"
+        },
+        "description_for_ai": {
+          "type": "string",
+          "minLength": 50,
+          "description": "Description written for LLMs — what this service does and when to use it"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "api_base": {
+          "type": "string",
+          "description": "Base URL for API calls"
+        },
+        "category": {
+          "type": "string",
+          "description": "Service category slug"
+        },
+        "geo": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "GLOBAL",
+              "RU",
+              "BY",
+              "KZ",
+              "KG",
+              "UZ",
+              "UA",
+              "AZ",
+              "GE",
+              "US",
+              "CA",
+              "GB",
+              "DE",
+              "FR",
+              "ES",
+              "IT",
+              "PT",
+              "NL",
+              "IE",
+              "CZ",
+              "TR",
+              "AE",
+              "AU",
+              "JP",
+              "CN",
+              "IN",
+              "BR",
+              "CL",
+              "RU-MOS"
+            ]
+          },
+          "minItems": 1,
+          "description": "Geographic availability — use GLOBAL for worldwide"
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ru",
+            "de",
+            "fr",
+            "zh",
+            "ja",
+            "es",
+            "pt",
+            "ar"
+          ],
+          "description": "Primary language of the API documentation and responses"
+        },
+        "docs": {
+          "type": "string",
+          "format": "uri",
+          "description": "Official documentation URL"
+        },
+        "access_note": {
+          "type": "string",
+          "description": "Important access warnings, e.g. unofficial API"
+        }
       }
     },
     "auth": {
       "type": "object",
-      "required": ["type", "anonymous_access"],
+      "required": [
+        "type",
+        "anonymous_access"
+      ],
+      "additionalProperties": true,
       "properties": {
-        "type": { "type": "string", "enum": ["none", "apikey", "oauth2", "bearer_token", "basic_auth", "oauth2_client_credentials", "oauth2_esia"] },
-        "anonymous_access": { "type": "boolean" },
-        "how_to_get": { "type": "string" },
-        "cost": { "type": "string" }
+        "type": {
+          "type": "string",
+          "enum": [
+            "none",
+            "apikey",
+            "bearer_token",
+            "oauth2",
+            "oauth2_client_credentials",
+            "oauth2_lwa",
+            "oauth2_esia",
+            "basic_auth",
+            "aws_sig_v4",
+            "jwt",
+            "password"
+          ],
+          "description": "Authentication mechanism"
+        },
+        "anonymous_access": {
+          "type": "boolean",
+          "description": "Whether the API can be called without credentials"
+        },
+        "anonymous_limits": {
+          "type": "string",
+          "description": "Rate limits when using anonymous access"
+        },
+        "anonymous_capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Which capability IDs work without auth"
+        },
+        "header": {
+          "type": "string",
+          "description": "HTTP header format, e.g. 'Authorization: Bearer sk-...'"
+        },
+        "param_name": {
+          "type": "string",
+          "description": "Query parameter name for API key"
+        },
+        "param_location": {
+          "type": "string",
+          "enum": [
+            "query",
+            "header",
+            "path",
+            "body"
+          ],
+          "description": "Where to pass the API key"
+        },
+        "token_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "OAuth2 token endpoint"
+        },
+        "how_to_get": {
+          "type": "string",
+          "description": "Step-by-step instructions to obtain credentials"
+        },
+        "cost": {
+          "type": "string",
+          "description": "Pricing summary for AI agent awareness"
+        },
+        "note": {
+          "type": "string",
+          "description": "Additional auth notes"
+        }
       }
     },
     "capabilities": {
@@ -41,32 +205,150 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "description_for_ai", "intent", "endpoint"],
+        "required": [
+          "id",
+          "description_for_ai",
+          "intent",
+          "endpoint",
+          "output",
+          "realtime",
+          "requires_auth"
+        ],
+        "additionalProperties": false,
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
-          "description_for_ai": { "type": "string", "minLength": 20 },
-          "intent": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-          "endpoint": { "type": "string" },
-          "input": { "type": "object" },
-          "output": { "type": "object" },
-          "realtime": { "type": "boolean" },
-          "requires_auth": { "type": "boolean" },
-          "rate_limit": { "type": "string" }
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Unique capability identifier, snake_case"
+          },
+          "description_for_ai": {
+            "type": "string",
+            "minLength": 30,
+            "description": "When and how to use this capability — written for LLMs"
+          },
+          "intent": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "description": "Natural language phrases that trigger this capability. Include Russian phrases where relevant."
+          },
+          "endpoint": {
+            "type": "string",
+            "pattern": "^(GET|POST|PUT|PATCH|DELETE|WS|WSS) .+",
+            "description": "HTTP method and full URL pattern"
+          },
+          "input": {
+            "type": "object",
+            "description": "Input parameter definitions",
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "default": {},
+                "enum": {
+                  "type": "array"
+                },
+                "min": {
+                  "type": "number"
+                },
+                "max": {
+                  "type": "number"
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "output": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Key response fields with dot-notation paths"
+              }
+            }
+          },
+          "realtime": {
+            "type": "boolean",
+            "description": "Whether this returns live/current data"
+          },
+          "requires_auth": {
+            "type": "boolean",
+            "description": "Whether authentication is required for this capability"
+          },
+          "rate_limit": {
+            "type": "string",
+            "description": "Rate limiting notes for this specific endpoint"
+          }
         }
       }
     },
     "agent_hints": {
       "type": "object",
-      "description": "Key-value hints for AI agents on how to use this API correctly"
+      "description": "Key-value hints for AI agents on how to use this API correctly",
+      "additionalProperties": {
+        "type": "string"
+      }
     },
-    "limits": { "type": "object" },
     "meta": {
       "type": "object",
+      "required": [
+        "apia_version",
+        "last_verified"
+      ],
+      "additionalProperties": false,
       "properties": {
-        "apia_version": { "type": "string" },
-        "manifest_author": { "type": "string" },
-        "last_verified": { "type": "string", "format": "date" },
-        "completeness": { "type": "string", "enum": ["full", "partial"] }
+        "apia_version": {
+          "type": "string",
+          "enum": [
+            "1.0"
+          ]
+        },
+        "manifest_author": {
+          "type": "string"
+        },
+        "last_verified": {
+          "type": "string",
+          "format": "date"
+        },
+        "completeness": {
+          "type": "string",
+          "enum": [
+            "full",
+            "partial",
+            "draft"
+          ],
+          "description": "How complete this manifest is. full=all major endpoints covered, partial=main endpoints only, draft=work in progress"
+        },
+        "quality_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Auto-calculated quality score"
+        }
       }
     }
   }
