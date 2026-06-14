@@ -57,11 +57,13 @@
         },
         "latitude": {
           "type": "number",
-          "required": false
+          "required": false,
+          "description": "Latitude in decimal degrees (-90 to 90)"
         },
         "longitude": {
           "type": "number",
-          "required": false
+          "required": false,
+          "description": "Longitude in decimal degrees (-180 to 180)"
         },
         "radius": {
           "type": "integer",
