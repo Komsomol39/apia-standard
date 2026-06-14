@@ -100,7 +100,8 @@
       "input": {
         "title": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Title or name string"
         },
         "text": {
           "type": "string",
