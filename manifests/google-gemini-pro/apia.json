@@ -1,1 +1,73 @@
-{"apia":"1.0","service":{"id":"google-gemini-pro","name":"Gemini 2.5 Pro API","description_for_ai":"Google most powerful Gemini model. 1M token context window, best reasoning, code and math. Outperforms GPT-4o on many benchmarks. Use when maximum quality needed: complex analysis, large codebase review, long document processing.","url":"https://ai.google.dev","api_base":"https://generativelanguage.googleapis.com/v1beta","category":"ai_llm_flagship","geo":["GLOBAL"],"language":"en","docs":"https://ai.google.dev/gemini-api/docs/models"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"https://aistudio.google.com/app/apikey","cost":"$1.25/$10 per 1M tokens (under 200K context). $2.50/$15 over 200K."},"capabilities":[{"id":"generate","description_for_ai":"Generate with Google flagship model. Best for: 1M token context, code review of entire repos, complex reasoning, long document analysis.","intent":["flagship AI","best quality AI","1M context","large codebase","complex reasoning","Gemini Pro"],"endpoint":"POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent","input":{"contents":{"type":"array","required":true},"systemInstruction":{"type":"object","required":false},"generationConfig":{"type":"object","required":false},"tools":{"type":"array","required":false}},"output":{"type":"completion","fields":["candidates[0].content.parts[0].text","usageMetadata"]},"realtime":true,"requires_auth":true}],"agent_hints":{"context_window":"1M tokens = ~750K words = entire novel or codebase. Pass entire files without chunking.","vs_flash":"gemini-2.5-flash for high volume cheap tasks. gemini-2.5-pro for best quality when it matters."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "google-gemini-pro",
+    "name": "Gemini 2.5 Pro API",
+    "description_for_ai": "Google most powerful Gemini model. 1M token context window, best reasoning, code and math. Outperforms GPT-4o on many benchmarks. Use when maximum quality needed: complex analysis, large codebase review, long document processing.",
+    "url": "https://ai.google.dev",
+    "api_base": "https://generativelanguage.googleapis.com/v1beta",
+    "category": "ai_llm_flagship",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "https://aistudio.google.com/app/apikey",
+    "cost": "$1.25/$10 per 1M tokens (under 200K context). $2.50/$15 over 200K."
+  },
+  "capabilities": [
+    {
+      "id": "generate",
+      "description_for_ai": "Generate with Google flagship model. Best for: 1M token context, code review of entire repos, complex reasoning, long document analysis.",
+      "intent": [
+        "flagship AI",
+        "best quality AI",
+        "1M context",
+        "large codebase",
+        "complex reasoning",
+        "Gemini Pro"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "systemInstruction": {
+          "type": "object",
+          "required": false
+        },
+        "generationConfig": {
+          "type": "object",
+          "required": false
+        },
+        "tools": {
+          "type": "array",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "candidates[0].content.parts[0].text",
+          "usageMetadata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "context_window": "1M tokens = ~750K words = entire novel or codebase. Pass entire files without chunking.",
+    "vs_flash": "gemini-2.5-flash for high volume cheap tasks. gemini-2.5-pro for best quality when it matters."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
