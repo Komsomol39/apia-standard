@@ -1,1 +1,143 @@
-{"apia":"1.0","service":{"id":"open-fda","name":"OpenFDA API","description_for_ai":"Free US FDA data API. Drug labels, adverse events, recalls, device reports. No API key needed for basic access. Use for drug information, side effects, recalls, medical device data.","url":"https://open.fda.gov","api_base":"https://api.fda.gov","category":"healthcare","geo":["US"],"language":"en","docs":"https://open.fda.gov/apis/"},"auth":{"type":"apikey","anonymous_access":true,"anonymous_limits":"40 req/min","param_name":"api_key","param_location":"query","how_to_get":"Optional key at https://open.fda.gov/apis/authentication/","cost":"Free"},"capabilities":[{"id":"drug_label","description_for_ai":"Get FDA drug label information: indications, dosage, warnings, contraindications, side effects. Use for drug information lookup.","intent":["drug information","medication info","drug side effects","drug warnings","лекарство информация","побочные эффекты"],"endpoint":"GET https://api.fda.gov/drug/label.json","input":{"search":{"type":"string","description":"Search query e.g. openfda.brand_name:aspirin or openfda.generic_name:ibuprofen","required":true},"limit":{"type":"integer","default":1}},"output":{"type":"drug_label","fields":["results[0].brand_name","results[0].generic_name","results[0].indications_and_usage","results[0].warnings","results[0].dosage_and_administration","results[0].adverse_reactions"]},"realtime":false,"requires_auth":false},{"id":"drug_adverse_events","description_for_ai":"Get FDA adverse event reports for a drug. Shows real-world side effects reported to FDA.","intent":["drug adverse events","side effects reports","medication reactions","FDA reports"],"endpoint":"GET https://api.fda.gov/drug/event.json","input":{"search":{"type":"string","description":"e.g. patient.drug.medicinalproduct:aspirin","required":true},"count":{"type":"string","description":"Field to count e.g. patient.reaction.reactionmeddrapt.exact","required":false},"limit":{"type":"integer","default":10}},"output":{"type":"adverse_events","fields":["results[].patient.reaction","results[].patient.drug","results[].seriousnessdeath"]},"realtime":false,"requires_auth":false},{"id":"recalls","description_for_ai":"Get FDA drug or food recalls. Use to check if a product has been recalled.","intent":["drug recall","food recall","product recall","FDA recall"],"endpoint":"GET https://api.fda.gov/food/enforcement.json","input":{"search":{"type":"string","description":"e.g. product_description:peanut+butter","required":false},"limit":{"type":"integer","default":10}},"output":{"type":"recalls","fields":["results[].product_description","results[].reason_for_recall","results[].status","results[].recall_initiation_date"]},"realtime":true,"requires_auth":false}],"agent_hints":{"free":"No API key needed for up to 40 req/min. Get key for higher limits.","disclaimer":"Always add medical disclaimer when showing drug info to users."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "open-fda",
+    "name": "OpenFDA API",
+    "description_for_ai": "Free US FDA data API. Drug labels, adverse events, recalls, device reports. No API key needed for basic access. Use for drug information, side effects, recalls, medical device data.",
+    "url": "https://open.fda.gov",
+    "api_base": "https://api.fda.gov",
+    "category": "healthcare",
+    "geo": [
+      "US"
+    ],
+    "language": "en",
+    "docs": "https://open.fda.gov/apis/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": true,
+    "anonymous_limits": "40 req/min",
+    "param_name": "api_key",
+    "param_location": "query",
+    "how_to_get": "Optional key at https://open.fda.gov/apis/authentication/",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "drug_label",
+      "description_for_ai": "Get FDA drug label information: indications, dosage, warnings, contraindications, side effects. Use for drug information lookup.",
+      "intent": [
+        "drug information",
+        "medication info",
+        "drug side effects",
+        "drug warnings",
+        "лекарство информация",
+        "побочные эффекты"
+      ],
+      "endpoint": "GET https://api.fda.gov/drug/label.json",
+      "input": {
+        "search": {
+          "type": "string",
+          "description": "Search query e.g. openfda.brand_name:aspirin or openfda.generic_name:ibuprofen",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "drug_label",
+        "fields": [
+          "results[0].brand_name",
+          "results[0].generic_name",
+          "results[0].indications_and_usage",
+          "results[0].warnings",
+          "results[0].dosage_and_administration",
+          "results[0].adverse_reactions"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "drug_adverse_events",
+      "description_for_ai": "Get FDA adverse event reports for a drug. Shows real-world side effects reported to FDA.",
+      "intent": [
+        "drug adverse events",
+        "side effects reports",
+        "medication reactions",
+        "FDA reports"
+      ],
+      "endpoint": "GET https://api.fda.gov/drug/event.json",
+      "input": {
+        "search": {
+          "type": "string",
+          "description": "e.g. patient.drug.medicinalproduct:aspirin",
+          "required": true
+        },
+        "count": {
+          "type": "string",
+          "description": "Field to count e.g. patient.reaction.reactionmeddrapt.exact",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "adverse_events",
+        "fields": [
+          "results[].patient.reaction",
+          "results[].patient.drug",
+          "results[].seriousnessdeath"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "recalls",
+      "description_for_ai": "Get FDA drug or food recalls. Use to check if a product has been recalled.",
+      "intent": [
+        "drug recall",
+        "food recall",
+        "product recall",
+        "FDA recall"
+      ],
+      "endpoint": "GET https://api.fda.gov/food/enforcement.json",
+      "input": {
+        "search": {
+          "type": "string",
+          "description": "e.g. product_description:peanut+butter",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "recalls",
+        "fields": [
+          "results[].product_description",
+          "results[].reason_for_recall",
+          "results[].status",
+          "results[].recall_initiation_date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "free": "No API key needed for up to 40 req/min. Get key for higher limits.",
+    "disclaimer": "Always add medical disclaimer when showing drug info to users."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
