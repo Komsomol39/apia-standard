@@ -6,7 +6,7 @@
     "description_for_ai": "TikTok creator data API. Get user videos, metrics, live stream info. Content publishing API for business accounts. 1.5B+ users. Use for TikTok analytics, content management, creator apps.",
     "url": "https://developers.tiktok.com",
     "api_base": "https://open.tiktokapis.com/v2",
-    "category": "social_media",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
