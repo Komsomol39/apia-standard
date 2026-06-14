@@ -1,1 +1,110 @@
-{"apia":"1.0","service":{"id":"runway","name":"RunwayML API","description_for_ai":"AI video generation and editing. Generate video from text or image, remove backgrounds, motion tracking. Gen-3 Alpha model. Used by major film studios. Use for AI video creation, video effects, content production.","url":"https://runwayml.com","api_base":"https://api.dev.runwayml.com/v1","category":"ai_video","geo":["GLOBAL"],"language":"en","docs":"https://docs.dev.runwayml.com/"},"auth":{"type":"bearer_token","anonymous_access":false,"header":"Authorization: Bearer {api_key}","how_to_get":"Register at https://app.runwayml.com — 125 credits free","cost":"$0.05/second of video"},"capabilities":[{"id":"image_to_video","description_for_ai":"Generate a 5 or 10 second video from an image using Gen-3 model. Add motion prompt to describe movement.","intent":["generate video","image to video","AI video","animate image","video generation","video from photo"],"endpoint":"POST https://api.dev.runwayml.com/v1/image_to_video","input":{"model":{"type":"string","description":"gen3a_turbo","default":"gen3a_turbo"},"promptImage":{"type":"string","description":"URL or base64 of starting image","required":true},"promptText":{"type":"string","description":"Motion description e.g. camera slowly zooms in, leaves rustling in wind","required":false},"duration":{"type":"integer","description":"5 or 10 seconds","default":5},"ratio":{"type":"string","description":"1280:768 or 768:1280","default":"1280:768"}},"output":{"type":"task","fields":["id","status"]},"realtime":false,"requires_auth":true},{"id":"get_task","description_for_ai":"Check status of video generation task. Poll until status is SUCCEEDED.","intent":["check video status","generation progress","video ready"],"endpoint":"GET https://api.dev.runwayml.com/v1/tasks/{id}","input":{"id":{"type":"string","required":true}},"output":{"type":"task","fields":["id","status","output[0]","progress"]},"realtime":false,"requires_auth":true}],"agent_hints":{"async":"Video generation is async. 1) POST → get task id. 2) Poll GET /tasks/{id} every 5s until status=SUCCEEDED. 3) Output[0] is video URL.","credits":"5s video costs 5 credits. 10s costs 10 credits. Free 125 credits = 25 videos."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "runway",
+    "name": "RunwayML API",
+    "description_for_ai": "AI video generation and editing. Generate video from text or image, remove backgrounds, motion tracking. Gen-3 Alpha model. Used by major film studios. Use for AI video creation, video effects, content production.",
+    "url": "https://runwayml.com",
+    "api_base": "https://api.dev.runwayml.com/v1",
+    "category": "ai_video",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.dev.runwayml.com/"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer {api_key}",
+    "how_to_get": "Register at https://app.runwayml.com — 125 credits free",
+    "cost": "$0.05/second of video"
+  },
+  "capabilities": [
+    {
+      "id": "image_to_video",
+      "description_for_ai": "Generate a 5 or 10 second video from an image using Gen-3 model. Add motion prompt to describe movement.",
+      "intent": [
+        "generate video",
+        "image to video",
+        "AI video",
+        "animate image",
+        "video generation",
+        "video from photo"
+      ],
+      "endpoint": "POST https://api.dev.runwayml.com/v1/image_to_video",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "gen3a_turbo",
+          "default": "gen3a_turbo"
+        },
+        "promptImage": {
+          "type": "string",
+          "description": "URL or base64 of starting image",
+          "required": true
+        },
+        "promptText": {
+          "type": "string",
+          "description": "Motion description e.g. camera slowly zooms in, leaves rustling in wind",
+          "required": false
+        },
+        "duration": {
+          "type": "integer",
+          "description": "5 or 10 seconds",
+          "default": 5
+        },
+        "ratio": {
+          "type": "string",
+          "description": "1280:768 or 768:1280",
+          "default": "1280:768"
+        }
+      },
+      "output": {
+        "type": "task",
+        "fields": [
+          "id",
+          "status"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_task",
+      "description_for_ai": "Check status of video generation task. Poll until status is SUCCEEDED.",
+      "intent": [
+        "check video status",
+        "generation progress",
+        "video ready"
+      ],
+      "endpoint": "GET https://api.dev.runwayml.com/v1/tasks/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "task",
+        "fields": [
+          "id",
+          "status",
+          "output[0]",
+          "progress"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "async": "Video generation is async. 1) POST → get task id. 2) Poll GET /tasks/{id} every 5s until status=SUCCEEDED. 3) Output[0] is video URL.",
+    "credits": "5s video costs 5 credits. 10s costs 10 credits. Free 125 credits = 25 videos."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
