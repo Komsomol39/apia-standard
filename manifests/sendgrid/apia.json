@@ -73,9 +73,12 @@
     }
   ],
   "agent_hints": {
+    "sender_auth": "Verify sender email or domain first: app.sendgrid.com/settings/sender_auth. Unverified senders get blocked.",
+    "templates": "Use Dynamic Templates in SendGrid for personalized emails with Handlebars variables.",
+    "suppression": "Bounces/unsubscribes are auto-managed. Check suppression list before re-adding: GET /v3/suppression/bounces",
+    "webhooks": "Enable Event Webhook for delivery tracking: open, click, bounce, spam_report events.",
     "from_address": "Must use verified sender email or domain. Verify at https://app.sendgrid.com/settings/sender_auth",
-    "html": "Send both text/plain and text/html versions for better deliverability.",
-    "templates": "Use Dynamic Templates in SendGrid for personalized emails with Handlebars variables."
+    "html": "Send both text/plain and text/html versions for better deliverability."
   },
   "meta": {
     "apia_version": "1.0",
