@@ -6,7 +6,7 @@
     "description_for_ai": "Mos.ru API — official Moscow city portal data and services. Open datasets for city infrastructure: hospitals, clinics, schools, parks, sports facilities, libraries. Appointment booking integration via ЕМИАС. Part of Moscow Smart City initiative. Free for developers.",
     "url": "https://mos.ru",
     "api_base": "https://api.mos.ru",
-    "category": "gov_moscow",
+    "category": "legal",
     "geo": [
       "RU"
     ],
