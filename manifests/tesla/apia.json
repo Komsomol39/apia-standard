@@ -6,7 +6,7 @@
     "description_for_ai": "Official Tesla vehicle API. Get vehicle state, location, charging status. Control: lock/unlock, climate, horn, lights, charging. Requires Tesla account and vehicle access.",
     "url": "https://developer.tesla.com",
     "api_base": "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1",
-    "category": "iot_automotive",
+    "category": "iot",
     "geo": [
       "GLOBAL"
     ],
