@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_products",
-      "description_for_ai": "Get products from Shopify store with prices, inventory, images, variants.",
+      "description_for_ai": "Get products from a Shopify store with prices, variants, inventory levels, and images. Use for product catalog display, inventory sync, price monitoring.",
       "intent": [
         "get products",
         "product list",
@@ -33,30 +33,66 @@
       "input": {
         "limit": {
           "type": "integer",
-          "default": 50,
-          "max": 250
+          "description": "Products per page, max 250",
+          "default": 50
+        },
+        "page_info": {
+          "type": "string",
+          "description": "Cursor for cursor-based pagination (from previous response Link header)",
+          "required": false
         },
         "status": {
           "type": "string",
-          "description": "active, archived, draft",
+          "description": "active (published), archived, draft, or any",
           "default": "active"
         },
         "title": {
           "type": "string",
-          "description": "Filter by title",
+          "description": "Filter by exact title match",
+          "required": false
+        },
+        "vendor": {
+          "type": "string",
+          "description": "Filter by product vendor/brand",
+          "required": false
+        },
+        "product_type": {
+          "type": "string",
+          "description": "Filter by product type category",
+          "required": false
+        },
+        "collection_id": {
+          "type": "integer",
+          "description": "Filter by collection/category ID",
+          "required": false
+        },
+        "created_at_min": {
+          "type": "string",
+          "description": "ISO 8601 — return products created after this date",
+          "required": false
+        },
+        "updated_at_min": {
+          "type": "string",
+          "description": "ISO 8601 — return products updated after this date",
+          "required": false
+        },
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated fields: id,title,variants,images,handle,product_type,vendor",
           "required": false
         }
       },
       "output": {
         "type": "list<product>",
         "fields": [
-          "id",
-          "title",
-          "handle",
-          "status",
-          "variants[0].price",
-          "images[0].src",
-          "inventory_quantity"
+          "products[0].id",
+          "products[0].title",
+          "products[0].handle",
+          "products[0].variants[0].price",
+          "products[0].variants[0].inventory_quantity",
+          "products[0].images[0].src",
+          "products[0].product_type",
+          "products[0].vendor"
         ]
       },
       "realtime": true,
@@ -64,7 +100,7 @@
     },
     {
       "id": "get_orders",
-      "description_for_ai": "Get orders from Shopify store with customer, items, and fulfillment status.",
+      "description_for_ai": "Get orders from Shopify store with customer info, line items, and fulfillment status. Use for order management, shipping, analytics.",
       "intent": [
         "get orders",
         "order list",
@@ -75,29 +111,51 @@
       "input": {
         "status": {
           "type": "string",
-          "description": "open, closed, cancelled, any",
+          "description": "open (active), closed, cancelled, or any",
           "default": "open"
+        },
+        "fulfillment_status": {
+          "type": "string",
+          "description": "shipped, partial, unshipped, unfulfilled, or any",
+          "required": false
+        },
+        "financial_status": {
+          "type": "string",
+          "description": "paid, unpaid, pending, refunded, voided, authorized, or any",
+          "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Orders per page, max 250",
           "default": 50
         },
         "created_at_min": {
           "type": "string",
-          "description": "ISO 8601 date filter",
+          "description": "ISO 8601 date — return orders created after this",
+          "required": false
+        },
+        "created_at_max": {
+          "type": "string",
+          "description": "ISO 8601 date — return orders created before this",
+          "required": false
+        },
+        "fields": {
+          "type": "string",
+          "description": "Fields to return: id,name,total_price,financial_status,customer,line_items,shipping_address",
           "required": false
         }
       },
       "output": {
         "type": "list<order>",
         "fields": [
-          "id",
-          "name",
-          "total_price",
-          "financial_status",
-          "fulfillment_status",
-          "customer.email",
-          "line_items"
+          "orders[0].id",
+          "orders[0].name (#1001)",
+          "orders[0].total_price",
+          "orders[0].financial_status",
+          "orders[0].fulfillment_status",
+          "orders[0].customer.email",
+          "orders[0].line_items[0].title",
+          "orders[0].shipping_address"
         ]
       },
       "realtime": true,
