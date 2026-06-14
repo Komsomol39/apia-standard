@@ -23,38 +23,50 @@
   "capabilities": [
     {
       "id": "parse_symptoms",
-      "description_for_ai": "Extract symptoms from natural language text. Use to convert user description to structured symptom IDs.",
+      "description_for_ai": "Extract symptom IDs from natural language text. First step before diagnosis — converts 'I have a headache and fever' into structured symptom evidence.",
       "intent": [
         "parse symptoms",
         "extract symptoms from text",
         "symptom recognition",
-        "what are my symptoms"
+        "what symptoms do I have",
+        "medical text parsing"
       ],
       "endpoint": "POST https://api.infermedica.com/v3/parse",
       "input": {
         "text": {
           "type": "string",
-          "description": "Natural language symptom description e.g. I have headache and fever",
+          "description": "Natural language symptom description in any supported language. E.g. 'I have a headache and high fever for 2 days'",
           "required": true
         },
         "age": {
           "type": "object",
-          "description": "{value: 30, unit: year}",
+          "description": "{value: 30, unit: 'year'} — patient age affects symptom relevance",
           "required": false
         },
         "sex": {
           "type": "string",
-          "description": "male or female",
+          "description": "'male' or 'female'",
           "required": false
+        },
+        "include_tokens": {
+          "type": "boolean",
+          "description": "Return token-level analysis of which words matched which symptoms",
+          "default": false
+        },
+        "correct_spelling": {
+          "type": "boolean",
+          "description": "Auto-correct spelling errors in input",
+          "default": false
         }
       },
       "output": {
         "type": "parsed",
         "fields": [
-          "mentions[].id",
-          "mentions[].name",
-          "mentions[].common_name",
-          "mentions[].orth"
+          "mentions[0].id (symptom ID)",
+          "mentions[0].name",
+          "mentions[0].common_name",
+          "mentions[0].orth (matched text)",
+          "mentions[0].type (symptom|risk_factor)"
         ]
       },
       "realtime": true,
@@ -62,39 +74,47 @@
     },
     {
       "id": "diagnose",
-      "description_for_ai": "Get possible diagnoses based on symptoms. Returns conditions with probability scores. Always show medical disclaimer.",
+      "description_for_ai": "Get possible diagnoses with probability scores based on symptoms. ALWAYS show medical disclaimer. Do not replace professional medical advice.",
       "intent": [
         "possible diagnosis",
         "what disease",
         "symptom checker",
         "medical triage",
-        "possible conditions"
+        "possible conditions",
+        "medical AI"
       ],
       "endpoint": "POST https://api.infermedica.com/v3/diagnosis",
       "input": {
         "sex": {
           "type": "string",
-          "description": "male or female",
+          "description": "'male' or 'female'",
           "required": true
         },
         "age": {
           "type": "object",
-          "description": "{value: N, unit: year}",
+          "description": "{value: 30, unit: 'year'|'month'}",
           "required": true
         },
         "evidence": {
           "type": "array",
-          "description": "[{id: symptom_id, choice_id: present/absent/unknown, initial: true}]",
+          "description": "Symptom evidence from parse endpoint: [{id: 's_21', choice_id: 'present', initial: true}, {id: 's_1190', choice_id: 'absent'}]. choice_id: present|absent|unknown. Set initial:true for patient-reported symptoms.",
           "required": true
+        },
+        "extras": {
+          "type": "object",
+          "description": "{disable_groups: true} to show individual diagnoses instead of groups",
+          "required": false
         }
       },
       "output": {
         "type": "diagnosis",
         "fields": [
-          "conditions[].name",
-          "conditions[].probability",
-          "conditions[].common_name",
-          "should_stop"
+          "conditions[0].id",
+          "conditions[0].name",
+          "conditions[0].common_name",
+          "conditions[0].probability (0-1)",
+          "should_stop (bool — enough info)",
+          "question (follow-up question if needed)"
         ]
       },
       "realtime": true,
@@ -102,8 +122,9 @@
     }
   ],
   "agent_hints": {
-    "disclaimer": "ALWAYS add: This is not medical advice. Consult a healthcare professional.",
-    "flow": "1) parse_symptoms to get IDs from text. 2) diagnose with those IDs. 3) Show results with disclaimer."
+    "disclaimer": "ALWAYS display: 'This is not medical advice. Consult a healthcare professional for diagnosis and treatment.'",
+    "flow": "1) parse_symptoms(text) → get symptom IDs. 2) diagnose(sex, age, evidence) → get conditions. 3) Show results with medical disclaimer.",
+    "interview_mode": "Use should_stop=false + question field to implement conversational symptom interview for more accurate diagnosis."
   },
   "meta": {
     "apia_version": "1.0",
