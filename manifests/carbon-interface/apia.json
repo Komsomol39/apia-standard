@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "flight_estimate",
-      "description_for_ai": "Calculate CO2 emissions for a flight between airports. Returns carbon kg per passenger.",
+      "description_for_ai": "Calculate CO2 equivalent emissions for a flight between airports. Returns carbon per passenger in kg and metric tons.",
       "intent": [
         "flight carbon",
         "carbon footprint flight",
@@ -35,25 +35,38 @@
       "input": {
         "type": {
           "type": "string",
+          "description": "Estimate type — always 'flight' for this capability",
           "default": "flight"
         },
         "passengers": {
           "type": "integer",
+          "description": "Number of passengers to calculate emissions for",
           "default": 1
         },
         "legs": {
           "type": "array",
-          "description": "[{departure_airport: JFK, destination_airport: LHR}]",
+          "description": "Flight route legs: [{departure_airport: 'SVO', destination_airport: 'JFK'}, ...]. Supports multi-leg trips.",
           "required": true
+        },
+        "cabin_class": {
+          "type": "string",
+          "description": "economy (default, ~2.5x), premium_economy (~3x), business (~5x), first (~7x) multiplier vs economy",
+          "default": "economy"
         }
       },
       "output": {
         "type": "estimate",
         "fields": [
-          "data.attributes.carbon_kg",
-          "data.attributes.carbon_mt",
+          "data.id",
+          "data.type",
+          "data.attributes.passengers",
+          "data.attributes.legs",
           "data.attributes.distance_value",
-          "data.attributes.distance_unit"
+          "data.attributes.distance_unit",
+          "data.attributes.carbon_g",
+          "data.attributes.carbon_lb",
+          "data.attributes.carbon_kg",
+          "data.attributes.carbon_mt"
         ]
       },
       "realtime": false,
@@ -61,7 +74,7 @@
     },
     {
       "id": "vehicle_estimate",
-      "description_for_ai": "Calculate CO2 emissions for driving a specific vehicle over a distance.",
+      "description_for_ai": "Calculate CO2 emissions for driving a specific vehicle model over a given distance.",
       "intent": [
         "driving carbon",
         "car emissions",
@@ -72,6 +85,7 @@
       "input": {
         "type": {
           "type": "string",
+          "description": "Estimate type — always 'vehicle'",
           "default": "vehicle"
         },
         "distance_unit": {
@@ -81,19 +95,24 @@
         },
         "distance_value": {
           "type": "number",
+          "description": "Distance driven e.g. 100 (km or miles)",
           "required": true
         },
         "vehicle_model_id": {
           "type": "string",
-          "description": "Get from /vehicle_makes endpoint",
+          "description": "Vehicle model ID from GET /vehicle_makes/{id}/vehicle_models. Get make IDs from /vehicle_makes.",
           "required": true
         }
       },
       "output": {
         "type": "estimate",
         "fields": [
+          "data.attributes.carbon_g",
           "data.attributes.carbon_kg",
-          "data.attributes.carbon_mt"
+          "data.attributes.carbon_mt",
+          "data.attributes.distance_value",
+          "data.attributes.vehicle_make",
+          "data.attributes.vehicle_model"
         ]
       },
       "realtime": false,
