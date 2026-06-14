@@ -7,7 +7,9 @@
     "url": "https://www.avito.ru/rossiya/vakansii",
     "api_base": "https://api.avito.ru",
     "category": "employment",
-    "geo": ["RU"],
+    "geo": [
+      "RU"
+    ],
     "language": "ru",
     "docs": "https://developers.avito.ru/api-catalog/job/documentation",
     "access_note": "⚠️ API только для работодателей. Поиск вакансий для соискателей через API недоступен."
@@ -23,32 +25,69 @@
     {
       "id": "get_vacancies_employer",
       "description_for_ai": "Получить список вакансий работодателя. Только для работодателей — управление своими вакансиями. Не для поиска вакансий соискателями.",
-      "intent": ["мои вакансии на авито", "управление вакансиями авито", "отклики авито"],
+      "intent": [
+        "мои вакансии на авито",
+        "управление вакансиями авито",
+        "отклики авито"
+      ],
       "endpoint": "GET https://api.avito.ru/job/v1/vacancies/",
       "input": {
-        "status": { "type": "string", "description": "active, closed, archived", "required": false },
-        "per_page": { "type": "integer", "default": 25 },
-        "page": { "type": "integer", "default": 1 }
+        "status": {
+          "type": "string",
+          "description": "active, closed, archived",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 25
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
       },
       "output": {
         "type": "list<vacancy>",
-        "fields": ["id", "title", "status", "responses_count", "url", "created_at"]
+        "fields": [
+          "id",
+          "title",
+          "status",
+          "responses_count",
+          "url",
+          "created_at"
+        ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
       "id": "get_responses",
-      "description_for_ai": "Получить отклики на вакансию работодателя.",
-      "intent": ["отклики на вакансию авито", "кандидаты авито"],
+      "description_for_ai": "Get job applications and candidate responses from Авито.Работа. Filter by vacancy and status. Returns candidate profile, contact details, and CV link.",
+      "intent": [
+        "отклики на вакансию авито",
+        "кандидаты авито"
+      ],
       "endpoint": "GET https://api.avito.ru/job/v1/vacancies/{vacancy_id}/responses/",
       "input": {
-        "vacancy_id": { "type": "string", "required": true },
-        "status": { "type": "string", "description": "new, viewed, invited, rejected", "required": false }
+        "vacancy_id": {
+          "type": "string",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "new, viewed, invited, rejected",
+          "required": false
+        }
       },
       "output": {
         "type": "list<response>",
-        "fields": ["id", "status", "created_at", "resume.title", "resume.name"]
+        "fields": [
+          "id",
+          "status",
+          "created_at",
+          "resume.title",
+          "resume.name"
+        ]
       },
       "realtime": true,
       "requires_auth": true
