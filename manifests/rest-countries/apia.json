@@ -1,1 +1,103 @@
-{"apia":"1.0","service":{"id":"rest-countries","name":"RestCountries API","description_for_ai":"Free country data API. 250 countries with name, capital, population, area, currency, languages, flag, borders, timezone, calling code. No API key needed. Use for country info, flags, geographic data.","url":"https://restcountries.com","api_base":"https://restcountries.com/v3.1","category":"geography","geo":["GLOBAL"],"language":"en","docs":"https://restcountries.com/#about-project"},"auth":{"type":"none","anonymous_access":true,"cost":"Free forever"},"capabilities":[{"id":"get_country","description_for_ai":"Get all info about a country: population, area, capital, currency, languages, flag emoji, borders.","intent":["country info","capital city","country population","currency of","flag of country","official language","информация о стране","столица"],"endpoint":"GET https://restcountries.com/v3.1/name/{name}","input":{"name":{"type":"string","description":"Country name e.g. Germany, Russia, Japan","required":true},"fullText":{"type":"boolean","description":"true for exact match only","required":false}},"output":{"type":"list<country>","fields":["name.common","name.official","capital","population","area","currencies","languages","flag","borders","timezones","callingCodes"]},"realtime":false,"requires_auth":false},{"id":"get_by_code","description_for_ai":"Get country by ISO alpha-2 or alpha-3 code.","intent":["country by code","ISO code lookup","country code"],"endpoint":"GET https://restcountries.com/v3.1/alpha/{code}","input":{"code":{"type":"string","description":"ISO 3166-1 alpha-2 (RU, DE, US) or alpha-3 (RUS, DEU, USA)","required":true}},"output":{"type":"country","fields":["name.common","capital","population","currencies","languages","flag"]},"realtime":false,"requires_auth":false}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "rest-countries",
+    "name": "RestCountries API",
+    "description_for_ai": "Free country data API. 250 countries with name, capital, population, area, currency, languages, flag, borders, timezone, calling code. No API key needed. Use for country info, flags, geographic data.",
+    "url": "https://restcountries.com",
+    "api_base": "https://restcountries.com/v3.1",
+    "category": "geography",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://restcountries.com/#about-project"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "Free forever"
+  },
+  "capabilities": [
+    {
+      "id": "get_country",
+      "description_for_ai": "Get all info about a country: population, area, capital, currency, languages, flag emoji, borders.",
+      "intent": [
+        "country info",
+        "capital city",
+        "country population",
+        "currency of",
+        "flag of country",
+        "official language",
+        "информация о стране",
+        "столица"
+      ],
+      "endpoint": "GET https://restcountries.com/v3.1/name/{name}",
+      "input": {
+        "name": {
+          "type": "string",
+          "description": "Country name e.g. Germany, Russia, Japan",
+          "required": true
+        },
+        "fullText": {
+          "type": "boolean",
+          "description": "true for exact match only",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<country>",
+        "fields": [
+          "name.common",
+          "name.official",
+          "capital",
+          "population",
+          "area",
+          "currencies",
+          "languages",
+          "flag",
+          "borders",
+          "timezones",
+          "callingCodes"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_by_code",
+      "description_for_ai": "Get country by ISO alpha-2 or alpha-3 code.",
+      "intent": [
+        "country by code",
+        "ISO code lookup",
+        "country code"
+      ],
+      "endpoint": "GET https://restcountries.com/v3.1/alpha/{code}",
+      "input": {
+        "code": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 (RU, DE, US) or alpha-3 (RUS, DEU, USA)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "country",
+        "fields": [
+          "name.common",
+          "capital",
+          "population",
+          "currencies",
+          "languages",
+          "flag"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
