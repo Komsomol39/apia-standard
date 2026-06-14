@@ -65,7 +65,7 @@
     },
     {
       "id": "create_form",
-      "description_for_ai": "Create a new Typeform with questions programmatically.",
+      "description_for_ai": "Create a new Typeform with custom questions, logic jumps, and design. Returns form ID and public URL.",
       "intent": [
         "create form",
         "new survey",
