@@ -7,7 +7,9 @@
     "url": "https://deepseek.com",
     "api_base": "https://api.deepseek.com/v1",
     "category": "ai_llm",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://platform.deepseek.com/docs"
   },
@@ -22,18 +24,49 @@
     {
       "id": "chat_completion",
       "description_for_ai": "OpenAI-compatible chat completions at dramatically lower cost. DeepSeek-V3 for general tasks, DeepSeek-R1 for reasoning/math/code. Best price-to-quality ratio in 2026.",
-      "intent": ["cheap LLM", "low cost AI", "high volume AI", "deepseek", "reasoning model", "math problems"],
+      "intent": [
+        "cheap LLM",
+        "low cost AI",
+        "high volume AI",
+        "deepseek",
+        "reasoning model",
+        "math problems"
+      ],
       "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
       "input": {
-        "model": { "type": "string", "description": "deepseek-chat (V3, general), deepseek-reasoner (R1, reasoning/math)", "required": true },
-        "messages": { "type": "array", "description": "OpenAI-compatible format: [{role, content}]", "required": true },
-        "temperature": { "type": "float", "default": 1 },
-        "max_tokens": { "type": "integer", "required": false },
-        "stream": { "type": "boolean", "default": false }
+        "model": {
+          "type": "string",
+          "description": "deepseek-chat (V3, general), deepseek-reasoner (R1, reasoning/math)",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "OpenAI-compatible format: [{role, content}]",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "default": 1,
+          "description": "Randomness 0.0-1.0: lower=deterministic, higher=creative"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false,
+          "description": "Maximum number of tokens to generate in response"
+        },
+        "stream": {
+          "type": "boolean",
+          "default": false
+        }
       },
       "output": {
         "type": "completion",
-        "fields": ["choices[0].message.content", "choices[0].message.reasoning_content", "usage.prompt_tokens", "usage.completion_tokens"]
+        "fields": [
+          "choices[0].message.content",
+          "choices[0].message.reasoning_content",
+          "usage.prompt_tokens",
+          "usage.completion_tokens"
+        ]
       },
       "realtime": true,
       "requires_auth": true
