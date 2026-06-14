@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "create_delivery",
-      "description_for_ai": "Request a DoorDash driver for pickup and delivery. Provide pickup and dropoff addresses with item details.",
+      "description_for_ai": "On-demand delivery logistics API. Request a DoorDash driver to pick up and deliver packages, food, or goods. Available in US, Canada, Australia. Use for delivery fulfillment, same-day delivery, restaurant order delivery. Request a DoorDash driver for pickup and delivery. Provide pickup and dropoff addresses with item details.",
       "intent": [
         "delivery request",
         "same day delivery",
