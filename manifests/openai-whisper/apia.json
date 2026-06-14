@@ -3,7 +3,7 @@
   "service": {
     "id": "openai-whisper",
     "name": "OpenAI Whisper API",
-    "description_for_ai": "State-of-the-art speech recognition. Transcribe or translate audio in 99 languages. $0.006/min. Handles accents, background noise, technical terms. Best accuracy available for speech-to-text.",
+    "description_for_ai": "OpenAI Whisper API — state-of-the-art speech recognition in 50+ languages. Near-human accuracy even with accents, background noise, and technical terms. Transcribe or translate audio files up to 25MB. $0.006/minute. Supports SRT/VTT subtitle output. Best STT accuracy available via API.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
     "category": "ai_speech",
