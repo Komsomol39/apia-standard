@@ -71,7 +71,7 @@
     },
     {
       "id": "create_lead",
-      "description_for_ai": "Создать новую сделку в amoCRM.",
+      "description_for_ai": "Create a new sales deal (сделка) in amoCRM CRM pipeline with title, budget, stage, and responsible manager.",
       "intent": [
         "добавить сделку",
         "новый лид",
