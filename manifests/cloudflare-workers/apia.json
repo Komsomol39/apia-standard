@@ -6,7 +6,7 @@
     "description_for_ai": "Serverless edge computing platform. Deploy JavaScript/Rust/Python at 300+ locations worldwide. 0ms cold start. 100K requests/day free. Use for edge APIs, proxies, middleware, serverless functions.",
     "url": "https://workers.cloudflare.com",
     "api_base": "https://api.cloudflare.com/client/v4",
-    "category": "developer_serverless",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
