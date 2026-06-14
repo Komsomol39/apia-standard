@@ -58,7 +58,7 @@
     },
     {
       "id": "create_droplet",
-      "description_for_ai": "Create a new cloud server (Droplet).",
+      "description_for_ai": "Create a new cloud server (Droplet) with specified size, OS image, and SSH keys. Returns immediately; server ready in ~30 seconds.",
       "intent": [
         "create server",
         "new VM",
