@@ -106,5 +106,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "client_id": "Client-Id header = your Seller ID (numeric). Find in seller.ozon.ru → Settings → API.",
+    "fbo_vs_fbs": "FBO = fulfilled by Ozon (storage at Ozon warehouse). FBS = fulfilled by seller (your warehouse). Different APIs.",
+    "price_update": "Update prices via POST /v1/product/import/prices. Bulk update up to 1000 products per request.",
+    "performance": "Product rating affects search position. Track via GET /v1/analytics/data."
   }
 }
