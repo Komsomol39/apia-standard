@@ -7,7 +7,9 @@
     "url": "https://hh.kz",
     "api_base": "https://api.hh.kz/v1",
     "category": "employment",
-    "geo": ["KZ"],
+    "geo": [
+      "KZ"
+    ],
     "language": "ru",
     "docs": "https://github.com/hhru/api",
     "note": "API полностью совместимо с hh.ru — те же endpoints, те же параметры, другой base URL и валюта"
@@ -15,7 +17,11 @@
   "auth": {
     "type": "oauth2",
     "anonymous_access": true,
-    "anonymous_capabilities": ["search_vacancies", "get_vacancy", "get_areas"],
+    "anonymous_capabilities": [
+      "search_vacancies",
+      "get_vacancy",
+      "get_areas"
+    ],
     "oauth_url": "https://hh.kz/oauth/authorize",
     "token_url": "https://hh.kz/oauth/token"
   },
@@ -24,40 +30,116 @@
       "id": "search_vacancies",
       "description_for_ai": "Поиск вакансий в Казахстане по ключевому слову, городу или координатам. Зарплаты в тенге (₸). Используй для запросов 'работа в Алматы', 'вакансии в Астане', 'найди работу в Казахстане'.",
       "intent": [
-        "работа в Казахстане", "вакансии в Алматы", "работа в Астане",
-        "найти работу в КЗ", "вакансии в Казахстане", "работа в Шымкенте"
+        "работа в Казахстане",
+        "вакансии в Алматы",
+        "работа в Астане",
+        "найти работу в КЗ",
+        "вакансии в Казахстане",
+        "работа в Шымкенте"
       ],
       "endpoint": "GET https://api.hh.kz/vacancies",
       "input": {
-        "text": { "type": "string", "description": "Поисковый запрос", "required": false },
-        "area": { "type": "integer", "description": "ID города. Алматы=160, Астана=159, Шымкент=210. Получить через get_areas", "required": false },
-        "lat": { "type": "float", "description": "Широта для геопоиска", "required": false },
-        "lng": { "type": "float", "description": "Долгота для геопоиска", "required": false },
-        "salary": { "type": "integer", "description": "Минимальная зарплата в тенге (₸)", "required": false },
-        "currency": { "type": "string", "description": "Валюта зарплаты", "default": "KZT" },
-        "experience": { "type": "string", "description": "noExperience, between1And3, between3And6, moreThan6", "required": false },
-        "schedule": { "type": "string", "description": "fullDay, remote, flexible, shift", "required": false },
-        "per_page": { "type": "integer", "default": 20, "max": 100 },
-        "page": { "type": "integer", "default": 0 }
+        "text": {
+          "type": "string",
+          "description": "Поисковый запрос",
+          "required": false
+        },
+        "area": {
+          "type": "integer",
+          "description": "ID города. Алматы=160, Астана=159, Шымкент=210. Получить через get_areas",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "description": "Широта для геопоиска",
+          "required": false
+        },
+        "lng": {
+          "type": "float",
+          "description": "Долгота для геопоиска",
+          "required": false
+        },
+        "salary": {
+          "type": "integer",
+          "description": "Минимальная зарплата в тенге (₸)",
+          "required": false
+        },
+        "currency": {
+          "type": "string",
+          "description": "Валюта зарплаты",
+          "default": "KZT"
+        },
+        "experience": {
+          "type": "string",
+          "description": "noExperience, between1And3, between3And6, moreThan6",
+          "required": false
+        },
+        "schedule": {
+          "type": "string",
+          "description": "fullDay, remote, flexible, shift",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20,
+          "max": 100
+        },
+        "page": {
+          "type": "integer",
+          "default": 0
+        }
       },
       "output": {
         "type": "list<vacancy>",
-        "fields": ["id", "name", "area.name", "salary.from", "salary.to", "salary.currency", "employer.name", "url", "published_at"]
+        "fields": [
+          "id",
+          "name",
+          "area.name",
+          "salary.from",
+          "salary.to",
+          "salary.currency",
+          "employer.name",
+          "url",
+          "published_at"
+        ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
       "id": "get_vacancy",
-      "description_for_ai": "Полное описание вакансии по ID. Аналогично hh.ru.",
-      "intent": ["подробнее о вакансии", "описание вакансии KZ"],
+      "description_for_ai": "Get full vacancy details from hh.kz Kazakhstan: title, company, salary in KZT, requirements, and employer info.",
+      "intent": [
+        "вакансия Казахстан",
+        "работа Алматы",
+        "работа Астана",
+        "job Kazakhstan",
+        "зарплата KZT"
+      ],
       "endpoint": "GET https://api.hh.kz/vacancies/{vacancy_id}",
       "input": {
-        "vacancy_id": { "type": "string", "required": true }
+        "id": {
+          "type": "string",
+          "description": "Vacancy ID from search results",
+          "required": true
+        },
+        "locale": {
+          "type": "string",
+          "description": "Response language: RU or EN",
+          "default": "RU"
+        }
       },
       "output": {
         "type": "vacancy",
-        "fields": ["name", "description", "key_skills", "employer.name", "salary", "address.raw", "contacts"]
+        "fields": [
+          "name",
+          "description",
+          "key_skills",
+          "employer.name",
+          "salary",
+          "address.raw",
+          "contacts"
+        ]
       },
       "realtime": true,
       "requires_auth": false
@@ -65,18 +147,29 @@
     {
       "id": "get_areas",
       "description_for_ai": "Список городов Казахстана с ID для фильтрации вакансий.",
-      "intent": ["города Казахстана", "ID Алматы", "регионы КЗ"],
+      "intent": [
+        "города Казахстана",
+        "ID Алматы",
+        "регионы КЗ"
+      ],
       "endpoint": "GET https://api.hh.kz/areas",
       "input": {},
-      "output": { "type": "list<area>", "fields": ["id", "name", "areas"] },
+      "output": {
+        "type": "list<area>",
+        "fields": [
+          "id",
+          "name",
+          "areas"
+        ]
+      },
       "realtime": false,
       "requires_auth": false
     }
   ],
   "agent_hints": {
-    "salary_tip": "Зарплаты в тенге. 1 USD ≈ 450-480 ₸. При сравнении с hh.ru конвертируй.",
-    "cities": "Алматы=160 (крупнейший город), Астана=159 (столица), Шымкент=210, Караганда=161.",
-    "same_api": "API идентично hh.ru. Если уже реализована интеграция с hh.ru — просто смени base URL на api.hh.kz."
+    "base_url": "Use api.hh.kz for Kazakhstan-localized results. API identical to hh.ru.",
+    "areas": "Kazakhstan area ID: 40. Almaty: 160. Astana/Nur-Sultan: 159. Get full list from /areas.",
+    "currency": "Salaries in KZT (Kazakhstani tenge). Filter by: salary_currency=KZT."
   },
   "limits": {
     "requests_per_day": 1000,
