@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "people_search",
-      "description_for_ai": "Search for people/contacts with filters: company, title, location, industry, seniority level.",
+      "description_for_ai": "Search 265M+ B2B contacts with advanced filters: job title, seniority, company size, industry, location. Returns verified emails and phone numbers.",
       "intent": [
         "find contacts",
         "B2B leads",
@@ -36,28 +36,47 @@
       "input": {
         "person_titles": {
           "type": "array",
-          "description": "Job titles e.g. [CEO, CTO, VP Engineering]",
+          "description": "Job titles to target: ['CEO', 'CTO', 'VP Engineering', 'Director of Marketing']",
           "required": false
         },
-        "person_locations": {
+        "person_seniority_levels": {
           "type": "array",
-          "description": "Location filters e.g. [United States, California]",
+          "description": "Seniority: ['c_suite', 'vp', 'director', 'manager', 'individual_contributor']",
           "required": false
         },
         "organization_locations": {
           "type": "array",
+          "description": "Company locations: ['United States', 'California', 'New York City']",
+          "required": false
+        },
+        "person_locations": {
+          "type": "array",
+          "description": "Person locations: ['San Francisco, California', 'London, England']",
           "required": false
         },
         "organization_industry_tag_ids": {
           "type": "array",
+          "description": "Industry IDs — get from /industries endpoint. E.g. 'technology', 'financial_services'",
+          "required": false
+        },
+        "organization_num_employees_ranges": {
+          "type": "array",
+          "description": "Company size ranges: ['1,10', '11,50', '51,200', '201,1000', '1001,10000', '10001,99999']",
+          "required": false
+        },
+        "q_organization_keyword_tags": {
+          "type": "array",
+          "description": "Company keyword tags: ['SaaS', 'artificial intelligence', 'fintech']",
           "required": false
         },
         "page": {
           "type": "integer",
+          "description": "Page number (1-indexed)",
           "default": 1
         },
         "per_page": {
           "type": "integer",
+          "description": "Results per page, max 100",
           "default": 25
         }
       },
@@ -67,9 +86,12 @@
           "people[0].name",
           "people[0].title",
           "people[0].email",
+          "people[0].email_status",
           "people[0].phone_numbers[0].raw_number",
           "people[0].organization.name",
-          "people[0].linkedin_url"
+          "people[0].organization.website_url",
+          "people[0].linkedin_url",
+          "pagination.total_entries"
         ]
       },
       "realtime": true,
