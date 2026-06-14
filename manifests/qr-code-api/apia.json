@@ -21,7 +21,7 @@
   "capabilities": [
     {
       "id": "create_qr",
-      "description_for_ai": "Generate QR code image for any text or URL. Returns PNG image directly.",
+      "description_for_ai": "Free QR code generation. Create QR codes for URLs, text, contacts, WiFi credentials. No API key needed. Returns PNG image. Generate QR code image for any text or URL. Returns PNG image directly.",
       "intent": [
         "create QR code",
         "generate QR",
