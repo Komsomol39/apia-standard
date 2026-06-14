@@ -1,1 +1,102 @@
-{"apia":"1.0","service":{"id":"sber-api","name":"Сбер API (SberCloud)","description_for_ai":"Экосистема API Сбербанка. SberPay (оплата), GigaChat (LLM), GigaCode (AI-кодирование), SberCloud (облако), SmartSpeech (распознавание речи), Salute (голосовой ассистент). Ключевая платформа российских AI-сервисов.","url":"https://developers.sber.ru","api_base":"https://ngw.devices.sberbank.ru","category":"ai_ru","geo":["RU"],"language":"ru","docs":"https://developers.sber.ru/portal/products"},"auth":{"type":"oauth2_client_credentials","anonymous_access":false,"how_to_get":"Регистрация на https://developers.sber.ru","cost":"GigaChat Lite бесплатно. Остальные по тарифам"},"capabilities":[{"id":"gigachat_generate","description_for_ai":"Генерация текста через GigaChat — российская LLM от Сбербанка. Альтернатива ChatGPT для российских компаний. Работает без ограничений для RU-пользователей. Поддерживает русский язык нативно.","intent":["российский ИИ","GigaChat","генерация текста Сбер","AI Сбербанк","отечественный LLM"],"endpoint":"POST https://gigachat.devices.sberbank.ru/api/v1/chat/completions","input":{"model":{"type":"string","description":"GigaChat, GigaChat-Plus, GigaChat-Pro","default":"GigaChat"},"messages":{"type":"array","description":"[{role: user, content: текст}]","required":true},"temperature":{"type":"float","default":0.87},"max_tokens":{"type":"integer","default":1024}},"output":{"type":"completion","fields":["choices[0].message.content","usage.total_tokens"]},"realtime":true,"requires_auth":true},{"id":"smartspeech_stt","description_for_ai":"Распознавание речи SmartSpeech от Сбера. Транскрибация аудио на русском языке. Оптимизирован для русского.","intent":["распознавание речи","транскрибация","speech to text русский","голос в текст"],"endpoint":"POST https://smartspeech.sber.ru/rest/v1/speech:recognize","input":{"audio":{"type":"binary","description":"Аудио файл WAV/MP3/OPUS","required":true},"model":{"type":"string","description":"general, callcenter, media","default":"general"}},"output":{"type":"recognition","fields":["result[0].normalized_text","result[0].confidence"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "sber-api",
+    "name": "Сбер API (SberCloud)",
+    "description_for_ai": "Экосистема API Сбербанка. SberPay (оплата), GigaChat (LLM), GigaCode (AI-кодирование), SberCloud (облако), SmartSpeech (распознавание речи), Salute (голосовой ассистент). Ключевая платформа российских AI-сервисов.",
+    "url": "https://developers.sber.ru",
+    "api_base": "https://ngw.devices.sberbank.ru",
+    "category": "ai_ru",
+    "geo": [
+      "RU"
+    ],
+    "language": "ru",
+    "docs": "https://developers.sber.ru/portal/products"
+  },
+  "auth": {
+    "type": "oauth2_client_credentials",
+    "anonymous_access": false,
+    "how_to_get": "Регистрация на https://developers.sber.ru",
+    "cost": "GigaChat Lite бесплатно. Остальные по тарифам"
+  },
+  "capabilities": [
+    {
+      "id": "gigachat_generate",
+      "description_for_ai": "Генерация текста через GigaChat — российская LLM от Сбербанка. Альтернатива ChatGPT для российских компаний. Работает без ограничений для RU-пользователей. Поддерживает русский язык нативно.",
+      "intent": [
+        "российский ИИ",
+        "GigaChat",
+        "генерация текста Сбер",
+        "AI Сбербанк",
+        "отечественный LLM"
+      ],
+      "endpoint": "POST https://gigachat.devices.sberbank.ru/api/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "GigaChat, GigaChat-Plus, GigaChat-Pro",
+          "default": "GigaChat"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: user, content: текст}]",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0.87
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 1024
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content",
+          "usage.total_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "smartspeech_stt",
+      "description_for_ai": "Распознавание речи SmartSpeech от Сбера. Транскрибация аудио на русском языке. Оптимизирован для русского.",
+      "intent": [
+        "распознавание речи",
+        "транскрибация",
+        "speech to text русский",
+        "голос в текст"
+      ],
+      "endpoint": "POST https://smartspeech.sber.ru/rest/v1/speech:recognize",
+      "input": {
+        "audio": {
+          "type": "binary",
+          "description": "Аудио файл WAV/MP3/OPUS",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "description": "general, callcenter, media",
+          "default": "general"
+        }
+      },
+      "output": {
+        "type": "recognition",
+        "fields": [
+          "result[0].normalized_text",
+          "result[0].confidence"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
