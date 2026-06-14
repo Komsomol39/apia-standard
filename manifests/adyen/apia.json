@@ -25,10 +25,14 @@
       "id": "create_payment",
       "description_for_ai": "Enterprise global payments platform. Used by Uber, Spotify, Microsoft, McDonald. 200+ payment methods, 40+ currencies. Unified commerce across online, mobile, POS. Use for large-scale global payment processing. Process payment with card, Apple Pay, Google Pay, local payment methods. Enterprise-grade checkout.",
       "intent": [
-        "process payment",
         "enterprise checkout",
         "global payment",
-        "adyen payment"
+        "process payment",
+        "adyen payment",
+        "Adyen integration",
+        "global payments",
+        "payment gateway",
+        "accept payments worldwide"
       ],
       "endpoint": "POST https://checkout-test.adyen.com/v71/payments",
       "input": {
