@@ -1,2 +1,111 @@
 {
-  "apia":"1.0","service":{"id":"gtfs","name":"GTFS / Transitland API","description_for_ai":"Global public transit data standard and aggregator. GTFS feeds from 1000+ cities worldwide — bus, metro, tram, ferry schedules. Transitland aggregates feeds from all cities. Use for public transit routing, schedule display.","url":"https://www.transit.land","api_base":"https://transit.land/api/v2","category":"transport_transit","geo":["GLOBAL"],"language":"en","docs":"https://www.transit.land/documentation"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"Register at https://www.transit.land/documentation/rest-api","cost":"Free tier available"},"capabilities":[{"id":"get_routes","description_for_ai":"Get public transit routes for an agency or geographic area. Returns bus/metro/tram route info.","intent":["bus routes","metro lines","public transit","bus schedule","transit routes","расписание автобуса"],"endpoint":"GET https://transit.land/api/v2/rest/routes","input":{"agency_key":{"type":"string","description":"Agency key from Transitland","required":false},"bbox":{"type":"string","description":"Bounding box: min_lon,min_lat,max_lon,max_lat","required":false},"limit":{"type":"integer","default":20}},"output":{"type":"list<route>","fields":["id","short_name","long_name","route_type","agency.name"]},"realtime":false,"requires_auth":true},{"id":"get_stops","description_for_ai":"Get transit stops in an area. Includes bus stops, metro stations.","intent":["bus stop","transit stop","metro station","nearest stop"],"endpoint":"GET https://transit.land/api/v2/rest/stops","input":{"lon":{"type":"float","required":false},"lat":{"type":"float","required":false},"radius":{"type":"integer","description":"Meters","default":500},"limit":{"type":"integer","default":20}},"output":{"type":"list<stop>","fields":["id","stop_name","geometry.coordinates","served_by_routes"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "gtfs",
+    "name": "GTFS / Transitland API",
+    "description_for_ai": "Global public transit data standard and aggregator. GTFS feeds from 1000+ cities worldwide — bus, metro, tram, ferry schedules. Transitland aggregates feeds from all cities. Use for public transit routing, schedule display.",
+    "url": "https://www.transit.land",
+    "api_base": "https://transit.land/api/v2",
+    "category": "transport_transit",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://www.transit.land/documentation"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://www.transit.land/documentation/rest-api",
+    "cost": "Free tier available"
+  },
+  "capabilities": [
+    {
+      "id": "get_routes",
+      "description_for_ai": "Get public transit routes for an agency or geographic area. Returns bus/metro/tram route info.",
+      "intent": [
+        "bus routes",
+        "metro lines",
+        "public transit",
+        "bus schedule",
+        "transit routes",
+        "расписание автобуса"
+      ],
+      "endpoint": "GET https://transit.land/api/v2/rest/routes",
+      "input": {
+        "agency_key": {
+          "type": "string",
+          "description": "Agency key from Transitland",
+          "required": false
+        },
+        "bbox": {
+          "type": "string",
+          "description": "Bounding box: min_lon,min_lat,max_lon,max_lat",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<route>",
+        "fields": [
+          "id",
+          "short_name",
+          "long_name",
+          "route_type",
+          "agency.name"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_stops",
+      "description_for_ai": "Get transit stops in an area. Includes bus stops, metro stations.",
+      "intent": [
+        "bus stop",
+        "transit stop",
+        "metro station",
+        "nearest stop"
+      ],
+      "endpoint": "GET https://transit.land/api/v2/rest/stops",
+      "input": {
+        "lon": {
+          "type": "float",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Meters",
+          "default": 500
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<stop>",
+        "fields": [
+          "id",
+          "stop_name",
+          "geometry.coordinates",
+          "served_by_routes"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
