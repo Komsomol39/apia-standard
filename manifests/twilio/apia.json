@@ -1,0 +1,76 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "twilio",
+    "name": "Twilio",
+    "description_for_ai": "World's leading communications API. Send SMS, make voice calls, send WhatsApp messages programmatically. Used by Airbnb, Uber, Netflix. Use when user needs to send a notification, OTP code, or automated message to a phone number.",
+    "url": "https://twilio.com",
+    "api_base": "https://api.twilio.com/2010-04-01",
+    "category": "communications",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://www.twilio.com/docs/sms/api"
+  },
+  "auth": {
+    "type": "basic_auth",
+    "anonymous_access": false,
+    "credentials": "Account SID (username) + Auth Token (password)",
+    "how_to_get": "Register at https://twilio.com/try-twilio — free trial with $15 credit",
+    "cost": "SMS: $0.0079/message. Phone number: $1/month"
+  },
+  "capabilities": [
+    {
+      "id": "send_sms",
+      "description_for_ai": "Send an SMS message to any phone number worldwide. Use when user wants to send a text notification, OTP code, alert or reminder to a phone number.",
+      "intent": [
+        "send SMS", "text message", "send notification to phone",
+        "OTP code", "send alert", "mobile notification"
+      ],
+      "endpoint": "POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json",
+      "input": {
+        "To": { "type": "string", "description": "Recipient phone number in E.164 format. E.g. '+79161234567'", "required": true },
+        "From": { "type": "string", "description": "Your Twilio phone number or Messaging Service SID", "required": true },
+        "Body": { "type": "string", "description": "Message text (max 1600 chars)", "required": true }
+      },
+      "output": {
+        "type": "message",
+        "fields": ["sid", "status", "to", "from", "body", "date_created", "price", "error_code"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_whatsapp",
+      "description_for_ai": "Send a WhatsApp message via Twilio. Use when user explicitly wants WhatsApp instead of SMS.",
+      "intent": ["send WhatsApp", "WhatsApp message", "message via WhatsApp"],
+      "endpoint": "POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json",
+      "input": {
+        "To": { "type": "string", "description": "WhatsApp number: 'whatsapp:+79161234567'", "required": true },
+        "From": { "type": "string", "description": "Twilio WhatsApp number: 'whatsapp:+14155238886'", "required": true },
+        "Body": { "type": "string", "description": "Message text", "required": true }
+      },
+      "output": {
+        "type": "message",
+        "fields": ["sid", "status", "to", "from", "body", "date_created"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "phone_format": "Always use E.164 format: +[country_code][number]. E.g. +79161234567 for Russia, +44207946123 for UK.",
+    "trial_limits": "Trial account can only send to verified numbers. Upgrade for production use.",
+    "russia_note": "SMS delivery to Russian numbers works but may have delays due to carrier routing. WhatsApp is more reliable.",
+    "sandbox": "For testing WhatsApp use the sandbox: +14155238886. Join by sending 'join <word>' to that number."
+  },
+  "limits": {
+    "commercial_use": true,
+    "attribution_required": false,
+    "trial_credit_usd": 15
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
