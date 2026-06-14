@@ -7,7 +7,9 @@
     "url": "https://data.mos.ru",
     "api_base": "https://api.data.mos.ru/v1",
     "category": "city_data",
-    "geo": ["RU-MOS"],
+    "geo": [
+      "RU-MOS"
+    ],
     "language": "ru",
     "docs": "https://data.mos.ru/developers/documentation"
   },
@@ -24,9 +26,15 @@
       "id": "get_dataset",
       "description_for_ai": "Получить данные из конкретного набора данных по его ID. Это основной метод — все данные портала хранятся в наборах с числовыми ID. Примеры: 526=аптеки, 1095=поликлиники, 2453=парковки, 619=остановки транспорта, 1938=спортплощадки, 582=библиотеки.",
       "intent": [
-        "аптеки в Москве", "поликлиники рядом", "парковки Москвы",
-        "остановки транспорта", "спортплощадки", "библиотеки",
-        "школы рядом", "детские сады", "городская инфраструктура"
+        "аптеки в Москве",
+        "поликлиники рядом",
+        "парковки Москвы",
+        "остановки транспорта",
+        "спортплощадки",
+        "библиотеки",
+        "школы рядом",
+        "детские сады",
+        "городская инфраструктура"
       ],
       "endpoint": "GET https://api.data.mos.ru/v1/datasets/{dataset_id}/rows",
       "input": {
@@ -35,14 +43,33 @@
           "description": "ID набора данных. 526=аптеки, 1095=поликлиники, 2453=парковки, 619=остановки, 1938=спортплощадки, 582=библиотеки, 1601=МФЦ, 2034=зоны WiFi",
           "required": true
         },
-        "$top": { "type": "integer", "description": "Количество записей", "default": 100, "max": 500 },
-        "$skip": { "type": "integer", "description": "Смещение для пагинации", "default": 0 },
-        "$filter": { "type": "string", "description": "OData фильтр. Например: Cells/AdmArea eq 'Центральный административный округ'", "required": false },
-        "$orderby": { "type": "string", "description": "Сортировка. Например: Cells/Name asc", "required": false }
+        "$top": {
+          "type": "integer",
+          "description": "Количество записей",
+          "default": 100,
+          "max": 500
+        },
+        "$skip": {
+          "type": "integer",
+          "description": "Смещение для пагинации",
+          "default": 0
+        },
+        "$filter": {
+          "type": "string",
+          "description": "OData фильтр. Например: Cells/AdmArea eq 'Центральный административный округ'",
+          "required": false
+        },
+        "$orderby": {
+          "type": "string",
+          "description": "Сортировка. Например: Cells/Name asc",
+          "required": false
+        }
       },
       "output": {
         "type": "list<row>",
-        "fields": ["Cells — объект с полями специфичными для каждого набора данных"]
+        "fields": [
+          "Cells — объект с полями специфичными для каждого набора данных"
+        ]
       },
       "realtime": false,
       "requires_auth": true
@@ -50,16 +77,36 @@
     {
       "id": "search_datasets",
       "description_for_ai": "Поиск наборов данных по ключевому слову. Используй когда не знаешь ID нужного набора — найди его по теме.",
-      "intent": ["найти набор данных", "что есть на портале", "поиск данных по теме"],
+      "intent": [
+        "найти набор данных",
+        "что есть на портале",
+        "поиск данных по теме"
+      ],
       "endpoint": "GET https://api.data.mos.ru/v1/datasets",
       "input": {
-        "$filter": { "type": "string", "description": "OData фильтр по названию. Например: substringof('парковка', Name)", "required": false },
-        "$top": { "type": "integer", "default": 20 },
-        "$skip": { "type": "integer", "default": 0 }
+        "$filter": {
+          "type": "string",
+          "description": "OData фильтр по названию. Например: substringof('парковка', Name)",
+          "required": false
+        },
+        "$top": {
+          "type": "integer",
+          "default": 20
+        },
+        "$skip": {
+          "type": "integer",
+          "default": 0
+        }
       },
       "output": {
         "type": "list<dataset>",
-        "fields": ["Id", "Name", "Caption", "RowsCount", "UpdatedAt"]
+        "fields": [
+          "Id",
+          "Name",
+          "Caption",
+          "RowsCount",
+          "UpdatedAt"
+        ]
       },
       "realtime": false,
       "requires_auth": true
@@ -67,14 +114,30 @@
     {
       "id": "get_dataset_info",
       "description_for_ai": "Получить метаданные набора данных: описание, поля, количество записей, дату обновления. Используй чтобы понять структуру данных перед запросом get_dataset.",
-      "intent": ["структура данных", "поля набора", "описание набора данных"],
+      "intent": [
+        "структура данных",
+        "поля набора",
+        "описание набора данных"
+      ],
       "endpoint": "GET https://api.data.mos.ru/v1/datasets/{dataset_id}",
       "input": {
-        "dataset_id": { "type": "integer", "description": "ID набора данных", "required": true }
+        "dataset_id": {
+          "type": "integer",
+          "description": "ID набора данных",
+          "required": true
+        }
       },
       "output": {
         "type": "dataset_info",
-        "fields": ["Id", "Name", "Caption", "RowsCount", "Columns", "UpdatedAt", "Category"]
+        "fields": [
+          "Id",
+          "Name",
+          "Caption",
+          "RowsCount",
+          "Columns",
+          "UpdatedAt",
+          "Category"
+        ]
       },
       "realtime": false,
       "requires_auth": true
@@ -83,18 +146,66 @@
   "popular_datasets": {
     "description_for_ai": "Наиболее полезные наборы данных для AI-агентов с геоконтекстом",
     "datasets": [
-      { "id": 526, "name": "Аптеки", "geo": true },
-      { "id": 1095, "name": "Поликлиники", "geo": true },
-      { "id": 2453, "name": "Парковочные пространства", "geo": true },
-      { "id": 619, "name": "Остановки наземного транспорта", "geo": true },
-      { "id": 1938, "name": "Спортивные площадки", "geo": true },
-      { "id": 582, "name": "Библиотеки", "geo": true },
-      { "id": 1601, "name": "МФЦ (Мои документы)", "geo": true },
-      { "id": 2034, "name": "Зоны бесплатного WiFi", "geo": true },
-      { "id": 1500, "name": "Школы", "geo": true },
-      { "id": 718, "name": "Детские сады", "geo": true },
-      { "id": 2121, "name": "Культурные центры", "geo": true },
-      { "id": 60, "name": "Мероприятия в Москве", "geo": false }
+      {
+        "id": 526,
+        "name": "Аптеки",
+        "geo": true
+      },
+      {
+        "id": 1095,
+        "name": "Поликлиники",
+        "geo": true
+      },
+      {
+        "id": 2453,
+        "name": "Парковочные пространства",
+        "geo": true
+      },
+      {
+        "id": 619,
+        "name": "Остановки наземного транспорта",
+        "geo": true
+      },
+      {
+        "id": 1938,
+        "name": "Спортивные площадки",
+        "geo": true
+      },
+      {
+        "id": 582,
+        "name": "Библиотеки",
+        "geo": true
+      },
+      {
+        "id": 1601,
+        "name": "МФЦ (Мои документы)",
+        "geo": true
+      },
+      {
+        "id": 2034,
+        "name": "Зоны бесплатного WiFi",
+        "geo": true
+      },
+      {
+        "id": 1500,
+        "name": "Школы",
+        "geo": true
+      },
+      {
+        "id": 718,
+        "name": "Детские сады",
+        "geo": true
+      },
+      {
+        "id": 2121,
+        "name": "Культурные центры",
+        "geo": true
+      },
+      {
+        "id": 60,
+        "name": "Мероприятия в Москве",
+        "geo": false
+      }
     ]
   },
   "agent_hints": {
