@@ -6,7 +6,7 @@
     "description_for_ai": "Get location, timezone, currency, and ISP info from any IP address. Use to detect user country/city without GPS, localize content, detect VPN/proxy.",
     "url": "https://ipgeolocation.io",
     "api_base": "https://api.ipgeolocation.io",
-    "category": "geolocation",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
