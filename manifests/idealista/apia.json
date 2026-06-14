@@ -1,1 +1,90 @@
-{"apia":"1.0","service":{"id":"idealista","name":"Idealista API (Spain/Italy/Portugal)","description_for_ai":"Leading property portal in Spain, Italy and Portugal. Buy and rent listings. Official API for real estate professionals. Use for property search in Southern Europe.","url":"https://idealista.com","api_base":"https://api.idealista.com/3.5","category":"real_estate","geo":["ES","IT","PT"],"language":"en","docs":"https://developers.idealista.com/"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Apply at https://developers.idealista.com","cost":"Professional license required"},"capabilities":[{"id":"search","description_for_ai":"Search properties in Spain, Italy or Portugal for sale or rent.","intent":["property Spain","apartment Madrid","buy house Italy","rent Portugal","pisos en venta","alquiler"],"endpoint":"POST https://api.idealista.com/3.5/{country}/search","input":{"country":{"type":"string","description":"es, it, pt","required":true},"operation":{"type":"string","description":"sale or rent","required":true},"propertyType":{"type":"string","description":"homes, offices, premises, garages, bedrooms","required":true},"center":{"type":"string","description":"lat,lng","required":false},"distance":{"type":"integer","description":"meters","required":false},"maxItems":{"type":"integer","default":40}},"output":{"type":"list<property>","fields":["propertyCode","price","rooms","size","floor","address","thumbnail","description"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "idealista",
+    "name": "Idealista API (Spain/Italy/Portugal)",
+    "description_for_ai": "Leading property portal in Spain, Italy and Portugal. Buy and rent listings. Official API for real estate professionals. Use for property search in Southern Europe.",
+    "url": "https://idealista.com",
+    "api_base": "https://api.idealista.com/3.5",
+    "category": "real_estate",
+    "geo": [
+      "ES",
+      "IT",
+      "PT"
+    ],
+    "language": "en",
+    "docs": "https://developers.idealista.com/"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Apply at https://developers.idealista.com",
+    "cost": "Professional license required"
+  },
+  "capabilities": [
+    {
+      "id": "search",
+      "description_for_ai": "Search properties in Spain, Italy or Portugal for sale or rent.",
+      "intent": [
+        "property Spain",
+        "apartment Madrid",
+        "buy house Italy",
+        "rent Portugal",
+        "pisos en venta",
+        "alquiler"
+      ],
+      "endpoint": "POST https://api.idealista.com/3.5/{country}/search",
+      "input": {
+        "country": {
+          "type": "string",
+          "description": "es, it, pt",
+          "required": true
+        },
+        "operation": {
+          "type": "string",
+          "description": "sale or rent",
+          "required": true
+        },
+        "propertyType": {
+          "type": "string",
+          "description": "homes, offices, premises, garages, bedrooms",
+          "required": true
+        },
+        "center": {
+          "type": "string",
+          "description": "lat,lng",
+          "required": false
+        },
+        "distance": {
+          "type": "integer",
+          "description": "meters",
+          "required": false
+        },
+        "maxItems": {
+          "type": "integer",
+          "default": 40
+        }
+      },
+      "output": {
+        "type": "list<property>",
+        "fields": [
+          "propertyCode",
+          "price",
+          "rooms",
+          "size",
+          "floor",
+          "address",
+          "thumbnail",
+          "description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
