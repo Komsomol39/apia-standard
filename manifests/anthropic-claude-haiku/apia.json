@@ -37,7 +37,8 @@
       "input": {
         "model": {
           "type": "string",
-          "default": "claude-haiku-4-5"
+          "default": "claude-haiku-4-5",
+          "description": "AI/ML model identifier to use for this request"
         },
         "messages": {
           "type": "array",
@@ -45,7 +46,8 @@
         },
         "max_tokens": {
           "type": "integer",
-          "default": 1024
+          "default": 1024,
+          "description": "Maximum number of tokens to generate in response"
         },
         "system": {
           "type": "string",
