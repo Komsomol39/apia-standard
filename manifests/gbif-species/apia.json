@@ -6,7 +6,7 @@
     "description_for_ai": "GBIF Species API — comprehensive taxonomy database covering all life on Earth. 3M+ species with full taxonomic classification, vernacular names in 100+ languages, synonyms, and media. Powers biodiversity research globally. Completely free and open data.",
     "url": "https://gbif.org",
     "api_base": "https://api.gbif.org/v1",
-    "category": "biodiversity",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
