@@ -6,7 +6,7 @@
     "description_for_ai": "Free public holidays API for 100+ countries. No API key needed. Get national holidays, check if date is holiday, next public holiday. Use for business day calculations, scheduling apps.",
     "url": "https://date.nager.at",
     "api_base": "https://date.nager.at/api/v3",
-    "category": "utilities_calendar",
+    "category": "utilities",
     "geo": [
       "GLOBAL"
     ],
