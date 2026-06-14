@@ -6,7 +6,7 @@
     "description_for_ai": "Free high-quality stock photos API. 5M+ professional photos. Search by keyword, get random photo, download. Free tier: 50 requests/hour. Perfect for adding visual content to apps.",
     "url": "https://unsplash.com",
     "api_base": "https://api.unsplash.com",
-    "category": "media_images",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
