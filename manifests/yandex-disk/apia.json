@@ -23,14 +23,20 @@
   "capabilities": [
     {
       "id": "get_disk_info",
-      "description_for_ai": "Получить информацию о диске: свободное место, использованное пространство, ссылки.",
+      "description_for_ai": "Get Яндекс.Диск quota info: total space, used space, trash size, and system folder paths.",
       "intent": [
         "место на диске",
         "свободное место Яндекс Диск",
         "информация о диске"
       ],
       "endpoint": "GET https://cloud-api.yandex.net/v1/disk",
-      "input": {},
+      "input": {
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated fields to return: is_paid, revision, trash_size, total_space, used_space, system_folders",
+          "required": false
+        }
+      },
       "output": {
         "type": "disk",
         "fields": [
@@ -45,7 +51,7 @@
     },
     {
       "id": "upload_file",
-      "description_for_ai": "Загрузить файл на Яндекс.Диск.",
+      "description_for_ai": "Get a pre-signed upload URL for uploading a file to Яндекс.Диск. Then PUT the file to the returned href URL.",
       "intent": [
         "загрузить файл",
         "сохранить на Яндекс Диск",
@@ -56,11 +62,12 @@
       "input": {
         "path": {
           "type": "string",
-          "description": "Путь для загрузки на диске, например /Загрузки/file.pdf",
+          "description": "Destination path on disk, e.g. /Загрузки/report.pdf. Create folders first with /resources if needed.",
           "required": true
         },
         "overwrite": {
           "type": "boolean",
+          "description": "Overwrite if file exists",
           "default": false
         }
       },
@@ -77,7 +84,7 @@
     },
     {
       "id": "list_files",
-      "description_for_ai": "Получить список файлов и папок на Яндекс.Диске.",
+      "description_for_ai": "List files and folders at a path on Яндекс.Диск. Returns metadata: name, type, size, modified date, download URL.",
       "intent": [
         "список файлов",
         "файлы на диске",
@@ -116,5 +123,10 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "upload_flow": "1) GET /disk/resources/upload?path=... to get upload URL. 2) PUT file binary to returned href. 3) Verify with GET /disk/resources?path=...",
+    "path_encoding": "Paths must be URL-encoded. Use /disk as root. All paths start with /.",
+    "quota": "Free: 10GB. Paid from 99 RUB/month for 100GB."
   }
 }
