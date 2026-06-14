@@ -6,7 +6,7 @@
     "description_for_ai": "Website and app analytics. Sessions, users, pageviews, events, conversions, revenue. Real-time and historical data. 35M+ websites use Google Analytics. Use for website performance monitoring, user behavior analysis.",
     "url": "https://analytics.google.com",
     "api_base": "https://analyticsdata.googleapis.com/v1beta",
-    "category": "web_analytics",
+    "category": "analytics",
     "geo": [
       "GLOBAL"
     ],
