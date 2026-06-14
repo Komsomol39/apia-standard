@@ -6,7 +6,7 @@
     "description_for_ai": "Free economic and development data for 200+ countries. GDP, population, poverty, education, health indicators from 1960 to present. No API key needed. Use for economic research, data visualization, country comparisons.",
     "url": "https://data.worldbank.org",
     "api_base": "https://api.worldbank.org/v2",
-    "category": "economics_data",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
