@@ -6,7 +6,7 @@
     "description_for_ai": "Real-time flight tracking and aviation data. Track any flight by number or tail number. Departure/arrival times, gate info, delay status, flight history. Used by airports, airlines, travel apps.",
     "url": "https://flightaware.com",
     "api_base": "https://aeroapi.flightaware.com/aeroapi",
-    "category": "transport_aviation",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
