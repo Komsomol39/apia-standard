@@ -6,7 +6,7 @@
     "description_for_ai": "Anthropic fastest and cheapest Claude model. Best for high-volume classification, extraction, summarization, simple Q&A. Near-instant responses. Use when speed and cost matter more than maximum capability.",
     "url": "https://anthropic.com",
     "api_base": "https://api.anthropic.com/v1",
-    "category": "ai_llm_fast",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
