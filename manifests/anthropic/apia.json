@@ -1,0 +1,75 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "anthropic",
+    "name": "Anthropic Claude API",
+    "description_for_ai": "Anthropic Claude AI models. Best-in-class for coding, long-context analysis, and safe, reliable outputs. Claude Haiku 4.5 for fast/cheap tasks, Claude Sonnet 4.6 for balanced quality, Claude Opus 4.6 for frontier capability. OpenAI-compatible chat format with extended thinking support.",
+    "url": "https://anthropic.com",
+    "api_base": "https://api.anthropic.com/v1",
+    "category": "ai_llm",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://docs.anthropic.com"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "x-api-key: sk-ant-...",
+    "how_to_get": "Register at https://console.anthropic.com — free tier available",
+    "cost": "Haiku 4.5: $0.80/$4 per 1M tokens. Sonnet 4.6: $3/$15. Opus 4.6: $15/$75 per 1M tokens"
+  },
+  "capabilities": [
+    {
+      "id": "messages",
+      "description_for_ai": "Generate responses using Claude models. Excellent for coding, analysis, writing, and tasks requiring careful reasoning. Supports vision (images), tool use, and extended thinking for complex problems.",
+      "intent": ["generate text", "write code", "analyze document", "long context", "careful reasoning", "claude"],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": { "type": "string", "description": "claude-haiku-4-5 (fast/cheap), claude-sonnet-4-6 (balanced), claude-opus-4-6 (powerful)", "required": true },
+        "messages": { "type": "array", "description": "Array of {role, content} objects. Roles: user, assistant", "required": true },
+        "system": { "type": "string", "description": "System prompt for behavior instructions", "required": false },
+        "max_tokens": { "type": "integer", "description": "Max tokens in response. Required.", "required": true },
+        "temperature": { "type": "float", "description": "0-1 randomness. Default 1.", "default": 1 },
+        "tools": { "type": "array", "description": "Tool definitions for function calling", "required": false },
+        "thinking": { "type": "object", "description": "{type: enabled, budget_tokens: N} for extended thinking on Opus", "required": false }
+      },
+      "output": {
+        "type": "message",
+        "fields": ["content[0].text", "usage.input_tokens", "usage.output_tokens", "stop_reason"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "vision",
+      "description_for_ai": "Analyze images with Claude. Pass images as base64 or URL in message content. Best for document analysis, screenshot understanding, diagram interpretation.",
+      "intent": ["analyze image", "read document", "screenshot analysis", "vision", "image understanding"],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": { "type": "string", "description": "claude-sonnet-4-6 or claude-opus-4-6 for vision", "required": true },
+        "messages": { "type": "array", "description": "Include {type: image, source: {type: base64, media_type: image/jpeg, data: ...}} in content", "required": true },
+        "max_tokens": { "type": "integer", "required": true }
+      },
+      "output": { "type": "message", "fields": ["content[0].text"] },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "model_choice": "Haiku 4.5 for classification, extraction, simple tasks. Sonnet 4.6 for most production use. Opus 4.6 for complex reasoning, coding, long documents.",
+    "system_prompt": "Always use system prompt to set context — Claude follows instructions more reliably with a clear system prompt.",
+    "thinking": "Extended thinking available on Opus: set thinking.type=enabled and thinking.budget_tokens. Shows reasoning chain before final answer.",
+    "prompt_caching": "Use prompt caching for repeated system prompts — up to 90% cost reduction. Add cache_control: {type: ephemeral} to reused blocks.",
+    "tool_use": "Claude is excellent at multi-step tool use. Define tools with JSON Schema, Claude calls them autonomously.",
+    "header_version": "Always include anthropic-version: 2023-06-01 header."
+  },
+  "limits": {
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
