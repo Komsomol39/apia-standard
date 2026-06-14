@@ -79,7 +79,8 @@
         },
         "key": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Key identifier or lookup key"
         }
       },
       "output": {
