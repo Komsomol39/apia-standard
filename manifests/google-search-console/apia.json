@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_search_analytics",
-      "description_for_ai": "Get search performance data: clicks, impressions, CTR, position for queries and pages.",
+      "description_for_ai": "SEO data from Google. Search queries, impressions, clicks, CTR, average position for your website in Google Search. Crawl errors, indexing status, sitemaps. Use for SEO monitoring, keyword research, indexing management. Get search performance data: clicks, impressions, CTR, position for queries and pages.",
       "intent": [
         "SEO data",
         "search queries",
