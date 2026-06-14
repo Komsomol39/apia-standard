@@ -6,7 +6,7 @@
     "description_for_ai": "Send messages and manage Slack workspaces. Post to channels, DM users, create channels, search messages, manage files. 20M+ daily users. Use for team notifications, bots, workflow automation.",
     "url": "https://slack.com",
     "api_base": "https://slack.com/api",
-    "category": "communication_teams",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
