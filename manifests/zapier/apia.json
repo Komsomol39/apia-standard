@@ -83,5 +83,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "nla_setup": "Enable NLA at nla.zapier.com. User must connect their Zapier account and enable specific actions.",
+    "action_ids": "Use list_actions first to get available action IDs for the connected user.",
+    "natural_language": "Instructions are natural language: 'Send email to john@example.com with subject Hello and body Hi there'",
+    "alternatives": "For programmatic automation without user interaction, consider Zapier's Interfaces or Tables APIs instead."
   }
 }
