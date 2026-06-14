@@ -71,7 +71,8 @@
       "input": {
         "Image": {
           "type": "object",
-          "required": true
+          "required": true,
+          "description": "Image URL or base64-encoded image data"
         }
       },
       "output": {
