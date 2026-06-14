@@ -8,7 +8,7 @@
 
 ## Why APIA Exists
 
-Every public API speaks its own language. An AI agent trying to help a user find a job, check a flight, convert currency, or get the weather must separately learn each service's format, auth scheme, and quirks. There is no shared contract.
+Every public API speaks its own language. An AI agent trying to help a user find a job, check a flight, or convert currency must separately learn each service's format, auth, and quirks. There is no shared contract.
 
 **APIA is that contract.** One file — `apia.json` — tells any AI agent everything it needs:
 
@@ -23,38 +23,38 @@ Every public API speaks its own language. An AI agent trying to help a user find
   },
   "capabilities": [{
     "id": "current_weather",
-    "description_for_ai": "Current conditions for a city or coordinates. Use for 'what's the weather', 'is it raining in Tokyo', 'temperature in Moscow now'.",
+    "description_for_ai": "Current conditions for a city or coordinates. Use for 'what's the weather', 'is it raining in Tokyo', 'погода сейчас'.",
     "intent": ["current weather", "temperature now", "is it raining", "погода сейчас"],
     "endpoint": "GET https://api.openweathermap.org/data/2.5/weather",
-    "realtime": true,
-    "requires_auth": false
+    "realtime": true
   }],
   "agent_hints": {
-    "coords_tip": "Prefer lat/lon over city name for accuracy — city names are ambiguous."
+    "tip": "Prefer lat/lon over city name — city names are ambiguous across countries."
   }
 }
 ```
 
-The key insight: `description_for_ai` and `intent` are written **for LLMs**, not for developers. That's what makes APIA different from OpenAPI.
+The key difference from OpenAPI: `description_for_ai` and `intent` are written **for LLMs**, not developers.
 
 ---
 
 ## Any API. Any Category. Any Country.
 
-APIA is not limited to Russian services or any specific domain. We welcome manifests for **any public API in the world**:
+We welcome manifests for **any public API in the world**:
 
-| Already in registry | Want to see next |
+| Already in registry | Still waiting |
 |---|---|
-| Weather, Maps, Jobs, Transport | Social media, E-commerce |
-| Payments, Music, Translation | Healthcare, IoT |
-| Gov data, Business registries | Agriculture, Energy |
-| Flights, Currency, Knowledge | Legal, Education |
+| Weather, Maps, Jobs | Social media posting |
+| Payments, Music | Healthcare, IoT |
+| Translation, Currency | E-commerce, Legal |
+| Flights, Knowledge | Agriculture, Energy |
+| Gaming, Messaging | And everything else |
 
 If it has a public API and an AI agent could use it — it belongs here.
 
 ---
 
-## Registry
+## Registry — 31 Manifests
 
 ### 🌍 Global
 
@@ -70,16 +70,22 @@ If it has a public API and an AI agent could use it — it belongs here.
 | [Spotify](manifests/spotify/apia.json) | Music | [→](https://developer.spotify.com/documentation/web-api) |
 | [Wikipedia](manifests/wikipedia/apia.json) | Knowledge | [→](https://en.wikipedia.org/api/rest_v1/) |
 | [Amadeus](manifests/amadeus/apia.json) | Flights / Travel | [→](https://developers.amadeus.com/self-service) |
+| [Steam](manifests/steam/apia.json) | Gaming | [→](https://steamcommunity.com/dev) |
+| [Reddit](manifests/reddit/apia.json) | Social / Discussion | [→](https://www.reddit.com/dev/api) |
+| [Discord](manifests/discord/apia.json) | Social / Gaming | [→](https://discord.com/developers/docs) |
+| [Telegram Bot](manifests/telegram-bot/apia.json) | Messaging | [→](https://core.telegram.org/bots/api) |
+| [LinkedIn](manifests/linkedin/apia.json) | Professional Network | [→](https://learn.microsoft.com/en-us/linkedin/) |
 
 ### 🇷🇺 Russia
 
 | Service | Category | Docs |
 |---|---|---|
+| [VK](manifests/vk/apia.json) | Social Media | [→](https://dev.vk.com/ru/api/overview) |
 | [hh.ru](manifests/hh-ru/apia.json) | Employment | [→](https://github.com/hhru/api) |
 | [SuperJob](manifests/superjob/apia.json) | Employment | [→](https://api.superjob.ru/) |
 | [SuperJob Resumes](manifests/superjob-resumes/apia.json) | Resumes | [→](https://api.superjob.ru/) |
 | [Авито.Работа](manifests/avito-jobs/apia.json) | Employment | [→](https://developers.avito.ru/api-catalog/job/documentation) |
-| [trudvsem.ru](manifests/trudvsem/apia.json) | Employment (Gov) | [→](https://trudvsem.ru/opendata/api) |
+| [trudvsem.ru](manifests/trudvsem/apia.json) | Employment Gov | [→](https://trudvsem.ru/opendata/api) |
 | [Яндекс.Расписания](manifests/yandex-rasp/apia.json) | Transport | [→](https://yandex.ru/dev/rasp/doc/ru/) |
 | [Яндекс.Карты](manifests/yandex-maps/apia.json) | Maps / Geocoding | [→](https://yandex.ru/dev/maps/) |
 | [2GIS](manifests/2gis/apia.json) | Maps / POI | [→](https://docs.2gis.com/en/api/search/overview) |
@@ -100,105 +106,63 @@ If it has a public API and an AI agent could use it — it belongs here.
 
 ## How the Registry Works
 
-### Adding a new manifest
-
-Anyone can contribute. The process is designed to be fast and low-friction:
+### Adding a manifest
 
 ```
-1. Fork → create manifests/{your-api-id}/apia.json
-2. Open a Pull Request
-3. GitHub Action auto-validates the JSON schema
-4. Get 3+ 👍 from the community
-5. Auto-merged into the registry
+Fork → create manifests/{id}/apia.json → Pull Request
+↓
+Auto-validation (JSON Schema) runs immediately
+↓
+3 × 👍 from the community → auto-merged
 ```
 
-Maintainers can block a PR only for clear reasons: broken endpoint, incorrect data, duplicate, or policy violation.
+Maintainers can only block for policy violations.
 
-### Keeping manifests up to date
+### Keeping manifests fresh
 
-Every manifest has a `last_verified` date. A monthly GitHub Action pings each endpoint and opens an Issue if it returns errors. The community can mark a manifest as `status: deprecated` when an API shuts down.
+Every manifest has `last_verified`. A monthly GitHub Action pings each endpoint and opens an Issue if something breaks. Mark outdated manifests as `deprecated`.
 
-Manifest authors are encouraged to watch their files — GitHub will notify you of issues automatically.
+### Propose what to add next
 
-### Voting on what to add next
+Use [Discussions → Ideas](../../discussions/categories/ideas) to propose APIs. Upvoted ideas get prioritized. Comment "I'll write this" to claim it for 2 weeks.
 
-Use [GitHub Discussions → Ideas](../../discussions/categories/ideas) to propose new APIs. The most upvoted ideas get prioritized by contributors. You can also claim an idea by commenting "I'll write this manifest" — that reserves it for 2 weeks.
-
-### Manifest quality tiers
+### Quality tiers
 
 | Tier | Meaning |
 |---|---|
-| ✅ **Verified** | Endpoint tested, fields confirmed, agent_hints written |
-| 🔶 **Draft** | Structure correct, not fully tested |
-| ⚠️ **Partial** | Stub with docs links — needs contributor |
-| ❌ **Deprecated** | API shut down or changed significantly |
+| ✅ Verified | Tested, fields confirmed, agent_hints written |
+| 🔶 Draft | Structure correct, not fully tested |
+| ⚠️ Partial | Stub with docs links — needs contributor |
+| ❌ Deprecated | API shut down or changed |
 
 ---
 
 ## Compatibility
 
-APIA works alongside existing standards — not replacing them:
-
-| Standard | How APIA relates |
+| Standard | Relationship |
 |---|---|
-| **OpenAPI / Swagger** | APIA references existing OpenAPI specs; adds the LLM layer on top |
-| **MCP** (Anthropic) | APIA manifests can auto-convert to MCP tool definitions |
-| **OpenClaw skills** | APIA manifests convert to `SKILL.md` automatically |
-| **JSON Schema** | APIA manifests are validated against a JSON Schema |
+| **MCP** (Anthropic) | APIA → MCP tool definitions |
+| **OpenAPI / Swagger** | APIA adds LLM layer on top of OpenAPI |
+| **OpenClaw skills** | APIA → `SKILL.md` auto-conversion |
 
 ---
 
-## Writing a Good Manifest
-
-The most important fields are the ones written for AI agents, not humans.
-
-### description_for_ai
-
-❌ **Developer-speak:** *"REST endpoint returning paginated vacancy objects filtered by location parameters"*
-
-✅ **Agent-speak:** *"Search job vacancies by keyword and location. Use when user says 'find me work nearby', 'Python developer jobs in Berlin', or 'remote positions with salary above 80k'"*
-
-### intent
-
-List the natural language phrases that should trigger this capability. Think about how real users speak — not API terminology.
-
-```json
-"intent": [
-  "find job", "work near me", "job vacancies",
-  "найти работу", "вакансии рядом", "ищу работу"
-]
-```
-
-### agent_hints
-
-Hard-won knowledge about how to use the API correctly. Format gotchas, flow recommendations, common mistakes.
-
-```json
-"agent_hints": {
-  "geo_flow": "If user says 'near me' pass lat/lng. If user names a city, call get_areas first to resolve the ID.",
-  "salary_tip": "Users say '80k' — convert to 80000 before passing to the API.",
-  "coords_format": "This API uses lng,lat order — NOT lat,lng. Don't mix them up."
-}
-```
-
----
-
-## Start Contributing
+## Contribute
 
 ```bash
 git clone https://github.com/Komsomol39/apia-standard
 cp manifests/hh-ru/apia.json manifests/your-api/apia.json
-# edit the file
+# edit it
 git commit -m "feat: add YourAPI manifest"
-git push && open a Pull Request
+# open Pull Request
 ```
 
-Not sure where to start? Check [open ideas in Discussions](../../discussions/categories/ideas) or pick an ⚠️ Partial manifest and complete it.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide on writing great manifests.
 
 ---
 
 💬 [Discussions](../../discussions) · 🐛 [Issues](../../issues) · 🌐 OpenClaw Discord `#showcase`
 
-**APIA is open source and not affiliated with any API provider.**
+**APIA is open source · Not affiliated with any API provider**
 
-*25 manifests · 4 languages · Started June 2026*
+*31 manifests · 4 languages · Started June 2026*
