@@ -99,5 +99,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "by_code": "get_by_code is faster for known countries. get_country (by name) does fuzzy matching.",
+    "fields_filter": "Add ?fields=name,capital,population to get only needed fields and reduce response size.",
+    "languages": "Returns languages as object: {eng: 'English', fra: 'French'}. Key is 3-letter ISO 639-3 code.",
+    "cca2": "cca2 = ISO 3166-1 alpha-2 (RU, US). cca3 = alpha-3 (RUS, USA). ccn3 = numeric (643, 840)."
   }
 }
