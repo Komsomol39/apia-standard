@@ -107,5 +107,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "token": "Create deployment token: vercel.com/account/tokens. Or use VERCEL_TOKEN environment variable.",
+    "project_id": "Get project ID from project settings or list_deployments response projectId field.",
+    "env_vars": "Manage via PATCH /v10/projects/{projectId} with env array. Target: production, preview, development.",
+    "domains": "Add/remove custom domains via /v10/projects/{projectId}/domains endpoint."
   }
 }
