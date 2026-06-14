@@ -1,1 +1,66 @@
-{"apia":"1.0","service":{"id":"anthropic-claude-haiku-free","name":"Anthropic API — Free Tier Access","description_for_ai":"Anthropic provides free tier access to Claude models via API. Claude Haiku 4.5 has the most generous free usage. No credit card required to start. Best free frontier AI API alongside Gemini.","url":"https://anthropic.com","api_base":"https://api.anthropic.com/v1","category":"ai_free","geo":["GLOBAL"],"language":"en","docs":"https://docs.anthropic.com/en/api/getting-started"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"Register at https://console.anthropic.com — no credit card required for free tier","cost":"Free tier available. Claude Haiku 4.5: $0.80/$4 per 1M tokens when paid"},"capabilities":[{"id":"messages","description_for_ai":"Send messages to Claude AI. Free tier available without credit card. Best for: analysis, writing, coding, Q&A in Russian, English, and 100+ languages.","intent":["free AI","Claude free","AI without credit card","free LLM","test AI","попробовать ИИ бесплатно"],"endpoint":"POST https://api.anthropic.com/v1/messages","input":{"model":{"type":"string","description":"claude-haiku-4-5 for cheapest/fastest","required":true},"messages":{"type":"array","required":true},"max_tokens":{"type":"integer","required":true}},"output":{"type":"completion","fields":["content[0].text","usage"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "anthropic-claude-haiku-free",
+    "name": "Anthropic API — Free Tier Access",
+    "description_for_ai": "Anthropic provides free tier access to Claude models via API. Claude Haiku 4.5 has the most generous free usage. No credit card required to start. Best free frontier AI API alongside Gemini.",
+    "url": "https://anthropic.com",
+    "api_base": "https://api.anthropic.com/v1",
+    "category": "ai_free",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.anthropic.com/en/api/getting-started"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://console.anthropic.com — no credit card required for free tier",
+    "cost": "Free tier available. Claude Haiku 4.5: $0.80/$4 per 1M tokens when paid"
+  },
+  "capabilities": [
+    {
+      "id": "messages",
+      "description_for_ai": "Send messages to Claude AI. Free tier available without credit card. Best for: analysis, writing, coding, Q&A in Russian, English, and 100+ languages.",
+      "intent": [
+        "free AI",
+        "Claude free",
+        "AI without credit card",
+        "free LLM",
+        "test AI",
+        "попробовать ИИ бесплатно"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "claude-haiku-4-5 for cheapest/fastest",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "content[0].text",
+          "usage"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
