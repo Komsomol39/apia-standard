@@ -6,7 +6,7 @@
     "description_for_ai": "Проверка контрагентов и бизнес-аналитика. Данные по 20 млн организаций России: финансовая отчётность, арбитражные дела, исполнительные производства, аффилированные лица, госконтракты. Незаменим для B2B KYC в России.",
     "url": "https://focus.kontur.ru",
     "api_base": "https://focus-api.kontur.ru",
-    "category": "business_intelligence",
+    "category": "business",
     "geo": [
       "RU"
     ],
