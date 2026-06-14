@@ -7,7 +7,9 @@
     "url": "https://amadeus.com",
     "api_base": "https://test.api.amadeus.com/v2",
     "category": "travel_flights",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://developers.amadeus.com/self-service"
   },
@@ -23,24 +25,76 @@
       "id": "flight_offers_search",
       "description_for_ai": "Search available flights between two cities with prices. Returns list of flight offers sorted by price. Use for 'find flights from Moscow to Dubai', 'cheapest flights to Paris', 'round trip to London'.",
       "intent": [
-        "find flights", "flight search", "cheapest flight",
-        "fly to", "book flight", "авиабилеты", "найти рейс", "перелёт"
+        "find flights",
+        "flight search",
+        "cheapest flight",
+        "fly to",
+        "book flight",
+        "авиабилеты",
+        "найти рейс",
+        "перелёт"
       ],
       "endpoint": "GET https://test.api.amadeus.com/v2/shopping/flight-offers",
       "input": {
-        "originLocationCode": { "type": "string", "description": "IATA airport code of origin. E.g. SVO (Moscow Sheremetyevo), JFK (New York), LHR (London Heathrow)", "required": true },
-        "destinationLocationCode": { "type": "string", "description": "IATA airport code of destination. E.g. DXB (Dubai), CDG (Paris), FCO (Rome)", "required": true },
-        "departureDate": { "type": "string", "description": "Departure date YYYY-MM-DD", "required": true },
-        "returnDate": { "type": "string", "description": "Return date for round trip YYYY-MM-DD", "required": false },
-        "adults": { "type": "integer", "description": "Number of adult passengers", "default": 1 },
-        "children": { "type": "integer", "description": "Number of children", "default": 0 },
-        "travelClass": { "type": "string", "description": "ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST", "default": "ECONOMY" },
-        "currencyCode": { "type": "string", "description": "Price currency: USD, EUR, RUB etc.", "default": "USD" },
-        "max": { "type": "integer", "description": "Max results", "default": 10, "max": 250 }
+        "originLocationCode": {
+          "type": "string",
+          "description": "IATA airport code of origin. E.g. SVO (Moscow Sheremetyevo), JFK (New York), LHR (London Heathrow)",
+          "required": true
+        },
+        "destinationLocationCode": {
+          "type": "string",
+          "description": "IATA airport code of destination. E.g. DXB (Dubai), CDG (Paris), FCO (Rome)",
+          "required": true
+        },
+        "departureDate": {
+          "type": "string",
+          "description": "Departure date YYYY-MM-DD",
+          "required": true
+        },
+        "returnDate": {
+          "type": "string",
+          "description": "Return date for round trip YYYY-MM-DD",
+          "required": false
+        },
+        "adults": {
+          "type": "integer",
+          "description": "Number of adult passengers",
+          "default": 1
+        },
+        "children": {
+          "type": "integer",
+          "description": "Number of children",
+          "default": 0
+        },
+        "travelClass": {
+          "type": "string",
+          "description": "ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST",
+          "default": "ECONOMY"
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "Price currency: USD, EUR, RUB etc.",
+          "default": "USD"
+        },
+        "max": {
+          "type": "integer",
+          "description": "Max results",
+          "default": 10,
+          "max": 250
+        }
       },
       "output": {
         "type": "list<flight_offer>",
-        "fields": ["id", "price.total", "price.currency", "itineraries[0].segments[0].departure.iataCode", "itineraries[0].segments[0].arrival.iataCode", "itineraries[0].duration", "numberOfBookableSeats", "validatingAirlineCodes"]
+        "fields": [
+          "id",
+          "price.total",
+          "price.currency",
+          "itineraries[0].segments[0].departure.iataCode",
+          "itineraries[0].segments[0].arrival.iataCode",
+          "itineraries[0].duration",
+          "numberOfBookableSeats",
+          "validatingAirlineCodes"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -49,16 +103,32 @@
       "id": "airport_search",
       "description_for_ai": "Find airport IATA codes by city name. Use before flight_offers_search when user mentions a city name instead of airport code.",
       "intent": [
-        "airport code", "IATA code", "which airport", "airport in city"
+        "airport code",
+        "IATA code",
+        "which airport",
+        "airport in city"
       ],
       "endpoint": "GET https://test.api.amadeus.com/v1/reference-data/locations",
       "input": {
-        "keyword": { "type": "string", "description": "City or airport name. E.g. 'Moscow', 'London', 'Dubai'", "required": true },
-        "subType": { "type": "string", "description": "AIRPORT, CITY, or AIRPORT,CITY", "default": "AIRPORT" }
+        "keyword": {
+          "type": "string",
+          "description": "City or airport name. E.g. 'Moscow', 'London', 'Dubai'",
+          "required": true
+        },
+        "subType": {
+          "type": "string",
+          "description": "AIRPORT, CITY, or AIRPORT,CITY",
+          "default": "AIRPORT"
+        }
       },
       "output": {
         "type": "list<location>",
-        "fields": ["iataCode", "name", "address.cityName", "address.countryCode"]
+        "fields": [
+          "iataCode",
+          "name",
+          "address.cityName",
+          "address.countryCode"
+        ]
       },
       "realtime": false,
       "requires_auth": true
@@ -67,19 +137,46 @@
       "id": "points_of_interest",
       "description_for_ai": "Find things to do, attractions, and restaurants near coordinates. Use for 'what to do in Rome', 'tourist attractions near me', 'restaurants in Paris'.",
       "intent": [
-        "things to do", "tourist attractions", "what to visit",
-        "restaurants near", "sightseeing", "достопримечательности"
+        "things to do",
+        "tourist attractions",
+        "what to visit",
+        "restaurants near",
+        "sightseeing",
+        "достопримечательности"
       ],
       "endpoint": "GET https://test.api.amadeus.com/v1/reference-data/locations/pois",
       "input": {
-        "latitude": { "type": "float", "required": true },
-        "longitude": { "type": "float", "required": true },
-        "radius": { "type": "integer", "description": "Search radius in km", "default": 2 },
-        "categories": { "type": "string", "description": "SIGHTS, NIGHTLIFE, RESTAURANT, SHOPPING, BEACH_PARK", "required": false }
+        "latitude": {
+          "type": "float",
+          "required": true,
+          "description": "Latitude in decimal degrees (-90 to 90)"
+        },
+        "longitude": {
+          "type": "float",
+          "required": true,
+          "description": "Longitude in decimal degrees (-180 to 180)"
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Search radius in km",
+          "default": 2
+        },
+        "categories": {
+          "type": "string",
+          "description": "SIGHTS, NIGHTLIFE, RESTAURANT, SHOPPING, BEACH_PARK",
+          "required": false
+        }
       },
       "output": {
         "type": "list<poi>",
-        "fields": ["name", "category", "rank", "tags", "geoCode.latitude", "geoCode.longitude"]
+        "fields": [
+          "name",
+          "category",
+          "rank",
+          "tags",
+          "geoCode.latitude",
+          "geoCode.longitude"
+        ]
       },
       "realtime": false,
       "requires_auth": true
