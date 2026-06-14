@@ -97,5 +97,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "async_flow": "Video generation is async: 1) POST to create generation → get id. 2) Poll GET /generations/{id} every 3-5s until state=completed. 3) Download assets.video URL.",
+    "generation_time": "Typical generation: 2-5 minutes for 5-second clip. Use exponential backoff for polling.",
+    "aspect_ratios": "16:9 landscape, 9:16 portrait (Reels/TikTok), 1:1 square, 4:3 classic, 3:4 portrait",
+    "credits": "Each generation costs credits. Monitor via GET /credits endpoint."
   }
 }
