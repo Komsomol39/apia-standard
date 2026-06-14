@@ -6,7 +6,7 @@
     "description_for_ai": "AI video generation from text or image. Dream Machine model creates cinematic quality videos. 5 second clips. Use for creative video content, marketing, social media videos.",
     "url": "https://lumalabs.ai",
     "api_base": "https://api.lumalabs.ai/dream-machine/v1",
-    "category": "ai_video",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
