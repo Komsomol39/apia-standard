@@ -1,0 +1,118 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "trudvsem",
+    "name": "Работа в России (trudvsem.ru)",
+    "description_for_ai": "Официальный государственный портал занятости России от Роструда. Содержит вакансии от государственных и частных работодателей, проверенные государством. Бесплатный API без авторизации. Используй в связке с hh.ru для полного охвата рынка труда — особенно для поиска вакансий в малых городах и госсекторе.",
+    "url": "https://trudvsem.ru",
+    "api_base": "http://opendata.trudvsem.ru/api/v1",
+    "category": "employment",
+    "geo": ["RU"],
+    "language": "ru",
+    "docs": "https://trudvsem.ru/opendata/api"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "note": "Полностью открытый API без авторизации. Государственные открытые данные."
+  },
+  "capabilities": [
+    {
+      "id": "search_vacancies",
+      "description_for_ai": "Поиск всех вакансий портала с пагинацией. Используй для получения государственных и официально зарегистрированных вакансий по всей России. Особенно полезен для госсектора, малых городов, социальных профессий.",
+      "intent": [
+        "государственные вакансии", "работа в госсекторе",
+        "официальные вакансии", "работа через центр занятости",
+        "вакансии Роструда", "все вакансии России"
+      ],
+      "endpoint": "GET http://opendata.trudvsem.ru/api/v1/vacancies",
+      "input": {
+        "offset": { "type": "integer", "description": "Смещение для пагинации", "default": 0 },
+        "limit": { "type": "integer", "description": "Количество записей на странице", "default": 10, "max": 100 },
+        "industry": { "type": "string", "description": "Код сферы деятельности", "required": false },
+        "source": { "type": "string", "description": "Источник публикации", "required": false },
+        "accommodation": { "type": "string", "description": "Возможность предоставления жилья", "required": false }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": ["id", "vacancy.job-name", "vacancy.salary", "vacancy.salary_min", "vacancy.salary_max", "vacancy.company.name", "vacancy.region.name", "vacancy.addresses.address", "vacancy.requirement.education", "vacancy.employment"]
+      },
+      "realtime": true,
+      "requires_auth": false,
+      "rate_limit": "не ограничен"
+    },
+    {
+      "id": "search_by_region",
+      "description_for_ai": "Вакансии в конкретном регионе России по коду региона. Используй когда пользователь ищет работу в конкретном городе или области. Код региона — стандартный ОКАТО (77 — Москва, 78 — Санкт-Петербург).",
+      "intent": [
+        "работа в регионе", "вакансии в области", "работа в городе",
+        "вакансии Москвы", "работа в Екатеринбурге"
+      ],
+      "endpoint": "GET http://opendata.trudvsem.ru/api/v1/vacancies/region/{region_code}",
+      "input": {
+        "region_code": { "type": "string", "description": "Код региона ОКАТО. 77=Москва, 78=СПб, 66=Свердловская обл., 23=Краснодарский край", "required": true },
+        "offset": { "type": "integer", "default": 0 },
+        "limit": { "type": "integer", "default": 10, "max": 100 },
+        "industry": { "type": "string", "required": false }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": ["id", "vacancy.job-name", "vacancy.salary_min", "vacancy.salary_max", "vacancy.company.name", "vacancy.region.name", "vacancy.addresses.address", "vacancy.employment"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_by_company_inn",
+      "description_for_ai": "Вакансии конкретного работодателя по ИНН. Используй когда пользователь хочет найти вакансии определённой компании зная её ИНН.",
+      "intent": ["вакансии компании", "вакансии работодателя по ИНН"],
+      "endpoint": "GET http://opendata.trudvsem.ru/api/v1/vacancies/company/inn/{inn}",
+      "input": {
+        "inn": { "type": "string", "description": "ИНН работодателя (10 цифр)", "required": true },
+        "offset": { "type": "integer", "default": 0 },
+        "limit": { "type": "integer", "default": 10, "max": 100 }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": ["id", "vacancy.job-name", "vacancy.salary_min", "vacancy.salary_max", "vacancy.company.name", "vacancy.addresses.address"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_by_company_ogrn",
+      "description_for_ai": "Вакансии конкретного работодателя по ОГРН.",
+      "intent": ["вакансии компании по ОГРН"],
+      "endpoint": "GET http://opendata.trudvsem.ru/api/v1/vacancies/company/ogrn/{ogrn}",
+      "input": {
+        "ogrn": { "type": "string", "description": "ОГРН работодателя (13 цифр)", "required": true },
+        "offset": { "type": "integer", "default": 0 },
+        "limit": { "type": "integer", "default": 10, "max": 100 }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": ["id", "vacancy.job-name", "vacancy.salary_min", "vacancy.salary_max", "vacancy.company.name"]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "vs_hhru": "Используй trudvsem в дополнение к hh.ru — они дополняют друг друга. trudvsem сильнее в госсекторе и малых городах, hh.ru — в IT и коммерческом секторе.",
+    "region_codes": "Коды регионов ОКАТО: 77=Москва, 78=СПб, 50=Московская обл., 23=Краснодарский край, 66=Свердловская обл., 52=Нижегородская обл., 16=Татарстан.",
+    "salary_fields": "Зарплата хранится в полях salary_min и salary_max — используй оба для отображения диапазона.",
+    "pagination": "Максимум 100 записей за запрос. Используй offset для пролистывания: offset=0, offset=100, offset=200..."
+  },
+  "limits": {
+    "requests_per_day": "без ограничений",
+    "commercial_use": true,
+    "attribution_required": true,
+    "attribution_text": "Данные предоставлены порталом «Работа в России» (trudvsem.ru)",
+    "license": "Открытые государственные данные"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
