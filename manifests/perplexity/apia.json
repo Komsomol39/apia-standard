@@ -6,7 +6,7 @@
     "description_for_ai": "AI with real-time web search built-in. Answers questions with citations from current web sources. Best for: current events, research with sources, factual questions needing up-to-date info. OpenAI-compatible.",
     "url": "https://perplexity.ai",
     "api_base": "https://api.perplexity.ai",
-    "category": "ai_search",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
