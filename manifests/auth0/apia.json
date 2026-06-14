@@ -6,7 +6,7 @@
     "description_for_ai": "Identity platform for authentication and authorization. User management, social login, MFA, SSO, machine-to-machine auth. 7500 MAU free. Industry standard for auth in web/mobile apps.",
     "url": "https://auth0.com",
     "api_base": "https://{tenant}.auth0.com/api/v2",
-    "category": "security_identity",
+    "category": "security",
     "geo": [
       "GLOBAL"
     ],
