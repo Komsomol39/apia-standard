@@ -6,7 +6,7 @@
     "description_for_ai": "Query OpenStreetMap data using Overpass QL. Find any geographic features: restaurants, hospitals, bus stops, parks, buildings, roads. Most detailed free map data. No API key needed.",
     "url": "https://overpass-api.de",
     "api_base": "https://overpass-api.de/api",
-    "category": "maps_data",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
