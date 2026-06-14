@@ -6,7 +6,7 @@
     "description_for_ai": "Email API for developers. Send, receive, track emails. Email validation, inbox placement testing. 5000 emails/month free for 3 months. High deliverability. Used by GitHub, Stripe, Lyft. Use for transactional email at scale.",
     "url": "https://mailgun.com",
     "api_base": "https://api.mailgun.net/v3",
-    "category": "communication_email",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
