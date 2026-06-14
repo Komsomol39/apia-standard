@@ -6,7 +6,7 @@
     "description_for_ai": "Free US Securities and Exchange Commission filings database. 10-K annual reports, 10-Q quarterly, 8-K current events, S-1 IPOs, insider trading (Form 4). All public company filings since 1993. No API key needed.",
     "url": "https://www.sec.gov/edgar",
     "api_base": "https://data.sec.gov",
-    "category": "legal_finance",
+    "category": "legal",
     "geo": [
       "US"
     ],
