@@ -106,5 +106,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "sandbox": "Test at https://demo.docusign.net — all test envelopes are free. Production at https://www.docusign.net",
+    "envelope_flow": "1) Create envelope with documents + recipients. 2) Send (status=sent). 3) Signer receives email. 4) Poll for status=completed. 5) Download signed PDF.",
+    "tab_types": "Use tabs to define signature/initial/date fields: signHereTabs, initialHereTabs, dateSignedTabs, textTabs",
+    "embedded_signing": "For in-app signing: create envelope, then POST /recipient_view to get signing URL. Embed in iframe."
   }
 }
