@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "search_scenes",
-      "description_for_ai": "Search for satellite scenes by location, date, and cloud cover. Returns available imagery for an area.",
+      "description_for_ai": "Daily satellite imagery of the entire Earth. 3-5m resolution, updated daily. Used for agriculture monitoring, deforestation tracking, disaster response. Commercial service with free education tier. Search for satellite scenes by location, date, and cloud cover. Returns available imagery for an area.",
       "intent": [
         "satellite image",
         "aerial photo",
@@ -42,7 +42,8 @@
         "filter": {
           "type": "object",
           "description": "{type: AndFilter, config: [DateRangeFilter, GeometryFilter, RangeFilter for cloud_cover]}",
-          "required": true
+          "required": true,
+          "note": "See description for full object structure"
         }
       },
       "output": {
