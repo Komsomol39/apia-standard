@@ -114,5 +114,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "idempotency": "Add Idempotence-Key header (UUID) to prevent duplicate payments on retry. Same key = same result.",
+    "webhook": "Configure webhooks in YooKassa dashboard for payment.succeeded, payment.canceled, refund.succeeded events.",
+    "test_cards": "Test card: 4111111111111111, expiry any future date, CVC 123. Test 3DS: 4000000000000002",
+    "receipts": "Russian law requires fiscal receipts (ФФД). Add receipt object with items and customer email/phone."
   }
 }
