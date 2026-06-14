@@ -57,7 +57,7 @@
     },
     {
       "id": "get_spot_price",
-      "description_for_ai": "Get current spot price of crypto pair. Simple and clean.",
+      "description_for_ai": "Get current spot price of a crypto currency pair e.g. BTC-USD, ETH-EUR. Returns price as string.",
       "intent": [
         "spot price",
         "current price",
