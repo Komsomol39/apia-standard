@@ -60,7 +60,8 @@
         },
         "currency": {
           "type": "string",
-          "default": "USD"
+          "default": "USD",
+          "description": "ISO 4217 currency code: USD, EUR, GBP, RUB"
         },
         "gl": {
           "type": "string",
