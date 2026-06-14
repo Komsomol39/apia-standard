@@ -1,1 +1,100 @@
-{"apia":"1.0","service":{"id":"aws-comprehend","name":"Amazon Comprehend","description_for_ai":"AWS NLP service. Sentiment analysis, entity recognition, key phrase extraction, language detection, topic modeling, document classification. 50K units/month free first year. Supports 12 languages.","url":"https://aws.amazon.com/comprehend","api_base":"https://comprehend.{region}.amazonaws.com","category":"nlp","geo":["GLOBAL"],"language":"en","docs":"https://docs.aws.amazon.com/comprehend/"},"auth":{"type":"aws_sig_v4","anonymous_access":false,"how_to_get":"AWS account","cost":"Free: 50K units/month (1 year). Then $0.0001 per unit"},"capabilities":[{"id":"detect_sentiment","description_for_ai":"Detect sentiment in text: POSITIVE, NEGATIVE, NEUTRAL, MIXED with confidence scores. Supports 12 languages.","intent":["sentiment analysis","text tone","positive or negative","customer sentiment","review analysis"],"endpoint":"POST https://comprehend.{region}.amazonaws.com/","input":{"Text":{"type":"string","description":"Text to analyze max 5000 bytes","required":true},"LanguageCode":{"type":"string","description":"en, es, fr, de, it, pt, ar, hi, ja, ko, zh, zh-TW","required":true}},"output":{"type":"sentiment","fields":["Sentiment","SentimentScore.Positive","SentimentScore.Negative","SentimentScore.Neutral","SentimentScore.Mixed"]},"realtime":true,"requires_auth":true},{"id":"detect_entities","description_for_ai":"Extract named entities from text: PERSON, ORGANIZATION, LOCATION, DATE, QUANTITY, COMMERCIAL_ITEM, EVENT.","intent":["extract entities","find names","NER","named entities","person detection","organization mention"],"endpoint":"POST https://comprehend.{region}.amazonaws.com/","input":{"Text":{"type":"string","required":true},"LanguageCode":{"type":"string","required":true}},"output":{"type":"entities","fields":["Entities[0].Text","Entities[0].Type","Entities[0].Score","Entities[0].BeginOffset","Entities[0].EndOffset"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "aws-comprehend",
+    "name": "Amazon Comprehend",
+    "description_for_ai": "AWS NLP service. Sentiment analysis, entity recognition, key phrase extraction, language detection, topic modeling, document classification. 50K units/month free first year. Supports 12 languages.",
+    "url": "https://aws.amazon.com/comprehend",
+    "api_base": "https://comprehend.{region}.amazonaws.com",
+    "category": "nlp",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.aws.amazon.com/comprehend/"
+  },
+  "auth": {
+    "type": "aws_sig_v4",
+    "anonymous_access": false,
+    "how_to_get": "AWS account",
+    "cost": "Free: 50K units/month (1 year). Then $0.0001 per unit"
+  },
+  "capabilities": [
+    {
+      "id": "detect_sentiment",
+      "description_for_ai": "Detect sentiment in text: POSITIVE, NEGATIVE, NEUTRAL, MIXED with confidence scores. Supports 12 languages.",
+      "intent": [
+        "sentiment analysis",
+        "text tone",
+        "positive or negative",
+        "customer sentiment",
+        "review analysis"
+      ],
+      "endpoint": "POST https://comprehend.{region}.amazonaws.com/",
+      "input": {
+        "Text": {
+          "type": "string",
+          "description": "Text to analyze max 5000 bytes",
+          "required": true
+        },
+        "LanguageCode": {
+          "type": "string",
+          "description": "en, es, fr, de, it, pt, ar, hi, ja, ko, zh, zh-TW",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "sentiment",
+        "fields": [
+          "Sentiment",
+          "SentimentScore.Positive",
+          "SentimentScore.Negative",
+          "SentimentScore.Neutral",
+          "SentimentScore.Mixed"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "detect_entities",
+      "description_for_ai": "Extract named entities from text: PERSON, ORGANIZATION, LOCATION, DATE, QUANTITY, COMMERCIAL_ITEM, EVENT.",
+      "intent": [
+        "extract entities",
+        "find names",
+        "NER",
+        "named entities",
+        "person detection",
+        "organization mention"
+      ],
+      "endpoint": "POST https://comprehend.{region}.amazonaws.com/",
+      "input": {
+        "Text": {
+          "type": "string",
+          "required": true
+        },
+        "LanguageCode": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "entities",
+        "fields": [
+          "Entities[0].Text",
+          "Entities[0].Type",
+          "Entities[0].Score",
+          "Entities[0].BeginOffset",
+          "Entities[0].EndOffset"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
