@@ -6,7 +6,7 @@
     "description_for_ai": "Free movie and TV database with 1M+ titles. Metadata, cast, ratings, trailers, posters. Used by major streaming apps. No cost. Use for movie/show info, search, recommendations, now playing.",
     "url": "https://themoviedb.org",
     "api_base": "https://api.themoviedb.org/3",
-    "category": "media_entertainment",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
