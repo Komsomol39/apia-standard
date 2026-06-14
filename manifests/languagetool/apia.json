@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "check",
-      "description_for_ai": "Check text for grammar, spelling, punctuation and style errors. Returns list of mistakes with suggestions.",
+      "description_for_ai": "Free grammar and spell checker. Supports 25+ languages including Russian, German, French, Spanish. Detects grammar errors, punctuation mistakes, style issues. Free: 20 req/min 20KB text. Check text for grammar, spelling, punctuation and style errors. Returns list of mistakes with suggestions.",
       "intent": [
         "grammar check",
         "spell check",
