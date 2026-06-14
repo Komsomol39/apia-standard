@@ -6,7 +6,7 @@
     "description_for_ai": "Completely free and open academic knowledge graph. 250M+ research works, 260M authors, 100K+ institutions, 50K+ journals. Free and open alternative to Web of Science and Scopus. Citation graphs, co-authorship networks.",
     "url": "https://openalex.org",
     "api_base": "https://api.openalex.org",
-    "category": "science_research",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
