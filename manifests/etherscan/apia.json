@@ -1,1 +1,124 @@
-{"apia":"1.0","service":{"id":"etherscan","name":"Etherscan API","description_for_ai":"Ethereum blockchain explorer API. Get transaction history, token balances, contract ABI, gas prices, ERC-20/NFT transfers for any Ethereum address. 5 req/sec free.","url":"https://etherscan.io","api_base":"https://api.etherscan.io/api","category":"blockchain_ethereum","geo":["GLOBAL"],"language":"en","docs":"https://docs.etherscan.io/"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"apikey","param_location":"query","how_to_get":"Register at https://etherscan.io/apis — free","cost":"Free: 5 req/sec. Pro: $199/month"},"capabilities":[{"id":"get_eth_balance","description_for_ai":"Get ETH balance for an Ethereum address.","intent":["ETH balance","wallet balance","Ethereum balance","crypto wallet check"],"endpoint":"GET https://api.etherscan.io/api","input":{"module":{"type":"string","default":"account"},"action":{"type":"string","default":"balance"},"address":{"type":"string","description":"Ethereum address 0x...","required":true},"tag":{"type":"string","default":"latest"}},"output":{"type":"balance","fields":["result"]},"realtime":true,"requires_auth":true},{"id":"get_transactions","description_for_ai":"Get transaction history for an Ethereum address.","intent":["ETH transactions","wallet history","blockchain transactions","crypto transfers","token transfers"],"endpoint":"GET https://api.etherscan.io/api","input":{"module":{"type":"string","default":"account"},"action":{"type":"string","default":"txlist"},"address":{"type":"string","required":true},"startblock":{"type":"integer","default":0},"endblock":{"type":"integer","default":99999999},"sort":{"type":"string","default":"desc"}},"output":{"type":"list<tx>","fields":["result[0].hash","result[0].from","result[0].to","result[0].value","result[0].timeStamp","result[0].isError"]},"realtime":false,"requires_auth":true}],"agent_hints":{"value_unit":"Value is in Wei. Divide by 1e18 for ETH. Example: 1000000000000000000 Wei = 1 ETH","free_limit":"Free API: 5 req/sec, 100K req/day"},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "etherscan",
+    "name": "Etherscan API",
+    "description_for_ai": "Ethereum blockchain explorer API. Get transaction history, token balances, contract ABI, gas prices, ERC-20/NFT transfers for any Ethereum address. 5 req/sec free.",
+    "url": "https://etherscan.io",
+    "api_base": "https://api.etherscan.io/api",
+    "category": "blockchain_ethereum",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.etherscan.io/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "apikey",
+    "param_location": "query",
+    "how_to_get": "Register at https://etherscan.io/apis — free",
+    "cost": "Free: 5 req/sec. Pro: $199/month"
+  },
+  "capabilities": [
+    {
+      "id": "get_eth_balance",
+      "description_for_ai": "Get ETH balance for an Ethereum address.",
+      "intent": [
+        "ETH balance",
+        "wallet balance",
+        "Ethereum balance",
+        "crypto wallet check"
+      ],
+      "endpoint": "GET https://api.etherscan.io/api",
+      "input": {
+        "module": {
+          "type": "string",
+          "default": "account"
+        },
+        "action": {
+          "type": "string",
+          "default": "balance"
+        },
+        "address": {
+          "type": "string",
+          "description": "Ethereum address 0x...",
+          "required": true
+        },
+        "tag": {
+          "type": "string",
+          "default": "latest"
+        }
+      },
+      "output": {
+        "type": "balance",
+        "fields": [
+          "result"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_transactions",
+      "description_for_ai": "Get transaction history for an Ethereum address.",
+      "intent": [
+        "ETH transactions",
+        "wallet history",
+        "blockchain transactions",
+        "crypto transfers",
+        "token transfers"
+      ],
+      "endpoint": "GET https://api.etherscan.io/api",
+      "input": {
+        "module": {
+          "type": "string",
+          "default": "account"
+        },
+        "action": {
+          "type": "string",
+          "default": "txlist"
+        },
+        "address": {
+          "type": "string",
+          "required": true
+        },
+        "startblock": {
+          "type": "integer",
+          "default": 0
+        },
+        "endblock": {
+          "type": "integer",
+          "default": 99999999
+        },
+        "sort": {
+          "type": "string",
+          "default": "desc"
+        }
+      },
+      "output": {
+        "type": "list<tx>",
+        "fields": [
+          "result[0].hash",
+          "result[0].from",
+          "result[0].to",
+          "result[0].value",
+          "result[0].timeStamp",
+          "result[0].isError"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "value_unit": "Value is in Wei. Divide by 1e18 for ETH. Example: 1000000000000000000 Wei = 1 ETH",
+    "free_limit": "Free API: 5 req/sec, 100K req/day"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
