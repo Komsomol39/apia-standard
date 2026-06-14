@@ -1,2 +1,91 @@
 {
-  "apia":"1.0","service":{"id":"coinbase","name":"Coinbase API","description_for_ai":"Coinbase cryptocurrency exchange API. Real-time crypto prices, buy/sell crypto, wallet management, payment processing. Most trusted US crypto exchange. Use for crypto price lookup, payment acceptance, portfolio management.","url":"https://coinbase.com","api_base":"https://api.coinbase.com/v2","category":"finance_crypto","geo":["GLOBAL"],"language":"en","docs":"https://docs.cdp.coinbase.com"},"auth":{"type":"apikey","anonymous_access":true,"anonymous_capabilities":["get_exchange_rates","get_prices"],"how_to_get":"Register at https://www.coinbase.com/settings/api","cost":"Free for market data. Trading fees: 0.4-1.2%"},"capabilities":[{"id":"get_exchange_rates","description_for_ai":"Get exchange rates for any cryptocurrency vs all major currencies. Free, no API key needed. Use for crypto price lookup.","intent":["bitcoin price","crypto price","BTC to USD","ETH price","cryptocurrency rate","курс биткоина"],"endpoint":"GET https://api.coinbase.com/v2/exchange-rates","input":{"currency":{"type":"string","description":"Crypto code: BTC, ETH, SOL, USDT, BNB, XRP","required":true}},"output":{"type":"exchange_rates","fields":["data.currency","data.rates.USD","data.rates.EUR","data.rates.RUB"]},"realtime":true,"requires_auth":false},{"id":"get_spot_price","description_for_ai":"Get current spot price of crypto pair. Simple and clean.","intent":["spot price","current price","crypto value"],"endpoint":"GET https://api.coinbase.com/v2/prices/{currency_pair}/spot","input":{"currency_pair":{"type":"string","description":"E.g. BTC-USD, ETH-EUR, SOL-USDT","required":true}},"output":{"type":"price","fields":["data.amount","data.currency","data.base"]},"realtime":true,"requires_auth":false}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "coinbase",
+    "name": "Coinbase API",
+    "description_for_ai": "Coinbase cryptocurrency exchange API. Real-time crypto prices, buy/sell crypto, wallet management, payment processing. Most trusted US crypto exchange. Use for crypto price lookup, payment acceptance, portfolio management.",
+    "url": "https://coinbase.com",
+    "api_base": "https://api.coinbase.com/v2",
+    "category": "finance_crypto",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.cdp.coinbase.com"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": true,
+    "anonymous_capabilities": [
+      "get_exchange_rates",
+      "get_prices"
+    ],
+    "how_to_get": "Register at https://www.coinbase.com/settings/api",
+    "cost": "Free for market data. Trading fees: 0.4-1.2%"
+  },
+  "capabilities": [
+    {
+      "id": "get_exchange_rates",
+      "description_for_ai": "Get exchange rates for any cryptocurrency vs all major currencies. Free, no API key needed. Use for crypto price lookup.",
+      "intent": [
+        "bitcoin price",
+        "crypto price",
+        "BTC to USD",
+        "ETH price",
+        "cryptocurrency rate",
+        "курс биткоина"
+      ],
+      "endpoint": "GET https://api.coinbase.com/v2/exchange-rates",
+      "input": {
+        "currency": {
+          "type": "string",
+          "description": "Crypto code: BTC, ETH, SOL, USDT, BNB, XRP",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "exchange_rates",
+        "fields": [
+          "data.currency",
+          "data.rates.USD",
+          "data.rates.EUR",
+          "data.rates.RUB"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_spot_price",
+      "description_for_ai": "Get current spot price of crypto pair. Simple and clean.",
+      "intent": [
+        "spot price",
+        "current price",
+        "crypto value"
+      ],
+      "endpoint": "GET https://api.coinbase.com/v2/prices/{currency_pair}/spot",
+      "input": {
+        "currency_pair": {
+          "type": "string",
+          "description": "E.g. BTC-USD, ETH-EUR, SOL-USDT",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "price",
+        "fields": [
+          "data.amount",
+          "data.currency",
+          "data.base"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
