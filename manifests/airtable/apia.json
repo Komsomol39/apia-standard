@@ -114,5 +114,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "base_id": "Get base ID from Airtable URL: airtable.com/{BASE_ID}/..., looks like 'appXXXXXXXXXXXXXX'",
+    "token": "Create token at airtable.com/create/tokens. Scope: data.records:read, data.records:write",
+    "formula": "filterByFormula supports Airtable formula syntax: {Status}='Active', AND({Price}>100, {Stock}>0)",
+    "pagination": "Use offset token from response for next page. Max 100 records per request."
   }
 }
