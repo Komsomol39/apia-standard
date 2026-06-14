@@ -6,7 +6,7 @@
     "description_for_ai": "Product analytics platform. Track user events, funnels, retention, cohorts. Understand user behavior in mobile and web apps. Used by Yelp, DocuSign, Expedia. Use for product analytics, funnel analysis, user retention tracking.",
     "url": "https://mixpanel.com",
     "api_base": "https://api.mixpanel.com",
-    "category": "product_analytics",
+    "category": "analytics",
     "geo": [
       "GLOBAL"
     ],
