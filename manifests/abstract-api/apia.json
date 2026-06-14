@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "validate_email",
-      "description_for_ai": "Validate email address. Check if email is valid format, deliverable, not disposable, not spam trap.",
+      "description_for_ai": "Validate email address deliverability: checks format, domain MX records, SMTP connection, and detects disposable/role emails. Returns quality score 0-1.",
       "intent": [
         "validate email",
         "check email",
@@ -36,11 +36,12 @@
       "input": {
         "email": {
           "type": "string",
+          "description": "Email address to validate e.g. user@example.com",
           "required": true
         },
         "auto_correct": {
           "type": "boolean",
-          "description": "Suggest corrections for typos",
+          "description": "Suggest correction for common typos e.g. 'gmail.con' → 'gmail.com'",
           "default": false
         }
       },
@@ -48,13 +49,16 @@
         "type": "validation",
         "fields": [
           "email",
-          "deliverability",
-          "quality_score",
+          "deliverability (DELIVERABLE/UNDELIVERABLE/RISKY/UNKNOWN)",
+          "quality_score (0-1)",
           "is_valid_format.value",
+          "is_free_email.value",
+          "is_disposable_email.value",
+          "is_role_email.value (info@, support@)",
+          "is_catchall_email.value",
           "is_mx_found.value",
           "is_smtp_valid.value",
-          "is_disposable_email.value",
-          "is_free_email.value"
+          "autocorrect (suggested correction if any)"
         ]
       },
       "realtime": true,
@@ -62,7 +66,7 @@
     },
     {
       "id": "validate_phone",
-      "description_for_ai": "Validate phone number. Returns country, carrier, line type, formatted number.",
+      "description_for_ai": "Validate phone number and get carrier, country, line type (mobile/landline/VoIP), and E.164 formatted number.",
       "intent": [
         "validate phone",
         "phone number check",
@@ -74,20 +78,22 @@
       "input": {
         "phone": {
           "type": "string",
-          "description": "Phone number in E.164 or local format",
+          "description": "Phone number to validate. Accepts any format: +79161234567, 8-916-123-45-67, (495) 123-4567",
           "required": true
         }
       },
       "output": {
         "type": "validation",
         "fields": [
-          "phone",
-          "valid",
+          "phone (input)",
+          "valid (boolean)",
           "format.international",
+          "format.local",
           "country.name",
           "country.code",
+          "country.prefix",
           "carrier",
-          "line_type"
+          "line_type (mobile/landline/voip)"
         ]
       },
       "realtime": true,
@@ -95,7 +101,7 @@
     },
     {
       "id": "get_holidays",
-      "description_for_ai": "Get public holidays for any country and year. Returns all national holidays with dates and names.",
+      "description_for_ai": "Get public holidays for any country and year with local names, holiday types, and whether they affect business hours.",
       "intent": [
         "public holidays",
         "national holidays",
@@ -108,21 +114,22 @@
       "input": {
         "country": {
           "type": "string",
-          "description": "ISO 2-letter country code e.g. RU, US, DE",
+          "description": "ISO 3166-1 alpha-2 country code: US, RU, DE, GB, FR, CN, JP, AU",
           "required": true
         },
         "year": {
           "type": "integer",
-          "description": "Year e.g. 2026",
+          "description": "Year to get holidays for e.g. 2024, 2025, 2026",
           "required": true
         },
         "month": {
           "type": "integer",
-          "description": "Month 1-12",
+          "description": "Month filter 1-12 (optional — returns all months if omitted)",
           "required": false
         },
         "day": {
           "type": "integer",
+          "description": "Day filter 1-31 (optional — check specific date)",
           "required": false
         }
       },
@@ -131,10 +138,16 @@
         "fields": [
           "name",
           "name_local",
+          "language",
           "date",
-          "day_of_week",
+          "date_year",
+          "date_month",
+          "date_day",
+          "week_day",
           "description",
-          "type"
+          "country (country code)",
+          "location",
+          "type (National/Local/Observance/etc.)"
         ]
       },
       "realtime": false,
