@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "list_records",
-      "description_for_ai": "Get records from Airtable table with fields and optional filters.",
+      "description_for_ai": "Get records from an Airtable table with optional filters, sorts, and field selection. Perfect for reading database entries.",
       "intent": [
         "airtable records",
         "get data",
@@ -35,29 +35,47 @@
       "input": {
         "base_id": {
           "type": "string",
+          "description": "Airtable base ID from URL: airtable.com/{BASE_ID}/... — starts with 'app'",
           "required": true
         },
         "table_name": {
           "type": "string",
+          "description": "Table name exactly as shown in Airtable (case-sensitive) e.g. 'Tasks', 'Contacts', 'Products'",
           "required": true
         },
         "filterByFormula": {
           "type": "string",
-          "description": "Airtable formula e.g. {Status}=Done",
+          "description": "Airtable formula to filter: {Status}='Active', AND({Priority}='High',{Assignee}='John')",
           "required": false
         },
         "maxRecords": {
           "type": "integer",
+          "description": "Maximum total records to return",
+          "required": false
+        },
+        "pageSize": {
+          "type": "integer",
+          "description": "Records per page, max 100",
           "default": 100
         },
         "sort": {
           "type": "array",
-          "description": "[{field: Name, direction: asc}]",
+          "description": "[{field: 'Name', direction: 'asc'}, {field: 'Created', direction: 'desc'}]",
           "required": false
         },
         "view": {
           "type": "string",
-          "description": "View name to use",
+          "description": "View name to apply its filters/sorts (e.g. 'Grid view', 'Active Tasks')",
+          "required": false
+        },
+        "fields": {
+          "type": "array",
+          "description": "Array of field names to include: ['Name', 'Status', 'Due Date']",
+          "required": false
+        },
+        "offset": {
+          "type": "string",
+          "description": "Pagination offset from previous response's offset field",
           "required": false
         }
       },
@@ -65,8 +83,9 @@
         "type": "list<record>",
         "fields": [
           "records[0].id",
-          "records[0].fields",
-          "records[0].createdTime"
+          "records[0].fields (all requested field values)",
+          "records[0].createdTime",
+          "offset (for next page if more records exist)"
         ]
       },
       "realtime": true,
@@ -74,7 +93,7 @@
     },
     {
       "id": "create_record",
-      "description_for_ai": "Create new record in Airtable table.",
+      "description_for_ai": "Create a new record in an Airtable table with field values.",
       "intent": [
         "add record",
         "new row",
@@ -86,15 +105,17 @@
       "input": {
         "base_id": {
           "type": "string",
+          "description": "Airtable base ID from URL",
           "required": true
         },
         "table_name": {
           "type": "string",
+          "description": "Table name",
           "required": true
         },
         "fields": {
           "type": "object",
-          "description": "Field values as key-value pairs",
+          "description": "Field values: {\"Name\": \"New task\", \"Status\": \"In progress\", \"Due Date\": \"2024-12-31\", \"Assignee\": [\"rec_userId\"]} — linked records use record IDs",
           "required": true
         }
       },
