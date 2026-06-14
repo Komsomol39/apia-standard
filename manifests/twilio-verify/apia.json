@@ -6,7 +6,7 @@
     "description_for_ai": "Two-factor authentication API. Send OTP via SMS, WhatsApp, email, or voice call. Verify user phone numbers. Global delivery. Pay per verification. Replaces building your own OTP system.",
     "url": "https://twilio.com/verify",
     "api_base": "https://verify.twilio.com/v2",
-    "category": "security_auth",
+    "category": "security",
     "geo": [
       "GLOBAL"
     ],
