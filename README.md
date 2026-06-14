@@ -25,7 +25,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 
 ## Registry — 257 Manifests
 
-> Full candidate list: [docs/ALL_APIS.md](docs/ALL_APIS.md) · How to contribute: [CONTRIBUTING.md](CONTRIBUTING.md)
+> **[QUICKSTART.md](QUICKSTART.md)** — usage examples · **[registry.json](registry.json)** — machine-readable index · **[docs/ALL_APIS.md](docs/ALL_APIS.md)** — candidate list · **[CONTRIBUTING.md](CONTRIBUTING.md)** — contribute
 
 ### 🤖 AI & Machine Learning
 
@@ -480,6 +480,17 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | [hh.kz](manifests/hh-kz/apia.json) | Employment KZ | [→](https://dev.hh.kz/) |
 | [hh.by](manifests/hh-by/apia.json) | Employment BY | [→](https://github.com/hhru/api) |
 | [2GIS CIS](manifests/2gis-cis/apia.json) | Maps BY+KZ | [→](https://docs.2gis.com/en/api/search/overview) |
+
+---
+
+## Get Started in 5 Minutes
+
+```bash
+# Download the full index (257 APIs)
+curl https://raw.githubusercontent.com/Komsomol39/apia-standard/main/registry.json
+```
+
+See **[QUICKSTART.md](QUICKSTART.md)** for usage examples: system prompt injection, dynamic discovery, OpenAI function calling, LangChain tools.
 
 ---
 
