@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "search_observations",
-      "description_for_ai": "Search wildlife observations by species, location, date, user. Returns verified species sightings with photos.",
+      "description_for_ai": "Search wildlife observations from 200M+ citizen science records. Filter by species, location, date, and quality grade.",
       "intent": [
         "wildlife sightings",
         "animal observations",
@@ -36,51 +36,72 @@
       "input": {
         "q": {
           "type": "string",
-          "description": "Species name or keyword",
+          "description": "Species name or keyword to search (common or scientific name)",
           "required": false
         },
         "lat": {
           "type": "float",
+          "description": "Center latitude for location-based search",
           "required": false
         },
         "lng": {
           "type": "float",
+          "description": "Center longitude",
           "required": false
         },
         "radius": {
           "type": "integer",
-          "description": "km from lat/lng",
+          "description": "Search radius in km from lat/lng",
           "required": false
         },
         "taxon_name": {
           "type": "string",
-          "description": "Scientific or common name",
+          "description": "Scientific or common species name e.g. 'Panthera leo', 'bald eagle'",
           "required": false
         },
         "place_id": {
           "type": "integer",
-          "description": "iNaturalist place ID",
+          "description": "iNaturalist place ID for country/region filter",
+          "required": false
+        },
+        "observed_on": {
+          "type": "string",
+          "description": "Exact observation date YYYY-MM-DD",
+          "required": false
+        },
+        "d1": {
+          "type": "string",
+          "description": "Observed after date YYYY-MM-DD",
+          "required": false
+        },
+        "d2": {
+          "type": "string",
+          "description": "Observed before date YYYY-MM-DD",
           "required": false
         },
         "per_page": {
           "type": "integer",
+          "description": "Results per page, max 200",
           "default": 30
         },
         "quality_grade": {
           "type": "string",
-          "description": "research, needs_id, casual",
+          "description": "research (verified by experts), needs_id, casual",
           "required": false
         }
       },
       "output": {
         "type": "list<observation>",
         "fields": [
-          "results[0].species_guess",
           "results[0].taxon.name",
+          "results[0].taxon.preferred_common_name",
           "results[0].observed_on",
-          "results[0].location",
+          "results[0].place_guess",
+          "results[0].location (lat,lng)",
           "results[0].photos[0].url",
-          "results[0].quality_grade"
+          "results[0].quality_grade",
+          "results[0].user.login",
+          "total_results"
         ]
       },
       "realtime": true,
