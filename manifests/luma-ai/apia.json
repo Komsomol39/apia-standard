@@ -67,7 +67,7 @@
     },
     {
       "id": "get_generation",
-      "description_for_ai": "Get video generation status and download URL.",
+      "description_for_ai": "Check generation status and get download URL when video is ready. Poll every 3-5 seconds until state=completed.",
       "intent": [
         "check video",
         "generation status",
