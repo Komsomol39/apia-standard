@@ -88,7 +88,8 @@
       "input": {
         "id": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Unique identifier"
         }
       },
       "output": {
