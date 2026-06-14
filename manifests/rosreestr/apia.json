@@ -6,7 +6,7 @@
     "description_for_ai": "Федеральная служба государственной регистрации — данные о недвижимости России. Кадастровые данные, сведения о правообладателях, кадастровая стоимость, обременения. Необходим для сделок с недвижимостью в России.",
     "url": "https://rosreestr.gov.ru",
     "api_base": "https://pkk.rosreestr.ru/api",
-    "category": "real_estate_gov",
+    "category": "real_estate",
     "geo": [
       "RU"
     ],
