@@ -1,1 +1,73 @@
-{"apia":"1.0","service":{"id":"rapidapi","name":"RapidAPI Hub","description_for_ai":"API marketplace with 40,000+ APIs. One API key, one SDK to access: weather, sports, finance, social media, entertainment, translation, and thousands of niche APIs. Simplifies multi-API integration. Use when you need an API for a specific niche not covered elsewhere.","url":"https://rapidapi.com","api_base":"https://api.rapidapi.com","category":"api_marketplace","geo":["GLOBAL"],"language":"en","docs":"https://docs.rapidapi.com/"},"auth":{"type":"apikey","anonymous_access":false,"header":"X-RapidAPI-Key: {key}","how_to_get":"Register at https://rapidapi.com — free tier on most APIs","cost":"Free tier on most APIs. Premium APIs vary."},"capabilities":[{"id":"call_any_api","description_for_ai":"Access any of 40,000+ APIs on RapidAPI using their host and endpoint. Use when you need a specific niche API like: sports scores, stock news, recipe generators, IP intelligence, image processing, etc.","intent":["niche API","specific API","API marketplace","find API","sports API","recipe API","image API"],"endpoint":"GET https://{api-host}.p.rapidapi.com/{endpoint}","input":{"X-RapidAPI-Host":{"type":"string","description":"API host from RapidAPI e.g. v3.football.api-sports.io","required":true},"endpoint":{"type":"string","description":"Specific endpoint path","required":true},"params":{"type":"object","description":"Query parameters specific to the API","required":false}},"output":{"type":"varies","fields":["Depends on specific API"]},"realtime":true,"requires_auth":true}],"agent_hints":{"discovery":"Search RapidAPI.com for specific API names. Each API has its own host and endpoint structure.","free_tiers":"Most APIs on RapidAPI have generous free tiers. Check each API page for limits."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "rapidapi",
+    "name": "RapidAPI Hub",
+    "description_for_ai": "API marketplace with 40,000+ APIs. One API key, one SDK to access: weather, sports, finance, social media, entertainment, translation, and thousands of niche APIs. Simplifies multi-API integration. Use when you need an API for a specific niche not covered elsewhere.",
+    "url": "https://rapidapi.com",
+    "api_base": "https://api.rapidapi.com",
+    "category": "api_marketplace",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.rapidapi.com/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "X-RapidAPI-Key: {key}",
+    "how_to_get": "Register at https://rapidapi.com — free tier on most APIs",
+    "cost": "Free tier on most APIs. Premium APIs vary."
+  },
+  "capabilities": [
+    {
+      "id": "call_any_api",
+      "description_for_ai": "Access any of 40,000+ APIs on RapidAPI using their host and endpoint. Use when you need a specific niche API like: sports scores, stock news, recipe generators, IP intelligence, image processing, etc.",
+      "intent": [
+        "niche API",
+        "specific API",
+        "API marketplace",
+        "find API",
+        "sports API",
+        "recipe API",
+        "image API"
+      ],
+      "endpoint": "GET https://{api-host}.p.rapidapi.com/{endpoint}",
+      "input": {
+        "X-RapidAPI-Host": {
+          "type": "string",
+          "description": "API host from RapidAPI e.g. v3.football.api-sports.io",
+          "required": true
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "Specific endpoint path",
+          "required": true
+        },
+        "params": {
+          "type": "object",
+          "description": "Query parameters specific to the API",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "varies",
+        "fields": [
+          "Depends on specific API"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "discovery": "Search RapidAPI.com for specific API names. Each API has its own host and endpoint structure.",
+    "free_tiers": "Most APIs on RapidAPI have generous free tiers. Check each API page for limits."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
