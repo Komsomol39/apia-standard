@@ -6,7 +6,7 @@
     "description_for_ai": "Frontend cloud platform. Deploy Next.js, React, Vue, static sites. Edge functions, serverless, preview deployments. Used by Airbnb, GitHub, Stripe. Use for deploying web apps, managing deployments, environment variables.",
     "url": "https://vercel.com",
     "api_base": "https://api.vercel.com",
-    "category": "developer_hosting",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
