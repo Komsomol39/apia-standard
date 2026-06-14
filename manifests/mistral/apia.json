@@ -1,0 +1,72 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "mistral",
+    "name": "Mistral AI API",
+    "description_for_ai": "European AI company with strong open-weight models. Best for: code generation (Codestral), multilingual European tasks, cost-efficient production. OpenAI-compatible API. Mistral Small is one of the cheapest quality models. Strong on French, German, Spanish, Italian.",
+    "url": "https://mistral.ai",
+    "api_base": "https://api.mistral.ai/v1",
+    "category": "ai_llm",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://docs.mistral.ai"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer ...",
+    "how_to_get": "Register at https://console.mistral.ai — free tier available",
+    "cost": "Mistral Small 3.1: $0.10/$0.30 per 1M tokens. Mistral Large 3: $2/$6. Codestral: $0.30/$0.90"
+  },
+  "capabilities": [
+    {
+      "id": "chat_completion",
+      "description_for_ai": "OpenAI-compatible chat completions. Drop-in replacement for OpenAI API — same format, different base URL. Best for European languages and cost-efficient production.",
+      "intent": ["generate text", "chat completion", "European languages", "cheap LLM", "code generation", "mistral"],
+      "endpoint": "POST https://api.mistral.ai/v1/chat/completions",
+      "input": {
+        "model": { "type": "string", "description": "mistral-small-latest (cheap), mistral-large-latest (powerful), codestral-latest (code)", "required": true },
+        "messages": { "type": "array", "description": "Same format as OpenAI: [{role, content}]", "required": true },
+        "temperature": { "type": "float", "default": 0.7 },
+        "max_tokens": { "type": "integer", "required": false },
+        "tools": { "type": "array", "required": false }
+      },
+      "output": {
+        "type": "completion",
+        "fields": ["choices[0].message.content", "usage.prompt_tokens", "usage.completion_tokens"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "code_completion",
+      "description_for_ai": "Code-specific completion using Codestral. Optimized for 80+ programming languages. Best Mistral model for coding tasks.",
+      "intent": ["write code", "code completion", "programming", "debug code", "codestral"],
+      "endpoint": "POST https://codestral.mistral.ai/v1/fim/completions",
+      "input": {
+        "model": { "type": "string", "default": "codestral-latest" },
+        "prompt": { "type": "string", "description": "Code before cursor", "required": true },
+        "suffix": { "type": "string", "description": "Code after cursor (for fill-in-the-middle)", "required": false },
+        "max_tokens": { "type": "integer", "default": 1024 }
+      },
+      "output": { "type": "completion", "fields": ["choices[0].message.content"] },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "openai_compat": "100% OpenAI-compatible. Change base URL to https://api.mistral.ai/v1 and swap model names. Same SDK works.",
+    "model_choice": "mistral-small-latest for high-volume cheap tasks. mistral-large-latest for complex reasoning. codestral-latest for code.",
+    "european_strength": "Mistral models are trained with stronger European language data — prefer over OpenAI for French/German/Spanish/Italian tasks.",
+    "open_source": "Mistral 7B and Mixtral 8x7B are open-weight and can be self-hosted. API is for managed hosting."
+  },
+  "limits": {
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
