@@ -21,7 +21,7 @@
   "capabilities": [
     {
       "id": "forecast",
-      "description_for_ai": "Get weather forecast for any coordinates. Temperature, precipitation, wind, humidity. Up to 16 days. No API key needed.",
+      "description_for_ai": "Free weather forecast API. No API key needed. Hourly and daily forecasts, historical weather, 16-day forecast. 11km resolution globally. Covers temperature, precipitation, wind, UV index, cloud cover. Best free weather API. Get weather forecast for any coordinates. Temperature, precipitation, wind, humidity. Up to 16 days. No API key needed.",
       "intent": [
         "free weather",
         "weather forecast",
