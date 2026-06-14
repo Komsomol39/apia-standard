@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "transcribe",
-      "description_for_ai": "Convert audio to text. Supports mp3, mp4, wav, m4a, webm up to 25MB. Best accuracy for speech recognition.",
+      "description_for_ai": "Transcribe audio to text with near-human accuracy in 50+ languages. Handles accents, background noise, and technical terminology.",
       "intent": [
         "transcribe audio",
         "speech to text",
@@ -35,34 +35,43 @@
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file mp3/mp4/wav/m4a/webm max 25MB",
+          "description": "Audio file: mp3, mp4, mpeg, mpga, m4a, wav, webm. Max 25MB. For larger files compress to mp3 first.",
           "required": true
         },
         "model": {
           "type": "string",
-          "default": "whisper-1",
-          "description": "AI/ML model identifier to use for this request"
+          "description": "Always 'whisper-1' — the only available Whisper model via API",
+          "default": "whisper-1"
         },
         "language": {
           "type": "string",
-          "description": "ISO 639-1 language code. Auto-detected if omitted. ru, en, de, zh, etc.",
+          "description": "ISO 639-1 language code: en, ru, de, fr, es, zh, ja, ar, etc. Auto-detected if omitted — but specifying improves accuracy.",
           "required": false
         },
         "prompt": {
           "type": "string",
-          "description": "Context hint to improve accuracy",
+          "description": "Context hint to improve accuracy: technical terms, proper nouns, or speaking style. E.g. 'Meeting about Kubernetes deployment'",
           "required": false
         },
         "response_format": {
           "type": "string",
-          "description": "json, text, srt, vtt, verbose_json",
+          "description": "json (default), text (plain string), srt (subtitles), vtt (WebVTT), verbose_json (with timestamps)",
           "default": "json"
+        },
+        "temperature": {
+          "type": "float",
+          "description": "Sampling temperature 0-1. Higher = more creative guesses for unclear audio.",
+          "default": 0
         }
       },
       "output": {
         "type": "transcription",
         "fields": [
-          "text"
+          "text (transcribed text)",
+          "language (detected)",
+          "duration (seconds)",
+          "words (with timestamps in verbose_json)",
+          "segments (sentence-level timestamps in verbose_json)"
         ]
       },
       "realtime": false,
@@ -70,29 +79,44 @@
     },
     {
       "id": "translate",
-      "description_for_ai": "Transcribe and translate audio to English from any language.",
+      "description_for_ai": "Transcribe audio in any language and translate to English simultaneously. Useful for multilingual audio content.",
       "intent": [
         "translate audio",
         "audio translation",
-        "foreign audio to english"
+        "foreign audio to english",
+        "multilingual transcription",
+        "speech translation"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/translations",
       "input": {
         "file": {
           "type": "file",
-          "required": true,
-          "description": "File path, URL, or binary content"
+          "description": "Audio file in any supported language",
+          "required": true
         },
         "model": {
           "type": "string",
-          "default": "whisper-1",
-          "description": "AI/ML model identifier to use for this request"
+          "default": "whisper-1"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "English text prompt to guide translation style",
+          "required": false
+        },
+        "response_format": {
+          "type": "string",
+          "description": "json, text, srt, vtt, or verbose_json",
+          "default": "json"
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0
         }
       },
       "output": {
         "type": "translation",
         "fields": [
-          "text"
+          "text (English translation)"
         ]
       },
       "realtime": false,
