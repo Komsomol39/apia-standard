@@ -43,7 +43,8 @@
         },
         "page": {
           "type": "integer",
-          "default": 1
+          "default": 1,
+          "description": "Page number for pagination (1-indexed)"
         },
         "facets": {
           "type": "string",
