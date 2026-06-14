@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "search_movie",
-      "description_for_ai": "Search for movies by title. Returns id, title, release date, overview, rating, poster image.",
+      "description_for_ai": "Search for movies by title. Returns matching movies with ratings, release dates, overview, and poster images.",
       "intent": [
         "find movie",
         "movie info",
@@ -36,31 +36,47 @@
       "input": {
         "query": {
           "type": "string",
+          "description": "Movie title or keywords to search",
           "required": true
         },
         "language": {
           "type": "string",
+          "description": "Language for results: en-US, ru-RU, de-DE, fr-FR, etc.",
           "default": "en-US"
         },
         "year": {
           "type": "integer",
+          "description": "Filter by release year e.g. 2024",
           "required": false
         },
         "page": {
           "type": "integer",
+          "description": "Page number, max 500 pages",
           "default": 1
+        },
+        "include_adult": {
+          "type": "boolean",
+          "description": "Include adult content results",
+          "default": false
+        },
+        "region": {
+          "type": "string",
+          "description": "ISO 3166-1 country code to prioritize results for that region",
+          "required": false
         }
       },
       "output": {
         "type": "list<movie>",
         "fields": [
-          "id",
-          "title",
-          "overview",
-          "release_date",
-          "vote_average",
-          "poster_path",
-          "genre_ids"
+          "results[0].id",
+          "results[0].title",
+          "results[0].overview",
+          "results[0].release_date",
+          "results[0].vote_average",
+          "results[0].poster_path",
+          "results[0].genre_ids",
+          "total_results",
+          "total_pages"
         ]
       },
       "realtime": false,
@@ -68,7 +84,7 @@
     },
     {
       "id": "get_movie",
-      "description_for_ai": "Get full details of a movie by TMDB id: cast, crew, trailer, budget, revenue, similar movies.",
+      "description_for_ai": "Get comprehensive details for a movie by TMDB ID: cast, crew, trailers, budget, revenue, similar movies, keywords, and streaming providers.",
       "intent": [
         "movie details",
         "cast",
@@ -81,15 +97,17 @@
       "input": {
         "movie_id": {
           "type": "integer",
+          "description": "TMDB movie ID from search results or TMDB URL",
           "required": true
         },
         "append_to_response": {
           "type": "string",
-          "description": "videos,credits,similar,images",
+          "description": "Comma-separated extras: videos,credits,similar,images,keywords,release_dates,watch/providers. E.g. 'videos,credits,similar'",
           "required": false
         },
         "language": {
           "type": "string",
+          "description": "Response language e.g. en-US, ru-RU",
           "default": "en-US"
         }
       },
@@ -101,11 +119,13 @@
           "release_date",
           "runtime",
           "vote_average",
+          "vote_count",
           "budget",
           "revenue",
           "genres",
-          "credits.cast",
-          "videos.results"
+          "credits.cast[0].name",
+          "videos.results[0].key",
+          "similar.results[0].title"
         ]
       },
       "realtime": false,
@@ -113,7 +133,7 @@
     },
     {
       "id": "now_playing",
-      "description_for_ai": "Get movies currently playing in theaters. Use for what to watch, cinema listings.",
+      "description_for_ai": "Get movies currently playing in theaters. Updated daily. Use for 'what's in cinema', movie recommendations, current releases.",
       "intent": [
         "movies in theaters",
         "now playing",
@@ -125,22 +145,29 @@
       "input": {
         "language": {
           "type": "string",
+          "description": "Response language",
           "default": "en-US"
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         },
         "region": {
           "type": "string",
-          "description": "ISO 3166-1 country code",
+          "description": "ISO 3166-1 country code to get local theater releases",
           "required": false
         }
       },
       "output": {
         "type": "list<movie>",
         "fields": [
-          "title",
-          "release_date",
-          "vote_average",
-          "overview",
-          "poster_path"
+          "results[0].title",
+          "results[0].release_date",
+          "results[0].vote_average",
+          "results[0].overview",
+          "results[0].poster_path",
+          "dates.minimum",
+          "dates.maximum"
         ]
       },
       "realtime": true,
