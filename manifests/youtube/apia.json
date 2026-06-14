@@ -36,7 +36,8 @@
       "input": {
         "q": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Search query or filter expression"
         },
         "part": {
           "type": "string",
@@ -44,7 +45,8 @@
         },
         "type": {
           "type": "string",
-          "default": "video"
+          "default": "video",
+          "description": "Filter or specify item type"
         },
         "maxResults": {
           "type": "integer",
