@@ -1,1 +1,92 @@
-{"apia":"1.0","service":{"id":"pokeapi","name":"PokéAPI","description_for_ai":"Complete Pokémon database API. All 1000+ Pokémon with stats, abilities, moves, evolutions, types. No API key needed. Completely free. Use for Pokémon games, apps, trivia, fan projects.","url":"https://pokeapi.co","api_base":"https://pokeapi.co/api/v2","category":"gaming_fun","geo":["GLOBAL"],"language":"en","docs":"https://pokeapi.co/docs/v2"},"auth":{"type":"none","anonymous_access":true,"cost":"Free forever"},"capabilities":[{"id":"get_pokemon","description_for_ai":"Get all data about a Pokémon: stats, types, abilities, moves, evolution chain, sprites.","intent":["pokemon info","pikachu stats","pokemon data","pokemon abilities","pokémon moves","what is this pokemon"],"endpoint":"GET https://pokeapi.co/api/v2/pokemon/{name_or_id}","input":{"name_or_id":{"type":"string","description":"Pokemon name (lowercase) or Pokedex number e.g. pikachu or 25","required":true}},"output":{"type":"pokemon","fields":["id","name","types[0].type.name","stats","abilities","moves","sprites.front_default","height","weight"]},"realtime":false,"requires_auth":false},{"id":"get_type","description_for_ai":"Get type effectiveness chart. Returns what types this type is strong/weak against.","intent":["type chart","type weakness","pokemon matchup","super effective"],"endpoint":"GET https://pokeapi.co/api/v2/type/{type}","input":{"type":{"type":"string","description":"Pokemon type: fire, water, grass, electric, psychic, dragon etc.","required":true}},"output":{"type":"type_info","fields":["damage_relations.double_damage_to","damage_relations.half_damage_to","damage_relations.no_damage_to"]},"realtime":false,"requires_auth":false}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "pokeapi",
+    "name": "PokéAPI",
+    "description_for_ai": "Complete Pokémon database API. All 1000+ Pokémon with stats, abilities, moves, evolutions, types. No API key needed. Completely free. Use for Pokémon games, apps, trivia, fan projects.",
+    "url": "https://pokeapi.co",
+    "api_base": "https://pokeapi.co/api/v2",
+    "category": "gaming_fun",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://pokeapi.co/docs/v2"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "Free forever"
+  },
+  "capabilities": [
+    {
+      "id": "get_pokemon",
+      "description_for_ai": "Get all data about a Pokémon: stats, types, abilities, moves, evolution chain, sprites.",
+      "intent": [
+        "pokemon info",
+        "pikachu stats",
+        "pokemon data",
+        "pokemon abilities",
+        "pokémon moves",
+        "what is this pokemon"
+      ],
+      "endpoint": "GET https://pokeapi.co/api/v2/pokemon/{name_or_id}",
+      "input": {
+        "name_or_id": {
+          "type": "string",
+          "description": "Pokemon name (lowercase) or Pokedex number e.g. pikachu or 25",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "pokemon",
+        "fields": [
+          "id",
+          "name",
+          "types[0].type.name",
+          "stats",
+          "abilities",
+          "moves",
+          "sprites.front_default",
+          "height",
+          "weight"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_type",
+      "description_for_ai": "Get type effectiveness chart. Returns what types this type is strong/weak against.",
+      "intent": [
+        "type chart",
+        "type weakness",
+        "pokemon matchup",
+        "super effective"
+      ],
+      "endpoint": "GET https://pokeapi.co/api/v2/type/{type}",
+      "input": {
+        "type": {
+          "type": "string",
+          "description": "Pokemon type: fire, water, grass, electric, psychic, dragon etc.",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "type_info",
+        "fields": [
+          "damage_relations.double_damage_to",
+          "damage_relations.half_damage_to",
+          "damage_relations.no_damage_to"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
