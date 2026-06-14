@@ -1,0 +1,74 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "fias",
+    "name": "ФИАС / ГАР (Федеральная информационная адресная система)",
+    "description_for_ai": "Официальный государственный реестр адресов России от ФНС. Единственный легитимный источник адресных данных РФ. Содержит все адреса: регионы, районы, города, улицы, дома. Используй для валидации и стандартизации российских адресов, получения почтовых индексов, поиска ФИАС-кода адреса.",
+    "url": "https://fias.nalog.ru",
+    "api_base": "https://fias-public-api.nalog.ru/api/addresses",
+    "category": "address_registry",
+    "geo": ["RU"],
+    "language": "ru",
+    "docs": "https://fias.nalog.ru/"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "note": "Публичный API без авторизации. Данные открыты по закону."
+  },
+  "capabilities": [
+    {
+      "id": "search_address",
+      "description_for_ai": "Поиск адреса в государственном реестре по строке. Возвращает стандартизированный адрес с ФИАС-кодом, почтовым индексом и иерархией (регион → город → улица → дом). Используй для проверки и нормализации адресов.",
+      "intent": [
+        "проверить адрес", "найти адрес", "индекс адреса",
+        "нормализовать адрес", "ФИАС код адреса", "официальный адрес"
+      ],
+      "endpoint": "GET https://fias-public-api.nalog.ru/api/addresses/search",
+      "input": {
+        "searchText": { "type": "string", "description": "Адрес для поиска. Например: 'Москва Тверская 1'", "required": true },
+        "pageSize": { "type": "integer", "description": "Количество результатов", "default": 10 },
+        "pageIndex": { "type": "integer", "description": "Номер страницы", "default": 0 }
+      },
+      "output": {
+        "type": "list<address>",
+        "fields": ["objectGuid", "fullAddress", "postalCode", "regionCode", "level", "objectId"]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_children",
+      "description_for_ai": "Получить дочерние объекты адреса (например, все улицы города или все дома на улице). Используй для построения иерархического выбора адреса.",
+      "intent": ["улицы города", "дома на улице", "районы города"],
+      "endpoint": "GET https://fias-public-api.nalog.ru/api/addresses/getchildren",
+      "input": {
+        "parentObjectId": { "type": "integer", "description": "ID родительского объекта из результатов search_address", "required": true },
+        "pageSize": { "type": "integer", "default": 100 },
+        "pageIndex": { "type": "integer", "default": 0 }
+      },
+      "output": {
+        "type": "list<address_object>",
+        "fields": ["objectId", "objectGuid", "name", "typeName", "level"]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "use_case": "ФИАС полезен для валидации адресов при оформлении доставки, регистрации юрлиц, заполнения форм. Для поиска организаций по адресу используй 2GIS или Яндекс.Карты.",
+    "update_note": "База обновляется еженедельно. Новостройки могут появляться с задержкой.",
+    "full_db": "Полная база ФИАС доступна для скачивания на fias.nalog.ru (~20 ГБ XML). Для большинства задач достаточно API."
+  },
+  "limits": {
+    "requests_per_day": "без ограничений",
+    "commercial_use": true,
+    "attribution_required": false,
+    "license": "Открытые государственные данные РФ"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
