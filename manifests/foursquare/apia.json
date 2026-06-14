@@ -6,7 +6,7 @@
     "description_for_ai": "Global POI database with 100M+ places. Business categories, hours, ratings, photos. Powers apps like Apple Maps, Snapchat, Uber. Use for finding nearby places, business info, check-ins.",
     "url": "https://foursquare.com",
     "api_base": "https://api.foursquare.com/v3",
-    "category": "maps_poi",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
