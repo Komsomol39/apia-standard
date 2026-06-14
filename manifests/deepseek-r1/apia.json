@@ -1,1 +1,72 @@
-{"apia":"1.0","service":{"id":"deepseek-r1","name":"DeepSeek R1 Reasoning API","description_for_ai":"DeepSeek reasoning model — shows chain-of-thought thinking before final answer. Comparable to OpenAI o1/o3 in math, coding, and complex reasoning tasks. 10-50x cheaper than OpenAI o3. Best open reasoning model available.","url":"https://platform.deepseek.com","api_base":"https://api.deepseek.com/v1","category":"ai_reasoning","geo":["GLOBAL"],"language":"en","docs":"https://platform.deepseek.com/docs"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"https://platform.deepseek.com — $5 free credit","cost":"$0.55/$2.19 per 1M tokens (I/O). Cache hits: 10x cheaper"},"capabilities":[{"id":"reason","description_for_ai":"Solve complex problems with visible chain-of-thought reasoning. Math, science, coding, logic. Returns reasoning_content (thinking) + content (final answer).","intent":["complex reasoning","math problem","logic puzzle","think step by step","chain of thought","deepseek reasoning","R1 model"],"endpoint":"POST https://api.deepseek.com/v1/chat/completions","input":{"model":{"type":"string","default":"deepseek-reasoner"},"messages":{"type":"array","required":true},"max_tokens":{"type":"integer","required":false}},"output":{"type":"completion","fields":["choices[0].message.reasoning_content","choices[0].message.content","usage.completion_tokens"]},"realtime":true,"requires_auth":true}],"agent_hints":{"reasoning_content":"reasoning_content contains the internal thinking process — show to users for transparency.","vs_deepseek_chat":"Use deepseek-reasoner for hard problems (math, algorithms, logic). Use deepseek-chat (V3) for everyday tasks at 4x lower cost.","pricing":"With cache hits: $0.055/$0.219 per 1M tokens — ultra cheap for cached prompts."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "deepseek-r1",
+    "name": "DeepSeek R1 Reasoning API",
+    "description_for_ai": "DeepSeek reasoning model — shows chain-of-thought thinking before final answer. Comparable to OpenAI o1/o3 in math, coding, and complex reasoning tasks. 10-50x cheaper than OpenAI o3. Best open reasoning model available.",
+    "url": "https://platform.deepseek.com",
+    "api_base": "https://api.deepseek.com/v1",
+    "category": "ai_reasoning",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://platform.deepseek.com/docs"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "https://platform.deepseek.com — $5 free credit",
+    "cost": "$0.55/$2.19 per 1M tokens (I/O). Cache hits: 10x cheaper"
+  },
+  "capabilities": [
+    {
+      "id": "reason",
+      "description_for_ai": "Solve complex problems with visible chain-of-thought reasoning. Math, science, coding, logic. Returns reasoning_content (thinking) + content (final answer).",
+      "intent": [
+        "complex reasoning",
+        "math problem",
+        "logic puzzle",
+        "think step by step",
+        "chain of thought",
+        "deepseek reasoning",
+        "R1 model"
+      ],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "deepseek-reasoner"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.reasoning_content",
+          "choices[0].message.content",
+          "usage.completion_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "reasoning_content": "reasoning_content contains the internal thinking process — show to users for transparency.",
+    "vs_deepseek_chat": "Use deepseek-reasoner for hard problems (math, algorithms, logic). Use deepseek-chat (V3) for everyday tasks at 4x lower cost.",
+    "pricing": "With cache hits: $0.055/$0.219 per 1M tokens — ultra cheap for cached prompts."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
