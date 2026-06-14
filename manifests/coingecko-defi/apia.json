@@ -6,7 +6,7 @@
     "description_for_ai": "DeFi protocols data, NFT collections, exchanges, derivatives. Total DeFi market cap, protocol TVL, NFT floor prices, trading volumes. Extension of CoinGecko for Web3/DeFi analytics.",
     "url": "https://coingecko.com",
     "api_base": "https://api.coingecko.com/api/v3",
-    "category": "finance_defi",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
