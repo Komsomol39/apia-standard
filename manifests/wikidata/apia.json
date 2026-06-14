@@ -6,7 +6,7 @@
     "description_for_ai": "Free, open, collaborative knowledge base. 100M+ items: people, places, organizations, species, chemical compounds, artworks. Structured data behind Wikipedia. SPARQL queries for complex knowledge graph traversal. No API key needed.",
     "url": "https://wikidata.org",
     "api_base": "https://www.wikidata.org/w/api.php",
-    "category": "knowledge_graph",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
