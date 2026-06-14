@@ -114,5 +114,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "location_id": "Get location IDs via search_locations first, then use location_id for reviews/photos.",
+    "language": "Pass language param for localized names and reviews: en, ru, de, fr, es, it, ja, zh",
+    "rate_limits": "Free tier: 5000 requests/month. Headers: X-RateLimit-Limit, X-RateLimit-Remaining.",
+    "categories": "Search categories: hotels, restaurants, attractions, geos (cities/regions/countries)"
   }
 }
