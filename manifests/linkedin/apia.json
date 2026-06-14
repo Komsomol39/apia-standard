@@ -1,0 +1,70 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "linkedin",
+    "name": "LinkedIn API",
+    "description_for_ai": "Professional network API. 1B+ professionals. Access user profiles, company pages, job postings, share content. Use for professional profile lookup, job search integration, company info, B2B use cases.",
+    "url": "https://linkedin.com",
+    "api_base": "https://api.linkedin.com/v2",
+    "category": "social_media_professional",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://learn.microsoft.com/en-us/linkedin/"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Create app at https://www.linkedin.com/developers/ — requires company page",
+    "oauth_url": "https://www.linkedin.com/oauth/v2/authorization",
+    "token_url": "https://www.linkedin.com/oauth/v2/accessToken",
+    "cost": "Free basic access. Some endpoints require LinkedIn partnership."
+  },
+  "capabilities": [
+    {
+      "id": "get_profile",
+      "description_for_ai": "Get LinkedIn profile of the authenticated user: name, headline, location, summary, experience. Requires user to log in with LinkedIn.",
+      "intent": ["linkedin profile", "professional profile", "linkedin info", "work experience", "professional background"],
+      "endpoint": "GET https://api.linkedin.com/v2/userinfo",
+      "input": {},
+      "output": {
+        "type": "profile",
+        "fields": ["sub", "name", "given_name", "family_name", "email", "picture", "locale"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "share_post",
+      "description_for_ai": "Share a post on LinkedIn on behalf of authenticated user or company page.",
+      "intent": ["post to linkedin", "share on linkedin", "linkedin post", "publish linkedin"],
+      "endpoint": "POST https://api.linkedin.com/v2/ugcPosts",
+      "input": {
+        "author": { "type": "string", "description": "urn:li:person:{personId} or urn:li:organization:{orgId}", "required": true },
+        "text": { "type": "string", "description": "Post text content", "required": true },
+        "visibility": { "type": "string", "description": "PUBLIC or CONNECTIONS", "default": "PUBLIC" }
+      },
+      "output": {
+        "type": "post",
+        "fields": ["id", "created.time"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "restricted": "LinkedIn API is significantly more restricted than other social APIs. Many endpoints require LinkedIn partnership approval.",
+    "oauth_scope": "Common scopes: openid profile email (for login), w_member_social (for posting), r_liteprofile (for profile reading).",
+    "urn_format": "LinkedIn uses URN identifiers: urn:li:person:abc123 for users, urn:li:organization:123456 for companies.",
+    "best_use": "LinkedIn API is best for: OAuth social login, sharing company updates, basic profile info. Job search API requires partnership."
+  },
+  "limits": {
+    "daily_member_data_requests": 500,
+    "commercial_use": true,
+    "attribution_required": false
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
