@@ -1,1 +1,165 @@
-{"apia":"1.0","service":{"id":"gitlab","name":"GitLab API","description_for_ai":"Git repository hosting with built-in CI/CD, issue tracking, container registry. 30M+ users. Alternative to GitHub. Free self-hosted. Use for repository management, CI/CD pipelines, DevOps automation.","url":"https://gitlab.com","api_base":"https://gitlab.com/api/v4","category":"developer_tools","geo":["GLOBAL"],"language":"en","docs":"https://docs.gitlab.com/ee/api/rest/"},"auth":{"type":"bearer_token","anonymous_access":true,"anonymous_limits":"Public repos only","header":"Authorization: Bearer {token}","how_to_get":"User Settings → Access Tokens","cost":"Free. Premium: $29/user/month"},"capabilities":[{"id":"list_projects","description_for_ai":"List GitLab projects/repositories. Filter by membership, visibility, search.","intent":["gitlab repos","list projects","find repository","gitlab search"],"endpoint":"GET https://gitlab.com/api/v4/projects","input":{"membership":{"type":"boolean","description":"Only show projects user is member of","default":false},"search":{"type":"string","required":false},"order_by":{"type":"string","description":"id, name, created_at, updated_at, last_activity_at, stars_count","default":"created_at"},"per_page":{"type":"integer","default":20}},"output":{"type":"list<project>","fields":["id","name","description","web_url","star_count","forks_count","last_activity_at","visibility"]},"realtime":true,"requires_auth":true},{"id":"create_issue","description_for_ai":"Create a GitLab issue in a project.","intent":["create gitlab issue","new bug","add task","gitlab ticket"],"endpoint":"POST https://gitlab.com/api/v4/projects/{id}/issues","input":{"id":{"type":"string","description":"Project ID or path","required":true},"title":{"type":"string","required":true},"description":{"type":"string","required":false},"labels":{"type":"string","description":"Comma-separated labels","required":false},"assignee_ids":{"type":"array","required":false}},"output":{"type":"issue","fields":["id","iid","title","web_url","state"]},"realtime":true,"requires_auth":true},{"id":"get_pipelines","description_for_ai":"Get CI/CD pipeline status for a project.","intent":["CI status","pipeline status","build status","deployment status","gitlab CI"],"endpoint":"GET https://gitlab.com/api/v4/projects/{id}/pipelines","input":{"id":{"type":"string","required":true},"status":{"type":"string","description":"created, waiting_for_resource, preparing, pending, running, success, failed, canceled","required":false},"per_page":{"type":"integer","default":20}},"output":{"type":"list<pipeline>","fields":["id","status","ref","sha","created_at","updated_at","web_url"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "gitlab",
+    "name": "GitLab API",
+    "description_for_ai": "Git repository hosting with built-in CI/CD, issue tracking, container registry. 30M+ users. Alternative to GitHub. Free self-hosted. Use for repository management, CI/CD pipelines, DevOps automation.",
+    "url": "https://gitlab.com",
+    "api_base": "https://gitlab.com/api/v4",
+    "category": "developer_tools",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.gitlab.com/ee/api/rest/"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": true,
+    "anonymous_limits": "Public repos only",
+    "header": "Authorization: Bearer {token}",
+    "how_to_get": "User Settings → Access Tokens",
+    "cost": "Free. Premium: $29/user/month"
+  },
+  "capabilities": [
+    {
+      "id": "list_projects",
+      "description_for_ai": "List GitLab projects/repositories. Filter by membership, visibility, search.",
+      "intent": [
+        "gitlab repos",
+        "list projects",
+        "find repository",
+        "gitlab search"
+      ],
+      "endpoint": "GET https://gitlab.com/api/v4/projects",
+      "input": {
+        "membership": {
+          "type": "boolean",
+          "description": "Only show projects user is member of",
+          "default": false
+        },
+        "search": {
+          "type": "string",
+          "required": false
+        },
+        "order_by": {
+          "type": "string",
+          "description": "id, name, created_at, updated_at, last_activity_at, stars_count",
+          "default": "created_at"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<project>",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "web_url",
+          "star_count",
+          "forks_count",
+          "last_activity_at",
+          "visibility"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_issue",
+      "description_for_ai": "Create a GitLab issue in a project.",
+      "intent": [
+        "create gitlab issue",
+        "new bug",
+        "add task",
+        "gitlab ticket"
+      ],
+      "endpoint": "POST https://gitlab.com/api/v4/projects/{id}/issues",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Project ID or path",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "labels": {
+          "type": "string",
+          "description": "Comma-separated labels",
+          "required": false
+        },
+        "assignee_ids": {
+          "type": "array",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "issue",
+        "fields": [
+          "id",
+          "iid",
+          "title",
+          "web_url",
+          "state"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_pipelines",
+      "description_for_ai": "Get CI/CD pipeline status for a project.",
+      "intent": [
+        "CI status",
+        "pipeline status",
+        "build status",
+        "deployment status",
+        "gitlab CI"
+      ],
+      "endpoint": "GET https://gitlab.com/api/v4/projects/{id}/pipelines",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "created, waiting_for_resource, preparing, pending, running, success, failed, canceled",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<pipeline>",
+        "fields": [
+          "id",
+          "status",
+          "ref",
+          "sha",
+          "created_at",
+          "updated_at",
+          "web_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
