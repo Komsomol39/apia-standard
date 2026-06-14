@@ -25,11 +25,15 @@
       "id": "list_issues",
       "description_for_ai": "Get Sentry error issues for a project. Filter by status, assignee, priority, or search query. Use for error monitoring dashboards and triage.",
       "intent": [
-        "sentry errors",
         "application errors",
+        "exception tracking",
         "crash reports",
         "exception list",
-        "error monitoring"
+        "sentry errors",
+        "bug monitoring",
+        "error monitoring",
+        "error log",
+        "production errors"
       ],
       "endpoint": "GET https://sentry.io/api/0/projects/{org}/{project}/issues/",
       "input": {
@@ -93,8 +97,11 @@
       "description_for_ai": "Send an error event to Sentry manually via HTTP. In production always use official Sentry SDK instead for better performance and context.",
       "intent": [
         "report error",
+        "report exception",
         "send to sentry",
-        "capture exception"
+        "capture exception",
+        "log error",
+        "error reporting"
       ],
       "endpoint": "POST https://sentry.io/api/{project_id}/store/",
       "input": {
