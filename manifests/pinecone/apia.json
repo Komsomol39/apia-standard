@@ -1,2 +1,111 @@
 {
-  "apia":"1.0","service":{"id":"pinecone","name":"Pinecone API","description_for_ai":"Leading vector database for AI applications. Store and search embeddings for semantic search, RAG, recommendations. Serverless — no infrastructure. Use after generating embeddings with OpenAI/Cohere/HuggingFace.","url":"https://pinecone.io","api_base":"https://api.pinecone.io","category":"ai_vector_db","geo":["GLOBAL"],"language":"en","docs":"https://docs.pinecone.io"},"auth":{"type":"apikey","anonymous_access":false,"header":"Api-Key: ...","how_to_get":"Register at https://app.pinecone.io — free tier available","cost":"Free: 2GB storage. Serverless from $0.033/GB/month"},"capabilities":[{"id":"upsert_vectors","description_for_ai":"Insert or update vectors in index. Use after generating embeddings to store them for later search.","intent":["store embeddings","upsert vectors","index documents","build vector database"],"endpoint":"POST https://{index-host}/vectors/upsert","input":{"vectors":{"type":"array","description":"[{id, values: [floats], metadata: {}}]","required":true},"namespace":{"type":"string","required":false}},"output":{"type":"upsert_response","fields":["upsertedCount"]},"realtime":true,"requires_auth":true},{"id":"query","description_for_ai":"Search for similar vectors by embedding. Returns top-K most similar items. Core RAG operation — find relevant documents before generating answer.","intent":["vector search","semantic search","find similar","RAG retrieval","nearest neighbors"],"endpoint":"POST https://{index-host}/query","input":{"vector":{"type":"array","description":"Query embedding (float array)","required":true},"topK":{"type":"integer","description":"Number of results","default":10},"filter":{"type":"object","description":"Metadata filter","required":false},"includeMetadata":{"type":"boolean","default":true},"namespace":{"type":"string","required":false}},"output":{"type":"query_response","fields":["matches[].id","matches[].score","matches[].metadata"]},"realtime":true,"requires_auth":true}],"agent_hints":{"rag_flow":"1) Generate embedding with OpenAI/Cohere. 2) Query Pinecone for top-K similar. 3) Pass retrieved docs to LLM as context.","dimensions":"Match dimensions to your embedding model: OpenAI text-embedding-3-small=1536, Cohere embed-v3=1024."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "pinecone",
+    "name": "Pinecone API",
+    "description_for_ai": "Leading vector database for AI applications. Store and search embeddings for semantic search, RAG, recommendations. Serverless — no infrastructure. Use after generating embeddings with OpenAI/Cohere/HuggingFace.",
+    "url": "https://pinecone.io",
+    "api_base": "https://api.pinecone.io",
+    "category": "ai_vector_db",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.pinecone.io"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Api-Key: ...",
+    "how_to_get": "Register at https://app.pinecone.io — free tier available",
+    "cost": "Free: 2GB storage. Serverless from $0.033/GB/month"
+  },
+  "capabilities": [
+    {
+      "id": "upsert_vectors",
+      "description_for_ai": "Insert or update vectors in index. Use after generating embeddings to store them for later search.",
+      "intent": [
+        "store embeddings",
+        "upsert vectors",
+        "index documents",
+        "build vector database"
+      ],
+      "endpoint": "POST https://{index-host}/vectors/upsert",
+      "input": {
+        "vectors": {
+          "type": "array",
+          "description": "[{id, values: [floats], metadata: {}}]",
+          "required": true
+        },
+        "namespace": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "upsert_response",
+        "fields": [
+          "upsertedCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "query",
+      "description_for_ai": "Search for similar vectors by embedding. Returns top-K most similar items. Core RAG operation — find relevant documents before generating answer.",
+      "intent": [
+        "vector search",
+        "semantic search",
+        "find similar",
+        "RAG retrieval",
+        "nearest neighbors"
+      ],
+      "endpoint": "POST https://{index-host}/query",
+      "input": {
+        "vector": {
+          "type": "array",
+          "description": "Query embedding (float array)",
+          "required": true
+        },
+        "topK": {
+          "type": "integer",
+          "description": "Number of results",
+          "default": 10
+        },
+        "filter": {
+          "type": "object",
+          "description": "Metadata filter",
+          "required": false
+        },
+        "includeMetadata": {
+          "type": "boolean",
+          "default": true
+        },
+        "namespace": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "query_response",
+        "fields": [
+          "matches[].id",
+          "matches[].score",
+          "matches[].metadata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "rag_flow": "1) Generate embedding with OpenAI/Cohere. 2) Query Pinecone for top-K similar. 3) Pass retrieved docs to LLM as context.",
+    "dimensions": "Match dimensions to your embedding model: OpenAI text-embedding-3-small=1536, Cohere embed-v3=1024."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
