@@ -6,7 +6,7 @@
     "description_for_ai": "Largest verified nutrition database. 3M+ food items with calories, macros, vitamins, minerals. Natural language food search. Use for calorie counting apps, nutrition tracking, meal planning.",
     "url": "https://nutritionix.com",
     "api_base": "https://trackapi.nutritionix.com/v2",
-    "category": "healthcare_nutrition",
+    "category": "healthcare",
     "geo": [
       "GLOBAL"
     ],
