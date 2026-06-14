@@ -6,7 +6,7 @@
     "description_for_ai": "Instagram business and creator API. Get posts, stories, insights, comments. Publish content, reply to DMs, manage business accounts. 2B+ users. Requires Instagram Business/Creator account.",
     "url": "https://instagram.com",
     "api_base": "https://graph.instagram.com",
-    "category": "social_media",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
