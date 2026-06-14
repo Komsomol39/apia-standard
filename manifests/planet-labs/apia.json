@@ -6,7 +6,7 @@
     "description_for_ai": "Daily satellite imagery of the entire Earth. 3-5m resolution, updated daily. Used for agriculture monitoring, deforestation tracking, disaster response. Commercial service with free education tier.",
     "url": "https://planet.com",
     "api_base": "https://api.planet.com/data/v1",
-    "category": "satellite_imagery",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
