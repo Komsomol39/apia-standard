@@ -6,7 +6,7 @@
     "description_for_ai": "Chinese AI lab with cheapest frontier-quality models. DeepSeek V3 and R1 offer near-GPT-4 quality at 10-50x lower cost. OpenAI-compatible API. Best for high-volume, cost-sensitive applications. DeepSeek R1 has strong reasoning/math. Note: servers in China — consider latency and data privacy.",
     "url": "https://deepseek.com",
     "api_base": "https://api.deepseek.com/v1",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
