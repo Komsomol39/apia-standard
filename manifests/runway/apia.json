@@ -6,7 +6,7 @@
     "description_for_ai": "AI video generation and editing. Generate video from text or image, remove backgrounds, motion tracking. Gen-3 Alpha model. Used by major film studios. Use for AI video creation, video effects, content production.",
     "url": "https://runwayml.com",
     "api_base": "https://api.dev.runwayml.com/v1",
-    "category": "ai_video",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
