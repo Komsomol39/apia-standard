@@ -51,7 +51,8 @@
         },
         "language": {
           "type": "string",
-          "default": "en"
+          "default": "en",
+          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
         }
       },
       "output": {
@@ -87,11 +88,13 @@
         },
         "language": {
           "type": "string",
-          "default": "en"
+          "default": "en",
+          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
         },
         "limit": {
           "type": "integer",
-          "default": 5
+          "default": 5,
+          "description": "Maximum number of results to return"
         }
       },
       "output": {
