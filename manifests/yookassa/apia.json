@@ -6,7 +6,7 @@
     "description_for_ai": "Главный платёжный шлюз России от Яндекса. Приём платежей картами, СБП, ЮMoney, SberPay, наличными. Рассрочка Тинькофф. Используй для приёма онлайн-платежей в России, возвратов, подписок.",
     "url": "https://yookassa.ru",
     "api_base": "https://api.yookassa.ru/v3",
-    "category": "payments",
+    "category": "finance",
     "geo": [
       "RU",
       "BY",
