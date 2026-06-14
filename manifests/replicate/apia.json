@@ -6,7 +6,7 @@
     "description_for_ai": "Run 1000+ open-source AI models via API. Images, video, audio, text, 3D. Includes Flux, SDXL, Llama, Whisper, LLaVA and many more. Pay per second of compute. Best for accessing specialized models.",
     "url": "https://replicate.com",
     "api_base": "https://api.replicate.com/v1",
-    "category": "ai_platform",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
