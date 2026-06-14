@@ -6,7 +6,7 @@
     "description_for_ai": "Customer support helpdesk. Tickets, agents, contacts, knowledge base, reports. Free plan available. Used by 68K+ companies. Alternative to Zendesk. Use for customer support management, ticket automation.",
     "url": "https://freshdesk.com",
     "api_base": "https://{domain}.freshdesk.com/api/v2",
-    "category": "customer_support",
+    "category": "support",
     "geo": [
       "GLOBAL"
     ],
