@@ -6,7 +6,7 @@
     "description_for_ai": "Стандартизация и обогащение данных для России. Подсказки и валидация адресов, ФИО, телефонов, ИНН, банковских реквизитов. Поиск по ФИО, организациям. Незаменим для форм с российскими адресами.",
     "url": "https://dadata.ru",
     "api_base": "https://suggestions.dadata.ru/suggestions/api/4_1/rs",
-    "category": "data_enrichment",
+    "category": "business",
     "geo": [
       "RU"
     ],
