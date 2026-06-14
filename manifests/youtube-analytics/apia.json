@@ -24,13 +24,19 @@
       "id": "get_channel_stats",
       "description_for_ai": "Deep analytics for YouTube channels. Views, watch time, revenue, demographics, traffic sources, engagement by video. Use for YouTube creator tools, channel analytics dashboards, content strategy apps. Get YouTube channel analytics: views, watch time, subscribers gained/lost, revenue for date range.",
       "intent": [
-        "youtube analytics",
-        "channel stats",
-        "video views",
         "watch time",
-        "subscribers",
+        "YouTube stats",
+        "video performance",
+        "subscriber growth",
+        "video views",
+        "youtube performance",
         "youtube revenue",
-        "youtube performance"
+        "channel revenue",
+        "youtube analytics",
+        "channel analytics",
+        "YouTube metrics",
+        "channel stats",
+        "subscribers"
       ],
       "endpoint": "GET https://youtubeanalytics.googleapis.com/v2/reports",
       "input": {
