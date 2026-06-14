@@ -25,11 +25,16 @@
       "id": "generate_image",
       "description_for_ai": "Generate image from text prompt using Stable Diffusion. Use for art creation, product mockups, illustrations. Returns PNG/JPEG.",
       "intent": [
+        "AI image generation",
+        "create illustration",
         "generate image",
-        "create art",
-        "stable diffusion",
+        "generate artwork",
         "image from text",
-        "create illustration"
+        "create image AI",
+        "create art",
+        "SDXL",
+        "stable diffusion",
+        "Stable Diffusion"
       ],
       "endpoint": "POST https://api.stability.ai/v2beta/stable-image/generate/core",
       "input": {
