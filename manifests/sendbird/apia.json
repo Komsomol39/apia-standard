@@ -106,5 +106,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "app_id": "App ID from Sendbird Dashboard. Replace {app_id} in base URL: api-{APP_ID}.sendbird.com",
+    "master_token": "Master API Token from Dashboard → Settings → General → API tokens. Use for server-side calls.",
+    "user_tokens": "For client-side: generate per-user session tokens via POST /v3/users/{user_id}/token. Expire after 1 day by default.",
+    "channel_types": "group_channels for private group chat, open_channels for public/stream chat (like Twitch chat)."
   }
 }
