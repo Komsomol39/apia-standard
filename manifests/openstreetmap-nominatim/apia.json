@@ -38,11 +38,13 @@
         },
         "format": {
           "type": "string",
-          "default": "json"
+          "default": "json",
+          "description": "Response format: json, xml, or csv"
         },
         "limit": {
           "type": "integer",
-          "default": 5
+          "default": 5,
+          "description": "Maximum number of results to return"
         },
         "addressdetails": {
           "type": "integer",
@@ -81,15 +83,18 @@
       "input": {
         "lat": {
           "type": "float",
-          "required": true
+          "required": true,
+          "description": "Latitude coordinate (decimal degrees, -90 to 90)"
         },
         "lon": {
           "type": "float",
-          "required": true
+          "required": true,
+          "description": "Longitude coordinate (decimal degrees, -180 to 180)"
         },
         "format": {
           "type": "string",
-          "default": "json"
+          "default": "json",
+          "description": "Response format: json, xml, or csv"
         }
       },
       "output": {
