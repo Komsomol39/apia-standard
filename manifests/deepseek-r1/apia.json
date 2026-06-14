@@ -36,7 +36,8 @@
       "input": {
         "model": {
           "type": "string",
-          "default": "deepseek-reasoner"
+          "default": "deepseek-reasoner",
+          "description": "AI/ML model identifier to use for this request"
         },
         "messages": {
           "type": "array",
@@ -44,7 +45,8 @@
         },
         "max_tokens": {
           "type": "integer",
-          "required": false
+          "required": false,
+          "description": "Maximum number of tokens to generate in response"
         }
       },
       "output": {
