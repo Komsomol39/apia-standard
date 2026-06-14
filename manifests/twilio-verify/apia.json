@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "send_otp",
-      "description_for_ai": "Send OTP code to phone number via SMS or call for two-factor authentication.",
+      "description_for_ai": "Send a one-time password (OTP) code to a user's phone via SMS, WhatsApp, voice call, or email. Part of 2FA flow.",
       "intent": [
         "send OTP",
         "two factor auth",
@@ -37,27 +37,41 @@
       "input": {
         "ServiceSid": {
           "type": "string",
-          "description": "Verify Service SID from Twilio Console",
+          "description": "Verify Service SID starting with 'VA' — created in Twilio Console → Verify → Services",
           "required": true
         },
         "To": {
           "type": "string",
-          "description": "Phone number in E.164 format e.g. +79161234567",
+          "description": "Recipient phone number in E.164 format: +79161234567 (Russia), +12125551234 (US)",
           "required": true
         },
         "Channel": {
           "type": "string",
-          "description": "sms, call, whatsapp, email",
+          "description": "Delivery channel: sms (default), call (voice), whatsapp, email, totp (authenticator app)",
           "default": "sms"
+        },
+        "Locale": {
+          "type": "string",
+          "description": "Language for OTP message: en, ru, de, fr, es, etc.",
+          "required": false
+        },
+        "CustomFriendlyName": {
+          "type": "string",
+          "description": "Override service name in OTP message",
+          "required": false
         }
       },
       "output": {
         "type": "verification",
         "fields": [
           "sid",
-          "status",
+          "service_sid",
+          "account_sid",
           "to",
-          "channel"
+          "channel",
+          "status (pending/approved/canceled)",
+          "valid",
+          "date_created"
         ]
       },
       "realtime": true,
@@ -65,7 +79,7 @@
     },
     {
       "id": "check_otp",
-      "description_for_ai": "Verify OTP code entered by user. Returns approved or pending.",
+      "description_for_ai": "Verify the OTP code entered by the user. Returns approved if correct, pending/canceled if wrong or expired.",
       "intent": [
         "verify OTP",
         "check code",
@@ -77,23 +91,28 @@
       "input": {
         "ServiceSid": {
           "type": "string",
+          "description": "Verify Service SID (same as used in send_otp)",
           "required": true
         },
         "To": {
           "type": "string",
+          "description": "Same phone number used in send_otp",
           "required": true
         },
         "Code": {
           "type": "string",
-          "description": "6-digit OTP code from user",
+          "description": "6-digit OTP code entered by the user",
           "required": true
         }
       },
       "output": {
         "type": "verification_check",
         "fields": [
-          "status",
-          "valid"
+          "status (approved/pending/canceled)",
+          "valid (boolean)",
+          "to",
+          "channel",
+          "sid"
         ]
       },
       "realtime": true,
