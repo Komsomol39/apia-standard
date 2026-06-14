@@ -87,5 +87,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "endpoint": "Get your IoT endpoint: aws iot describe-endpoint --endpoint-type iot:Data-ATS",
+    "auth": "Use IoT certificates (X.509) for devices, IAM for API calls. Policy must allow iot:Publish action.",
+    "mqtt": "Prefer MQTT SDK over REST for high-frequency device data. REST is for one-off operations.",
+    "shadow": "Device Shadow stores last known state. Useful when device is offline — state syncs on reconnect."
   }
 }
