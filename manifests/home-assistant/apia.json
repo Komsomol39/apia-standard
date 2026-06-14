@@ -89,7 +89,7 @@
         },
         "temperature": {
           "type": "float",
-          "description": "For climate",
+          "description": "Randomness 0.0-1.0: lower=deterministic, higher=creative",
           "required": false
         }
       },
