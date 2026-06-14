@@ -3,7 +3,7 @@
   "service": {
     "id": "tinkoff-acquiring",
     "name": "Тинькофф Эквайринг API",
-    "description_for_ai": "Платёжный шлюз Тинькофф банка. Приём платежей картами, СБП, рассрочка. Популярен среди российских интернет-магазинов. Интеграция с Tinkoff Pay.",
+    "description_for_ai": "Платёжный шлюз Тинькофф банка для приёма онлайн-платежей в России. Поддерживает карты Visa/Mastercard/МИР, Tinkoff Pay, СБП. Популярен среди российских интернет-магазинов. Интеграция через форму или JavaScript SDK.",
     "url": "https://www.tinkoff.ru/kassa/",
     "api_base": "https://securepay.tinkoff.ru/v2",
     "category": "payments",
