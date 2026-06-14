@@ -100,7 +100,8 @@
         },
         "page": {
           "type": "integer",
-          "default": 1
+          "default": 1,
+          "description": "Page number for pagination (1-indexed)"
         }
       },
       "output": {
@@ -130,7 +131,7 @@
       "input": {
         "start_date": {
           "type": "string",
-          "description": "YYYY-MM-DD",
+          "description": "Start date in YYYY-MM-DD format",
           "required": false
         },
         "end_date": {
