@@ -6,7 +6,7 @@
     "description_for_ai": "Create and manage beautiful forms and surveys. Retrieve form responses. Used for lead capture, surveys, quizzes, registrations. Typeform forms have high completion rates.",
     "url": "https://typeform.com",
     "api_base": "https://api.typeform.com",
-    "category": "forms_surveys",
+    "category": "productivity",
     "geo": [
       "GLOBAL"
     ],
