@@ -6,7 +6,7 @@
     "description_for_ai": "Free academic paper search with AI-powered recommendations. 220M+ papers, citations graph, author profiles, paper recommendations, research trends. Better discovery than Google Scholar. No API key for basic use.",
     "url": "https://semanticscholar.org",
     "api_base": "https://api.semanticscholar.org/graph/v1",
-    "category": "science_research",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
