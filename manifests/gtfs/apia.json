@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_routes",
-      "description_for_ai": "Get public transit routes for an agency or geographic area. Returns bus/metro/tram route info.",
+      "description_for_ai": "Get public transit routes (bus, metro, tram, rail) for an agency or geographic bounding box.",
       "intent": [
         "bus routes",
         "metro lines",
@@ -35,27 +35,34 @@
       "input": {
         "agency_key": {
           "type": "string",
-          "description": "Agency key from Transitland",
+          "description": "Transit agency key from Transitland e.g. 'f-dp3wjp-metro' for LA Metro. Search agencies at transit.land/agencies",
           "required": false
         },
         "bbox": {
           "type": "string",
-          "description": "Bounding box: min_lon,min_lat,max_lon,max_lat",
+          "description": "Geographic bounding box: min_lon,min_lat,max_lon,max_lat e.g. '-87.7,41.8,-87.6,41.9' for Chicago area",
           "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Max routes per page",
           "default": 20
+        },
+        "after": {
+          "type": "integer",
+          "description": "Pagination cursor (ID) for next page",
+          "required": false
         }
       },
       "output": {
         "type": "list<route>",
         "fields": [
-          "id",
-          "short_name",
-          "long_name",
-          "route_type",
-          "agency.name"
+          "routes[0].id",
+          "routes[0].short_name",
+          "routes[0].long_name",
+          "routes[0].route_type (0=tram,1=metro,2=rail,3=bus)",
+          "routes[0].agency.name",
+          "routes[0].agency.onestop_id"
         ]
       },
       "realtime": false,
@@ -63,7 +70,7 @@
     },
     {
       "id": "get_stops",
-      "description_for_ai": "Get transit stops in an area. Includes bus stops, metro stations.",
+      "description_for_ai": "Get transit stops (bus stops, metro stations, etc.) near a location or within a bounding box.",
       "intent": [
         "bus stop",
         "transit stop",
@@ -74,29 +81,38 @@
       "input": {
         "lon": {
           "type": "float",
+          "description": "Center longitude for proximity search",
           "required": false
         },
         "lat": {
           "type": "float",
+          "description": "Center latitude for proximity search",
           "required": false
         },
         "radius": {
           "type": "integer",
-          "description": "Meters",
+          "description": "Search radius in meters from lon,lat point",
           "default": 500
+        },
+        "bbox": {
+          "type": "string",
+          "description": "Alternative to lon/lat/radius: min_lon,min_lat,max_lon,max_lat bounding box",
+          "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Max stops to return",
           "default": 20
         }
       },
       "output": {
         "type": "list<stop>",
         "fields": [
-          "id",
-          "stop_name",
-          "geometry.coordinates",
-          "served_by_routes"
+          "stops[0].id",
+          "stops[0].stop_name",
+          "stops[0].geometry.coordinates",
+          "stops[0].served_by_routes[0].short_name",
+          "stops[0].departures_url"
         ]
       },
       "realtime": false,
