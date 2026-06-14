@@ -1,1 +1,97 @@
-{"apia":"1.0","service":{"id":"paypal","name":"PayPal REST API","description_for_ai":"Global payments leader. Accept payments in 200+ countries, 25 currencies. PayPal buttons, subscriptions, invoices, payouts. 400M+ active accounts. Use for accepting international payments, subscriptions, marketplace payouts.","url":"https://paypal.com","api_base":"https://api-m.paypal.com/v2","category":"payments","geo":["GLOBAL"],"language":"en","docs":"https://developer.paypal.com/docs/api/overview/"},"auth":{"type":"oauth2_client_credentials","anonymous_access":false,"token_url":"https://api-m.paypal.com/v1/oauth2/token","how_to_get":"Register at https://developer.paypal.com","cost":"No monthly fee. 3.49% + $0.49 per transaction"},"capabilities":[{"id":"create_order","description_for_ai":"Create PayPal payment order. Returns approval URL to redirect user to PayPal checkout.","intent":["paypal payment","accept payment","checkout","buy button","pay with paypal"],"endpoint":"POST https://api-m.paypal.com/v2/checkout/orders","input":{"intent":{"type":"string","description":"CAPTURE or AUTHORIZE","default":"CAPTURE"},"purchase_units":{"type":"array","description":"[{amount: {currency_code: USD, value: 10.00}, description: Product name}]","required":true}},"output":{"type":"order","fields":["id","status","links[1].href (approve URL)"]},"realtime":true,"requires_auth":true},{"id":"send_payout","description_for_ai":"Send money to PayPal accounts or emails. Use for marketplace seller payouts, refunds, rewards.","intent":["send money","payout","transfer funds","pay seller","mass payout"],"endpoint":"POST https://api-m.paypal.com/v1/payments/payouts","input":{"sender_batch_header":{"type":"object","description":"{sender_batch_id, email_subject}","required":true},"items":{"type":"array","description":"[{recipient_type: EMAIL, amount: {value, currency}, receiver: email@example.com}]","required":true}},"output":{"type":"payout","fields":["batch_header.payout_batch_id","batch_header.batch_status"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "paypal",
+    "name": "PayPal REST API",
+    "description_for_ai": "Global payments leader. Accept payments in 200+ countries, 25 currencies. PayPal buttons, subscriptions, invoices, payouts. 400M+ active accounts. Use for accepting international payments, subscriptions, marketplace payouts.",
+    "url": "https://paypal.com",
+    "api_base": "https://api-m.paypal.com/v2",
+    "category": "payments",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developer.paypal.com/docs/api/overview/"
+  },
+  "auth": {
+    "type": "oauth2_client_credentials",
+    "anonymous_access": false,
+    "token_url": "https://api-m.paypal.com/v1/oauth2/token",
+    "how_to_get": "Register at https://developer.paypal.com",
+    "cost": "No monthly fee. 3.49% + $0.49 per transaction"
+  },
+  "capabilities": [
+    {
+      "id": "create_order",
+      "description_for_ai": "Create PayPal payment order. Returns approval URL to redirect user to PayPal checkout.",
+      "intent": [
+        "paypal payment",
+        "accept payment",
+        "checkout",
+        "buy button",
+        "pay with paypal"
+      ],
+      "endpoint": "POST https://api-m.paypal.com/v2/checkout/orders",
+      "input": {
+        "intent": {
+          "type": "string",
+          "description": "CAPTURE or AUTHORIZE",
+          "default": "CAPTURE"
+        },
+        "purchase_units": {
+          "type": "array",
+          "description": "[{amount: {currency_code: USD, value: 10.00}, description: Product name}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
+          "id",
+          "status",
+          "links[1].href (approve URL)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_payout",
+      "description_for_ai": "Send money to PayPal accounts or emails. Use for marketplace seller payouts, refunds, rewards.",
+      "intent": [
+        "send money",
+        "payout",
+        "transfer funds",
+        "pay seller",
+        "mass payout"
+      ],
+      "endpoint": "POST https://api-m.paypal.com/v1/payments/payouts",
+      "input": {
+        "sender_batch_header": {
+          "type": "object",
+          "description": "{sender_batch_id, email_subject}",
+          "required": true
+        },
+        "items": {
+          "type": "array",
+          "description": "[{recipient_type: EMAIL, amount: {value, currency}, receiver: email@example.com}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "payout",
+        "fields": [
+          "batch_header.payout_batch_id",
+          "batch_header.batch_status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
