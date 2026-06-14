@@ -40,7 +40,8 @@
         },
         "search": {
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Search keywords or query string"
         },
         "order_by": {
           "type": "string",
@@ -49,7 +50,8 @@
         },
         "per_page": {
           "type": "integer",
-          "default": 20
+          "default": 20,
+          "description": "Results per page. Check API docs for maximum allowed."
         }
       },
       "output": {
@@ -86,7 +88,7 @@
         },
         "title": {
           "type": "string",
-          "description": "Issue title",
+          "description": "Title or name string",
           "required": true
         },
         "description": {
@@ -167,7 +169,8 @@
         },
         "per_page": {
           "type": "integer",
-          "default": 20
+          "default": 20,
+          "description": "Results per page. Check API docs for maximum allowed."
         },
         "order_by": {
           "type": "string",
@@ -176,7 +179,7 @@
         },
         "sort": {
           "type": "string",
-          "description": "asc or desc",
+          "description": "Sort field and direction e.g. 'created_at:desc' or 'name'",
           "default": "desc"
         }
       },
