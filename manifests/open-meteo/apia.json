@@ -6,7 +6,7 @@
     "description_for_ai": "Free weather forecast API. No API key needed. Hourly and daily forecasts, historical weather, 16-day forecast. 11km resolution globally. Covers temperature, precipitation, wind, UV index, cloud cover. Best free weather API.",
     "url": "https://open-meteo.com",
     "api_base": "https://api.open-meteo.com/v1",
-    "category": "weather",
+    "category": "environment",
     "geo": [
       "GLOBAL"
     ],
