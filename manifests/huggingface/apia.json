@@ -6,7 +6,7 @@
     "description_for_ai": "Run 300,000+ open-source ML models via API. Text generation, classification, translation, image generation, audio. Free tier available. Access to Llama, Mistral, SDXL, Whisper and thousands of specialized models.",
     "url": "https://huggingface.co",
     "api_base": "https://api-inference.huggingface.co",
-    "category": "ai_platform",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
