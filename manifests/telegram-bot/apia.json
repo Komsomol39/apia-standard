@@ -6,7 +6,7 @@
     "description_for_ai": "Create bots that send messages, handle commands, and interact with Telegram users. 950M+ users. Free, fast, no rate limits for personal bots. The simplest way to build a conversational interface. Use to send notifications, create interactive bots, receive commands from users via Telegram.",
     "url": "https://telegram.org",
     "api_base": "https://api.telegram.org/bot{token}",
-    "category": "social_media_messaging",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
