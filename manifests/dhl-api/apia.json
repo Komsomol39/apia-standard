@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_rates",
-      "description_for_ai": "Get DHL Express rates for international shipment.",
+      "description_for_ai": "Get DHL Express shipping rates between two cities. Returns available products with price, delivery date, and transit time.",
       "intent": [
         "DHL rates",
         "international shipping",
@@ -34,19 +34,22 @@
       "input": {
         "accountNumber": {
           "type": "string",
+          "description": "Your DHL account number",
           "required": true
         },
         "originCountryCode": {
           "type": "string",
-          "description": "ISO 2-letter e.g. RU",
+          "description": "Origin ISO 2-letter country code e.g. RU, DE, US",
           "required": true
         },
         "originCityName": {
           "type": "string",
+          "description": "Origin city name e.g. Moscow, Berlin",
           "required": true
         },
         "destinationCountryCode": {
           "type": "string",
+          "description": "Destination country code",
           "required": true
         },
         "destinationCityName": {
@@ -55,24 +58,33 @@
         },
         "weight": {
           "type": "number",
+          "description": "Shipment weight in kg",
           "required": true
         },
         "length": {
           "type": "number",
+          "description": "Package length in cm",
           "required": true
         },
         "width": {
           "type": "number",
+          "description": "Package width in cm",
           "required": true
         },
         "height": {
           "type": "number",
+          "description": "Package height in cm",
           "required": true
         },
         "plannedShippingDateAndTime": {
           "type": "string",
-          "description": "ISO 8601",
+          "description": "Pickup date ISO 8601 e.g. 2024-01-15T10:00:00GMT+03:00",
           "required": true
+        },
+        "isCustomsDeclarable": {
+          "type": "boolean",
+          "description": "true for international shipments",
+          "default": true
         }
       },
       "output": {
@@ -88,7 +100,7 @@
     },
     {
       "id": "track_shipment",
-      "description_for_ai": "Track DHL shipment by waybill number.",
+      "description_for_ai": "Track a DHL Express shipment by waybill number. Returns current status, location, and full event history.",
       "intent": [
         "track DHL",
         "DHL tracking",
@@ -99,7 +111,18 @@
       "input": {
         "shipmentTrackingNumber": {
           "type": "string",
+          "description": "DHL waybill/tracking number (10 digits)",
           "required": true
+        },
+        "trackingView": {
+          "type": "string",
+          "description": "all-checkpoints for full history or last-checkpoint for latest only",
+          "default": "all-checkpoints"
+        },
+        "levelOfDetail": {
+          "type": "string",
+          "description": "shipment for basic or all-checkpoints for detailed",
+          "default": "all-checkpoints"
         }
       },
       "output": {
@@ -119,5 +142,10 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "sandbox": "Test with sandbox API: https://express.api.dhl.com/mydhlapi/test — use test credentials from developer.dhl.com",
+    "account": "Production requires a DHL business account number. Apply at dhl.com or through local DHL office.",
+    "incoterms": "For customs: add incoterms (DAP most common for ecommerce), description of goods, and declared value."
   }
 }
