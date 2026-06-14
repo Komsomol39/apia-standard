@@ -6,7 +6,7 @@
     "description_for_ai": "Google Gemini AI models. Most generous free tier of any frontier AI API. Gemini 2.5 Flash is fast and cheap, Gemini 3.1 Pro is the flagship. Supports text, vision, audio, video, and code. 1M+ token context window. Use when cost matters or for multimodal tasks involving video/audio.",
     "url": "https://ai.google.dev",
     "api_base": "https://generativelanguage.googleapis.com/v1beta",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
