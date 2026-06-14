@@ -25,12 +25,15 @@
       "id": "search_everything",
       "description_for_ai": "Search all news articles by keyword, date range, language, source. Returns article title, description, URL, source, published date.",
       "intent": [
+        "новости о",
         "news about",
-        "latest news on",
-        "articles about",
-        "news search",
+        "press coverage",
         "find articles",
-        "новости о"
+        "поиск новостей",
+        "media monitoring",
+        "articles about",
+        "latest news on",
+        "news search"
       ],
       "endpoint": "GET https://newsapi.org/v2/everything",
       "input": {
@@ -83,11 +86,13 @@
       "id": "top_headlines",
       "description_for_ai": "Get top headlines from a country or category. Use for breaking news, top stories by category.",
       "intent": [
-        "top news",
-        "breaking news",
-        "headlines",
         "top stories",
-        "главные новости"
+        "latest headlines",
+        "главные новости",
+        "headlines",
+        "daily news",
+        "top news",
+        "breaking news"
       ],
       "endpoint": "GET https://newsapi.org/v2/top-headlines",
       "input": {
