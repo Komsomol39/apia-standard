@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "upload_object",
-      "description_for_ai": "Upload a file to S3 bucket. Returns public URL if bucket is public.",
+      "description_for_ai": "Upload a file or data to an S3 bucket. Returns ETag confirming upload success. File is immediately available at its URL.",
       "intent": [
         "upload file",
         "store file",
@@ -34,29 +34,45 @@
       "input": {
         "bucket": {
           "type": "string",
+          "description": "S3 bucket name e.g. 'my-company-assets'. Must exist and you must have write permission.",
           "required": true
         },
         "key": {
           "type": "string",
-          "description": "File path in bucket e.g. images/photo.jpg",
+          "description": "Object path/name in bucket e.g. 'images/product-123.jpg' or 'backups/2024-01-15.tar.gz'",
           "required": true
         },
         "body": {
           "type": "binary",
-          "description": "File content",
+          "description": "File content as binary stream, string, or bytes object",
           "required": true
         },
         "ContentType": {
           "type": "string",
-          "description": "MIME type",
+          "description": "MIME type: image/jpeg, image/png, application/pdf, text/html, application/json, video/mp4",
           "required": false
+        },
+        "ACL": {
+          "type": "string",
+          "description": "Access control: private (default), public-read, public-read-write, authenticated-read",
+          "required": false
+        },
+        "Metadata": {
+          "type": "object",
+          "description": "Custom metadata as key-value pairs: {author: 'John', version: '2.0'}",
+          "required": false
+        },
+        "StorageClass": {
+          "type": "string",
+          "description": "STANDARD, STANDARD_IA (infrequent), GLACIER (archive), DEEP_ARCHIVE",
+          "default": "STANDARD"
         }
       },
       "output": {
         "type": "upload",
         "fields": [
-          "ETag",
-          "VersionId"
+          "ETag (MD5 hash in quotes)",
+          "VersionId (if versioning enabled)"
         ]
       },
       "realtime": true,
@@ -64,7 +80,7 @@
     },
     {
       "id": "get_object",
-      "description_for_ai": "Download a file from S3 bucket.",
+      "description_for_ai": "Download a file from S3 bucket. Returns the object body as a stream.",
       "intent": [
         "download file",
         "get from S3",
@@ -75,18 +91,33 @@
       "input": {
         "bucket": {
           "type": "string",
+          "description": "S3 bucket name",
           "required": true
         },
         "key": {
           "type": "string",
-          "required": true,
-          "description": "Key identifier or lookup key"
+          "description": "Object key (file path in bucket)",
+          "required": true
+        },
+        "Range": {
+          "type": "string",
+          "description": "Byte range for partial download: 'bytes=0-1023' for first 1KB",
+          "required": false
+        },
+        "VersionId": {
+          "type": "string",
+          "description": "Specific version ID if versioning enabled",
+          "required": false
         }
       },
       "output": {
         "type": "binary",
         "fields": [
-          "file content"
+          "Body (file content stream)",
+          "ContentType",
+          "ContentLength",
+          "LastModified",
+          "ETag"
         ]
       },
       "realtime": true,
