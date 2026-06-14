@@ -6,7 +6,7 @@
     "description_for_ai": "Free country data API. 250 countries with name, capital, population, area, currency, languages, flag, borders, timezone, calling code. No API key needed. Use for country info, flags, geographic data.",
     "url": "https://restcountries.com",
     "api_base": "https://restcountries.com/v3.1",
-    "category": "geography",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
