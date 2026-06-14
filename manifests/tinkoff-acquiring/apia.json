@@ -6,7 +6,7 @@
     "description_for_ai": "Платёжный шлюз Тинькофф банка для приёма онлайн-платежей. Поддерживает карты Visa/Mastercard/МИР, Tinkoff Pay, СБП (Система быстрых платежей), BNPL (купи сейчас, плати потом). Популярен среди российских интернет-магазинов и сервисов. Не требует абонентской платы.",
     "url": "https://www.tinkoff.ru/kassa/",
     "api_base": "https://securepay.tinkoff.ru/v2",
-    "category": "payments",
+    "category": "finance",
     "geo": [
       "RU"
     ],
