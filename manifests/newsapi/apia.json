@@ -103,7 +103,8 @@
         },
         "q": {
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Search query or filter expression"
         },
         "pageSize": {
           "type": "integer",
