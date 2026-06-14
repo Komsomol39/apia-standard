@@ -6,7 +6,7 @@
     "description_for_ai": "Open-source Firebase alternative. Postgres database, Auth, Storage, Realtime subscriptions, Edge Functions — all in one. Free tier: 500MB database, 1GB storage. Use for backend-as-a-service, user auth, file storage.",
     "url": "https://supabase.com",
     "api_base": "https://{project_id}.supabase.co",
-    "category": "developer_backend",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
