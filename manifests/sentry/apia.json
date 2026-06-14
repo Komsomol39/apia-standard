@@ -1,1 +1,120 @@
-{"apia":"1.0","service":{"id":"sentry","name":"Sentry API","description_for_ai":"Error tracking and performance monitoring. Captures exceptions, crashes, slow transactions. 4M+ developers use it. Use for error monitoring, crash reporting, performance profiling in apps.","url":"https://sentry.io","api_base":"https://sentry.io/api/0","category":"developer_monitoring","geo":["GLOBAL"],"language":"en","docs":"https://docs.sentry.io/api/"},"auth":{"type":"bearer_token","anonymous_access":false,"header":"Authorization: Bearer {token}","how_to_get":"Settings → Account → API Tokens","cost":"Free: 5K errors/month. Team: $26/month"},"capabilities":[{"id":"list_issues","description_for_ai":"Get error issues from Sentry project. Returns error message, count, first/last seen, status.","intent":["sentry errors","application errors","crash reports","exception list","error monitoring"],"endpoint":"GET https://sentry.io/api/0/projects/{org}/{project}/issues/","input":{"org":{"type":"string","description":"Organization slug","required":true},"project":{"type":"string","description":"Project slug","required":true},"query":{"type":"string","description":"Search query e.g. is:unresolved","default":"is:unresolved"},"limit":{"type":"integer","default":25}},"output":{"type":"list<issue>","fields":["id","title","culprit","count","userCount","firstSeen","lastSeen","status","level"]},"realtime":true,"requires_auth":true},{"id":"capture_event","description_for_ai":"Send an error or event to Sentry manually via HTTP. Use Sentry SDK in production instead.","intent":["report error","send to sentry","capture exception"],"endpoint":"POST https://sentry.io/api/{project_id}/store/","input":{"event_id":{"type":"string","required":true},"message":{"type":"string","required":true},"level":{"type":"string","description":"fatal, error, warning, info, debug","default":"error"},"exception":{"type":"object","required":false},"tags":{"type":"object","required":false}},"output":{"type":"event","fields":["id"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "sentry",
+    "name": "Sentry API",
+    "description_for_ai": "Error tracking and performance monitoring. Captures exceptions, crashes, slow transactions. 4M+ developers use it. Use for error monitoring, crash reporting, performance profiling in apps.",
+    "url": "https://sentry.io",
+    "api_base": "https://sentry.io/api/0",
+    "category": "developer_monitoring",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.sentry.io/api/"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer {token}",
+    "how_to_get": "Settings → Account → API Tokens",
+    "cost": "Free: 5K errors/month. Team: $26/month"
+  },
+  "capabilities": [
+    {
+      "id": "list_issues",
+      "description_for_ai": "Get error issues from Sentry project. Returns error message, count, first/last seen, status.",
+      "intent": [
+        "sentry errors",
+        "application errors",
+        "crash reports",
+        "exception list",
+        "error monitoring"
+      ],
+      "endpoint": "GET https://sentry.io/api/0/projects/{org}/{project}/issues/",
+      "input": {
+        "org": {
+          "type": "string",
+          "description": "Organization slug",
+          "required": true
+        },
+        "project": {
+          "type": "string",
+          "description": "Project slug",
+          "required": true
+        },
+        "query": {
+          "type": "string",
+          "description": "Search query e.g. is:unresolved",
+          "default": "is:unresolved"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<issue>",
+        "fields": [
+          "id",
+          "title",
+          "culprit",
+          "count",
+          "userCount",
+          "firstSeen",
+          "lastSeen",
+          "status",
+          "level"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "capture_event",
+      "description_for_ai": "Send an error or event to Sentry manually via HTTP. Use Sentry SDK in production instead.",
+      "intent": [
+        "report error",
+        "send to sentry",
+        "capture exception"
+      ],
+      "endpoint": "POST https://sentry.io/api/{project_id}/store/",
+      "input": {
+        "event_id": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        },
+        "level": {
+          "type": "string",
+          "description": "fatal, error, warning, info, debug",
+          "default": "error"
+        },
+        "exception": {
+          "type": "object",
+          "required": false
+        },
+        "tags": {
+          "type": "object",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "event",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
