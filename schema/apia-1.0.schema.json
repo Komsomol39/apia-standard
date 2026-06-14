@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Komsomol39/apia-standard/blob/main/schema/apia-1.0.schema.json",
+  "title": "APIA Manifest Schema v1.0",
+  "description": "Validates an APIA manifest file (apia.json)",
+  "type": "object",
+  "required": ["apia", "service", "capabilities"],
+  "properties": {
+    "apia": {
+      "type": "string",
+      "description": "APIA standard version",
+      "enum": ["1.0"]
+    },
+    "service": {
+      "type": "object",
+      "required": ["id", "name", "description_for_ai", "category", "geo"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Unique slug, lowercase, hyphens only" },
+        "name": { "type": "string" },
+        "description_for_ai": { "type": "string", "minLength": 20, "description": "Written for LLMs, not developers" },
+        "url": { "type": "string", "format": "uri" },
+        "api_base": { "type": "string" },
+        "category": { "type": "string" },
+        "geo": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "language": { "type": "string" },
+        "docs": { "type": "string", "format": "uri" }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "required": ["type", "anonymous_access"],
+      "properties": {
+        "type": { "type": "string", "enum": ["none", "apikey", "oauth2", "bearer_token", "basic_auth", "oauth2_client_credentials", "oauth2_esia"] },
+        "anonymous_access": { "type": "boolean" },
+        "how_to_get": { "type": "string" },
+        "cost": { "type": "string" }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description_for_ai", "intent", "endpoint"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "description_for_ai": { "type": "string", "minLength": 20 },
+          "intent": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "endpoint": { "type": "string" },
+          "input": { "type": "object" },
+          "output": { "type": "object" },
+          "realtime": { "type": "boolean" },
+          "requires_auth": { "type": "boolean" },
+          "rate_limit": { "type": "string" }
+        }
+      }
+    },
+    "agent_hints": {
+      "type": "object",
+      "description": "Key-value hints for AI agents on how to use this API correctly"
+    },
+    "limits": { "type": "object" },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "apia_version": { "type": "string" },
+        "manifest_author": { "type": "string" },
+        "last_verified": { "type": "string", "format": "date" },
+        "completeness": { "type": "string", "enum": ["full", "partial"] }
+      }
+    }
+  }
+}
