@@ -65,7 +65,7 @@
     },
     {
       "id": "get_random",
-      "description_for_ai": "Get a random recipe. Use for meal inspiration, what to cook today.",
+      "description_for_ai": "Get a completely random recipe. Ideal for meal inspiration, 'what should I cook today', daily recipe features.",
       "intent": [
         "random recipe",
         "surprise meal",
@@ -89,7 +89,7 @@
     },
     {
       "id": "filter_by_ingredient",
-      "description_for_ai": "Find all recipes that use a specific ingredient.",
+      "description_for_ai": "Find all recipes containing a specific ingredient. Returns list of matching meals with thumbnails. Use to suggest what to cook with available ingredients.",
       "intent": [
         "recipes with ingredient",
         "what can I make with",
@@ -100,7 +100,7 @@
       "input": {
         "i": {
           "type": "string",
-          "description": "Ingredient name e.g. chicken_breast, egg, tomato",
+          "description": "Ingredient name (use underscores for spaces): chicken_breast, salmon, garlic, tomato, pasta, cheese",
           "required": true
         }
       },
@@ -120,5 +120,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "free_tier": "Test key '1' gives access to all endpoints. Full API key from Patreon unlocks search by category/area.",
+    "image_url": "Meal thumbnail: strMealThumb. Append /preview for smaller version.",
+    "categories": "Available categories: Beef, Chicken, Dessert, Lamb, Miscellaneous, Pasta, Pork, Seafood, Side, Starter, Vegan, Vegetarian, Breakfast, Goat",
+    "youtube": "strYoutube field contains YouTube URL for cooking video when available."
   }
 }
