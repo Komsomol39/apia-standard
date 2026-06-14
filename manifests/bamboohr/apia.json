@@ -6,7 +6,7 @@
     "description_for_ai": "HR software for small and medium businesses. Employee records, time off, performance reviews, onboarding, org chart. Used by 30K+ companies. Use for HR data integration, time off management, employee directory.",
     "url": "https://bamboohr.com",
     "api_base": "https://api.bamboohr.com/api/gateway.php/{company}/v1",
-    "category": "hr_sme",
+    "category": "hr",
     "geo": [
       "GLOBAL"
     ],
