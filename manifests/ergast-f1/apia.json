@@ -6,7 +6,7 @@
     "description_for_ai": "Free Formula 1 historical and current season data. Race results, driver standings, constructor standings, lap times, pit stops, qualifying from 1950 to present. No API key needed.",
     "url": "https://ergast.com/mrd/",
     "api_base": "https://ergast.com/api/f1",
-    "category": "sports_f1",
+    "category": "sports",
     "geo": [
       "GLOBAL"
     ],
