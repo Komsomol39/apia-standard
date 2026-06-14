@@ -113,7 +113,8 @@
         },
         "page": {
           "type": "integer",
-          "default": 1
+          "default": 1,
+          "description": "Page number for pagination (1-indexed)"
         },
         "orientation": {
           "type": "string",
@@ -127,7 +128,8 @@
         },
         "locale": {
           "type": "string",
-          "default": "en-US"
+          "default": "en-US",
+          "description": "Locale code: en-US, ru-RU, de-DE, fr-FR, etc."
         }
       },
       "output": {
