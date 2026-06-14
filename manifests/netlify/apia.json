@@ -1,1 +1,99 @@
-{"apia":"1.0","service":{"id":"netlify","name":"Netlify API","description_for_ai":"Jamstack hosting platform. Deploy static sites, Next.js, Gatsby. Edge functions, serverless, forms, auth, split testing. Free tier very generous. Used by 3M+ developers. Use for frontend deployment, static hosting.","url":"https://netlify.com","api_base":"https://api.netlify.com/api/v1","category":"developer_hosting","geo":["GLOBAL"],"language":"en","docs":"https://open-api.netlify.com/"},"auth":{"type":"bearer_token","anonymous_access":false,"header":"Authorization: Bearer {token}","how_to_get":"User Settings → Applications → New access token","cost":"Free: 100GB bandwidth, 300 build min/month. Pro: $19/month"},"capabilities":[{"id":"list_sites","description_for_ai":"List all Netlify sites in account with deploy status and URLs.","intent":["netlify sites","deployed sites","frontend apps","static sites"],"endpoint":"GET https://api.netlify.com/api/v1/sites","input":{"filter":{"type":"string","description":"all, owner, guest","default":"all"},"per_page":{"type":"integer","default":20}},"output":{"type":"list<site>","fields":["id","name","url","ssl_url","published_deploy.state","published_deploy.published_at","build_settings.repo_url"]},"realtime":true,"requires_auth":true},{"id":"deploy_site","description_for_ai":"Trigger a new deployment for a Netlify site.","intent":["deploy site","redeploy","publish changes","trigger build"],"endpoint":"POST https://api.netlify.com/api/v1/sites/{site_id}/deploys","input":{"site_id":{"type":"string","required":true},"clear_cache":{"type":"boolean","default":false}},"output":{"type":"deploy","fields":["id","state","url","deploy_url","created_at"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "netlify",
+    "name": "Netlify API",
+    "description_for_ai": "Jamstack hosting platform. Deploy static sites, Next.js, Gatsby. Edge functions, serverless, forms, auth, split testing. Free tier very generous. Used by 3M+ developers. Use for frontend deployment, static hosting.",
+    "url": "https://netlify.com",
+    "api_base": "https://api.netlify.com/api/v1",
+    "category": "developer_hosting",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://open-api.netlify.com/"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer {token}",
+    "how_to_get": "User Settings → Applications → New access token",
+    "cost": "Free: 100GB bandwidth, 300 build min/month. Pro: $19/month"
+  },
+  "capabilities": [
+    {
+      "id": "list_sites",
+      "description_for_ai": "List all Netlify sites in account with deploy status and URLs.",
+      "intent": [
+        "netlify sites",
+        "deployed sites",
+        "frontend apps",
+        "static sites"
+      ],
+      "endpoint": "GET https://api.netlify.com/api/v1/sites",
+      "input": {
+        "filter": {
+          "type": "string",
+          "description": "all, owner, guest",
+          "default": "all"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<site>",
+        "fields": [
+          "id",
+          "name",
+          "url",
+          "ssl_url",
+          "published_deploy.state",
+          "published_deploy.published_at",
+          "build_settings.repo_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "deploy_site",
+      "description_for_ai": "Trigger a new deployment for a Netlify site.",
+      "intent": [
+        "deploy site",
+        "redeploy",
+        "publish changes",
+        "trigger build"
+      ],
+      "endpoint": "POST https://api.netlify.com/api/v1/sites/{site_id}/deploys",
+      "input": {
+        "site_id": {
+          "type": "string",
+          "required": true
+        },
+        "clear_cache": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "deploy",
+        "fields": [
+          "id",
+          "state",
+          "url",
+          "deploy_url",
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
