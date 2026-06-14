@@ -6,7 +6,7 @@
     "description_for_ai": "Email delivery API trusted by 80,000+ companies. Send transactional and marketing emails. 100 emails/day free. High deliverability, analytics, templates. Use for sending emails programmatically.",
     "url": "https://sendgrid.com",
     "api_base": "https://api.sendgrid.com/v3",
-    "category": "communication_email",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
