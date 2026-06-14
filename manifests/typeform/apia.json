@@ -104,5 +104,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "workspace": "Form responses are workspace-specific. Get workspace ID from account settings.",
+    "webhooks": "Set up form webhooks for real-time submissions: POST /forms/{id}/webhooks with payload_fields.",
+    "hidden_fields": "Pass hidden: {ref: 'value'} in create_form to pre-populate fields from URL params. Useful for user tracking.",
+    "score": "For quiz forms, calculated.score contains total quiz score. Set correct_choice on question options."
   }
 }
