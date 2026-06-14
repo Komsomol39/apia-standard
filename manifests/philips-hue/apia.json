@@ -82,7 +82,7 @@
     },
     {
       "id": "get_lights",
-      "description_for_ai": "Get all Philips Hue lights with their current state: on/off, brightness, color, reachability.",
+      "description_for_ai": "Get all Philips Hue lights in the bridge with current state: on/off, brightness (1-254), color (hue/saturation), and reachability.",
       "intent": [
         "list lights",
         "all lights status",
