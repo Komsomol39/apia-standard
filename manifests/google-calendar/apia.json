@@ -1,1 +1,150 @@
-{"apia":"1.0","service":{"id":"google-calendar","name":"Google Calendar API","description_for_ai":"Read and write Google Calendar events. Create meetings, check availability, list events, manage calendars. 1B+ users. Use for scheduling apps, meeting management, availability checking.","url":"https://calendar.google.com","api_base":"https://www.googleapis.com/calendar/v3","category":"productivity_calendar","geo":["GLOBAL"],"language":"en","docs":"https://developers.google.com/calendar/api/v3/reference"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Enable Calendar API at https://console.cloud.google.com","cost":"Free"},"capabilities":[{"id":"list_events","description_for_ai":"Get upcoming calendar events. Filter by date range, calendar, search term.","intent":["calendar events","my schedule","upcoming meetings","what is on calendar","free slots","расписание","встречи"],"endpoint":"GET https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events","input":{"calendarId":{"type":"string","description":"Calendar ID. Use primary for main calendar.","default":"primary"},"timeMin":{"type":"string","description":"ISO 8601 start time","required":false},"timeMax":{"type":"string","description":"ISO 8601 end time","required":false},"q":{"type":"string","description":"Search term","required":false},"maxResults":{"type":"integer","default":10},"orderBy":{"type":"string","default":"startTime"},"singleEvents":{"type":"boolean","default":true}},"output":{"type":"list<event>","fields":["summary","start.dateTime","end.dateTime","location","description","attendees[0].email","htmlLink"]},"realtime":true,"requires_auth":true},{"id":"create_event","description_for_ai":"Create new calendar event with title, time, location, attendees.","intent":["create meeting","add to calendar","schedule event","book appointment","новая встреча","добавить в календарь"],"endpoint":"POST https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events","input":{"calendarId":{"type":"string","default":"primary"},"summary":{"type":"string","description":"Event title","required":true},"start":{"type":"object","description":"{dateTime: ISO 8601, timeZone: America/New_York}","required":true},"end":{"type":"object","description":"{dateTime: ISO 8601, timeZone}","required":true},"location":{"type":"string","required":false},"description":{"type":"string","required":false},"attendees":{"type":"array","description":"[{email: user@example.com}]","required":false}},"output":{"type":"event","fields":["id","htmlLink","summary","start","end"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "google-calendar",
+    "name": "Google Calendar API",
+    "description_for_ai": "Read and write Google Calendar events. Create meetings, check availability, list events, manage calendars. 1B+ users. Use for scheduling apps, meeting management, availability checking.",
+    "url": "https://calendar.google.com",
+    "api_base": "https://www.googleapis.com/calendar/v3",
+    "category": "productivity_calendar",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.google.com/calendar/api/v3/reference"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Enable Calendar API at https://console.cloud.google.com",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "list_events",
+      "description_for_ai": "Get upcoming calendar events. Filter by date range, calendar, search term.",
+      "intent": [
+        "calendar events",
+        "my schedule",
+        "upcoming meetings",
+        "what is on calendar",
+        "free slots",
+        "расписание",
+        "встречи"
+      ],
+      "endpoint": "GET https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events",
+      "input": {
+        "calendarId": {
+          "type": "string",
+          "description": "Calendar ID. Use primary for main calendar.",
+          "default": "primary"
+        },
+        "timeMin": {
+          "type": "string",
+          "description": "ISO 8601 start time",
+          "required": false
+        },
+        "timeMax": {
+          "type": "string",
+          "description": "ISO 8601 end time",
+          "required": false
+        },
+        "q": {
+          "type": "string",
+          "description": "Search term",
+          "required": false
+        },
+        "maxResults": {
+          "type": "integer",
+          "default": 10
+        },
+        "orderBy": {
+          "type": "string",
+          "default": "startTime"
+        },
+        "singleEvents": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "list<event>",
+        "fields": [
+          "summary",
+          "start.dateTime",
+          "end.dateTime",
+          "location",
+          "description",
+          "attendees[0].email",
+          "htmlLink"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_event",
+      "description_for_ai": "Create new calendar event with title, time, location, attendees.",
+      "intent": [
+        "create meeting",
+        "add to calendar",
+        "schedule event",
+        "book appointment",
+        "новая встреча",
+        "добавить в календарь"
+      ],
+      "endpoint": "POST https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events",
+      "input": {
+        "calendarId": {
+          "type": "string",
+          "default": "primary"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Event title",
+          "required": true
+        },
+        "start": {
+          "type": "object",
+          "description": "{dateTime: ISO 8601, timeZone: America/New_York}",
+          "required": true
+        },
+        "end": {
+          "type": "object",
+          "description": "{dateTime: ISO 8601, timeZone}",
+          "required": true
+        },
+        "location": {
+          "type": "string",
+          "required": false
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "attendees": {
+          "type": "array",
+          "description": "[{email: user@example.com}]",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "event",
+        "fields": [
+          "id",
+          "htmlLink",
+          "summary",
+          "start",
+          "end"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
