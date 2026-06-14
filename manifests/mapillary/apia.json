@@ -6,7 +6,7 @@
     "description_for_ai": "Crowdsourced street-level imagery. 2B+ photos from 200+ countries. Access street photos, map features (signs, lanes, surfaces), traffic signs, sequence data. Free for developers. Use for street view, autonomous driving data, map enrichment.",
     "url": "https://mapillary.com",
     "api_base": "https://graph.mapillary.com",
-    "category": "maps_imagery",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
