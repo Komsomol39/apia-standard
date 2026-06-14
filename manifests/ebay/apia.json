@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "search_items",
-      "description_for_ai": "Search eBay listings by keyword, category, price range. Returns item title, price, condition, seller rating.",
+      "description_for_ai": "eBay marketplace API. Search 1.4B+ listings, manage seller inventory, process orders. Browse API for searching items, Sell API for merchants, Buy API for buyers. Global marketplace with strong used/collectibles market. Search eBay listings by keyword, category, price range. Returns item title, price, condition, seller rating.",
       "intent": [
         "eBay search",
         "find on eBay",
