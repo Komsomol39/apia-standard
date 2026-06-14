@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "get_employees",
-      "description_for_ai": "Get employee directory with custom fields: name, email, department, title, location, hire date, phone.",
+      "description_for_ai": "Get employee directory with all profile fields: name, job title, department, location, hire date, work email, manager.",
       "intent": [
         "employee directory",
         "staff list",
@@ -33,7 +33,13 @@
         "org chart data"
       ],
       "endpoint": "GET https://api.bamboohr.com/api/gateway.php/{company}/v1/employees/directory",
-      "input": {},
+      "input": {
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated field IDs: firstName,lastName,jobTitle,department,location,workEmail,hireDate,supervisor,employmentHistoryStatus,workPhone,mobilePhone",
+          "required": false
+        }
+      },
       "output": {
         "type": "directory",
         "fields": [
@@ -53,7 +59,7 @@
     },
     {
       "id": "get_time_off",
-      "description_for_ai": "Get employee time off requests and balances.",
+      "description_for_ai": "Get employee time off requests (PTO, vacation, sick days) with dates, status, type, and hours/days amount.",
       "intent": [
         "time off",
         "vacation days",
@@ -104,5 +110,10 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "company_domain": "Replace {company} in base URL with your BambooHR subdomain e.g. mycompany",
+    "auth": "API key as username in basic auth, any string as password (e.g. 'x'). Get key: Account → API Keys",
+    "fields": "Use GET /v1/meta/fields to discover all available field IDs for your account."
   }
 }
