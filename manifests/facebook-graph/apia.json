@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_page_posts",
-      "description_for_ai": "Get posts from a Facebook Page with engagement metrics.",
+      "description_for_ai": "Get posts from a Facebook Page with engagement metrics (likes, comments, shares). Requires Page access token and pages_read_engagement permission.",
       "intent": [
         "facebook posts",
         "page content",
@@ -34,16 +34,28 @@
       "input": {
         "page_id": {
           "type": "string",
+          "description": "Facebook Page ID or username",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "message,created_time,likes.summary(true),comments.summary(true),shares",
-          "default": "message,created_time"
+          "description": "Comma-separated: message,story,created_time,full_picture,permalink_url,likes.summary(true),comments.summary(true),shares,reactions.summary(true)",
+          "default": "message,created_time,likes.summary(true)"
         },
         "limit": {
           "type": "integer",
+          "description": "Posts per page, default 10, max 100",
           "default": 10
+        },
+        "since": {
+          "type": "string",
+          "description": "Unix timestamp or date string to filter posts from",
+          "required": false
+        },
+        "until": {
+          "type": "string",
+          "description": "Unix timestamp or date string to filter posts until",
+          "required": false
         }
       },
       "output": {
@@ -61,7 +73,7 @@
     },
     {
       "id": "publish_post",
-      "description_for_ai": "Publish a post to a Facebook Page.",
+      "description_for_ai": "Publish a text or link post to a Facebook Page. Requires Page publish_actions permission and Page access token.",
       "intent": [
         "post to facebook",
         "publish on facebook",
@@ -76,10 +88,22 @@
         },
         "message": {
           "type": "string",
-          "required": true
+          "description": "Post text content",
+          "required": false
         },
         "link": {
           "type": "string",
+          "description": "URL to share as link post with preview card",
+          "required": false
+        },
+        "published": {
+          "type": "boolean",
+          "description": "true to publish immediately, false to create draft",
+          "default": true
+        },
+        "scheduled_publish_time": {
+          "type": "integer",
+          "description": "Unix timestamp for scheduled publishing (requires published=false)",
           "required": false
         }
       },
@@ -97,5 +121,10 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "access_token": "Page posts require a Page Access Token (not User token). Get via: GET /{user_id}/accounts to list pages and their tokens.",
+    "permissions": "For reading: pages_read_engagement. For publishing: pages_manage_posts. Request via App Review for production.",
+    "rate_limits": "Facebook uses app-level and user-level rate limits. Watch X-App-Usage and X-Ad-Account-Usage headers."
   }
 }
