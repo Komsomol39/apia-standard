@@ -21,7 +21,7 @@
   "capabilities": [
     {
       "id": "get_questions",
-      "description_for_ai": "Get random trivia questions by category and difficulty. Returns question, correct answer, and incorrect answers.",
+      "description_for_ai": "Free trivia questions API. 4000+ verified questions across 24 categories. Multiple difficulty levels. No API key needed. Use for quiz games, trivia apps, educational games. Get random trivia questions by category and difficulty. Returns question, correct answer, and incorrect answers.",
       "intent": [
         "trivia questions",
         "quiz questions",
