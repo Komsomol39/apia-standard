@@ -22,47 +22,70 @@
   "capabilities": [
     {
       "id": "search_tweets",
-      "description_for_ai": "Search recent tweets by keyword, hashtag, or from a user. Returns text, author, engagement metrics.",
+      "description_for_ai": "Search recent tweets by keyword, hashtag, username, or advanced operators. Returns up to 100 tweets per request with engagement metrics.",
       "intent": [
         "search tweets",
         "twitter search",
         "find tweets",
         "twitter mentions",
         "hashtag search",
-        "twitter sentiment"
+        "twitter sentiment",
+        "social listening"
       ],
       "endpoint": "GET https://api.twitter.com/2/tweets/search/recent",
       "input": {
         "query": {
           "type": "string",
-          "description": "Search query e.g. from:user, #hashtag, keyword -is:retweet lang:en",
+          "description": "Search query with operators: 'from:elonmusk' (from user), '#AI' (hashtag), '-is:retweet' (exclude RT), 'lang:en' (language), '(word1 OR word2)' (boolean). Max 512 chars.",
           "required": true
         },
         "max_results": {
           "type": "integer",
-          "default": 10,
-          "max": 100
+          "description": "Results per request, 10-100",
+          "default": 10
         },
         "tweet.fields": {
           "type": "string",
-          "description": "created_at,public_metrics,author_id,lang",
+          "description": "Comma-separated: created_at,public_metrics,author_id,lang,geo,entities,context_annotations",
           "required": false
         },
         "expansions": {
           "type": "string",
-          "description": "author_id for user info",
+          "description": "author_id to get user info, attachments.media_keys for media",
+          "required": false
+        },
+        "user.fields": {
+          "type": "string",
+          "description": "With expansions=author_id: name,username,profile_image_url,public_metrics",
+          "required": false
+        },
+        "start_time": {
+          "type": "string",
+          "description": "ISO 8601 start time, max 7 days ago for free tier",
+          "required": false
+        },
+        "end_time": {
+          "type": "string",
+          "description": "ISO 8601 end time",
+          "required": false
+        },
+        "next_token": {
+          "type": "string",
+          "description": "Pagination token from previous response",
           "required": false
         }
       },
       "output": {
         "type": "list<tweet>",
         "fields": [
-          "id",
-          "text",
-          "created_at",
-          "public_metrics.like_count",
-          "public_metrics.retweet_count",
-          "author_id"
+          "data[0].id",
+          "data[0].text",
+          "data[0].created_at",
+          "data[0].public_metrics.like_count",
+          "data[0].public_metrics.retweet_count",
+          "data[0].public_metrics.reply_count",
+          "meta.result_count",
+          "meta.next_token"
         ]
       },
       "realtime": true,
@@ -70,7 +93,7 @@
     },
     {
       "id": "post_tweet",
-      "description_for_ai": "Post a new tweet. Returns tweet ID and text.",
+      "description_for_ai": "Post a new tweet to the authenticated user's timeline.",
       "intent": [
         "post tweet",
         "tweet",
@@ -82,17 +105,27 @@
       "input": {
         "text": {
           "type": "string",
-          "description": "Tweet text max 280 chars",
+          "description": "Tweet text, max 280 characters. Supports mentions @username, hashtags #tag, and URLs",
           "required": true
         },
         "reply": {
           "type": "object",
-          "description": "{in_reply_to_tweet_id: id} for replies",
+          "description": "{in_reply_to_tweet_id: '1234567890'} to reply to a tweet",
+          "required": false
+        },
+        "quote_tweet_id": {
+          "type": "string",
+          "description": "Tweet ID to quote-tweet",
           "required": false
         },
         "media": {
           "type": "object",
-          "description": "{media_ids: [id]} for media attachments",
+          "description": "{media_ids: ['id1', 'id2']} to attach uploaded media (upload first via v1.1/media/upload)",
+          "required": false
+        },
+        "poll": {
+          "type": "object",
+          "description": "{duration_minutes: 1440, options: ['Option A', 'Option B', 'Option C']}",
           "required": false
         }
       },
@@ -108,9 +141,9 @@
     }
   ],
   "agent_hints": {
-    "api_v2": "Always use v2 API. v1.1 is deprecated.",
-    "rate_limits": "Free tier very limited. Basic tier $100/month gives 500K tweets read/month.",
-    "search_operators": "Powerful operators: from:user, to:user, #hashtag, is:retweet, lang:ru, -is:retweet"
+    "api_tiers": "Free: 1500 tweets/month write only, no search. Basic ($100/month): 10K tweets/month write, 500K read. Pro ($5000/month): higher limits.",
+    "search_operators": "Powerful operators: from:user, to:user, @mention, #hashtag, is:retweet, is:verified, lang:ru, has:images, has:links, place_country:US",
+    "rate_limits": "Basic tier: 1 request/15min for search. Cache results and avoid polling too frequently."
   },
   "meta": {
     "apia_version": "1.0",
