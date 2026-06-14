@@ -1,2 +1,105 @@
 {
-  "apia":"1.0","service":{"id":"aws-s3","name":"Amazon S3 API","description_for_ai":"World leading cloud object storage. Store files, images, videos, backups. Highly durable, globally available. 5GB free first year. Use for file uploads, static hosting, backups, media storage.","url":"https://aws.amazon.com/s3","api_base":"https://s3.amazonaws.com","category":"cloud_storage","geo":["GLOBAL"],"language":"en","docs":"https://docs.aws.amazon.com/s3"},"auth":{"type":"aws_sig_v4","anonymous_access":false,"how_to_get":"AWS account at https://aws.amazon.com — 5GB free tier","cost":"Free: 5GB, 20K GET, 2K PUT. Then $0.023/GB/month"},"capabilities":[{"id":"upload_object","description_for_ai":"Upload a file to S3 bucket. Returns public URL if bucket is public.","intent":["upload file","store file","S3 upload","cloud storage","сохранить файл"],"endpoint":"PUT https://{bucket}.s3.{region}.amazonaws.com/{key}","input":{"bucket":{"type":"string","required":true},"key":{"type":"string","description":"File path in bucket e.g. images/photo.jpg","required":true},"body":{"type":"binary","description":"File content","required":true},"ContentType":{"type":"string","description":"MIME type","required":false}},"output":{"type":"upload","fields":["ETag","VersionId"]},"realtime":true,"requires_auth":true},{"id":"get_object","description_for_ai":"Download a file from S3 bucket.","intent":["download file","get from S3","retrieve file","read file"],"endpoint":"GET https://{bucket}.s3.{region}.amazonaws.com/{key}","input":{"bucket":{"type":"string","required":true},"key":{"type":"string","required":true}},"output":{"type":"binary","fields":["file content"]},"realtime":true,"requires_auth":true}],"agent_hints":{"sdk":"Use AWS SDK (boto3 for Python, aws-sdk for JS) instead of raw HTTP — handles auth automatically.","public_url":"For public objects: https://{bucket}.s3.{region}.amazonaws.com/{key}","presigned":"Use presigned URLs for temporary access without exposing credentials."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "aws-s3",
+    "name": "Amazon S3 API",
+    "description_for_ai": "World leading cloud object storage. Store files, images, videos, backups. Highly durable, globally available. 5GB free first year. Use for file uploads, static hosting, backups, media storage.",
+    "url": "https://aws.amazon.com/s3",
+    "api_base": "https://s3.amazonaws.com",
+    "category": "cloud_storage",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.aws.amazon.com/s3"
+  },
+  "auth": {
+    "type": "aws_sig_v4",
+    "anonymous_access": false,
+    "how_to_get": "AWS account at https://aws.amazon.com — 5GB free tier",
+    "cost": "Free: 5GB, 20K GET, 2K PUT. Then $0.023/GB/month"
+  },
+  "capabilities": [
+    {
+      "id": "upload_object",
+      "description_for_ai": "Upload a file to S3 bucket. Returns public URL if bucket is public.",
+      "intent": [
+        "upload file",
+        "store file",
+        "S3 upload",
+        "cloud storage",
+        "сохранить файл"
+      ],
+      "endpoint": "PUT https://{bucket}.s3.{region}.amazonaws.com/{key}",
+      "input": {
+        "bucket": {
+          "type": "string",
+          "required": true
+        },
+        "key": {
+          "type": "string",
+          "description": "File path in bucket e.g. images/photo.jpg",
+          "required": true
+        },
+        "body": {
+          "type": "binary",
+          "description": "File content",
+          "required": true
+        },
+        "ContentType": {
+          "type": "string",
+          "description": "MIME type",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "upload",
+        "fields": [
+          "ETag",
+          "VersionId"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_object",
+      "description_for_ai": "Download a file from S3 bucket.",
+      "intent": [
+        "download file",
+        "get from S3",
+        "retrieve file",
+        "read file"
+      ],
+      "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/{key}",
+      "input": {
+        "bucket": {
+          "type": "string",
+          "required": true
+        },
+        "key": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "binary",
+        "fields": [
+          "file content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "sdk": "Use AWS SDK (boto3 for Python, aws-sdk for JS) instead of raw HTTP — handles auth automatically.",
+    "public_url": "For public objects: https://{bucket}.s3.{region}.amazonaws.com/{key}",
+    "presigned": "Use presigned URLs for temporary access without exposing credentials."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
