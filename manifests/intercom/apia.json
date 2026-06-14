@@ -6,7 +6,7 @@
     "description_for_ai": "Customer messaging platform. Live chat, chatbots, email campaigns, help center. 25K+ companies use it. Manage contacts, conversations, send messages. Use for customer engagement, support automation, in-app messaging.",
     "url": "https://intercom.com",
     "api_base": "https://api.intercom.io",
-    "category": "customer_support",
+    "category": "support",
     "geo": [
       "GLOBAL"
     ],
