@@ -6,7 +6,7 @@
     "description_for_ai": "Free UK company registry. 5M+ UK companies with directors, filing history, accounts, charges, insolvency. Official government data. No cost. Use for UK business verification, company research, due diligence.",
     "url": "https://companies house.gov.uk",
     "api_base": "https://api.company-information.service.gov.uk",
-    "category": "business_registry",
+    "category": "business",
     "geo": [
       "GB"
     ],
