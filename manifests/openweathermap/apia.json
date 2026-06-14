@@ -6,7 +6,7 @@
     "description_for_ai": "World's most popular weather API. Use for current weather, forecasts and historical data for any city or coordinates. Returns temperature, humidity, wind, pressure, precipitation, sunrise/sunset. Free tier: 1000 calls/day. Used by 5M+ developers worldwide.",
     "url": "https://openweathermap.org",
     "api_base": "https://api.openweathermap.org/data/2.5",
-    "category": "weather",
+    "category": "environment",
     "geo": [
       "GLOBAL"
     ],
