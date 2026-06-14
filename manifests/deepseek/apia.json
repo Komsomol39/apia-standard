@@ -1,0 +1,60 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "deepseek",
+    "name": "DeepSeek API",
+    "description_for_ai": "Chinese AI lab with cheapest frontier-quality models. DeepSeek V3 and R1 offer near-GPT-4 quality at 10-50x lower cost. OpenAI-compatible API. Best for high-volume, cost-sensitive applications. DeepSeek R1 has strong reasoning/math. Note: servers in China — consider latency and data privacy.",
+    "url": "https://deepseek.com",
+    "api_base": "https://api.deepseek.com/v1",
+    "category": "ai_llm",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://platform.deepseek.com/docs"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer sk-...",
+    "how_to_get": "Register at https://platform.deepseek.com — free $5 credit",
+    "cost": "DeepSeek V4 Flash: $0.14/$0.28 per 1M tokens. DeepSeek R1: $0.55/$2.19. Cache hits: $0.014/$0.028"
+  },
+  "capabilities": [
+    {
+      "id": "chat_completion",
+      "description_for_ai": "OpenAI-compatible chat completions at dramatically lower cost. DeepSeek-V3 for general tasks, DeepSeek-R1 for reasoning/math/code. Best price-to-quality ratio in 2026.",
+      "intent": ["cheap LLM", "low cost AI", "high volume AI", "deepseek", "reasoning model", "math problems"],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": { "type": "string", "description": "deepseek-chat (V3, general), deepseek-reasoner (R1, reasoning/math)", "required": true },
+        "messages": { "type": "array", "description": "OpenAI-compatible format: [{role, content}]", "required": true },
+        "temperature": { "type": "float", "default": 1 },
+        "max_tokens": { "type": "integer", "required": false },
+        "stream": { "type": "boolean", "default": false }
+      },
+      "output": {
+        "type": "completion",
+        "fields": ["choices[0].message.content", "choices[0].message.reasoning_content", "usage.prompt_tokens", "usage.completion_tokens"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "price_tip": "DeepSeek V4 Flash at $0.14/$0.28 is 10-50x cheaper than GPT-4o for similar quality tasks.",
+    "reasoner": "deepseek-reasoner (R1) shows chain-of-thought in reasoning_content field before final answer. Best for math, code, logic.",
+    "openai_compat": "Drop-in OpenAI replacement: change base URL + model name. No other code changes needed.",
+    "cache_discount": "Cache hit pricing is 100x cheaper — structure prompts to maximize cache reuse.",
+    "data_privacy": "Servers in China. Do not send sensitive personal data or confidential business information.",
+    "stability": "DeepSeek has had reliability issues during peak demand. Add retry logic and consider fallback to OpenAI/Gemini."
+  },
+  "limits": {
+    "commercial_use": true,
+    "attribution_required": false,
+    "free_credit_usd": 5
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
