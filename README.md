@@ -17,20 +17,17 @@ Every public API speaks its own language. An AI agent trying to help a user find
   "apia": "1.0",
   "service": {
     "id": "openweathermap",
-    "description_for_ai": "Get current weather and forecasts for any location worldwide. Use when user asks about temperature, rain, or weekly forecast.",
+    "description_for_ai": "Get weather for any location. Use when user asks about temperature, rain, or forecast.",
     "category": "weather",
     "geo": ["GLOBAL"]
   },
   "capabilities": [{
     "id": "current_weather",
-    "description_for_ai": "Current conditions for a city or coordinates. Use for 'what's the weather', 'is it raining in Tokyo', 'погода сейчас'.",
+    "description_for_ai": "Current conditions. Use for 'what's the weather', 'is it raining in Tokyo', 'погода сейчас'.",
     "intent": ["current weather", "temperature now", "is it raining", "погода сейчас"],
     "endpoint": "GET https://api.openweathermap.org/data/2.5/weather",
     "realtime": true
-  }],
-  "agent_hints": {
-    "tip": "Prefer lat/lon over city name — city names are ambiguous across countries."
-  }
+  }]
 }
 ```
 
@@ -40,21 +37,22 @@ The key difference from OpenAPI: `description_for_ai` and `intent` are written *
 
 ## Any API. Any Category. Any Country.
 
-We welcome manifests for **any public API in the world**:
-
-| Already in registry | Still waiting |
-|---|---|
-| Weather, Maps, Jobs | Social media posting |
-| Payments, Music | Healthcare, IoT |
-| Translation, Currency | E-commerce, Legal |
-| Flights, Knowledge | Agriculture, Energy |
-| Gaming, Messaging | And everything else |
-
-If it has a public API and an AI agent could use it — it belongs here.
+We welcome manifests for **any public API in the world.**
 
 ---
 
-## Registry — 31 Manifests
+## Registry — 37 Manifests
+
+### 🤖 AI & LLMs
+
+| Service | Category | Docs |
+|---|---|---|
+| [OpenAI](manifests/openai/apia.json) | LLM / Vision / TTS | [→](https://platform.openai.com/docs) |
+| [Anthropic Claude](manifests/anthropic/apia.json) | LLM / Vision | [→](https://docs.anthropic.com) |
+| [Google Gemini](manifests/google-gemini/apia.json) | LLM / Multimodal | [→](https://ai.google.dev/api) |
+| [Mistral AI](manifests/mistral/apia.json) | LLM / Code | [→](https://docs.mistral.ai) |
+| [DeepSeek](manifests/deepseek/apia.json) | LLM / Reasoning | [→](https://platform.deepseek.com/docs) |
+| [xAI Grok](manifests/xai-grok/apia.json) | LLM / Live Search | [→](https://docs.x.ai/api) |
 
 ### 🌍 Global
 
@@ -106,34 +104,18 @@ If it has a public API and an AI agent could use it — it belongs here.
 
 ## How the Registry Works
 
-### Adding a manifest
-
+**Adding a manifest:**
 ```
 Fork → create manifests/{id}/apia.json → Pull Request
-↓
-Auto-validation (JSON Schema) runs immediately
-↓
-3 × 👍 from the community → auto-merged
+→ Auto JSON Schema validation
+→ 3 × 👍 from community → auto-merged
 ```
 
-Maintainers can only block for policy violations.
+**Keeping fresh:** Monthly GitHub Action pings endpoints, opens Issues if broken.
 
-### Keeping manifests fresh
+**Propose ideas:** [Discussions → Ideas](../../discussions/categories/ideas) — upvoted ideas get prioritized.
 
-Every manifest has `last_verified`. A monthly GitHub Action pings each endpoint and opens an Issue if something breaks. Mark outdated manifests as `deprecated`.
-
-### Propose what to add next
-
-Use [Discussions → Ideas](../../discussions/categories/ideas) to propose APIs. Upvoted ideas get prioritized. Comment "I'll write this" to claim it for 2 weeks.
-
-### Quality tiers
-
-| Tier | Meaning |
-|---|---|
-| ✅ Verified | Tested, fields confirmed, agent_hints written |
-| 🔶 Draft | Structure correct, not fully tested |
-| ⚠️ Partial | Stub with docs links — needs contributor |
-| ❌ Deprecated | API shut down or changed |
+**Quality tiers:** ✅ Verified · 🔶 Draft · ⚠️ Partial · ❌ Deprecated
 
 ---
 
@@ -142,7 +124,7 @@ Use [Discussions → Ideas](../../discussions/categories/ideas) to propose APIs.
 | Standard | Relationship |
 |---|---|
 | **MCP** (Anthropic) | APIA → MCP tool definitions |
-| **OpenAPI / Swagger** | APIA adds LLM layer on top of OpenAPI |
+| **OpenAPI** | APIA adds LLM layer on top |
 | **OpenClaw skills** | APIA → `SKILL.md` auto-conversion |
 
 ---
@@ -152,12 +134,10 @@ Use [Discussions → Ideas](../../discussions/categories/ideas) to propose APIs.
 ```bash
 git clone https://github.com/Komsomol39/apia-standard
 cp manifests/hh-ru/apia.json manifests/your-api/apia.json
-# edit it
-git commit -m "feat: add YourAPI manifest"
-# open Pull Request
+# edit → Pull Request
 ```
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide on writing great manifests.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
 ---
 
@@ -165,4 +145,4 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide on writing great mani
 
 **APIA is open source · Not affiliated with any API provider**
 
-*31 manifests · 4 languages · Started June 2026*
+*37 manifests · 4 languages · Started June 2026*
