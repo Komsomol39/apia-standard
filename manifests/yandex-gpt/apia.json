@@ -6,7 +6,7 @@
     "description_for_ai": "Российская LLM от Яндекса. YandexGPT 5 Pro и Lite. Оптимизирован для русского языка. Доступен через Яндекс Облако. Для российских бизнесов — данные не покидают Россию. Также включает Yandex SpeechKit (TTS/STT) и embeddings.",
     "url": "https://yandex.cloud",
     "api_base": "https://llm.api.cloud.yandex.net",
-    "category": "ai_ru",
+    "category": "ai",
     "geo": [
       "RU",
       "GLOBAL"
