@@ -1,1 +1,70 @@
-{"apia":"1.0","service":{"id":"google-translate","name":"Google Cloud Translation API","description_for_ai":"Google Translate API. 135+ languages. Detect language, translate text, translate documents. Free: 500K chars/month. More languages than DeepL but lower quality for European languages.","url":"https://cloud.google.com/translate","api_base":"https://translation.googleapis.com/language/translate/v2","category":"translation","geo":["GLOBAL"],"language":"en","docs":"https://cloud.google.com/translate/docs"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"key","param_location":"query","how_to_get":"Enable Translation API at https://console.cloud.google.com","cost":"Free: 500K chars/month. Then $20/1M chars"},"capabilities":[{"id":"translate","description_for_ai":"Translate text between 135+ languages. Auto-detects source language. Use when DeepL does not support the language pair.","intent":["translate","translation","перевести","перевод","language translation","detect language"],"endpoint":"POST https://translation.googleapis.com/language/translate/v2","input":{"q":{"type":"string","description":"Text to translate","required":true},"target":{"type":"string","description":"Target language BCP-47: en, ru, zh, ar, hi, ja, ko, th","required":true},"source":{"type":"string","description":"Source language, auto-detected if omitted","required":false}},"output":{"type":"translation","fields":["data.translations[0].translatedText","data.translations[0].detectedSourceLanguage"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "google-translate",
+    "name": "Google Cloud Translation API",
+    "description_for_ai": "Google Translate API. 135+ languages. Detect language, translate text, translate documents. Free: 500K chars/month. More languages than DeepL but lower quality for European languages.",
+    "url": "https://cloud.google.com/translate",
+    "api_base": "https://translation.googleapis.com/language/translate/v2",
+    "category": "translation",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://cloud.google.com/translate/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "key",
+    "param_location": "query",
+    "how_to_get": "Enable Translation API at https://console.cloud.google.com",
+    "cost": "Free: 500K chars/month. Then $20/1M chars"
+  },
+  "capabilities": [
+    {
+      "id": "translate",
+      "description_for_ai": "Translate text between 135+ languages. Auto-detects source language. Use when DeepL does not support the language pair.",
+      "intent": [
+        "translate",
+        "translation",
+        "перевести",
+        "перевод",
+        "language translation",
+        "detect language"
+      ],
+      "endpoint": "POST https://translation.googleapis.com/language/translate/v2",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Text to translate",
+          "required": true
+        },
+        "target": {
+          "type": "string",
+          "description": "Target language BCP-47: en, ru, zh, ar, hi, ja, ko, th",
+          "required": true
+        },
+        "source": {
+          "type": "string",
+          "description": "Source language, auto-detected if omitted",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "translation",
+        "fields": [
+          "data.translations[0].translatedText",
+          "data.translations[0].detectedSourceLanguage"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
