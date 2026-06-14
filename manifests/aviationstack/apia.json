@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "get_flights",
-      "description_for_ai": "Get real-time flight data. Filter by flight number, airline, departure/arrival airport.",
+      "description_for_ai": "Real-time flight data, airport info, airline data. 250+ airlines, 8000+ airports. Free tier: 100 API calls/month. Track flights, get airport details, airline info. Get real-time flight data. Filter by flight number, airline, departure/arrival airport.",
       "intent": [
         "flight status",
         "track flight",
