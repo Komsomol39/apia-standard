@@ -65,7 +65,7 @@
     },
     {
       "id": "get_orders",
-      "description_for_ai": "Получить заказы покупателей для обработки и отгрузки.",
+      "description_for_ai": "Get FBS (fulfilled by seller) orders from Ozon marketplace requiring packaging and shipping by seller.",
       "intent": [
         "заказы Ozon",
         "обработка заказов",
