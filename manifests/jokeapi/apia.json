@@ -6,7 +6,7 @@
     "description_for_ai": "Free joke and humor API with 4000+ jokes. Supports 7 languages including Russian. Content categories: Programming, Miscellaneous, Dark, Pun, Spooky, Christmas. Content filters for safe mode. No API key needed — completely free.",
     "url": "https://jokeapi.dev",
     "api_base": "https://v2.jokeapi.dev",
-    "category": "fun",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
