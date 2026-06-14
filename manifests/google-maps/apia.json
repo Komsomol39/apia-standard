@@ -7,7 +7,9 @@
     "url": "https://maps.google.com",
     "api_base": "https://maps.googleapis.com/maps/api",
     "category": "maps_geocoding",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://developers.google.com/maps/documentation"
   },
@@ -24,19 +26,45 @@
       "id": "geocode",
       "description_for_ai": "Convert address to coordinates (forward) or coordinates to address (reverse). Best geocoder globally. Use for any address-to-coordinates task outside Russia (for Russia prefer Yandex Maps).",
       "intent": [
-        "find coordinates", "address to coordinates", "what address is this",
-        "reverse geocode", "where is this building"
+        "find coordinates",
+        "address to coordinates",
+        "what address is this",
+        "reverse geocode",
+        "where is this building"
       ],
       "endpoint": "GET https://maps.googleapis.com/maps/api/geocode/json",
       "input": {
-        "address": { "type": "string", "description": "Address for forward geocoding. E.g. '1600 Amphitheatre Parkway, Mountain View, CA'", "required": false },
-        "latlng": { "type": "string", "description": "Coordinates for reverse geocoding. E.g. '37.4224764,-122.0842499'", "required": false },
-        "language": { "type": "string", "description": "Response language code", "default": "en" },
-        "region": { "type": "string", "description": "Country code bias. E.g. 'us', 'ru', 'de'", "required": false }
+        "address": {
+          "type": "string",
+          "description": "Address for forward geocoding. E.g. '1600 Amphitheatre Parkway, Mountain View, CA'",
+          "required": false
+        },
+        "latlng": {
+          "type": "string",
+          "description": "Coordinates for reverse geocoding. E.g. '37.4224764,-122.0842499'",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "description": "Response language code",
+          "default": "en"
+        },
+        "region": {
+          "type": "string",
+          "description": "Country code bias. E.g. 'us', 'ru', 'de'",
+          "required": false
+        }
       },
       "output": {
         "type": "list<geocode_result>",
-        "fields": ["formatted_address", "geometry.location.lat", "geometry.location.lng", "place_id", "address_components", "types"]
+        "fields": [
+          "formatted_address",
+          "geometry.location.lat",
+          "geometry.location.lng",
+          "place_id",
+          "address_components",
+          "types"
+        ]
       },
       "realtime": false,
       "requires_auth": true
@@ -45,21 +73,60 @@
       "id": "places_nearby",
       "description_for_ai": "Find places (restaurants, shops, hospitals, etc.) near coordinates. Returns name, rating, opening hours, price level. Use for 'restaurants nearby', 'find a pharmacy', 'coffee shops around here'.",
       "intent": [
-        "places nearby", "restaurants near me", "find a cafe",
-        "pharmacy nearby", "what's around here", "find places"
+        "places nearby",
+        "restaurants near me",
+        "find a cafe",
+        "pharmacy nearby",
+        "what's around here",
+        "find places"
       ],
       "endpoint": "GET https://maps.googleapis.com/maps/api/place/nearbysearch/json",
       "input": {
-        "location": { "type": "string", "description": "Center coordinates 'lat,lng'. E.g. '51.5074,-0.1278'", "required": true },
-        "radius": { "type": "integer", "description": "Search radius in meters", "default": 500, "max": 50000 },
-        "type": { "type": "string", "description": "Place type: restaurant, cafe, pharmacy, hospital, bank, supermarket, gas_station etc.", "required": false },
-        "keyword": { "type": "string", "description": "Free-text filter", "required": false },
-        "opennow": { "type": "boolean", "description": "true = only currently open places", "required": false },
-        "language": { "type": "string", "default": "en" }
+        "location": {
+          "type": "string",
+          "description": "Center coordinates 'lat,lng'. E.g. '51.5074,-0.1278'",
+          "required": true
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Search radius in meters",
+          "default": 500,
+          "max": 50000
+        },
+        "type": {
+          "type": "string",
+          "description": "Place type: restaurant, cafe, pharmacy, hospital, bank, supermarket, gas_station etc.",
+          "required": false
+        },
+        "keyword": {
+          "type": "string",
+          "description": "Free-text filter",
+          "required": false
+        },
+        "opennow": {
+          "type": "boolean",
+          "description": "true = only currently open places",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "default": "en",
+          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
+        }
       },
       "output": {
         "type": "list<place>",
-        "fields": ["place_id", "name", "vicinity", "geometry.location", "rating", "opening_hours.open_now", "price_level", "types", "photos[0].photo_reference"]
+        "fields": [
+          "place_id",
+          "name",
+          "vicinity",
+          "geometry.location",
+          "rating",
+          "opening_hours.open_now",
+          "price_level",
+          "types",
+          "photos[0].photo_reference"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -68,20 +135,49 @@
       "id": "directions",
       "description_for_ai": "Get directions between two points. Returns route steps, duration, distance, and travel mode options. Use for 'how to get from A to B', 'driving directions', 'transit route'.",
       "intent": [
-        "how to get there", "directions", "route from A to B",
-        "driving time", "public transit route", "walking directions"
+        "how to get there",
+        "directions",
+        "route from A to B",
+        "driving time",
+        "public transit route",
+        "walking directions"
       ],
       "endpoint": "GET https://maps.googleapis.com/maps/api/directions/json",
       "input": {
-        "origin": { "type": "string", "description": "Start point: address or 'lat,lng'", "required": true },
-        "destination": { "type": "string", "description": "End point: address or 'lat,lng'", "required": true },
-        "mode": { "type": "string", "description": "driving, walking, bicycling, transit", "default": "driving" },
-        "language": { "type": "string", "default": "en" },
-        "departure_time": { "type": "integer", "description": "Unix timestamp for traffic-aware routing", "required": false }
+        "origin": {
+          "type": "string",
+          "description": "Start point: address or 'lat,lng'",
+          "required": true
+        },
+        "destination": {
+          "type": "string",
+          "description": "End point: address or 'lat,lng'",
+          "required": true
+        },
+        "mode": {
+          "type": "string",
+          "description": "driving, walking, bicycling, transit",
+          "default": "driving"
+        },
+        "language": {
+          "type": "string",
+          "default": "en",
+          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
+        },
+        "departure_time": {
+          "type": "integer",
+          "description": "Unix timestamp for traffic-aware routing",
+          "required": false
+        }
       },
       "output": {
         "type": "directions",
-        "fields": ["routes[0].legs[0].duration.text", "routes[0].legs[0].distance.text", "routes[0].legs[0].steps", "routes[0].summary"]
+        "fields": [
+          "routes[0].legs[0].duration.text",
+          "routes[0].legs[0].distance.text",
+          "routes[0].legs[0].steps",
+          "routes[0].summary"
+        ]
       },
       "realtime": true,
       "requires_auth": true
