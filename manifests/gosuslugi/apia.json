@@ -6,8 +6,10 @@
     "description_for_ai": "Единый портал государственных услуг России. Потенциально даёт доступ к статусу заявлений, данным профиля гражданина, записи к врачу, штрафам ГИБДД. Доступ ТОЛЬКО для аккредитованных организаций через СМЭВ/ЕСИА — публичного open API нет.",
     "url": "https://gosuslugi.ru",
     "api_base": "https://esia-portal1.test.gosuslugi.ru/esia-rs/api",
-    "category": "gov_services",
-    "geo": ["RU"],
+    "category": "legal",
+    "geo": [
+      "RU"
+    ],
     "language": "ru",
     "docs": "https://partners.gosuslugi.ru/catalog/api_for_gu",
     "access_note": "⚠️ Закрытый API. Требует официальной аккредитации Минцифры и СМЭВ. Не подходит для публичных приложений."
@@ -23,17 +25,41 @@
     {
       "id": "auth_citizen",
       "description_for_ai": "Авторизация гражданина через ЕСИА (аналог 'Войти через Госуслуги'). Позволяет получить подтверждённые данные пользователя: ФИО, СНИЛС, паспорт. Используется для верификации личности в государственных и коммерческих сервисах.",
-      "intent": ["войти через госуслуги", "подтвердить личность", "верификация гражданина", "ЕСИА авторизация"],
+      "intent": [
+        "войти через госуслуги",
+        "подтвердить личность",
+        "верификация гражданина",
+        "ЕСИА авторизация"
+      ],
       "endpoint": "GET https://esia.gosuslugi.ru/aas/oauth2/ac",
       "input": {
-        "client_id": { "type": "string", "description": "ID зарегистрированного приложения в ЕСИА", "required": true },
-        "redirect_uri": { "type": "string", "description": "URL возврата после авторизации", "required": true },
-        "scope": { "type": "string", "description": "Запрашиваемые данные: fullname, birthdate, snils, inn, email, mobile", "required": true },
-        "state": { "type": "string", "description": "Случайная строка для защиты от CSRF", "required": true }
+        "client_id": {
+          "type": "string",
+          "description": "ID зарегистрированного приложения в ЕСИА",
+          "required": true
+        },
+        "redirect_uri": {
+          "type": "string",
+          "description": "URL возврата после авторизации",
+          "required": true
+        },
+        "scope": {
+          "type": "string",
+          "description": "Запрашиваемые данные: fullname, birthdate, snils, inn, email, mobile",
+          "required": true
+        },
+        "state": {
+          "type": "string",
+          "description": "Случайная строка для защиты от CSRF",
+          "required": true
+        }
       },
       "output": {
         "type": "auth_code",
-        "fields": ["code", "state"]
+        "fields": [
+          "code",
+          "state"
+        ]
       },
       "realtime": true,
       "requires_auth": true
