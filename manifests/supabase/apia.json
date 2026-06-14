@@ -132,7 +132,8 @@
         },
         "file": {
           "type": "binary",
-          "required": true
+          "required": true,
+          "description": "File path, URL, or binary content"
         }
       },
       "output": {
