@@ -27,13 +27,18 @@
       "id": "search",
       "description_for_ai": "Search PubMed for research papers by keyword, author, or MeSH terms. Returns article IDs.",
       "intent": [
-        "medical research",
-        "scientific papers",
         "find studies",
         "literature search",
+        "scientific papers",
+        "clinical study",
+        "systematic review",
+        "biomedical research",
+        "medical journal",
         "PubMed search",
+        "medical research",
         "medical literature",
-        "research articles"
+        "research articles",
+        "research literature"
       ],
       "endpoint": "GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
       "input": {
@@ -89,7 +94,7 @@
     },
     {
       "id": "fetch_abstracts",
-      "description_for_ai": "Get abstracts and metadata for PubMed articles by their IDs.",
+      "description_for_ai": "Retrieve full abstracts and metadata (authors, journal, publication date, DOI) for PubMed articles by their PMID numbers.",
       "intent": [
         "article abstract",
         "paper details",
