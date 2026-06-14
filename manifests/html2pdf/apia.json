@@ -1,1 +1,106 @@
-{"apia":"1.0","service":{"id":"html2pdf","name":"HTML/CSS to PDF API (pdfcrowd)","description_for_ai":"Convert HTML, URLs, or CSS to PDF. High-fidelity rendering. Used for invoice generation, report PDFs, document export. Multiple providers available.","url":"https://pdfcrowd.com","api_base":"https://api.pdfcrowd.com/convert","category":"utilities_pdf","geo":["GLOBAL"],"language":"en","docs":"https://pdfcrowd.com/api/"},"auth":{"type":"basic_auth","anonymous_access":false,"how_to_get":"Register at https://pdfcrowd.com — 200 pages free trial","cost":"Basic: $9/month 3000 pages. Business: $29/month"},"capabilities":[{"id":"url_to_pdf","description_for_ai":"Convert any URL to PDF. Renders JavaScript, CSS. Use for generating PDF reports from web pages.","intent":["convert to PDF","URL to PDF","web page PDF","generate PDF","print to PDF","create PDF"],"endpoint":"POST https://api.pdfcrowd.com/convert/24.04/html/","input":{"source_url":{"type":"string","description":"URL to convert to PDF","required":true},"page_size":{"type":"string","description":"A4, Letter, A3","default":"A4"},"orientation":{"type":"string","description":"portrait or landscape","default":"portrait"},"margin_top":{"type":"string","description":"e.g. 10mm","default":"10mm"},"margin_bottom":{"type":"string","default":"10mm"}},"output":{"type":"binary","fields":["PDF binary content"]},"realtime":true,"requires_auth":true},{"id":"html_to_pdf","description_for_ai":"Convert HTML string to PDF directly. Use for invoice generation, templated documents.","intent":["HTML to PDF","invoice PDF","template to PDF","generate document"],"endpoint":"POST https://api.pdfcrowd.com/convert/24.04/html/","input":{"source":{"type":"string","description":"HTML string content","required":true},"page_size":{"type":"string","default":"A4"}},"output":{"type":"binary","fields":["PDF binary content"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "html2pdf",
+    "name": "HTML/CSS to PDF API (pdfcrowd)",
+    "description_for_ai": "Convert HTML, URLs, or CSS to PDF. High-fidelity rendering. Used for invoice generation, report PDFs, document export. Multiple providers available.",
+    "url": "https://pdfcrowd.com",
+    "api_base": "https://api.pdfcrowd.com/convert",
+    "category": "utilities_pdf",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://pdfcrowd.com/api/"
+  },
+  "auth": {
+    "type": "basic_auth",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://pdfcrowd.com — 200 pages free trial",
+    "cost": "Basic: $9/month 3000 pages. Business: $29/month"
+  },
+  "capabilities": [
+    {
+      "id": "url_to_pdf",
+      "description_for_ai": "Convert any URL to PDF. Renders JavaScript, CSS. Use for generating PDF reports from web pages.",
+      "intent": [
+        "convert to PDF",
+        "URL to PDF",
+        "web page PDF",
+        "generate PDF",
+        "print to PDF",
+        "create PDF"
+      ],
+      "endpoint": "POST https://api.pdfcrowd.com/convert/24.04/html/",
+      "input": {
+        "source_url": {
+          "type": "string",
+          "description": "URL to convert to PDF",
+          "required": true
+        },
+        "page_size": {
+          "type": "string",
+          "description": "A4, Letter, A3",
+          "default": "A4"
+        },
+        "orientation": {
+          "type": "string",
+          "description": "portrait or landscape",
+          "default": "portrait"
+        },
+        "margin_top": {
+          "type": "string",
+          "description": "e.g. 10mm",
+          "default": "10mm"
+        },
+        "margin_bottom": {
+          "type": "string",
+          "default": "10mm"
+        }
+      },
+      "output": {
+        "type": "binary",
+        "fields": [
+          "PDF binary content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "html_to_pdf",
+      "description_for_ai": "Convert HTML string to PDF directly. Use for invoice generation, templated documents.",
+      "intent": [
+        "HTML to PDF",
+        "invoice PDF",
+        "template to PDF",
+        "generate document"
+      ],
+      "endpoint": "POST https://api.pdfcrowd.com/convert/24.04/html/",
+      "input": {
+        "source": {
+          "type": "string",
+          "description": "HTML string content",
+          "required": true
+        },
+        "page_size": {
+          "type": "string",
+          "default": "A4"
+        }
+      },
+      "output": {
+        "type": "binary",
+        "fields": [
+          "PDF binary content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
