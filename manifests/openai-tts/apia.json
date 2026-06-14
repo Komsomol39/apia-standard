@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "create_speech",
-      "description_for_ai": "Convert text to speech audio. Returns mp3 audio file. 6 natural voices available.",
+      "description_for_ai": "High-quality text-to-speech. 6 voices, fast generation. $15/1M chars. Natural sounding speech in many languages. Use for reading text aloud, voice assistants, audiobook narration. Convert text to speech audio. Returns mp3 audio file. 6 natural voices available.",
       "intent": [
         "text to speech",
         "read aloud",
