@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_price_estimate",
-      "description_for_ai": "Get Uber price estimate between two locations without booking. Use to show fare estimate to users.",
+      "description_for_ai": "Get Uber fare estimate between two GPS coordinates without booking. Returns available ride types with price range and duration.",
       "intent": [
         "uber price",
         "ride cost estimate",
@@ -34,31 +34,41 @@
       "input": {
         "start_latitude": {
           "type": "float",
+          "description": "Pickup latitude (-90 to 90)",
           "required": true
         },
         "start_longitude": {
           "type": "float",
+          "description": "Pickup longitude (-180 to 180)",
           "required": true
         },
         "end_latitude": {
           "type": "float",
+          "description": "Dropoff latitude",
           "required": true
         },
         "end_longitude": {
           "type": "float",
+          "description": "Dropoff longitude",
           "required": true
+        },
+        "seat_count": {
+          "type": "integer",
+          "description": "Number of seats required (for UberXL, etc.)",
+          "default": 2
         }
       },
       "output": {
         "type": "list<estimate>",
         "fields": [
-          "display_name",
-          "estimate",
-          "low_estimate",
-          "high_estimate",
-          "currency_code",
-          "duration",
-          "distance"
+          "prices[0].product_id",
+          "prices[0].display_name",
+          "prices[0].estimate (e.g. '$12-16')",
+          "prices[0].low_estimate",
+          "prices[0].high_estimate",
+          "prices[0].currency_code",
+          "prices[0].duration (seconds)",
+          "prices[0].distance (miles)"
         ]
       },
       "realtime": true,
@@ -66,7 +76,7 @@
     },
     {
       "id": "get_products",
-      "description_for_ai": "Get available Uber products at a location: UberX, UberXL, Comfort, etc.",
+      "description_for_ai": "Get available Uber ride types at a location: UberX, UberXL, Comfort, Black, etc. with capacity and description.",
       "intent": [
         "uber products",
         "available rides",
@@ -77,21 +87,23 @@
       "input": {
         "latitude": {
           "type": "float",
+          "description": "Location latitude",
           "required": true
         },
         "longitude": {
           "type": "float",
+          "description": "Location longitude",
           "required": true
         }
       },
       "output": {
         "type": "list<product>",
         "fields": [
-          "product_id",
-          "display_name",
-          "description",
-          "capacity",
-          "image"
+          "products[0].product_id",
+          "products[0].display_name",
+          "products[0].description",
+          "products[0].capacity",
+          "products[0].image"
         ]
       },
       "realtime": true,
