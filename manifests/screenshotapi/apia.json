@@ -6,7 +6,7 @@
     "description_for_ai": "Capture website screenshots via API. Full page, viewport, mobile/desktop. Convert URLs to PNG/JPEG/PDF. Used for website monitoring, thumbnails, content archiving. 100 screenshots/month free.",
     "url": "https://screenshotapi.net",
     "api_base": "https://shot.screenshotapi.net",
-    "category": "utilities_web",
+    "category": "utilities",
     "geo": [
       "GLOBAL"
     ],
