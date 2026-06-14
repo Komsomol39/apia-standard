@@ -36,7 +36,7 @@
       "input": {
         "url": {
           "type": "string",
-          "description": "URL to scan",
+          "description": "Full URL including protocol (https://...)",
           "required": true
         }
       },
