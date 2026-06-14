@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "create_incident",
-      "description_for_ai": "Create an incident alert in PagerDuty. Notifies on-call engineer immediately.",
+      "description_for_ai": "Create a PagerDuty incident that immediately notifies the on-call engineer. Use for production issues requiring human intervention.",
       "intent": [
         "create alert",
         "incident alert",
@@ -36,20 +36,21 @@
       "input": {
         "incident": {
           "type": "object",
-          "description": "{type: incident, title: string, service: {id, type: service_reference}, urgency: high|low, body: {type: incident_body, details: string}}",
+          "description": "{type: 'incident', title: 'Database connection pool exhausted', urgency: 'high', service: {id: 'SERVICE_ID', type: 'service_reference'}, body: {type: 'incident_body', details: 'Detailed description of the incident, steps taken, impact'}, escalation_policy: {id: 'POLICY_ID', type: 'escalation_policy_reference'}}",
           "required": true
         }
       },
       "output": {
         "type": "incident",
         "fields": [
-          "id",
-          "incident_number",
-          "title",
-          "status",
-          "urgency",
-          "html_url",
-          "created_at"
+          "incident.id",
+          "incident.incident_number",
+          "incident.title",
+          "incident.status",
+          "incident.urgency",
+          "incident.html_url",
+          "incident.created_at",
+          "incident.service.summary"
         ]
       },
       "realtime": true,
@@ -57,7 +58,7 @@
     },
     {
       "id": "list_incidents",
-      "description_for_ai": "Get current open incidents. Filter by status, urgency, service.",
+      "description_for_ai": "Get current open incidents. Filter by status, urgency, or service. Use for incident dashboards and status monitoring.",
       "intent": [
         "open incidents",
         "current alerts",
@@ -68,7 +69,7 @@
       "input": {
         "statuses": {
           "type": "array",
-          "description": "[triggered, acknowledged, resolved]",
+          "description": "Status filter: ['triggered'] (new), ['acknowledged'] (being worked on), ['resolved'], or combine: ['triggered','acknowledged']",
           "default": [
             "triggered",
             "acknowledged"
@@ -76,26 +77,42 @@
         },
         "urgencies": {
           "type": "array",
-          "description": "[high, low]",
+          "description": "Urgency filter: ['high'] or ['low'] or both",
+          "required": false
+        },
+        "service_ids": {
+          "type": "array",
+          "description": "Filter by service IDs",
+          "required": false
+        },
+        "team_ids": {
+          "type": "array",
+          "description": "Filter by team IDs",
+          "required": false
+        },
+        "since": {
+          "type": "string",
+          "description": "ISO 8601 — return incidents created after this time",
           "required": false
         },
         "limit": {
           "type": "integer",
-          "default": 25,
-          "description": "Maximum number of results to return"
+          "description": "Max incidents to return, max 100",
+          "default": 25
         }
       },
       "output": {
         "type": "list<incident>",
         "fields": [
-          "id",
-          "incident_number",
-          "title",
-          "status",
-          "urgency",
-          "created_at",
-          "html_url",
-          "service.summary"
+          "incidents[0].id",
+          "incidents[0].incident_number",
+          "incidents[0].title",
+          "incidents[0].status",
+          "incidents[0].urgency",
+          "incidents[0].created_at",
+          "incidents[0].html_url",
+          "incidents[0].service.summary",
+          "incidents[0].assignments[0].assignee.summary"
         ]
       },
       "realtime": true,
