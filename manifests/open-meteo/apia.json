@@ -34,11 +34,13 @@
       "input": {
         "latitude": {
           "type": "float",
-          "required": true
+          "required": true,
+          "description": "Latitude in decimal degrees (-90 to 90)"
         },
         "longitude": {
           "type": "float",
-          "required": true
+          "required": true,
+          "description": "Longitude in decimal degrees (-180 to 180)"
         },
         "hourly": {
           "type": "string",
