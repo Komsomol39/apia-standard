@@ -81,13 +81,18 @@
     },
     {
       "id": "google_maps_search",
-      "description_for_ai": "Search Google Maps for businesses, places, restaurants by query and location.",
+      "description_for_ai": "Search Google Maps for businesses and places via SerpAPI. Returns ratings, addresses, hours, and phone numbers.",
       "intent": [
-        "google maps search",
-        "find places",
-        "restaurants near",
+        "local search",
         "business search",
-        "local search"
+        "local SEO data",
+        "restaurant search",
+        "Google Maps data",
+        "restaurants near",
+        "find places",
+        "google maps search",
+        "business finder",
+        "places search"
       ],
       "endpoint": "GET https://serpapi.com/search",
       "input": {
