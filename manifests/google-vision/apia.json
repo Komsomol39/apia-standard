@@ -6,7 +6,7 @@
     "description_for_ai": "Analyze images with Google AI. Detect objects, faces, text (OCR), logos, landmarks, explicit content, colors. Very accurate OCR for documents. 1000 units free/month.",
     "url": "https://cloud.google.com/vision",
     "api_base": "https://vision.googleapis.com/v1",
-    "category": "ai_vision",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
