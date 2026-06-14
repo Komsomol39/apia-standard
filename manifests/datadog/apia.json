@@ -6,7 +6,7 @@
     "description_for_ai": "Cloud monitoring and observability platform. Metrics, logs, traces, dashboards, alerts. Monitor infrastructure, applications, databases. Used by 27K+ companies. Use for infrastructure monitoring, alerting, log analysis.",
     "url": "https://datadoghq.com",
     "api_base": "https://api.datadoghq.com/api/v1",
-    "category": "developer_monitoring",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
