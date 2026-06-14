@@ -6,7 +6,7 @@
     "description_for_ai": "Free, open-source geocoder using OpenStreetMap data. No API key required. Global coverage. Use for address lookup, reverse geocoding, place search. Rate limit: 1 req/sec. Perfect for development and low-volume production.",
     "url": "https://nominatim.openstreetmap.org",
     "api_base": "https://nominatim.openstreetmap.org",
-    "category": "maps_geocoding",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
