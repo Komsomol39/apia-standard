@@ -6,7 +6,7 @@
     "description_for_ai": "Best-in-class text-to-speech and voice cloning. 1000+ voices, 29 languages, ultra-realistic output. Clone any voice from audio sample. Use for audiobooks, podcasts, voice assistants, accessibility features.",
     "url": "https://elevenlabs.io",
     "api_base": "https://api.elevenlabs.io/v1",
-    "category": "ai_speech",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
