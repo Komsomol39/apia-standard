@@ -1,1 +1,104 @@
-{"apia":"1.0","service":{"id":"clearbit","name":"Clearbit API (HubSpot)","description_for_ai":"Business intelligence API. Enrich company and person data from email or domain. Get company size, industry, funding, tech stack, social profiles. Used by Stripe, Zendesk, Intercom. Use for lead enrichment, B2B data.","url":"https://clearbit.com","api_base":"https://company.clearbit.com/v2","category":"business_intelligence","geo":["GLOBAL"],"language":"en","docs":"https://dashboard.clearbit.com/docs"},"auth":{"type":"basic_auth","anonymous_access":false,"note":"API key as username, empty password","how_to_get":"Register at https://clearbit.com","cost":"Free: 50 lookups/month. Paid from $99/month"},"capabilities":[{"id":"enrich_company","description_for_ai":"Get company data from domain: size, industry, location, funding, tech stack, social links. Use for lead research and sales intelligence.","intent":["company info","company data","business intelligence","company size","tech stack","company research","B2B data"],"endpoint":"GET https://company.clearbit.com/v2/companies/find","input":{"domain":{"type":"string","description":"Company domain e.g. stripe.com","required":true}},"output":{"type":"company","fields":["name","domain","description","industry","sector","employeesRange","annualRevenue","raised","tech","location.country","metrics.employees","metrics.marketCap","identifiers.usEIN"]},"realtime":true,"requires_auth":true},{"id":"enrich_person","description_for_ai":"Get professional data from email: name, title, company, LinkedIn, Twitter, location.","intent":["email lookup","person data","lead research","professional profile","contact enrichment"],"endpoint":"GET https://person.clearbit.com/v2/people/find","input":{"email":{"type":"string","required":true}},"output":{"type":"person","fields":["name.fullName","title","employment.name","employment.title","linkedin.handle","twitter.handle","location","employment.seniority"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "clearbit",
+    "name": "Clearbit API (HubSpot)",
+    "description_for_ai": "Business intelligence API. Enrich company and person data from email or domain. Get company size, industry, funding, tech stack, social profiles. Used by Stripe, Zendesk, Intercom. Use for lead enrichment, B2B data.",
+    "url": "https://clearbit.com",
+    "api_base": "https://company.clearbit.com/v2",
+    "category": "business_intelligence",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://dashboard.clearbit.com/docs"
+  },
+  "auth": {
+    "type": "basic_auth",
+    "anonymous_access": false,
+    "note": "API key as username, empty password",
+    "how_to_get": "Register at https://clearbit.com",
+    "cost": "Free: 50 lookups/month. Paid from $99/month"
+  },
+  "capabilities": [
+    {
+      "id": "enrich_company",
+      "description_for_ai": "Get company data from domain: size, industry, location, funding, tech stack, social links. Use for lead research and sales intelligence.",
+      "intent": [
+        "company info",
+        "company data",
+        "business intelligence",
+        "company size",
+        "tech stack",
+        "company research",
+        "B2B data"
+      ],
+      "endpoint": "GET https://company.clearbit.com/v2/companies/find",
+      "input": {
+        "domain": {
+          "type": "string",
+          "description": "Company domain e.g. stripe.com",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "name",
+          "domain",
+          "description",
+          "industry",
+          "sector",
+          "employeesRange",
+          "annualRevenue",
+          "raised",
+          "tech",
+          "location.country",
+          "metrics.employees",
+          "metrics.marketCap",
+          "identifiers.usEIN"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "enrich_person",
+      "description_for_ai": "Get professional data from email: name, title, company, LinkedIn, Twitter, location.",
+      "intent": [
+        "email lookup",
+        "person data",
+        "lead research",
+        "professional profile",
+        "contact enrichment"
+      ],
+      "endpoint": "GET https://person.clearbit.com/v2/people/find",
+      "input": {
+        "email": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "person",
+        "fields": [
+          "name.fullName",
+          "title",
+          "employment.name",
+          "employment.title",
+          "linkedin.handle",
+          "twitter.handle",
+          "location",
+          "employment.seniority"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
