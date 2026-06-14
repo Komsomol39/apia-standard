@@ -3,7 +3,7 @@
   "service": {
     "id": "easypost",
     "name": "EasyPost API",
-    "description_for_ai": "Shipping and logistics API. Buy labels for USPS, UPS, FedEx, DHL from one API. Rate comparison, tracking, address verification. Used by 100K+ businesses. Use for e-commerce shipping, label generation, rate shopping.",
+    "description_for_ai": "EasyPost — unified shipping API for US and international carriers. Buy labels from USPS, UPS, FedEx, DHL, Canada Post and 100+ more with one integration. Real-time rate comparison, address verification, package tracking. 100K+ businesses use EasyPost for e-commerce shipping.",
     "url": "https://easypost.com",
     "api_base": "https://api.easypost.com/v2",
     "category": "logistics_shipping",
