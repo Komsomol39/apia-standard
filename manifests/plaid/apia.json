@@ -6,7 +6,7 @@
     "description_for_ai": "Connect to 12,000+ bank accounts. Access transactions, balances, identity, income verification. Powers apps like Venmo, Robinhood, Betterment. Use for personal finance apps, expense tracking, bank account linking.",
     "url": "https://plaid.com",
     "api_base": "https://production.plaid.com",
-    "category": "finance_banking",
+    "category": "finance",
     "geo": [
       "US",
       "CA",
