@@ -6,7 +6,7 @@
     "description_for_ai": "Valve's gaming platform API. Access game info, player profiles, owned games, achievements, current player counts, and game reviews. Free and partially open without a key. Use for game lookup, player stats, achievement tracking, or checking how many people are playing a game right now.",
     "url": "https://store.steampowered.com",
     "api_base": "https://api.steampowered.com",
-    "category": "gaming",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
