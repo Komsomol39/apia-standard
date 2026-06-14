@@ -6,7 +6,7 @@
     "description_for_ai": "Ethereum blockchain explorer API. Get transaction history, token balances, contract ABI, gas prices, ERC-20/NFT transfers for any Ethereum address. 5 req/sec free.",
     "url": "https://etherscan.io",
     "api_base": "https://api.etherscan.io/api",
-    "category": "blockchain_ethereum",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
