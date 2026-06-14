@@ -25,14 +25,20 @@
       "id": "analyze_image",
       "description_for_ai": "Analyze any image: describe content, extract text (OCR), identify objects, read charts, answer questions about image. Send as URL or base64.",
       "intent": [
-        "analyze image",
-        "describe image",
-        "OCR",
-        "read text from image",
-        "image understanding",
-        "what is in this image",
+        "image recognition",
         "image Q&A",
-        "извлечь текст из изображения"
+        "анализ фото",
+        "read photo",
+        "what is in picture",
+        "OCR",
+        "analyze image",
+        "извлечь текст из изображения",
+        "image analysis",
+        "read text from image",
+        "what is in this image",
+        "image understanding",
+        "describe image",
+        "что на изображении"
       ],
       "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
       "input": {
@@ -64,10 +70,11 @@
       "id": "analyze_video",
       "description_for_ai": "Analyze video content: transcribe speech, describe scenes, answer questions about video. Upload to Google Files API first.",
       "intent": [
+        "describe video",
+        "video content AI",
+        "video understanding",
         "analyze video",
         "video transcription",
-        "video understanding",
-        "describe video",
         "video content"
       ],
       "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
