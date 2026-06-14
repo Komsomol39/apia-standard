@@ -24,40 +24,55 @@
   "capabilities": [
     {
       "id": "analyze_comment",
-      "description_for_ai": "Score a comment for toxicity, threats, insults, profanity, identity attacks. Returns 0-1 probability score per attribute.",
+      "description_for_ai": "Score a comment for toxicity, threats, insults, profanity, identity attacks. Returns probability scores 0-1 for each requested attribute. Free. 100+ languages.",
       "intent": [
         "toxic comment",
-        "moderation",
+        "moderation check",
         "hate speech detection",
         "comment score",
         "is this toxic",
         "offensive content",
-        "content moderation"
+        "content moderation",
+        "проверка токсичности",
+        "модерация"
       ],
       "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
       "input": {
         "comment": {
           "type": "object",
-          "description": "{text: comment text}",
+          "description": "{text: 'Comment text to analyze'}",
           "required": true
         },
         "requestedAttributes": {
           "type": "object",
-          "description": "{TOXICITY: {}, SEVERE_TOXICITY: {}, THREAT: {}, INSULT: {}, PROFANITY: {}, IDENTITY_ATTACK: {}}",
+          "description": "Attributes to score: {TOXICITY: {}, SEVERE_TOXICITY: {}, THREAT: {}, INSULT: {}, PROFANITY: {}, IDENTITY_ATTACK: {}, SEXUALLY_EXPLICIT: {}, FLIRTATION: {}}. Request only what you need.",
           "required": true
         },
         "languages": {
           "type": "array",
-          "description": "[en, ru, de, fr, es, it, pt, zh]",
+          "description": "Language codes: ['en', 'ru', 'de', 'fr', 'es', 'it', 'pt', 'zh']. Auto-detected if omitted.",
+          "required": false
+        },
+        "doNotStore": {
+          "type": "boolean",
+          "description": "Set true to prevent Google from storing the comment",
+          "default": false
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Opaque session identifier for tracking",
           "required": false
         }
       },
       "output": {
         "type": "scores",
         "fields": [
-          "attributeScores.TOXICITY.summaryScore.value",
+          "attributeScores.TOXICITY.summaryScore.value (0-1)",
+          "attributeScores.SEVERE_TOXICITY.summaryScore.value",
           "attributeScores.THREAT.summaryScore.value",
-          "attributeScores.INSULT.summaryScore.value"
+          "attributeScores.INSULT.summaryScore.value",
+          "attributeScores.PROFANITY.summaryScore.value",
+          "attributeScores.IDENTITY_ATTACK.summaryScore.value"
         ]
       },
       "realtime": true,
@@ -65,9 +80,10 @@
     }
   ],
   "agent_hints": {
-    "threshold": "Score > 0.7 is generally considered toxic. Adjust based on your moderation needs.",
-    "free": "Free up to quota limits. Much more generous than commercial alternatives.",
-    "languages": "Works for 100+ languages but most accurate for English."
+    "thresholds": "Common thresholds: score > 0.7 = block/reject, 0.5-0.7 = review queue, < 0.5 = allow. Adjust per your use case.",
+    "free": "Completely free API with quota. Apply at https://perspectiveapi.com for production quota increase.",
+    "languages": "TOXICITY works for 100+ languages. Other attributes have varying language support — check docs.",
+    "privacy": "Set doNotStore: true for GDPR compliance. Comments with doNotStore are not used to train models."
   },
   "meta": {
     "apia_version": "1.0",
