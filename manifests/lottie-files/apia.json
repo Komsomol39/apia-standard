@@ -1,1 +1,67 @@
-{"apia":"1.0","service":{"id":"lottie-files","name":"LottieFiles API","description_for_ai":"Animation platform. Access 200K+ free Lottie animations (JSON-based vector animations). Search animations by keyword. Used to add beautiful animations to apps and websites. Animations are lightweight, scalable, and work everywhere.","url":"https://lottiefiles.com","api_base":"https://graphql.lottiefiles.com","category":"design_animation","geo":["GLOBAL"],"language":"en","docs":"https://docs.lottiefiles.com/api/"},"auth":{"type":"apikey","anonymous_access":false,"header":"Authorization: Bearer {token}","how_to_get":"Register at https://app.lottiefiles.com — free","cost":"Free access to public animations. Pro for private."},"capabilities":[{"id":"search_animations","description_for_ai":"Search LottieFiles for animations by keyword. Returns JSON animation files ready to embed.","intent":["animation","lottie animation","loading spinner","success animation","error animation","UI animation","motion design"],"endpoint":"POST https://graphql.lottiefiles.com","input":{"query":{"type":"string","description":"GraphQL query: {featured(first: 10) {edges {node {id, title, lottieUrl, gifUrl, speed, frameRate}}}}","required":true}},"output":{"type":"animations","fields":["id","title","lottieUrl","gifUrl","speed"]},"realtime":false,"requires_auth":true}],"agent_hints":{"usage":"Download lottieUrl JSON and use with lottie-web library: lottie.loadAnimation({container, renderer: svg, loop: true, autoplay: true, path: lottieUrl})","free_alternatives":"Many common animations (loading, success, error) available free at lottiefiles.com/search"},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "lottie-files",
+    "name": "LottieFiles API",
+    "description_for_ai": "Animation platform. Access 200K+ free Lottie animations (JSON-based vector animations). Search animations by keyword. Used to add beautiful animations to apps and websites. Animations are lightweight, scalable, and work everywhere.",
+    "url": "https://lottiefiles.com",
+    "api_base": "https://graphql.lottiefiles.com",
+    "category": "design_animation",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.lottiefiles.com/api/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer {token}",
+    "how_to_get": "Register at https://app.lottiefiles.com — free",
+    "cost": "Free access to public animations. Pro for private."
+  },
+  "capabilities": [
+    {
+      "id": "search_animations",
+      "description_for_ai": "Search LottieFiles for animations by keyword. Returns JSON animation files ready to embed.",
+      "intent": [
+        "animation",
+        "lottie animation",
+        "loading spinner",
+        "success animation",
+        "error animation",
+        "UI animation",
+        "motion design"
+      ],
+      "endpoint": "POST https://graphql.lottiefiles.com",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "GraphQL query: {featured(first: 10) {edges {node {id, title, lottieUrl, gifUrl, speed, frameRate}}}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "animations",
+        "fields": [
+          "id",
+          "title",
+          "lottieUrl",
+          "gifUrl",
+          "speed"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "usage": "Download lottieUrl JSON and use with lottie-web library: lottie.loadAnimation({container, renderer: svg, loop: true, autoplay: true, path: lottieUrl})",
+    "free_alternatives": "Many common animations (loading, success, error) available free at lottiefiles.com/search"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
