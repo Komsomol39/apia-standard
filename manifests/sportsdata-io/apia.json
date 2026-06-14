@@ -1,1 +1,106 @@
-{"apia":"1.0","service":{"id":"sportsdata-io","name":"SportsData.io API","description_for_ai":"Comprehensive sports data API. NFL, NBA, MLB, NHL, Soccer, Golf, Tennis, NASCAR real-time scores, stats, odds. Used by major sports apps. Use for live scores, player stats, team standings.","url":"https://sportsdata.io","api_base":"https://api.sportsdata.io","category":"sports","geo":["GLOBAL"],"language":"en","docs":"https://sportsdata.io/developers/api-documentation/nfl"},"auth":{"type":"apikey","anonymous_access":false,"header":"Ocp-Apim-Subscription-Key: ...","how_to_get":"Register at https://sportsdata.io/developers","cost":"Free trial. Paid from $9/month per sport"},"capabilities":[{"id":"get_scores","description_for_ai":"Get live and recent game scores for NFL, NBA, MLB, NHL or soccer. Returns score, quarter/period, time remaining.","intent":["live scores","game score","sports results","NBA score","NFL score","who won","football score"],"endpoint":"GET https://api.sportsdata.io/v3/{sport}/scores/json/GamesByDate/{date}","input":{"sport":{"type":"string","description":"nfl, nba, mlb, nhl, nba","required":true},"date":{"type":"string","description":"YYYY-MM-DD or today","required":true}},"output":{"type":"list<game>","fields":["HomeTeam","AwayTeam","HomeScore","AwayScore","Status","Quarter","TimeRemainingMinutes"]},"realtime":true,"requires_auth":true},{"id":"get_standings","description_for_ai":"Get current season standings for any sport. Returns team records, win percentage, division rank.","intent":["standings","league table","team rankings","who is first","division leaders"],"endpoint":"GET https://api.sportsdata.io/v3/{sport}/scores/json/Standings/{season}","input":{"sport":{"type":"string","required":true},"season":{"type":"string","description":"Year e.g. 2026","required":true}},"output":{"type":"list<team>","fields":["Name","Wins","Losses","Percentage","Division","DivisionRank"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "sportsdata-io",
+    "name": "SportsData.io API",
+    "description_for_ai": "Comprehensive sports data API. NFL, NBA, MLB, NHL, Soccer, Golf, Tennis, NASCAR real-time scores, stats, odds. Used by major sports apps. Use for live scores, player stats, team standings.",
+    "url": "https://sportsdata.io",
+    "api_base": "https://api.sportsdata.io",
+    "category": "sports",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://sportsdata.io/developers/api-documentation/nfl"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Ocp-Apim-Subscription-Key: ...",
+    "how_to_get": "Register at https://sportsdata.io/developers",
+    "cost": "Free trial. Paid from $9/month per sport"
+  },
+  "capabilities": [
+    {
+      "id": "get_scores",
+      "description_for_ai": "Get live and recent game scores for NFL, NBA, MLB, NHL or soccer. Returns score, quarter/period, time remaining.",
+      "intent": [
+        "live scores",
+        "game score",
+        "sports results",
+        "NBA score",
+        "NFL score",
+        "who won",
+        "football score"
+      ],
+      "endpoint": "GET https://api.sportsdata.io/v3/{sport}/scores/json/GamesByDate/{date}",
+      "input": {
+        "sport": {
+          "type": "string",
+          "description": "nfl, nba, mlb, nhl, nba",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD or today",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<game>",
+        "fields": [
+          "HomeTeam",
+          "AwayTeam",
+          "HomeScore",
+          "AwayScore",
+          "Status",
+          "Quarter",
+          "TimeRemainingMinutes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_standings",
+      "description_for_ai": "Get current season standings for any sport. Returns team records, win percentage, division rank.",
+      "intent": [
+        "standings",
+        "league table",
+        "team rankings",
+        "who is first",
+        "division leaders"
+      ],
+      "endpoint": "GET https://api.sportsdata.io/v3/{sport}/scores/json/Standings/{season}",
+      "input": {
+        "sport": {
+          "type": "string",
+          "required": true
+        },
+        "season": {
+          "type": "string",
+          "description": "Year e.g. 2026",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<team>",
+        "fields": [
+          "Name",
+          "Wins",
+          "Losses",
+          "Percentage",
+          "Division",
+          "DivisionRank"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
