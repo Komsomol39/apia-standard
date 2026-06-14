@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "get_eth_balance",
-      "description_for_ai": "Get ETH balance for an Ethereum address.",
+      "description_for_ai": "Get current ETH balance for any Ethereum wallet address. Returns balance in Wei (divide by 1e18 for ETH).",
       "intent": [
         "ETH balance",
         "wallet balance",
@@ -62,7 +62,7 @@
     },
     {
       "id": "get_transactions",
-      "description_for_ai": "Get transaction history for an Ethereum address.",
+      "description_for_ai": "Get transaction history for an Ethereum address — all ETH transfers in/out with timestamps, values, and status.",
       "intent": [
         "ETH transactions",
         "wallet history",
