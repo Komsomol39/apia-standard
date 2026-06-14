@@ -67,7 +67,7 @@
         },
         "sort": {
           "type": "string",
-          "description": "asc or desc",
+          "description": "Sort field and direction e.g. 'created_at:desc' or 'name'",
           "default": "asc"
         }
       },
