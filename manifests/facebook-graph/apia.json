@@ -6,7 +6,7 @@
     "description_for_ai": "Facebook and Instagram platform API. Pages, posts, ads, user data, events, groups. 3B+ users. Manage Facebook Pages, run ads, get insights. Requires app review for most endpoints.",
     "url": "https://facebook.com",
     "api_base": "https://graph.facebook.com/v20.0",
-    "category": "social_media",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
