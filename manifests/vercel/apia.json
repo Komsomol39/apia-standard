@@ -63,7 +63,7 @@
     },
     {
       "id": "create_deployment",
-      "description_for_ai": "Deploy a project to Vercel from git or files.",
+      "description_for_ai": "Create and deploy a new Vercel deployment from git source or uploaded files.",
       "intent": [
         "deploy to vercel",
         "new deployment",
