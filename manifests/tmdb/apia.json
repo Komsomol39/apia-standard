@@ -1,2 +1,160 @@
 {
-  "apia":"1.0","service":{"id":"tmdb","name":"The Movie Database (TMDB) API","description_for_ai":"Free movie and TV database with 1M+ titles. Metadata, cast, ratings, trailers, posters. Used by major streaming apps. No cost. Use for movie/show info, search, recommendations, now playing.","url":"https://themoviedb.org","api_base":"https://api.themoviedb.org/3","category":"media_entertainment","geo":["GLOBAL"],"language":"en","docs":"https://developer.themoviedb.org/docs"},"auth":{"type":"apikey","anonymous_access":false,"header":"Authorization: Bearer ...","how_to_get":"Free key at https://www.themoviedb.org/settings/api","cost":"Completely free"},"capabilities":[{"id":"search_movie","description_for_ai":"Search for movies by title. Returns id, title, release date, overview, rating, poster image.","intent":["find movie","movie info","search film","movie details","фильм информация","что за фильм"],"endpoint":"GET https://api.themoviedb.org/3/search/movie","input":{"query":{"type":"string","required":true},"language":{"type":"string","default":"en-US"},"year":{"type":"integer","required":false},"page":{"type":"integer","default":1}},"output":{"type":"list<movie>","fields":["id","title","overview","release_date","vote_average","poster_path","genre_ids"]},"realtime":false,"requires_auth":true},{"id":"get_movie","description_for_ai":"Get full details of a movie by TMDB id: cast, crew, trailer, budget, revenue, similar movies.","intent":["movie details","cast","director","trailer","movie budget","movie rating"],"endpoint":"GET https://api.themoviedb.org/3/movie/{movie_id}","input":{"movie_id":{"type":"integer","required":true},"append_to_response":{"type":"string","description":"videos,credits,similar,images","required":false},"language":{"type":"string","default":"en-US"}},"output":{"type":"movie","fields":["title","overview","release_date","runtime","vote_average","budget","revenue","genres","credits.cast","videos.results"]},"realtime":false,"requires_auth":true},{"id":"now_playing","description_for_ai":"Get movies currently playing in theaters. Use for what to watch, cinema listings.","intent":["movies in theaters","now playing","cinema today","new movies","что идёт в кино"],"endpoint":"GET https://api.themoviedb.org/3/movie/now_playing","input":{"language":{"type":"string","default":"en-US"},"region":{"type":"string","description":"ISO 3166-1 country code","required":false}},"output":{"type":"list<movie>","fields":["title","release_date","vote_average","overview","poster_path"]},"realtime":true,"requires_auth":true}],"agent_hints":{"poster_url":"Poster images: https://image.tmdb.org/t/p/w500{poster_path}","language":"Supports ru-RU for Russian. Pass language=ru-RU for Russian titles and descriptions.","free":"100% free, just need API key."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "tmdb",
+    "name": "The Movie Database (TMDB) API",
+    "description_for_ai": "Free movie and TV database with 1M+ titles. Metadata, cast, ratings, trailers, posters. Used by major streaming apps. No cost. Use for movie/show info, search, recommendations, now playing.",
+    "url": "https://themoviedb.org",
+    "api_base": "https://api.themoviedb.org/3",
+    "category": "media_entertainment",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developer.themoviedb.org/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer ...",
+    "how_to_get": "Free key at https://www.themoviedb.org/settings/api",
+    "cost": "Completely free"
+  },
+  "capabilities": [
+    {
+      "id": "search_movie",
+      "description_for_ai": "Search for movies by title. Returns id, title, release date, overview, rating, poster image.",
+      "intent": [
+        "find movie",
+        "movie info",
+        "search film",
+        "movie details",
+        "фильм информация",
+        "что за фильм"
+      ],
+      "endpoint": "GET https://api.themoviedb.org/3/search/movie",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "default": "en-US"
+        },
+        "year": {
+          "type": "integer",
+          "required": false
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<movie>",
+        "fields": [
+          "id",
+          "title",
+          "overview",
+          "release_date",
+          "vote_average",
+          "poster_path",
+          "genre_ids"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_movie",
+      "description_for_ai": "Get full details of a movie by TMDB id: cast, crew, trailer, budget, revenue, similar movies.",
+      "intent": [
+        "movie details",
+        "cast",
+        "director",
+        "trailer",
+        "movie budget",
+        "movie rating"
+      ],
+      "endpoint": "GET https://api.themoviedb.org/3/movie/{movie_id}",
+      "input": {
+        "movie_id": {
+          "type": "integer",
+          "required": true
+        },
+        "append_to_response": {
+          "type": "string",
+          "description": "videos,credits,similar,images",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "default": "en-US"
+        }
+      },
+      "output": {
+        "type": "movie",
+        "fields": [
+          "title",
+          "overview",
+          "release_date",
+          "runtime",
+          "vote_average",
+          "budget",
+          "revenue",
+          "genres",
+          "credits.cast",
+          "videos.results"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "now_playing",
+      "description_for_ai": "Get movies currently playing in theaters. Use for what to watch, cinema listings.",
+      "intent": [
+        "movies in theaters",
+        "now playing",
+        "cinema today",
+        "new movies",
+        "что идёт в кино"
+      ],
+      "endpoint": "GET https://api.themoviedb.org/3/movie/now_playing",
+      "input": {
+        "language": {
+          "type": "string",
+          "default": "en-US"
+        },
+        "region": {
+          "type": "string",
+          "description": "ISO 3166-1 country code",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<movie>",
+        "fields": [
+          "title",
+          "release_date",
+          "vote_average",
+          "overview",
+          "poster_path"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "poster_url": "Poster images: https://image.tmdb.org/t/p/w500{poster_path}",
+    "language": "Supports ru-RU for Russian. Pass language=ru-RU for Russian titles and descriptions.",
+    "free": "100% free, just need API key."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
