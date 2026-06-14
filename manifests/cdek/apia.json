@@ -93,7 +93,8 @@
       "input": {
         "type": {
           "type": "integer",
-          "required": true
+          "required": true,
+          "description": "Filter or specify item type"
         },
         "tariff_code": {
           "type": "integer",
