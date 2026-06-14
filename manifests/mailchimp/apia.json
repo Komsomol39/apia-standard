@@ -6,7 +6,7 @@
     "description_for_ai": "Email marketing platform API. Manage subscriber lists, send campaigns, automate email sequences, track open rates. 500 contacts and 1000 emails/month free. Best for marketing emails and newsletters.",
     "url": "https://mailchimp.com",
     "api_base": "https://{dc}.api.mailchimp.com/3.0",
-    "category": "communication_email",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
