@@ -6,7 +6,7 @@
     "description_for_ai": "Git repository hosting with built-in CI/CD, issue tracking, container registry. 30M+ users. Alternative to GitHub. Free self-hosted. Use for repository management, CI/CD pipelines, DevOps automation.",
     "url": "https://gitlab.com",
     "api_base": "https://gitlab.com/api/v4",
-    "category": "developer_tools",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
