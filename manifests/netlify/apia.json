@@ -95,5 +95,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "auth": "Create personal access token at app.netlify.com/user/applications/personal. Bearer token in header.",
+    "site_id": "Get site ID from site settings or from list_sites response id field.",
+    "deploy_hooks": "Set up deploy hooks in UI for triggering builds from external systems (webhooks).",
+    "env_vars": "Manage environment variables via PATCH /api/v1/sites/{site_id} with build_settings.env object."
   }
 }
