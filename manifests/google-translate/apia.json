@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "translate",
-      "description_for_ai": "Translate text between 135+ languages. Auto-detects source language. Use when DeepL does not support the language pair.",
+      "description_for_ai": "Google Translate API. 135+ languages. Detect language, translate text, translate documents. Free: 500K chars/month. More languages than DeepL but lower quality for European languages. Translate text between 135+ languages. Auto-detects source language. Use when DeepL does not support the language pair.",
       "intent": [
         "translate",
         "translation",
