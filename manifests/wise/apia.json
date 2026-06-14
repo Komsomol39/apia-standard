@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_exchange_rate",
-      "description_for_ai": "Get real mid-market exchange rate between currencies. More accurate than bank rates.",
+      "description_for_ai": "Get real mid-market exchange rate between two currencies. More accurate than bank rates, no markup applied.",
       "intent": [
         "real exchange rate",
         "mid-market rate",
@@ -35,22 +35,27 @@
       "input": {
         "source": {
           "type": "string",
-          "description": "Source currency code e.g. USD",
+          "description": "Source currency ISO code: USD, EUR, GBP, RUB, CNY, JPY, AUD, CAD",
           "required": true
         },
         "target": {
           "type": "string",
-          "description": "Target currency code e.g. EUR",
+          "description": "Target currency ISO code",
           "required": true
+        },
+        "time": {
+          "type": "string",
+          "description": "ISO 8601 datetime for historical rate lookup. Omit for current rate.",
+          "required": false
         }
       },
       "output": {
-        "type": "rate",
+        "type": "list<rate>",
         "fields": [
-          "rate",
-          "source",
-          "target",
-          "time"
+          "[0].rate",
+          "[0].source",
+          "[0].target",
+          "[0].time"
         ]
       },
       "realtime": true,
@@ -58,7 +63,7 @@
     },
     {
       "id": "get_transfer_quote",
-      "description_for_ai": "Get transfer fee and delivery time estimate for sending money internationally.",
+      "description_for_ai": "Get transfer fee and estimated delivery time for sending money internationally via Wise. Compares payment methods (bank transfer, card, etc.).",
       "intent": [
         "transfer fee",
         "how much to send",
@@ -69,18 +74,27 @@
       "input": {
         "sourceCurrency": {
           "type": "string",
+          "description": "Currency you're sending from: USD, EUR, GBP, etc.",
           "required": true
         },
         "targetCurrency": {
           "type": "string",
+          "description": "Currency recipient will receive",
           "required": true
         },
         "sourceAmount": {
           "type": "number",
+          "description": "Amount to send (in sourceCurrency). Provide either sourceAmount or targetAmount.",
           "required": false
         },
         "targetAmount": {
           "type": "number",
+          "description": "Amount to deliver to recipient (in targetCurrency). Alternative to sourceAmount.",
+          "required": false
+        },
+        "profile": {
+          "type": "integer",
+          "description": "Your Wise profile ID. Get via GET /v2/profiles. Personal vs business affects fees.",
           "required": false
         }
       },
@@ -93,8 +107,10 @@
           "sourceAmount",
           "targetAmount",
           "rate",
+          "paymentOptions[0].payIn (BANK_TRANSFER/DEBIT_CARD/CREDIT_CARD)",
           "paymentOptions[0].fee.total",
-          "paymentOptions[0].estimatedDelivery"
+          "paymentOptions[0].estimatedDelivery",
+          "paymentOptions[0].price.total.value"
         ]
       },
       "realtime": true,
