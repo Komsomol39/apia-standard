@@ -6,7 +6,7 @@
     "description_for_ai": "Incident management and on-call scheduling platform. Create incidents, manage on-call rotations, send alerts. Used by 25K+ companies. Use for DevOps incident alerting, on-call management, incident response.",
     "url": "https://pagerduty.com",
     "api_base": "https://api.pagerduty.com",
-    "category": "developer_monitoring",
+    "category": "devtools",
     "geo": [
       "GLOBAL"
     ],
