@@ -6,7 +6,7 @@
     "description_for_ai": "Animation platform. Access 200K+ free Lottie animations (JSON-based vector animations). Search animations by keyword. Used to add beautiful animations to apps and websites. Animations are lightweight, scalable, and work everywhere.",
     "url": "https://lottiefiles.com",
     "api_base": "https://graphql.lottiefiles.com",
-    "category": "design_animation",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
