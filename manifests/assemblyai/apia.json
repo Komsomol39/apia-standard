@@ -6,7 +6,7 @@
     "description_for_ai": "AI-powered speech-to-text and audio intelligence. Transcribe audio files or streams. Speaker diarization, sentiment analysis, topic detection, PII redaction, content moderation, auto chapters. Best for processing audio content at scale.",
     "url": "https://assemblyai.com",
     "api_base": "https://api.assemblyai.com/v2",
-    "category": "ai_speech",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
