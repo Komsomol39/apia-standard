@@ -24,12 +24,16 @@
       "id": "get_streams",
       "description_for_ai": "Get currently live streams. Filter by game, language, or search by streamer name. Returns viewer count, title, thumbnail.",
       "intent": [
-        "live streams",
-        "twitch streams",
-        "watch gaming",
+        "Twitch live",
         "who is streaming",
+        "live gaming",
+        "twitch streams",
         "live now",
-        "стримы"
+        "gaming livestream",
+        "watch streams",
+        "стримы",
+        "watch gaming",
+        "live streams"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/streams",
       "input": {
@@ -75,9 +79,13 @@
       "id": "get_games",
       "description_for_ai": "Search for games by name or get top games on Twitch right now.",
       "intent": [
+        "popular games",
+        "Twitch game ID",
+        "top games",
+        "game popularity",
         "top games on twitch",
-        "twitch game id",
-        "popular games"
+        "popular on Twitch",
+        "twitch game id"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/games",
       "input": {
