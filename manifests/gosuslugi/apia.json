@@ -1,0 +1,58 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "gosuslugi",
+    "name": "Госуслуги (ЕПГУ)",
+    "description_for_ai": "Единый портал государственных услуг России. Потенциально даёт доступ к статусу заявлений, данным профиля гражданина, записи к врачу, штрафам ГИБДД. Доступ ТОЛЬКО для аккредитованных организаций через СМЭВ/ЕСИА — публичного open API нет.",
+    "url": "https://gosuslugi.ru",
+    "api_base": "https://esia-portal1.test.gosuslugi.ru/esia-rs/api",
+    "category": "gov_services",
+    "geo": ["RU"],
+    "language": "ru",
+    "docs": "https://partners.gosuslugi.ru/catalog/api_for_gu",
+    "access_note": "⚠️ Закрытый API. Требует официальной аккредитации Минцифры и СМЭВ. Не подходит для публичных приложений."
+  },
+  "auth": {
+    "type": "oauth2_esia",
+    "anonymous_access": false,
+    "note": "Используется ЕСИА (Единая система идентификации и аутентификации). Требует получения API-Key от Госуслуг для организаций и подписи запросов PKCS#7.",
+    "how_to_get": "Подать заявку через partners.gosuslugi.ru — только для юридических лиц с СМЭВ-подключением",
+    "cost": "Требует официального соглашения с Минцифры"
+  },
+  "capabilities": [
+    {
+      "id": "auth_citizen",
+      "description_for_ai": "Авторизация гражданина через ЕСИА (аналог 'Войти через Госуслуги'). Позволяет получить подтверждённые данные пользователя: ФИО, СНИЛС, паспорт. Используется для верификации личности в государственных и коммерческих сервисах.",
+      "intent": ["войти через госуслуги", "подтвердить личность", "верификация гражданина", "ЕСИА авторизация"],
+      "endpoint": "GET https://esia.gosuslugi.ru/aas/oauth2/ac",
+      "input": {
+        "client_id": { "type": "string", "description": "ID зарегистрированного приложения в ЕСИА", "required": true },
+        "redirect_uri": { "type": "string", "description": "URL возврата после авторизации", "required": true },
+        "scope": { "type": "string", "description": "Запрашиваемые данные: fullname, birthdate, snils, inn, email, mobile", "required": true },
+        "state": { "type": "string", "description": "Случайная строка для защиты от CSRF", "required": true }
+      },
+      "output": {
+        "type": "auth_code",
+        "fields": ["code", "state"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "contributor_notes": {
+    "status": "Нужен контрибьютор с опытом СМЭВ/ЕСИА",
+    "complexity": "Высокая — требует государственной аккредитации",
+    "useful_links": [
+      "https://partners.gosuslugi.ru/catalog/api_for_gu",
+      "https://info.gosuslugi.ru/articles/",
+      "https://github.com/nicholasgasior/gostok"
+    ],
+    "what_to_document": "Методы получения данных о штрафах, записи к врачу, статусов заявлений"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14",
+    "completeness": "partial"
+  }
+}
