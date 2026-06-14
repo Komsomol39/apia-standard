@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "search_contacts",
-      "description_for_ai": "Search B2B contacts with advanced filters: job function, level, company size, revenue, technology used.",
+      "description_for_ai": "Enterprise B2B data platform. 100M+ business professionals, 20M+ companies with org charts, technographic data, buying intent signals. Most comprehensive B2B database. Enterprise sales intelligence. Search B2B contacts with advanced filters: job function, level, company size, revenue, technology used.",
       "intent": [
         "B2B contacts",
         "enterprise leads",
