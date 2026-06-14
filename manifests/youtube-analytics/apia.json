@@ -6,7 +6,7 @@
     "description_for_ai": "YouTube Analytics Data API — deep performance insights for YouTube channels. Views, watch time, revenue, subscriber changes, demographics, traffic sources, device types. Historical data from channel creation. Free for authenticated channel owners. Essential for YouTube content strategy.",
     "url": "https://youtube.com",
     "api_base": "https://youtubeanalytics.googleapis.com/v2",
-    "category": "media_analytics",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
