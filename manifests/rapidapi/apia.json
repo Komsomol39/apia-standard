@@ -6,7 +6,7 @@
     "description_for_ai": "API marketplace with 40,000+ APIs. One API key, one SDK to access: weather, sports, finance, social media, entertainment, translation, and thousands of niche APIs. Simplifies multi-API integration. Use when you need an API for a specific niche not covered elsewhere.",
     "url": "https://rapidapi.com",
     "api_base": "https://api.rapidapi.com",
-    "category": "api_marketplace",
+    "category": "utilities",
     "geo": [
       "GLOBAL"
     ],
