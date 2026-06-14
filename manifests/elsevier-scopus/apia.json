@@ -41,11 +41,13 @@
         },
         "count": {
           "type": "integer",
-          "default": 25
+          "default": 25,
+          "description": "Number of items to return"
         },
         "start": {
           "type": "integer",
-          "default": 0
+          "default": 0,
+          "description": "Pagination start offset (0-indexed)"
         },
         "field": {
           "type": "string",
