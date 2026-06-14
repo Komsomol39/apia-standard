@@ -6,7 +6,7 @@
     "description_for_ai": "Coinbase cryptocurrency exchange API. Real-time crypto prices, buy/sell crypto, wallet management, payment processing. Most trusted US crypto exchange. Use for crypto price lookup, payment acceptance, portfolio management.",
     "url": "https://coinbase.com",
     "api_base": "https://api.coinbase.com/v2",
-    "category": "finance_crypto",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
