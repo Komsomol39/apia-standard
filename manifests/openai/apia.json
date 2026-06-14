@@ -1,0 +1,106 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "openai",
+    "name": "OpenAI API",
+    "description_for_ai": "OpenAI flagship AI API. Access GPT models for text generation, code, vision, reasoning. DALL-E for image generation. Whisper for speech-to-text. TTS for text-to-speech. Embeddings for semantic search. The most widely used AI API with the largest ecosystem of integrations and SDKs.",
+    "url": "https://openai.com",
+    "api_base": "https://api.openai.com/v1",
+    "category": "ai_llm",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://platform.openai.com/docs"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "header": "Authorization: Bearer sk-...",
+    "how_to_get": "Register at https://platform.openai.com — $5 free credit on signup",
+    "cost": "GPT-4o-mini: $0.15/$0.60 per 1M tokens. GPT-5.2: $1.75/$14 per 1M tokens"
+  },
+  "capabilities": [
+    {
+      "id": "chat_completion",
+      "description_for_ai": "Generate text responses using GPT models. The core capability — use for any text generation, answering questions, summarization, translation, code writing, analysis. Supports vision (images as input) with gpt-4o models.",
+      "intent": ["generate text", "answer question", "write code", "summarize", "translate", "analyze", "chat"],
+      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "input": {
+        "model": { "type": "string", "description": "Model ID. Recommended: gpt-4o-mini (cheap), gpt-4o (balanced), o3-mini (reasoning)", "required": true },
+        "messages": { "type": "array", "description": "Array of {role, content} objects. Roles: system, user, assistant", "required": true },
+        "temperature": { "type": "float", "description": "Randomness 0-2. 0=deterministic, 1=default, 2=creative", "default": 1 },
+        "max_tokens": { "type": "integer", "description": "Max response tokens", "required": false },
+        "stream": { "type": "boolean", "description": "Stream response tokens as they generate", "default": false },
+        "tools": { "type": "array", "description": "Function/tool definitions for tool use", "required": false }
+      },
+      "output": {
+        "type": "completion",
+        "fields": ["choices[0].message.content", "choices[0].message.role", "usage.prompt_tokens", "usage.completion_tokens", "usage.total_tokens"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "embeddings",
+      "description_for_ai": "Convert text to vector embeddings for semantic search, similarity comparison, and RAG. Use to find similar documents, cluster content, or build knowledge bases.",
+      "intent": ["embeddings", "semantic search", "vector database", "similar documents", "RAG"],
+      "endpoint": "POST https://api.openai.com/v1/embeddings",
+      "input": {
+        "model": { "type": "string", "default": "text-embedding-3-small" },
+        "input": { "type": "string|array", "description": "Text or array of texts to embed", "required": true }
+      },
+      "output": {
+        "type": "embeddings",
+        "fields": ["data[0].embedding", "usage.total_tokens"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "speech_to_text",
+      "description_for_ai": "Transcribe audio to text using Whisper. Supports 50+ languages. Use for voice input, transcribing calls, processing audio files.",
+      "intent": ["transcribe audio", "speech to text", "voice input", "transcribe recording"],
+      "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
+      "input": {
+        "file": { "type": "file", "description": "Audio file: mp3, mp4, wav, m4a, webm (max 25MB)", "required": true },
+        "model": { "type": "string", "default": "whisper-1" },
+        "language": { "type": "string", "description": "ISO 639-1 language code. Auto-detected if omitted.", "required": false }
+      },
+      "output": { "type": "transcription", "fields": ["text"] },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "image_generation",
+      "description_for_ai": "Generate images from text descriptions using DALL-E 3. Use for creating illustrations, product mockups, or visual content.",
+      "intent": ["generate image", "create picture", "draw", "DALL-E", "image from text"],
+      "endpoint": "POST https://api.openai.com/v1/images/generations",
+      "input": {
+        "model": { "type": "string", "default": "dall-e-3" },
+        "prompt": { "type": "string", "description": "Image description", "required": true },
+        "size": { "type": "string", "description": "1024x1024, 1792x1024, 1024x1792", "default": "1024x1024" },
+        "quality": { "type": "string", "description": "standard or hd", "default": "standard" },
+        "n": { "type": "integer", "description": "Number of images (1 for DALL-E 3)", "default": 1 }
+      },
+      "output": { "type": "image", "fields": ["data[0].url", "data[0].revised_prompt"] },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "model_choice": "gpt-4o-mini for cheap tasks ($0.15/$0.60). gpt-4o for balanced quality/cost. o3-mini for complex reasoning. Use mini by default, upgrade only when quality is insufficient.",
+    "tool_use": "Define tools as JSON Schema functions. Model decides when to call them. Essential for agentic workflows.",
+    "vision": "Pass images as base64 or URL in message content: {type: image_url, image_url: {url: ...}}. Works with gpt-4o and gpt-4o-mini.",
+    "batch_api": "Use Batch API for 50% discount on non-urgent tasks: submit job, get results within 24h.",
+    "token_counting": "1 token ≈ 4 chars in English, ≈ 2 chars in Russian/CJK. Input is cheaper than output."
+  },
+  "limits": {
+    "commercial_use": true,
+    "attribution_required": false,
+    "free_credit_usd": 5
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
