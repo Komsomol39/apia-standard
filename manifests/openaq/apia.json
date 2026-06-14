@@ -63,7 +63,7 @@
         },
         "page": {
           "type": "integer",
-          "description": "Page number",
+          "description": "Page number for pagination (1-indexed)",
           "default": 1
         },
         "date_from": {
