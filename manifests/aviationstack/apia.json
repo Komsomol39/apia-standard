@@ -6,7 +6,7 @@
     "description_for_ai": "Real-time flight data, airport info, airline data. 250+ airlines, 8000+ airports. Free tier: 100 API calls/month. Track flights, get airport details, airline info.",
     "url": "https://aviationstack.com",
     "api_base": "https://api.aviationstack.com/v1",
-    "category": "transport_aviation",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
