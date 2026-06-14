@@ -1,2 +1,112 @@
 {
-  "apia":"1.0","service":{"id":"shopify","name":"Shopify API","description_for_ai":"Power 4M+ online stores. Manage products, orders, customers, inventory, payments. Use to build Shopify apps, sync store data, automate order processing, manage products programmatically.","url":"https://shopify.com","api_base":"https://{shop}.myshopify.com/admin/api/2024-01","category":"ecommerce","geo":["GLOBAL"],"language":"en","docs":"https://shopify.dev/docs/api"},"auth":{"type":"oauth2","anonymous_access":false,"how_to_get":"Create Partner account at https://partners.shopify.com","cost":"Free for apps. Shopify plans from $29/month"},"capabilities":[{"id":"get_products","description_for_ai":"Get products from Shopify store with prices, inventory, images, variants.","intent":["get products","product list","store inventory","shopify products"],"endpoint":"GET https://{shop}.myshopify.com/admin/api/2024-01/products.json","input":{"limit":{"type":"integer","default":50,"max":250},"status":{"type":"string","description":"active, archived, draft","default":"active"},"title":{"type":"string","description":"Filter by title","required":false}},"output":{"type":"list<product>","fields":["id","title","handle","status","variants[0].price","images[0].src","inventory_quantity"]},"realtime":true,"requires_auth":true},{"id":"get_orders","description_for_ai":"Get orders from Shopify store with customer, items, and fulfillment status.","intent":["get orders","order list","sales orders","shopify orders"],"endpoint":"GET https://{shop}.myshopify.com/admin/api/2024-01/orders.json","input":{"status":{"type":"string","description":"open, closed, cancelled, any","default":"open"},"limit":{"type":"integer","default":50},"created_at_min":{"type":"string","description":"ISO 8601 date filter","required":false}},"output":{"type":"list<order>","fields":["id","name","total_price","financial_status","fulfillment_status","customer.email","line_items"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "shopify",
+    "name": "Shopify API",
+    "description_for_ai": "Power 4M+ online stores. Manage products, orders, customers, inventory, payments. Use to build Shopify apps, sync store data, automate order processing, manage products programmatically.",
+    "url": "https://shopify.com",
+    "api_base": "https://{shop}.myshopify.com/admin/api/2024-01",
+    "category": "ecommerce",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://shopify.dev/docs/api"
+  },
+  "auth": {
+    "type": "oauth2",
+    "anonymous_access": false,
+    "how_to_get": "Create Partner account at https://partners.shopify.com",
+    "cost": "Free for apps. Shopify plans from $29/month"
+  },
+  "capabilities": [
+    {
+      "id": "get_products",
+      "description_for_ai": "Get products from Shopify store with prices, inventory, images, variants.",
+      "intent": [
+        "get products",
+        "product list",
+        "store inventory",
+        "shopify products"
+      ],
+      "endpoint": "GET https://{shop}.myshopify.com/admin/api/2024-01/products.json",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 50,
+          "max": 250
+        },
+        "status": {
+          "type": "string",
+          "description": "active, archived, draft",
+          "default": "active"
+        },
+        "title": {
+          "type": "string",
+          "description": "Filter by title",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<product>",
+        "fields": [
+          "id",
+          "title",
+          "handle",
+          "status",
+          "variants[0].price",
+          "images[0].src",
+          "inventory_quantity"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_orders",
+      "description_for_ai": "Get orders from Shopify store with customer, items, and fulfillment status.",
+      "intent": [
+        "get orders",
+        "order list",
+        "sales orders",
+        "shopify orders"
+      ],
+      "endpoint": "GET https://{shop}.myshopify.com/admin/api/2024-01/orders.json",
+      "input": {
+        "status": {
+          "type": "string",
+          "description": "open, closed, cancelled, any",
+          "default": "open"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 50
+        },
+        "created_at_min": {
+          "type": "string",
+          "description": "ISO 8601 date filter",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<order>",
+        "fields": [
+          "id",
+          "name",
+          "total_price",
+          "financial_status",
+          "fulfillment_status",
+          "customer.email",
+          "line_items"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
