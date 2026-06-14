@@ -6,7 +6,7 @@
     "description_for_ai": "World largest crypto exchange by volume. Real-time prices, order books, trading history for 2000+ crypto pairs. Free market data, no key needed for public endpoints. Use for crypto prices, market data, trading automation.",
     "url": "https://binance.com",
     "api_base": "https://api.binance.com",
-    "category": "finance_crypto",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
