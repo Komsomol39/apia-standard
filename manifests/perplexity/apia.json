@@ -1,2 +1,70 @@
 {
-  "apia":"1.0","service":{"id":"perplexity","name":"Perplexity AI API","description_for_ai":"AI with real-time web search built-in. Answers questions with citations from current web sources. Best for: current events, research with sources, factual questions needing up-to-date info. OpenAI-compatible.","url":"https://perplexity.ai","api_base":"https://api.perplexity.ai","category":"ai_search","geo":["GLOBAL"],"language":"en","docs":"https://docs.perplexity.ai"},"auth":{"type":"bearer_token","anonymous_access":false,"how_to_get":"https://www.perplexity.ai/settings/api","cost":"$5/1M tokens for sonar models"},"capabilities":[{"id":"search_and_answer","description_for_ai":"Answer questions with real-time web search and citations. Returns answer + source URLs. Use when user needs current information with verifiable sources.","intent":["search web","current events","find sources","research with citations","real time search AI"],"endpoint":"POST https://api.perplexity.ai/chat/completions","input":{"model":{"type":"string","description":"sonar (fast), sonar-pro (thorough), sonar-reasoning (thinking+search)","required":true},"messages":{"type":"array","required":true},"search_recency_filter":{"type":"string","description":"month, week, day, hour","required":false}},"output":{"type":"completion","fields":["choices[0].message.content","citations"]},"realtime":true,"requires_auth":true}],"agent_hints":{"citations":"Response includes citations array with URLs — always show sources to users.","vs_rag":"Use Perplexity when you need current web info. Use RAG when you have your own documents."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "perplexity",
+    "name": "Perplexity AI API",
+    "description_for_ai": "AI with real-time web search built-in. Answers questions with citations from current web sources. Best for: current events, research with sources, factual questions needing up-to-date info. OpenAI-compatible.",
+    "url": "https://perplexity.ai",
+    "api_base": "https://api.perplexity.ai",
+    "category": "ai_search",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.perplexity.ai"
+  },
+  "auth": {
+    "type": "bearer_token",
+    "anonymous_access": false,
+    "how_to_get": "https://www.perplexity.ai/settings/api",
+    "cost": "$5/1M tokens for sonar models"
+  },
+  "capabilities": [
+    {
+      "id": "search_and_answer",
+      "description_for_ai": "Answer questions with real-time web search and citations. Returns answer + source URLs. Use when user needs current information with verifiable sources.",
+      "intent": [
+        "search web",
+        "current events",
+        "find sources",
+        "research with citations",
+        "real time search AI"
+      ],
+      "endpoint": "POST https://api.perplexity.ai/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "sonar (fast), sonar-pro (thorough), sonar-reasoning (thinking+search)",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "search_recency_filter": {
+          "type": "string",
+          "description": "month, week, day, hour",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content",
+          "citations"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "citations": "Response includes citations array with URLs — always show sources to users.",
+    "vs_rag": "Use Perplexity when you need current web info. Use RAG when you have your own documents."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
