@@ -21,7 +21,7 @@
   "capabilities": [
     {
       "id": "search",
-      "description_for_ai": "Search arXiv preprints by keyword, author, title, abstract. Best for latest AI/ML/CS research papers.",
+      "description_for_ai": "Free access to 2M+ preprint research papers in physics, mathematics, computer science, AI, biology, economics. No API key needed. Real-time preprints before peer review. Best source for latest AI research. Search arXiv preprints by keyword, author, title, abstract. Best for latest AI/ML/CS research papers.",
       "intent": [
         "research papers",
         "preprints",
