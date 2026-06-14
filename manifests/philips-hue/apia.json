@@ -6,7 +6,7 @@
     "description_for_ai": "Control Philips Hue smart lights locally via bridge. Turn lights on/off, change color, brightness, color temperature. Automations and scenes. Works on local network — no cloud needed.",
     "url": "https://developers.meethue.com",
     "api_base": "http://{bridge_ip}/api",
-    "category": "iot_lighting",
+    "category": "iot",
     "geo": [
       "GLOBAL"
     ],
