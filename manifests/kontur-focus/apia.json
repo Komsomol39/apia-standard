@@ -1,1 +1,96 @@
-{"apia":"1.0","service":{"id":"kontur-focus","name":"Контур.Фокус API","description_for_ai":"Проверка контрагентов и бизнес-аналитика. Данные по 20 млн организаций России: финансовая отчётность, арбитражные дела, исполнительные производства, аффилированные лица, госконтракты. Незаменим для B2B KYC в России.","url":"https://focus.kontur.ru","api_base":"https://focus-api.kontur.ru","category":"business_intelligence","geo":["RU"],"language":"ru","docs":"https://developer.kontur.ru/doc/focus"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"key","param_location":"query","how_to_get":"Подать заявку на developer.kontur.ru","cost":"Платный. Демо-доступ доступен"},"capabilities":[{"id":"get_requisites","description_for_ai":"Получить реквизиты организации по ИНН: название, ОГРН, адрес, руководитель, дата регистрации, уставный капитал.","intent":["реквизиты компании","проверить контрагента","ИНН организации","данные компании Россия","KYC Россия"],"endpoint":"GET https://focus-api.kontur.ru/api3/req","input":{"inn":{"type":"string","description":"ИНН организации (10 или 12 цифр)","required":true}},"output":{"type":"requisites","fields":["inn","ogrn","fullName","shortName","legalAddress","leaders[0].fio","leaders[0].position","registrationDate","status"]},"realtime":true,"requires_auth":true},{"id":"get_financial","description_for_ai":"Получить финансовую отчётность организации: выручка, прибыль, активы из бухгалтерской отчётности ФНС.","intent":["финансы компании","выручка организации","прибыль компании","бухгалтерская отчётность","финансовый анализ"],"endpoint":"GET https://focus-api.kontur.ru/api3/finanses","input":{"inn":{"type":"string","required":true}},"output":{"type":"financials","fields":["period","revenue","netProfit","assets","netAssets"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "kontur-focus",
+    "name": "Контур.Фокус API",
+    "description_for_ai": "Проверка контрагентов и бизнес-аналитика. Данные по 20 млн организаций России: финансовая отчётность, арбитражные дела, исполнительные производства, аффилированные лица, госконтракты. Незаменим для B2B KYC в России.",
+    "url": "https://focus.kontur.ru",
+    "api_base": "https://focus-api.kontur.ru",
+    "category": "business_intelligence",
+    "geo": [
+      "RU"
+    ],
+    "language": "ru",
+    "docs": "https://developer.kontur.ru/doc/focus"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "key",
+    "param_location": "query",
+    "how_to_get": "Подать заявку на developer.kontur.ru",
+    "cost": "Платный. Демо-доступ доступен"
+  },
+  "capabilities": [
+    {
+      "id": "get_requisites",
+      "description_for_ai": "Получить реквизиты организации по ИНН: название, ОГРН, адрес, руководитель, дата регистрации, уставный капитал.",
+      "intent": [
+        "реквизиты компании",
+        "проверить контрагента",
+        "ИНН организации",
+        "данные компании Россия",
+        "KYC Россия"
+      ],
+      "endpoint": "GET https://focus-api.kontur.ru/api3/req",
+      "input": {
+        "inn": {
+          "type": "string",
+          "description": "ИНН организации (10 или 12 цифр)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "requisites",
+        "fields": [
+          "inn",
+          "ogrn",
+          "fullName",
+          "shortName",
+          "legalAddress",
+          "leaders[0].fio",
+          "leaders[0].position",
+          "registrationDate",
+          "status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_financial",
+      "description_for_ai": "Получить финансовую отчётность организации: выручка, прибыль, активы из бухгалтерской отчётности ФНС.",
+      "intent": [
+        "финансы компании",
+        "выручка организации",
+        "прибыль компании",
+        "бухгалтерская отчётность",
+        "финансовый анализ"
+      ],
+      "endpoint": "GET https://focus-api.kontur.ru/api3/finanses",
+      "input": {
+        "inn": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "financials",
+        "fields": [
+          "period",
+          "revenue",
+          "netProfit",
+          "assets",
+          "netAssets"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
