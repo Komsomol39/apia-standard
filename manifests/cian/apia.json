@@ -1,1 +1,100 @@
-{"apia":"1.0","service":{"id":"cian","name":"ЦИАН API (Россия)","description_for_ai":"Крупнейший портал недвижимости России. Поиск квартир, домов, коммерческой недвижимости для покупки и аренды. Официальный API через партнёрскую программу. Используй для поиска жилья в России.","url":"https://cian.ru","api_base":"https://public-api.cian.ru","category":"real_estate","geo":["RU"],"language":"ru","docs":"https://www.cian.ru/help/about/partners-api/"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"Подать заявку на партнёрство: https://www.cian.ru/help/about/partners-api/","cost":"Партнёрский договор"},"capabilities":[{"id":"search_offers","description_for_ai":"Поиск объявлений о продаже и аренде недвижимости в России. Фильтры по цене, площади, количеству комнат, метро.","intent":["квартира купить","снять квартиру","недвижимость Москва","аренда жилья","продажа квартиры","найти квартиру"],"endpoint":"GET https://public-api.cian.ru/v1/offers/search","input":{"deal_type":{"type":"string","description":"sale или rent","required":true},"offer_type":{"type":"string","description":"flat, house, commercial","default":"flat"},"region_id":{"type":"integer","description":"ID региона. Москва=1, СПб=2","required":false},"rooms_count":{"type":"array","description":"Количество комнат: [1,2,3]","required":false},"price_min":{"type":"integer","required":false},"price_max":{"type":"integer","required":false},"total_area_min":{"type":"float","required":false},"page":{"type":"integer","default":1},"page_size":{"type":"integer","default":20}},"output":{"type":"list<offer>","fields":["id","price","rooms_count","total_area","address","floor","floors_count","description","photos"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "cian",
+    "name": "ЦИАН API (Россия)",
+    "description_for_ai": "Крупнейший портал недвижимости России. Поиск квартир, домов, коммерческой недвижимости для покупки и аренды. Официальный API через партнёрскую программу. Используй для поиска жилья в России.",
+    "url": "https://cian.ru",
+    "api_base": "https://public-api.cian.ru",
+    "category": "real_estate",
+    "geo": [
+      "RU"
+    ],
+    "language": "ru",
+    "docs": "https://www.cian.ru/help/about/partners-api/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "Подать заявку на партнёрство: https://www.cian.ru/help/about/partners-api/",
+    "cost": "Партнёрский договор"
+  },
+  "capabilities": [
+    {
+      "id": "search_offers",
+      "description_for_ai": "Поиск объявлений о продаже и аренде недвижимости в России. Фильтры по цене, площади, количеству комнат, метро.",
+      "intent": [
+        "квартира купить",
+        "снять квартиру",
+        "недвижимость Москва",
+        "аренда жилья",
+        "продажа квартиры",
+        "найти квартиру"
+      ],
+      "endpoint": "GET https://public-api.cian.ru/v1/offers/search",
+      "input": {
+        "deal_type": {
+          "type": "string",
+          "description": "sale или rent",
+          "required": true
+        },
+        "offer_type": {
+          "type": "string",
+          "description": "flat, house, commercial",
+          "default": "flat"
+        },
+        "region_id": {
+          "type": "integer",
+          "description": "ID региона. Москва=1, СПб=2",
+          "required": false
+        },
+        "rooms_count": {
+          "type": "array",
+          "description": "Количество комнат: [1,2,3]",
+          "required": false
+        },
+        "price_min": {
+          "type": "integer",
+          "required": false
+        },
+        "price_max": {
+          "type": "integer",
+          "required": false
+        },
+        "total_area_min": {
+          "type": "float",
+          "required": false
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<offer>",
+        "fields": [
+          "id",
+          "price",
+          "rooms_count",
+          "total_area",
+          "address",
+          "floor",
+          "floors_count",
+          "description",
+          "photos"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
