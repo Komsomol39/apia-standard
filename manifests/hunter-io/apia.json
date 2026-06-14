@@ -24,7 +24,7 @@
   "capabilities": [
     {
       "id": "domain_search",
-      "description_for_ai": "Find all email addresses at a company domain. Returns contacts with name, role, department.",
+      "description_for_ai": "Find all publicly known email addresses at a company domain. Returns emails with name, job title, and LinkedIn when available.",
       "intent": [
         "find company emails",
         "company contacts",
@@ -37,25 +37,37 @@
       "input": {
         "domain": {
           "type": "string",
-          "description": "Company domain e.g. google.com, stripe.com",
+          "description": "Company domain without http/www e.g. stripe.com, google.com, microsoft.com",
           "required": true
         },
         "company": {
           "type": "string",
-          "description": "Company name",
+          "description": "Company name as alternative to domain (less reliable)",
           "required": false
         },
         "limit": {
           "type": "integer",
+          "description": "Max results per page, max 100",
           "default": 10
         },
         "offset": {
           "type": "integer",
+          "description": "Pagination offset",
           "default": 0
         },
         "type": {
           "type": "string",
-          "description": "personal or generic",
+          "description": "Filter by email type: personal (first.last@) or generic (info@, support@, sales@)",
+          "required": false
+        },
+        "seniority": {
+          "type": "string",
+          "description": "Filter by seniority level: junior, senior, executive",
+          "required": false
+        },
+        "department": {
+          "type": "string",
+          "description": "Filter by department: executive, it, finance, management, sales, legal, support, hr, marketing, communication",
           "required": false
         }
       },
@@ -66,8 +78,11 @@
           "data.emails[0].first_name",
           "data.emails[0].last_name",
           "data.emails[0].position",
+          "data.emails[0].department",
           "data.emails[0].seniority",
-          "data.organization"
+          "data.emails[0].linkedin",
+          "data.organization",
+          "meta.total"
         ]
       },
       "realtime": true,
