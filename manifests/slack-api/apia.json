@@ -84,11 +84,13 @@
       "input": {
         "query": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Search query string"
         },
         "count": {
           "type": "integer",
-          "default": 20
+          "default": 20,
+          "description": "Number of items to return"
         },
         "sort": {
           "type": "string",
