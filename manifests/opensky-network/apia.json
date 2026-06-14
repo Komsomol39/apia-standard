@@ -1,2 +1,82 @@
 {
-  "apia":"1.0","service":{"id":"opensky-network","name":"OpenSky Network API","description_for_ai":"Free real-time aircraft tracking using ADS-B data. Track all aircraft in the sky. No API key required for anonymous access. Use for flight tracking, aviation analytics, air traffic visualization.","url":"https://opensky-network.org","api_base":"https://opensky-network.org/api","category":"transport_aviation","geo":["GLOBAL"],"language":"en","docs":"https://openskynetwork.github.io/opensky-api/"},"auth":{"type":"none","anonymous_access":true,"anonymous_limits":"400 requests/day","cost":"Free. Premium account for higher limits."},"capabilities":[{"id":"get_states","description_for_ai":"Get real-time state vectors of all aircraft in a bounding box. Returns position, altitude, speed, heading for each aircraft.","intent":["aircraft positions","planes in sky","ADS-B data","air traffic","track planes","aviation radar"],"endpoint":"GET https://opensky-network.org/api/states/all","input":{"lamin":{"type":"float","description":"Min latitude of bounding box","required":false},"lomin":{"type":"float","description":"Min longitude","required":false},"lamax":{"type":"float","description":"Max latitude","required":false},"lomax":{"type":"float","description":"Max longitude","required":false}},"output":{"type":"aircraft_states","fields":["states[][0]=icao24","states[][1]=callsign","states[][5]=longitude","states[][6]=latitude","states[][7]=baro_altitude","states[][9]=velocity","states[][10]=heading"]},"realtime":true,"requires_auth":false}],"agent_hints":{"bounding_box":"For Europe: lamin=36, lomin=-10, lamax=60, lomax=40. For Russia: lamin=50, lomin=30, lamax=70, lomax=140.","free":"Completely free, no registration needed. 400 req/day anonymous limit."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "opensky-network",
+    "name": "OpenSky Network API",
+    "description_for_ai": "Free real-time aircraft tracking using ADS-B data. Track all aircraft in the sky. No API key required for anonymous access. Use for flight tracking, aviation analytics, air traffic visualization.",
+    "url": "https://opensky-network.org",
+    "api_base": "https://opensky-network.org/api",
+    "category": "transport_aviation",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://openskynetwork.github.io/opensky-api/"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "anonymous_limits": "400 requests/day",
+    "cost": "Free. Premium account for higher limits."
+  },
+  "capabilities": [
+    {
+      "id": "get_states",
+      "description_for_ai": "Get real-time state vectors of all aircraft in a bounding box. Returns position, altitude, speed, heading for each aircraft.",
+      "intent": [
+        "aircraft positions",
+        "planes in sky",
+        "ADS-B data",
+        "air traffic",
+        "track planes",
+        "aviation radar"
+      ],
+      "endpoint": "GET https://opensky-network.org/api/states/all",
+      "input": {
+        "lamin": {
+          "type": "float",
+          "description": "Min latitude of bounding box",
+          "required": false
+        },
+        "lomin": {
+          "type": "float",
+          "description": "Min longitude",
+          "required": false
+        },
+        "lamax": {
+          "type": "float",
+          "description": "Max latitude",
+          "required": false
+        },
+        "lomax": {
+          "type": "float",
+          "description": "Max longitude",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "aircraft_states",
+        "fields": [
+          "states[][0]=icao24",
+          "states[][1]=callsign",
+          "states[][5]=longitude",
+          "states[][6]=latitude",
+          "states[][7]=baro_altitude",
+          "states[][9]=velocity",
+          "states[][10]=heading"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "bounding_box": "For Europe: lamin=36, lomin=-10, lamax=60, lomax=40. For Russia: lamin=50, lomin=30, lamax=70, lomax=140.",
+    "free": "Completely free, no registration needed. 400 req/day anonymous limit."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
