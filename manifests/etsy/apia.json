@@ -3,7 +3,7 @@
   "service": {
     "id": "etsy",
     "name": "Etsy API",
-    "description_for_ai": "Handmade, vintage, and craft marketplace API. 90M+ active buyers. Listing management, order processing, shop analytics, shipping profiles. Use for Etsy seller automation, shop management, marketplace integration.",
+    "description_for_ai": "Etsy marketplace API for handmade, vintage, and craft products. 90M+ active buyers, 7M+ sellers. Manage listings, process orders, track shop analytics. Strong for unique, custom, and personalized products. Used by craft sellers and print-on-demand businesses.",
     "url": "https://etsy.com",
     "api_base": "https://openapi.etsy.com/v3",
     "category": "ecommerce",
