@@ -6,7 +6,7 @@
     "description_for_ai": "Build AI assistants with persistent memory, file search, and code execution. Assistants maintain conversation history, can search uploaded documents (RAG), and run Python code. Use for document Q&A chatbots, coding assistants, data analysis bots.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_agents",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
