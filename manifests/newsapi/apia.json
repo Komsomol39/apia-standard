@@ -6,7 +6,7 @@
     "description_for_ai": "NewsAPI — real-time news aggregation from 150,000+ sources worldwide. Search articles by keyword, source, category, country, and language. Top headlines and archived articles. Free for development with 100 req/day. Perfect for news monitoring, sentiment analysis, content curation.",
     "url": "https://newsapi.org",
     "api_base": "https://newsapi.org/v2",
-    "category": "news",
+    "category": "media",
     "geo": [
       "GLOBAL"
     ],
