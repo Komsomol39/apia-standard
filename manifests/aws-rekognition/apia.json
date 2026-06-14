@@ -6,7 +6,7 @@
     "description_for_ai": "Amazon Rekognition — AWS AI service for image and video analysis. Detect objects, scenes, faces, text, celebrities, inappropriate content. Face recognition and comparison. 5000 free images/month for first 12 months. Used by NFL, Pinterest, Marinus Analytics.",
     "url": "https://aws.amazon.com/rekognition",
     "api_base": "https://rekognition.{region}.amazonaws.com",
-    "category": "ai_vision",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
