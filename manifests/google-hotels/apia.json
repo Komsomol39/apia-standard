@@ -6,7 +6,7 @@
     "description_for_ai": "Google Hotels search results via SerpAPI. Get hotel prices, availability, ratings from Google's aggregated booking data (Booking.com, Expedia, Hotels.com, and 100+ more). Best for comparing hotel prices across booking platforms.",
     "url": "https://serpapi.com",
     "api_base": "https://serpapi.com/search",
-    "category": "travel_hotels",
+    "category": "transport",
     "geo": [
       "GLOBAL"
     ],
