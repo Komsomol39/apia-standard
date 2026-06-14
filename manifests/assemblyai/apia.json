@@ -1,2 +1,116 @@
 {
-  "apia":"1.0","service":{"id":"assemblyai","name":"AssemblyAI API","description_for_ai":"AI-powered speech-to-text and audio intelligence. Transcribe audio files or streams. Speaker diarization, sentiment analysis, topic detection, PII redaction, content moderation, auto chapters. Best for processing audio content at scale.","url":"https://assemblyai.com","api_base":"https://api.assemblyai.com/v2","category":"ai_speech","geo":["GLOBAL"],"language":"en","docs":"https://www.assemblyai.com/docs"},"auth":{"type":"apikey","anonymous_access":false,"header":"Authorization: YOUR_API_KEY","how_to_get":"Register at https://www.assemblyai.com — $50 free credit","cost":"$0.37/hour audio. $0.13/hour for nano model"},"capabilities":[{"id":"transcribe","description_for_ai":"Transcribe audio file to text with timestamps, speaker labels, and AI insights. Submit URL or upload file. Async — returns job ID then poll for result.","intent":["transcribe audio","speech to text","transcribe recording","meeting transcription","podcast transcription"],"endpoint":"POST https://api.assemblyai.com/v2/transcript","input":{"audio_url":{"type":"string","description":"Public URL to audio file (mp3, mp4, wav, m4a, ogg)","required":true},"language_code":{"type":"string","description":"en, ru, de, fr, es, etc. Auto-detected if omitted","required":false},"speaker_labels":{"type":"boolean","description":"Identify different speakers","default":false},"sentiment_analysis":{"type":"boolean","default":false},"auto_chapters":{"type":"boolean","default":false},"entity_detection":{"type":"boolean","default":false}},"output":{"type":"transcript","fields":["id","status","text","words","utterances","sentiment_analysis_results","chapters","entities"]},"realtime":false,"requires_auth":true},{"id":"get_transcript","description_for_ai":"Poll for transcription result after submitting job. Check status field: queued→processing→completed/error.","intent":["get transcription result","check transcription status"],"endpoint":"GET https://api.assemblyai.com/v2/transcript/{id}","input":{"id":{"type":"string","required":true}},"output":{"type":"transcript","fields":["status","text","words","utterances"]},"realtime":false,"requires_auth":true}],"agent_hints":{"async_flow":"1) POST to /transcript with audio_url → get id. 2) Poll GET /transcript/{id} until status=completed. Usually 30-60s for 1h audio.","streaming":"For real-time use WebSocket endpoint wss://api.assemblyai.com/v2/realtime/ws"},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+  "apia": "1.0",
+  "service": {
+    "id": "assemblyai",
+    "name": "AssemblyAI API",
+    "description_for_ai": "AI-powered speech-to-text and audio intelligence. Transcribe audio files or streams. Speaker diarization, sentiment analysis, topic detection, PII redaction, content moderation, auto chapters. Best for processing audio content at scale.",
+    "url": "https://assemblyai.com",
+    "api_base": "https://api.assemblyai.com/v2",
+    "category": "ai_speech",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://www.assemblyai.com/docs"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Authorization: YOUR_API_KEY",
+    "how_to_get": "Register at https://www.assemblyai.com — $50 free credit",
+    "cost": "$0.37/hour audio. $0.13/hour for nano model"
+  },
+  "capabilities": [
+    {
+      "id": "transcribe",
+      "description_for_ai": "Transcribe audio file to text with timestamps, speaker labels, and AI insights. Submit URL or upload file. Async — returns job ID then poll for result.",
+      "intent": [
+        "transcribe audio",
+        "speech to text",
+        "transcribe recording",
+        "meeting transcription",
+        "podcast transcription"
+      ],
+      "endpoint": "POST https://api.assemblyai.com/v2/transcript",
+      "input": {
+        "audio_url": {
+          "type": "string",
+          "description": "Public URL to audio file (mp3, mp4, wav, m4a, ogg)",
+          "required": true
+        },
+        "language_code": {
+          "type": "string",
+          "description": "en, ru, de, fr, es, etc. Auto-detected if omitted",
+          "required": false
+        },
+        "speaker_labels": {
+          "type": "boolean",
+          "description": "Identify different speakers",
+          "default": false
+        },
+        "sentiment_analysis": {
+          "type": "boolean",
+          "default": false
+        },
+        "auto_chapters": {
+          "type": "boolean",
+          "default": false
+        },
+        "entity_detection": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "transcript",
+        "fields": [
+          "id",
+          "status",
+          "text",
+          "words",
+          "utterances",
+          "sentiment_analysis_results",
+          "chapters",
+          "entities"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_transcript",
+      "description_for_ai": "Poll for transcription result after submitting job. Check status field: queued→processing→completed/error.",
+      "intent": [
+        "get transcription result",
+        "check transcription status"
+      ],
+      "endpoint": "GET https://api.assemblyai.com/v2/transcript/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "transcript",
+        "fields": [
+          "status",
+          "text",
+          "words",
+          "utterances"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "async_flow": "1) POST to /transcript with audio_url → get id. 2) Poll GET /transcript/{id} until status=completed. Usually 30-60s for 1h audio.",
+    "streaming": "For real-time use WebSocket endpoint wss://api.assemblyai.com/v2/realtime/ws"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
