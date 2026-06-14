@@ -6,7 +6,7 @@
     "description_for_ai": "Ultra-fast AI inference using custom LPU hardware. Llama 3, Mixtral, Gemma at 300-800 tokens/second — fastest available. OpenAI-compatible. Free tier generous. Use when speed matters: real-time chat, voice assistants, interactive apps.",
     "url": "https://groq.com",
     "api_base": "https://api.groq.com/openai/v1",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
