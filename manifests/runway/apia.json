@@ -36,7 +36,7 @@
       "input": {
         "model": {
           "type": "string",
-          "description": "gen3a_turbo",
+          "description": "AI/ML model identifier to use for this request",
           "default": "gen3a_turbo"
         },
         "promptImage": {
@@ -82,7 +82,8 @@
       "input": {
         "id": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Unique identifier"
         }
       },
       "output": {
