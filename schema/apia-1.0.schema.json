@@ -56,7 +56,35 @@
         },
         "category": {
           "type": "string",
-          "description": "Service category slug"
+          "enum": [
+            "ai",
+            "ai_media",
+            "analytics",
+            "business",
+            "devtools",
+            "ecommerce",
+            "environment",
+            "finance",
+            "food",
+            "healthcare",
+            "hr",
+            "iot",
+            "legal",
+            "logistics",
+            "maps",
+            "media",
+            "nlp",
+            "productivity",
+            "real_estate",
+            "science",
+            "security",
+            "social",
+            "sports",
+            "support",
+            "transport",
+            "utilities"
+          ],
+          "description": "Service category. 26 normalized categories."
         },
         "geo": {
           "type": "array",
