@@ -6,7 +6,7 @@
     "description_for_ai": "DocuSign eSignature API — world's #1 electronic signature platform. Legally binding in 180+ countries. Send documents for digital signature via email or embedded signing. Track signature status, auto-remind signers, download signed PDFs. 1M+ customers including 15 of Fortune 100.",
     "url": "https://docusign.com",
     "api_base": "https://demo.docusign.net/restapi/v2.1",
-    "category": "legal_esign",
+    "category": "legal",
     "geo": [
       "GLOBAL"
     ],
