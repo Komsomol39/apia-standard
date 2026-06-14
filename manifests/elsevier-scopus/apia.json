@@ -6,7 +6,7 @@
     "description_for_ai": "World largest abstract and citation database. 87M+ records from 24K+ journals. Article search, author profiles, journal metrics, citation analysis, h-index, affiliation data. Used by researchers and librarians worldwide. Requires institutional access or developer key.",
     "url": "https://scopus.com",
     "api_base": "https://api.elsevier.com/content",
-    "category": "science_academic",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
