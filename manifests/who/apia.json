@@ -6,7 +6,7 @@
     "description_for_ai": "Free WHO Global Health Observatory data. Health statistics for 194 countries: disease rates, mortality, life expectancy, immunization coverage, health spending. No API key needed.",
     "url": "https://www.who.int/data/gho",
     "api_base": "https://ghoapi.azureedge.net/api",
-    "category": "healthcare_public",
+    "category": "healthcare",
     "geo": [
       "GLOBAL"
     ],
