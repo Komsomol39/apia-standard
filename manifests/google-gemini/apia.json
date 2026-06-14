@@ -7,7 +7,9 @@
     "url": "https://ai.google.dev",
     "api_base": "https://generativelanguage.googleapis.com/v1beta",
     "category": "ai_llm",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "en",
     "docs": "https://ai.google.dev/api"
   },
@@ -22,19 +24,60 @@
   "capabilities": [
     {
       "id": "generate_content",
-      "description_for_ai": "Generate text using Gemini models. Supports text, images, audio, video, and documents as input. Massive 1M-token context window. Best free tier of any frontier AI.",
-      "intent": ["generate text", "answer question", "analyze image", "process video", "long document", "gemini", "free AI"],
+      "description_for_ai": "Generate text, analyze images/video/audio, answer questions, write code. Gemini 2.0 Flash is default — fast, free 1500 req/day. Use gemini-2.5-pro for complex reasoning with 1M context window.",
+      "intent": [
+        "generate text",
+        "AI assistant",
+        "analyze image",
+        "write code",
+        "answer question",
+        "summarize",
+        "translate",
+        "Gemini AI",
+        "Google AI",
+        "бесплатный ИИ"
+      ],
       "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
       "input": {
-        "model": { "type": "string", "description": "gemini-2.5-flash (cheap/fast), gemini-2.5-pro (balanced), gemini-3.1-pro (flagship)", "required": true },
-        "contents": { "type": "array", "description": "Array of {role, parts} where parts can be text, image, video, audio", "required": true },
-        "systemInstruction": { "type": "object", "description": "{parts: [{text: system_prompt}]}", "required": false },
-        "generationConfig": { "type": "object", "description": "{temperature, maxOutputTokens, topP, topK}", "required": false },
-        "tools": { "type": "array", "description": "Tool definitions for function calling", "required": false }
+        "model": {
+          "type": "string",
+          "description": "gemini-2.5-flash (fast, free 1500/day), gemini-2.5-pro (best quality, 1M context), gemini-2.0-flash-exp (experimental)",
+          "required": true
+        },
+        "contents": {
+          "type": "array",
+          "description": "Conversation: [{role: 'user'|'model', parts: [{text: 'message'}]}]. For images add: {inline_data: {mime_type: 'image/jpeg', data: 'BASE64'}}",
+          "required": true
+        },
+        "systemInstruction": {
+          "type": "object",
+          "description": "{parts: [{text: 'system prompt'}]} — sets model behavior and persona",
+          "required": false
+        },
+        "generationConfig": {
+          "type": "object",
+          "description": "{temperature: 0.7, maxOutputTokens: 2048, topK: 40, topP: 0.95, candidateCount: 1, responseMimeType: 'text/plain'|'application/json'}",
+          "required": false
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{functionDeclarations: [{name, description, parameters: {type: object, properties: {}}}]}] for function calling",
+          "required": false
+        },
+        "safetySettings": {
+          "type": "array",
+          "description": "[{category: HARM_CATEGORY_HARASSMENT, threshold: BLOCK_NONE}] — configure content safety",
+          "required": false
+        }
       },
       "output": {
-        "type": "completion",
-        "fields": ["candidates[0].content.parts[0].text", "usageMetadata.promptTokenCount", "usageMetadata.candidatesTokenCount"]
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text",
+          "candidates[0].finishReason",
+          "usageMetadata.promptTokenCount",
+          "usageMetadata.candidatesTokenCount"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -42,23 +85,72 @@
     {
       "id": "embed_content",
       "description_for_ai": "Create text embeddings using Gemini Embedding model. For semantic search and RAG.",
-      "intent": ["embeddings", "semantic search", "vector", "RAG", "similarity"],
+      "intent": [
+        "embeddings",
+        "semantic search",
+        "vector",
+        "RAG",
+        "similarity"
+      ],
       "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent",
       "input": {
-        "content": { "type": "object", "description": "{parts: [{text: your_text}]}", "required": true },
-        "taskType": { "type": "string", "description": "RETRIEVAL_QUERY, RETRIEVAL_DOCUMENT, SEMANTIC_SIMILARITY, CLASSIFICATION", "required": false }
+        "content": {
+          "type": "object",
+          "description": "{parts: [{text: your_text}]}",
+          "required": true
+        },
+        "taskType": {
+          "type": "string",
+          "description": "RETRIEVAL_QUERY, RETRIEVAL_DOCUMENT, SEMANTIC_SIMILARITY, CLASSIFICATION",
+          "required": false
+        }
       },
-      "output": { "type": "embedding", "fields": ["embedding.values"] },
+      "output": {
+        "type": "embedding",
+        "fields": [
+          "embedding.values"
+        ]
+      },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "count_tokens",
+      "description_for_ai": "Count tokens in content before sending to estimate cost and check context limits.",
+      "intent": [
+        "count tokens",
+        "token count",
+        "context length check",
+        "cost estimate"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/{model}:countTokens",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "contents": {
+          "type": "array",
+          "description": "Same format as generateContent",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "token_count",
+        "fields": [
+          "totalTokens"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
   "agent_hints": {
-    "free_tier": "Gemini 2.5 Flash is free for 1500 requests/day — ideal for development and low-volume production.",
-    "model_choice": "gemini-2.5-flash for most tasks (free tier). gemini-2.5-pro when you need stronger reasoning. gemini-3.1-pro for production frontier tasks.",
-    "multimodal": "Gemini natively handles images, audio, video — pass them as inline_data with base64. No separate endpoint needed.",
-    "context_window": "1M token context = ~750,000 words = entire book. Use for processing large documents.",
-    "openai_compat": "Gemini supports OpenAI-compatible endpoint: generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+    "free_tier": "gemini-2.5-flash: 1500 requests/day FREE. Best free frontier model in 2026.",
+    "json_mode": "Set generationConfig.responseMimeType='application/json' for structured JSON output.",
+    "multimodal": "Pass images, audio, video inline. gemini-2.5-pro handles 1M token context with full video/audio understanding.",
+    "context": "1M token context = entire codebases, long books, hours of audio. No chunking needed.",
+    "thinking": "gemini-2.5-flash-thinking-exp supports extended reasoning for hard problems."
   },
   "limits": {
     "free_requests_per_day": 1500,
