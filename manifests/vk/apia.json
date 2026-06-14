@@ -7,7 +7,13 @@
     "url": "https://vk.com",
     "api_base": "https://api.vk.com/method",
     "category": "social_media",
-    "geo": ["RU", "BY", "KZ", "UA", "UZ"],
+    "geo": [
+      "RU",
+      "BY",
+      "KZ",
+      "UA",
+      "UZ"
+    ],
     "language": "ru",
     "docs": "https://dev.vk.com/ru/api/overview"
   },
@@ -23,17 +29,49 @@
     {
       "id": "search_posts",
       "description_for_ai": "Search posts across VK by keyword. Use for monitoring mentions, finding trending content in Russia, sentiment analysis of Russian social media.",
-      "intent": ["vk posts", "поиск по вк", "посты вконтакте", "упоминания вк", "russian social media", "vk mentions"],
+      "intent": [
+        "vk posts",
+        "поиск по вк",
+        "посты вконтакте",
+        "упоминания вк",
+        "russian social media",
+        "vk mentions"
+      ],
       "endpoint": "GET https://api.vk.com/method/newsfeed.search",
       "input": {
-        "q": { "type": "string", "description": "Search query", "required": true },
-        "count": { "type": "integer", "description": "Number of results", "default": 20, "max": 200 },
-        "start_time": { "type": "integer", "description": "Unix timestamp filter", "required": false },
-        "v": { "type": "string", "description": "API version", "default": "5.199" }
+        "q": {
+          "type": "string",
+          "description": "Search query or filter expression",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of results",
+          "default": 20,
+          "max": 200
+        },
+        "start_time": {
+          "type": "integer",
+          "description": "Unix timestamp filter",
+          "required": false
+        },
+        "v": {
+          "type": "string",
+          "description": "API version",
+          "default": "5.199"
+        }
       },
       "output": {
         "type": "list<post>",
-        "fields": ["id", "text", "date", "likes.count", "reposts.count", "comments.count", "from_id"]
+        "fields": [
+          "id",
+          "text",
+          "date",
+          "likes.count",
+          "reposts.count",
+          "comments.count",
+          "from_id"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -41,16 +79,40 @@
     {
       "id": "get_user",
       "description_for_ai": "Get VK user profile: name, photo, city, followers, friends count.",
-      "intent": ["vk profile", "профиль вк", "информация о пользователе вк", "vk user info"],
+      "intent": [
+        "vk profile",
+        "профиль вк",
+        "информация о пользователе вк",
+        "vk user info"
+      ],
       "endpoint": "GET https://api.vk.com/method/users.get",
       "input": {
-        "user_ids": { "type": "string", "description": "VK user IDs or screen names, comma-separated", "required": true },
-        "fields": { "type": "string", "description": "photo_200, city, followers_count, status, bdate", "required": false },
-        "v": { "type": "string", "default": "5.199" }
+        "user_ids": {
+          "type": "string",
+          "description": "VK user IDs or screen names, comma-separated",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "photo_200, city, followers_count, status, bdate",
+          "required": false
+        },
+        "v": {
+          "type": "string",
+          "default": "5.199"
+        }
       },
       "output": {
         "type": "list<user>",
-        "fields": ["id", "first_name", "last_name", "photo_200", "city.title", "followers_count", "status"]
+        "fields": [
+          "id",
+          "first_name",
+          "last_name",
+          "photo_200",
+          "city.title",
+          "followers_count",
+          "status"
+        ]
       },
       "realtime": true,
       "requires_auth": true
@@ -58,17 +120,39 @@
     {
       "id": "wall_post",
       "description_for_ai": "Publish a post on VK wall (user or group). Use to post content to VK automatically.",
-      "intent": ["post to vk", "опубликовать в вк", "publish vk post", "vk wall post"],
+      "intent": [
+        "post to vk",
+        "опубликовать в вк",
+        "publish vk post",
+        "vk wall post"
+      ],
       "endpoint": "POST https://api.vk.com/method/wall.post",
       "input": {
-        "owner_id": { "type": "integer", "description": "User or group ID (negative for groups)", "required": false },
-        "message": { "type": "string", "description": "Post text", "required": true },
-        "attachments": { "type": "string", "description": "Photos, links, etc.", "required": false },
-        "v": { "type": "string", "default": "5.199" }
+        "owner_id": {
+          "type": "integer",
+          "description": "User or group ID (negative for groups)",
+          "required": false
+        },
+        "message": {
+          "type": "string",
+          "description": "Post text",
+          "required": true
+        },
+        "attachments": {
+          "type": "string",
+          "description": "Photos, links, etc.",
+          "required": false
+        },
+        "v": {
+          "type": "string",
+          "default": "5.199"
+        }
       },
       "output": {
         "type": "post",
-        "fields": ["post_id"]
+        "fields": [
+          "post_id"
+        ]
       },
       "realtime": true,
       "requires_auth": true
