@@ -6,7 +6,7 @@
     "description_for_ai": "Customer Data Platform. Collect user events once, send to 450+ destinations (analytics, CRM, email, ads). Single tracking code for all tools. Used by IBM, Intuit, FOX. Use for unified analytics, customer data routing.",
     "url": "https://segment.com",
     "api_base": "https://api.segment.io/v1",
-    "category": "data_cdp",
+    "category": "business",
     "geo": [
       "GLOBAL"
     ],
