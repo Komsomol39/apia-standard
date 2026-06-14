@@ -6,7 +6,7 @@
     "description_for_ai": "All-in-one marketing platform. Email, SMS, WhatsApp, push notifications, CRM. 500K+ companies. Generous free tier: 300 emails/day. Use for transactional email, marketing campaigns, SMS, WhatsApp Business.",
     "url": "https://brevo.com",
     "api_base": "https://api.brevo.com/v3",
-    "category": "marketing_email",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
