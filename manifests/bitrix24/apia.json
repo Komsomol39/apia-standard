@@ -6,7 +6,7 @@
     "description_for_ai": "Популярная платформа для бизнеса в России и СНГ. CRM, задачи, проекты, коммуникации, HR, документооборот. Бесплатный план до 5 пользователей. Используй для управления компанией, CRM, задачами.",
     "url": "https://bitrix24.ru",
     "api_base": "https://{portal}.bitrix24.ru/rest",
-    "category": "crm_business",
+    "category": "business",
     "geo": [
       "RU",
       "BY",
