@@ -3,7 +3,7 @@
   "service": {
     "id": "stability-ai",
     "name": "Stability AI API",
-    "description_for_ai": "Generate images using Stable Diffusion models. Stable Image Core, Ultra, and Stable Diffusion 3. Best open-weight image generation. Use for creating illustrations, product images, artistic content.",
+    "description_for_ai": "Stability AI API — image generation using Stable Diffusion models. Stable Image Core, Ultra, SD3. Industry-leading open-weight models for photorealistic and artistic images. Credit-based pricing: $0.003-0.08 per image. Best for: product mockups, art generation, controlled image creation.",
     "url": "https://stability.ai",
     "api_base": "https://api.stability.ai",
     "category": "ai_image",
