@@ -3,7 +3,7 @@
   "service": {
     "id": "rightmove",
     "name": "Rightmove API (UK)",
-    "description_for_ai": "UK largest property portal. Buy, rent, commercial property listings across England, Scotland, Wales. Used by 95% of UK estate agents. Official API for property professionals.",
+    "description_for_ai": "Rightmove — UK's largest property portal used by 95% of estate agents. 900K+ listings of homes to buy and rent across England, Scotland, Wales. Partner API for property professionals. Comprehensive UK residential and commercial property data.",
     "url": "https://rightmove.co.uk",
     "api_base": "https://api.rightmove.co.uk",
     "category": "real_estate",
