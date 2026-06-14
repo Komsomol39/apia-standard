@@ -35,7 +35,8 @@
       "input": {
         "id": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Unique identifier"
         },
         "_format": {
           "type": "string",
