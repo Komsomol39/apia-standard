@@ -1,0 +1,91 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "telegram-bot",
+    "name": "Telegram Bot API",
+    "description_for_ai": "Create bots that send messages, handle commands, and interact with Telegram users. 950M+ users. Free, fast, no rate limits for personal bots. The simplest way to build a conversational interface. Use to send notifications, create interactive bots, receive commands from users via Telegram.",
+    "url": "https://telegram.org",
+    "api_base": "https://api.telegram.org/bot{token}",
+    "category": "social_media_messaging",
+    "geo": ["GLOBAL"],
+    "language": "en",
+    "docs": "https://core.telegram.org/bots/api"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_location": "path",
+    "how_to_get": "Message @BotFather on Telegram → /newbot → get token instantly. Free forever.",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "send_message",
+      "description_for_ai": "Send a text message to a Telegram user or group. Supports markdown formatting. Use to notify users, send alerts, or respond in a bot conversation.",
+      "intent": ["send telegram message", "notify via telegram", "telegram notification", "send message to user", "отправить в телеграм"],
+      "endpoint": "POST https://api.telegram.org/bot{token}/sendMessage",
+      "input": {
+        "chat_id": { "type": "string", "description": "User ID, group ID, or @username. E.g. 123456789 or @mychannel", "required": true },
+        "text": { "type": "string", "description": "Message text. Max 4096 chars.", "required": true },
+        "parse_mode": { "type": "string", "description": "Markdown, MarkdownV2, or HTML for formatting", "required": false },
+        "reply_markup": { "type": "object", "description": "Inline keyboard buttons", "required": false }
+      },
+      "output": {
+        "type": "message",
+        "fields": ["message_id", "chat.id", "text", "date"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_updates",
+      "description_for_ai": "Get new messages sent to the bot (long polling). Use to receive user commands and messages without setting up a webhook.",
+      "intent": ["receive messages", "bot updates", "get commands", "user messages"],
+      "endpoint": "GET https://api.telegram.org/bot{token}/getUpdates",
+      "input": {
+        "offset": { "type": "integer", "description": "Update ID to start from (for pagination)", "required": false },
+        "limit": { "type": "integer", "default": 100 },
+        "timeout": { "type": "integer", "description": "Long polling timeout in seconds", "default": 0 }
+      },
+      "output": {
+        "type": "list<update>",
+        "fields": ["update_id", "message.text", "message.from.id", "message.from.username", "message.chat.id", "message.date"]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_photo",
+      "description_for_ai": "Send a photo to a Telegram chat. Can be a URL or uploaded file.",
+      "intent": ["send image telegram", "photo message", "отправить фото"],
+      "endpoint": "POST https://api.telegram.org/bot{token}/sendPhoto",
+      "input": {
+        "chat_id": { "type": "string", "required": true },
+        "photo": { "type": "string", "description": "URL of image or file_id of previously uploaded photo", "required": true },
+        "caption": { "type": "string", "description": "Photo caption. Max 1024 chars.", "required": false }
+      },
+      "output": { "type": "message", "fields": ["message_id", "photo", "caption"] },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "botfather": "To create a bot: open Telegram → search @BotFather → send /newbot → choose name → get token. Takes 30 seconds.",
+    "chat_id_tip": "To get your own chat_id: send any message to your bot, then call getUpdates — your ID is in message.from.id.",
+    "markdown_v2": "MarkdownV2 requires escaping special chars with backslash: . ! - = + | { } # ( ) [ ]. Use HTML mode instead for simplicity.",
+    "webhook_vs_polling": "For production use webhook (set once, Telegram pushes updates). For development use getUpdates polling.",
+    "russia_note": "Telegram is very popular in Russia and CIS — great alternative to SMS for Russian-speaking users."
+  },
+  "limits": {
+    "messages_per_second": 30,
+    "messages_per_minute_per_group": 20,
+    "commercial_use": true,
+    "attribution_required": false,
+    "cost": "Completely free"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
