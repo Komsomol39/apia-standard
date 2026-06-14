@@ -7,7 +7,12 @@
     "url": "https://superjob.ru",
     "api_base": "https://api.superjob.ru/2.0",
     "category": "employment",
-    "geo": ["RU", "BY", "KZ", "UA"],
+    "geo": [
+      "RU",
+      "BY",
+      "KZ",
+      "UA"
+    ],
     "language": "ru",
     "docs": "https://api.superjob.ru/"
   },
@@ -26,29 +31,87 @@
       "id": "search_vacancies",
       "description_for_ai": "Поиск вакансий по ключевым словам, городу и фильтрам. Используй для запросов 'найди работу сварщика в Челябинске', 'вакансии водителя с зарплатой от 60000', 'работа на производстве'. SuperJob особенно силён в рабочих профессиях и регионах.",
       "intent": [
-        "найти работу", "вакансии рядом", "работа в городе",
-        "рабочие вакансии", "вакансии на производстве", "работа водителем",
-        "строительные вакансии", "вакансии с зарплатой"
+        "найти работу",
+        "вакансии рядом",
+        "работа в городе",
+        "рабочие вакансии",
+        "вакансии на производстве",
+        "работа водителем",
+        "строительные вакансии",
+        "вакансии с зарплатой"
       ],
       "endpoint": "GET https://api.superjob.ru/2.0/vacancies/",
       "headers": {
         "X-Api-App-Id": "секретный ключ приложения"
       },
       "input": {
-        "keyword": { "type": "string", "description": "Ключевые слова поиска. Например: 'сварщик', 'водитель', 'менеджер продаж'", "required": false },
-        "town": { "type": "integer|string", "description": "ID города или название. Москва=4, СПб=14. Или строка 'Екатеринбург'", "required": false },
-        "salary_from": { "type": "integer", "description": "Минимальная зарплата в рублях", "required": false },
-        "salary_to": { "type": "integer", "description": "Максимальная зарплата в рублях", "required": false },
-        "no_agreement": { "type": "integer", "description": "1 — только вакансии с указанной зарплатой (без 'по договорённости')", "required": false },
-        "type_of_work": { "type": "integer", "description": "Тип занятости: 1=полный день, 2=сменный, 3=гибкий, 4=удалённая, 5=вахта", "required": false },
-        "experience": { "type": "integer", "description": "Опыт: 1=без опыта, 2=от 1 до 3 лет, 3=от 3 до 6 лет, 4=более 6 лет", "required": false },
-        "gender": { "type": "integer", "description": "Пол: 1=мужской, 2=женский, 0=не важно", "required": false },
-        "count": { "type": "integer", "description": "Количество результатов на страницу", "default": 20, "max": 100 },
-        "page": { "type": "integer", "description": "Номер страницы", "default": 0 }
+        "keyword": {
+          "type": "string",
+          "description": "Ключевые слова поиска. Например: 'сварщик', 'водитель', 'менеджер продаж'",
+          "required": false
+        },
+        "town": {
+          "type": "integer|string",
+          "description": "ID города или название. Москва=4, СПб=14. Или строка 'Екатеринбург'",
+          "required": false
+        },
+        "salary_from": {
+          "type": "integer",
+          "description": "Минимальная зарплата в рублях",
+          "required": false
+        },
+        "salary_to": {
+          "type": "integer",
+          "description": "Максимальная зарплата в рублях",
+          "required": false
+        },
+        "no_agreement": {
+          "type": "integer",
+          "description": "1 — только вакансии с указанной зарплатой (без 'по договорённости')",
+          "required": false
+        },
+        "type_of_work": {
+          "type": "integer",
+          "description": "Тип занятости: 1=полный день, 2=сменный, 3=гибкий, 4=удалённая, 5=вахта",
+          "required": false
+        },
+        "experience": {
+          "type": "integer",
+          "description": "Опыт: 1=без опыта, 2=от 1 до 3 лет, 3=от 3 до 6 лет, 4=более 6 лет",
+          "required": false
+        },
+        "gender": {
+          "type": "integer",
+          "description": "Пол: 1=мужской, 2=женский, 0=не важно",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "description": "Количество результатов на страницу",
+          "default": 20,
+          "max": 100
+        },
+        "page": {
+          "type": "integer",
+          "description": "Page number for pagination (1-indexed)",
+          "default": 0
+        }
       },
       "output": {
         "type": "list<vacancy>",
-        "fields": ["id", "profession", "firm_name", "town.title", "payment_from", "payment_to", "currency", "type_of_work.title", "experience.title", "date_published", "link"]
+        "fields": [
+          "id",
+          "profession",
+          "firm_name",
+          "town.title",
+          "payment_from",
+          "payment_to",
+          "currency",
+          "type_of_work.title",
+          "experience.title",
+          "date_published",
+          "link"
+        ]
       },
       "realtime": true,
       "requires_auth": false,
@@ -57,15 +120,41 @@
     {
       "id": "get_vacancy",
       "description_for_ai": "Полная информация о конкретной вакансии по ID. Используй после search_vacancies для получения полного описания, требований и контактов работодателя.",
-      "intent": ["подробнее о вакансии", "описание вакансии", "контакты работодателя", "требования к кандидату"],
+      "intent": [
+        "подробнее о вакансии",
+        "описание вакансии",
+        "контакты работодателя",
+        "требования к кандидату"
+      ],
       "endpoint": "GET https://api.superjob.ru/2.0/vacancies/{id}/",
-      "headers": { "X-Api-App-Id": "секретный ключ" },
+      "headers": {
+        "X-Api-App-Id": "секретный ключ"
+      },
       "input": {
-        "id": { "type": "integer", "description": "ID вакансии из результатов search_vacancies", "required": true }
+        "id": {
+          "type": "integer",
+          "description": "ID вакансии из результатов search_vacancies",
+          "required": true
+        }
       },
       "output": {
         "type": "vacancy",
-        "fields": ["profession", "firm_name", "firm_site", "town.title", "payment_from", "payment_to", "vacancyRichText", "candidat", "experience.title", "type_of_work.title", "place_of_work.title", "phones", "contact", "address"]
+        "fields": [
+          "profession",
+          "firm_name",
+          "firm_site",
+          "town.title",
+          "payment_from",
+          "payment_to",
+          "vacancyRichText",
+          "candidat",
+          "experience.title",
+          "type_of_work.title",
+          "place_of_work.title",
+          "phones",
+          "contact",
+          "address"
+        ]
       },
       "realtime": true,
       "requires_auth": false
@@ -73,16 +162,34 @@
     {
       "id": "get_towns",
       "description_for_ai": "Список городов с их ID. Используй чтобы найти ID города по его названию перед вызовом search_vacancies.",
-      "intent": ["найти ID города", "список городов SuperJob"],
+      "intent": [
+        "найти ID города",
+        "список городов SuperJob"
+      ],
       "endpoint": "GET https://api.superjob.ru/2.0/towns/",
-      "headers": { "X-Api-App-Id": "секретный ключ" },
+      "headers": {
+        "X-Api-App-Id": "секретный ключ"
+      },
       "input": {
-        "keyword": { "type": "string", "description": "Название города для поиска", "required": false },
-        "count": { "type": "integer", "default": 20 }
+        "keyword": {
+          "type": "string",
+          "description": "Название города для поиска",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "default": 20,
+          "description": "Number of items to return"
+        }
       },
       "output": {
         "type": "list<town>",
-        "fields": ["id", "title", "declension", "genitive"]
+        "fields": [
+          "id",
+          "title",
+          "declension",
+          "genitive"
+        ]
       },
       "realtime": false,
       "requires_auth": false
@@ -90,13 +197,24 @@
     {
       "id": "get_catalogues",
       "description_for_ai": "Справочник отраслей и профессиональных областей. Используй для фильтрации вакансий по сфере деятельности.",
-      "intent": ["отрасли", "сферы деятельности", "категории вакансий"],
+      "intent": [
+        "отрасли",
+        "сферы деятельности",
+        "категории вакансий"
+      ],
       "endpoint": "GET https://api.superjob.ru/2.0/catalogues/",
-      "headers": { "X-Api-App-Id": "секретный ключ" },
+      "headers": {
+        "X-Api-App-Id": "секретный ключ"
+      },
       "input": {},
       "output": {
         "type": "list<catalogue>",
-        "fields": ["key", "title", "positions.key", "positions.title"]
+        "fields": [
+          "key",
+          "title",
+          "positions.key",
+          "positions.title"
+        ]
       },
       "realtime": false,
       "requires_auth": false
