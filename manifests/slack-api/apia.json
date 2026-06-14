@@ -73,7 +73,7 @@
     },
     {
       "id": "search_messages",
-      "description_for_ai": "Search messages across Slack workspace.",
+      "description_for_ai": "Search Slack workspace messages by keyword. Returns matching messages with channel, timestamp, and permalink.",
       "intent": [
         "search slack",
         "find message",
