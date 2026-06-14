@@ -6,7 +6,7 @@
     "description_for_ai": "AI-powered symptom checker and medical triage API. Identify possible conditions from symptoms. Used by 100+ healthcare companies. Use for preliminary symptom assessment, triage, health apps. Always recommend consulting a doctor.",
     "url": "https://infermedica.com",
     "api_base": "https://api.infermedica.com/v3",
-    "category": "healthcare_ai",
+    "category": "healthcare",
     "geo": [
       "GLOBAL"
     ],
