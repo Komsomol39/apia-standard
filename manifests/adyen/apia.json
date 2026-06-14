@@ -3,7 +3,7 @@
   "service": {
     "id": "adyen",
     "name": "Adyen API",
-    "description_for_ai": "Enterprise global payments platform. Used by Uber, Spotify, Microsoft, McDonald. 200+ payment methods, 40+ currencies. Unified commerce across online, mobile, POS. Use for large-scale global payment processing.",
+    "description_for_ai": "Adyen — enterprise global payments platform processing $1T+ annually. Accepts 200+ payment methods across 40 currencies in 70+ countries. Used by Uber, Microsoft, Spotify, McDonald's, Airbnb. Unified commerce: online, mobile, in-store. Advanced fraud prevention included.",
     "url": "https://adyen.com",
     "api_base": "https://checkout-test.adyen.com/v71",
     "category": "payments_enterprise",
