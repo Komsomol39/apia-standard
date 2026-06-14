@@ -69,7 +69,7 @@
     },
     {
       "id": "get_balance",
-      "description_for_ai": "Get real-time account balances for linked bank account.",
+      "description_for_ai": "Get real-time bank account balances for a linked account. Returns available and current balance for all accounts.",
       "intent": [
         "bank balance",
         "account balance",
