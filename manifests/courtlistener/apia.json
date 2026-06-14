@@ -6,7 +6,7 @@
     "description_for_ai": "CourtListener — free US court case database from Free Law Project. 5M+ court opinions from Supreme Court, Circuit Courts, and District Courts. Federal and state case law. Oral arguments, dockets, and judge profiles. Essential for US legal research. No authentication needed for basic access.",
     "url": "https://courtlistener.com",
     "api_base": "https://www.courtlistener.com/api/rest/v3",
-    "category": "legal_courts",
+    "category": "legal",
     "geo": [
       "US"
     ],
