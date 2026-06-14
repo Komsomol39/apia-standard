@@ -103,5 +103,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "api_key": "Generate API key in seller dashboard: Профиль → Настройки → Доступ к новому API",
+    "multiple_keys": "WB uses separate keys for different API sections: Statistics, Promotions, Marketplace, etc.",
+    "date_filter": "dateFrom is required. Always specify date range to avoid timeout on large datasets.",
+    "analytics": "More detailed analytics via POST /api/v1/analytics/data: turnover, days_on_stock, ordered_units"
   }
 }
