@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "deploy_worker",
-      "description_for_ai": "Deploy a Worker script to Cloudflare edge network. Script runs at 300+ global locations.",
+      "description_for_ai": "Deploy or update a Cloudflare Worker script to the edge network. Worker runs at 300+ global locations with zero cold starts.",
       "intent": [
         "deploy serverless",
         "edge function",
@@ -34,16 +34,23 @@
       "input": {
         "account_id": {
           "type": "string",
+          "description": "Your Cloudflare Account ID from dashboard.cloudflare.com → right sidebar",
           "required": true
         },
         "script_name": {
           "type": "string",
+          "description": "Worker script name (URL-safe, unique per account). Used as subdomain: {name}.{subdomain}.workers.dev",
           "required": true
         },
         "script_content": {
           "type": "string",
-          "description": "JavaScript worker code",
+          "description": "JavaScript/TypeScript Worker code as string. Must export default handler: export default { fetch(request, env) { return new Response('Hello') } }",
           "required": true
+        },
+        "bindings": {
+          "type": "array",
+          "description": "Resource bindings: [{type: 'kv_namespace', name: 'MY_KV', namespace_id: '...'}, {type: 'r2_bucket', name: 'MY_BUCKET', bucket_name: '...'}]",
+          "required": false
         }
       },
       "output": {
@@ -51,6 +58,7 @@
         "fields": [
           "result.id",
           "result.etag",
+          "result.size",
           "success"
         ]
       },
@@ -59,7 +67,7 @@
     },
     {
       "id": "kv_put",
-      "description_for_ai": "Store key-value data in Cloudflare KV. Global, low-latency, eventually consistent storage.",
+      "description_for_ai": "Store a key-value pair in Cloudflare KV namespace. KV is globally distributed, eventually consistent storage for config, sessions, content.",
       "intent": [
         "store data",
         "KV storage",
@@ -70,30 +78,41 @@
       "input": {
         "account_id": {
           "type": "string",
+          "description": "Cloudflare Account ID",
           "required": true
         },
         "namespace_id": {
           "type": "string",
+          "description": "KV Namespace ID from dashboard or /storage/kv/namespaces API",
           "required": true
         },
         "key": {
           "type": "string",
+          "description": "Key name (up to 512 bytes, no special chars)",
           "required": true
         },
         "value": {
           "type": "string",
+          "description": "Value to store (up to 25MB, stored as string)",
           "required": true
         },
         "expiration_ttl": {
           "type": "integer",
-          "description": "TTL in seconds",
+          "description": "Time-to-live in seconds. Key auto-deletes after this time. Min 60 seconds.",
+          "required": false
+        },
+        "expiration": {
+          "type": "integer",
+          "description": "Unix timestamp when key expires. Alternative to expiration_ttl.",
           "required": false
         }
       },
       "output": {
         "type": "success",
         "fields": [
-          "success"
+          "success",
+          "errors",
+          "messages"
         ]
       },
       "realtime": true,
