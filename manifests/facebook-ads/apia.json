@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "get_ad_insights",
-      "description_for_ai": "Get Facebook/Instagram ad performance: reach, impressions, clicks, spend, conversions, ROAS by campaign, ad set, or ad.",
+      "description_for_ai": "Advertise on Facebook and Instagram. Create campaigns, ad sets, ads. Access detailed analytics. 3B+ users reach. Powerful audience targeting: interests, demographics, lookalikes, custom audiences. Get Facebook/Instagram ad performance: reach, impressions, clicks, spend, conversions, ROAS by campaign, ad set, or ad.",
       "intent": [
         "facebook ads performance",
         "instagram ads",
@@ -51,7 +51,8 @@
         "time_range": {
           "type": "object",
           "description": "{since: YYYY-MM-DD, until: YYYY-MM-DD}",
-          "required": false
+          "required": false,
+          "note": "See description for full object structure"
         }
       },
       "output": {
