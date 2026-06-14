@@ -6,7 +6,7 @@
     "description_for_ai": "DeepSeek reasoning model — shows chain-of-thought thinking before final answer. Comparable to OpenAI o1/o3 in math, coding, and complex reasoning tasks. 10-50x cheaper than OpenAI o3. Best open reasoning model available.",
     "url": "https://platform.deepseek.com",
     "api_base": "https://api.deepseek.com/v1",
-    "category": "ai_reasoning",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
