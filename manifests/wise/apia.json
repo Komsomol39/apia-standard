@@ -6,7 +6,7 @@
     "description_for_ai": "International money transfers at real exchange rate. Send money to 80+ countries. Multi-currency accounts. Used for international payouts, freelancer payments, business transfers. Real exchange rate — no hidden fees.",
     "url": "https://wise.com",
     "api_base": "https://api.wise.com",
-    "category": "payments_international",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
