@@ -1,1 +1,72 @@
-{"apia":"1.0","service":{"id":"planet-labs","name":"Planet Labs API","description_for_ai":"Daily satellite imagery of the entire Earth. 3-5m resolution, updated daily. Used for agriculture monitoring, deforestation tracking, disaster response. Commercial service with free education tier.","url":"https://planet.com","api_base":"https://api.planet.com/data/v1","category":"satellite_imagery","geo":["GLOBAL"],"language":"en","docs":"https://developers.planet.com/docs/apis/data/"},"auth":{"type":"apikey","anonymous_access":false,"how_to_get":"Register at https://www.planet.com/explorer/ — free education/research access available","cost":"Free education tier. Commercial from custom pricing"},"capabilities":[{"id":"search_scenes","description_for_ai":"Search for satellite scenes by location, date, and cloud cover. Returns available imagery for an area.","intent":["satellite image","aerial photo","satellite view","earth observation","land use","crop monitoring","деградация земли"],"endpoint":"POST https://api.planet.com/data/v1/quick-search","input":{"item_types":{"type":"array","description":"[PSScene] for PlanetScope daily imagery","required":true},"filter":{"type":"object","description":"{type: AndFilter, config: [DateRangeFilter, GeometryFilter, RangeFilter for cloud_cover]}","required":true}},"output":{"type":"list<scene>","fields":["id","properties.item_type","properties.acquired","properties.cloud_cover","properties.pixel_resolution","_links.thumbnail"]},"realtime":false,"requires_auth":true}],"agent_hints":{"free_tier":"Education and research accounts get free access. Apply at https://www.planet.com/markets/education-and-research/","cloud_cover":"Filter cloud_cover lte 0.1 for 10% or less cloud cover for usable imagery."},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "planet-labs",
+    "name": "Planet Labs API",
+    "description_for_ai": "Daily satellite imagery of the entire Earth. 3-5m resolution, updated daily. Used for agriculture monitoring, deforestation tracking, disaster response. Commercial service with free education tier.",
+    "url": "https://planet.com",
+    "api_base": "https://api.planet.com/data/v1",
+    "category": "satellite_imagery",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://developers.planet.com/docs/apis/data/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "how_to_get": "Register at https://www.planet.com/explorer/ — free education/research access available",
+    "cost": "Free education tier. Commercial from custom pricing"
+  },
+  "capabilities": [
+    {
+      "id": "search_scenes",
+      "description_for_ai": "Search for satellite scenes by location, date, and cloud cover. Returns available imagery for an area.",
+      "intent": [
+        "satellite image",
+        "aerial photo",
+        "satellite view",
+        "earth observation",
+        "land use",
+        "crop monitoring",
+        "деградация земли"
+      ],
+      "endpoint": "POST https://api.planet.com/data/v1/quick-search",
+      "input": {
+        "item_types": {
+          "type": "array",
+          "description": "[PSScene] for PlanetScope daily imagery",
+          "required": true
+        },
+        "filter": {
+          "type": "object",
+          "description": "{type: AndFilter, config: [DateRangeFilter, GeometryFilter, RangeFilter for cloud_cover]}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<scene>",
+        "fields": [
+          "id",
+          "properties.item_type",
+          "properties.acquired",
+          "properties.cloud_cover",
+          "properties.pixel_resolution",
+          "_links.thumbnail"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "agent_hints": {
+    "free_tier": "Education and research accounts get free access. Apply at https://www.planet.com/markets/education-and-research/",
+    "cloud_cover": "Filter cloud_cover lte 0.1 for 10% or less cloud cover for usable imagery."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
