@@ -6,7 +6,7 @@
     "description_for_ai": "Developer-focused mapping platform. Interactive maps, geocoding, navigation, isochrone analysis. Beautiful maps with custom styling. Used by Snapchat, Foursquare, Strava. Best for custom map UIs and navigation apps.",
     "url": "https://mapbox.com",
     "api_base": "https://api.mapbox.com",
-    "category": "maps_geocoding",
+    "category": "maps",
     "geo": [
       "GLOBAL"
     ],
