@@ -3,7 +3,7 @@
   "service": {
     "id": "idealista",
     "name": "Idealista API (Spain/Italy/Portugal)",
-    "description_for_ai": "Leading property portal in Spain, Italy and Portugal. Buy and rent listings. Official API for real estate professionals. Use for property search in Southern Europe.",
+    "description_for_ai": "Idealista — крупнейший портал недвижимости в Испании, Италии и Португалии. 2M+ объявлений: аренда, покупка, коммерческая недвижимость. Официальный API для профессионалов рынка. Used by real estate agents and property portals across Southern Europe.",
     "url": "https://idealista.com",
     "api_base": "https://api.idealista.com/3.5",
     "category": "real_estate",
@@ -76,6 +76,46 @@
           "address",
           "thumbnail",
           "description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_property",
+      "description_for_ai": "Get full property details by Idealista property code: photos, floor plan, description, price history, energy certificate, and contact info.",
+      "intent": [
+        "property details Spain",
+        "apartment info",
+        "house details Italy",
+        "property info Portugal",
+        "listing details"
+      ],
+      "endpoint": "GET https://api.idealista.com/3.5/{country}/detail",
+      "input": {
+        "country": {
+          "type": "string",
+          "description": "Country code: es, it, pt",
+          "required": true
+        },
+        "propertyCode": {
+          "type": "string",
+          "description": "Property code from search results",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "property",
+        "fields": [
+          "price",
+          "size",
+          "rooms",
+          "floor",
+          "description",
+          "photos",
+          "address",
+          "energyCertification",
+          "contactInfo"
         ]
       },
       "realtime": true,
