@@ -6,7 +6,7 @@
     "description_for_ai": "Global payments leader. Accept payments in 200+ countries, 25 currencies. PayPal buttons, subscriptions, invoices, payouts. 400M+ active accounts. Use for accepting international payments, subscriptions, marketplace payouts.",
     "url": "https://paypal.com",
     "api_base": "https://api-m.paypal.com/v2",
-    "category": "payments",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
