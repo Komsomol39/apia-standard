@@ -1,1 +1,146 @@
-{"apia":"1.0","service":{"id":"pubmed","name":"PubMed / NCBI Entrez API","description_for_ai":"Free access to 35M+ biomedical research articles. Search by keyword, author, journal, MeSH terms. Get abstracts, full text links, citations. No API key needed for basic access. Essential for medical and scientific research.","url":"https://pubmed.ncbi.nlm.nih.gov","api_base":"https://eutils.ncbi.nlm.nih.gov/entrez/eutils","category":"science_research","geo":["GLOBAL"],"language":"en","docs":"https://www.ncbi.nlm.nih.gov/books/NBK25499/"},"auth":{"type":"apikey","anonymous_access":true,"anonymous_limits":"3 req/sec","param_name":"api_key","param_location":"query","how_to_get":"Register at https://www.ncbi.nlm.nih.gov/account/ — free","cost":"Free"},"capabilities":[{"id":"search","description_for_ai":"Search PubMed for research papers by keyword, author, or MeSH terms. Returns article IDs.","intent":["medical research","scientific papers","find studies","literature search","PubMed search","medical literature","research articles"],"endpoint":"GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi","input":{"db":{"type":"string","default":"pubmed"},"term":{"type":"string","description":"Search query e.g. COVID-19 vaccine efficacy, breast cancer immunotherapy","required":true},"retmax":{"type":"integer","description":"Number of results","default":20},"sort":{"type":"string","description":"pub+date, relevance, author","default":"relevance"},"retmode":{"type":"string","default":"json"},"datetype":{"type":"string","description":"pdat for publication date","required":false},"mindate":{"type":"string","description":"YYYY/MM/DD","required":false},"maxdate":{"type":"string","description":"YYYY/MM/DD","required":false}},"output":{"type":"search","fields":["esearchresult.idlist","esearchresult.count","esearchresult.querytranslation"]},"realtime":false,"requires_auth":false},{"id":"fetch_abstracts","description_for_ai":"Get abstracts and metadata for PubMed articles by their IDs.","intent":["article abstract","paper details","study findings","research abstract","paper summary"],"endpoint":"GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi","input":{"db":{"type":"string","default":"pubmed"},"id":{"type":"string","description":"Comma-separated PubMed IDs","required":true},"rettype":{"type":"string","description":"abstract, medline","default":"abstract"},"retmode":{"type":"string","default":"text"}},"output":{"type":"abstracts","fields":["ArticleTitle","AbstractText","AuthorList","Journal","PubDate","DOI"]},"realtime":false,"requires_auth":false}],"agent_hints":{"flow":"1) esearch to get IDs by keyword. 2) efetch to get abstracts for those IDs.","rate_limit":"Without API key: 3 req/sec. With key: 10 req/sec.","mesh_terms":"Use MeSH controlled vocabulary for precise medical searches e.g. Neoplasms[MeSH]"},"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "pubmed",
+    "name": "PubMed / NCBI Entrez API",
+    "description_for_ai": "Free access to 35M+ biomedical research articles. Search by keyword, author, journal, MeSH terms. Get abstracts, full text links, citations. No API key needed for basic access. Essential for medical and scientific research.",
+    "url": "https://pubmed.ncbi.nlm.nih.gov",
+    "api_base": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
+    "category": "science_research",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://www.ncbi.nlm.nih.gov/books/NBK25499/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": true,
+    "anonymous_limits": "3 req/sec",
+    "param_name": "api_key",
+    "param_location": "query",
+    "how_to_get": "Register at https://www.ncbi.nlm.nih.gov/account/ — free",
+    "cost": "Free"
+  },
+  "capabilities": [
+    {
+      "id": "search",
+      "description_for_ai": "Search PubMed for research papers by keyword, author, or MeSH terms. Returns article IDs.",
+      "intent": [
+        "medical research",
+        "scientific papers",
+        "find studies",
+        "literature search",
+        "PubMed search",
+        "medical literature",
+        "research articles"
+      ],
+      "endpoint": "GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+      "input": {
+        "db": {
+          "type": "string",
+          "default": "pubmed"
+        },
+        "term": {
+          "type": "string",
+          "description": "Search query e.g. COVID-19 vaccine efficacy, breast cancer immunotherapy",
+          "required": true
+        },
+        "retmax": {
+          "type": "integer",
+          "description": "Number of results",
+          "default": 20
+        },
+        "sort": {
+          "type": "string",
+          "description": "pub+date, relevance, author",
+          "default": "relevance"
+        },
+        "retmode": {
+          "type": "string",
+          "default": "json"
+        },
+        "datetype": {
+          "type": "string",
+          "description": "pdat for publication date",
+          "required": false
+        },
+        "mindate": {
+          "type": "string",
+          "description": "YYYY/MM/DD",
+          "required": false
+        },
+        "maxdate": {
+          "type": "string",
+          "description": "YYYY/MM/DD",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "search",
+        "fields": [
+          "esearchresult.idlist",
+          "esearchresult.count",
+          "esearchresult.querytranslation"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "fetch_abstracts",
+      "description_for_ai": "Get abstracts and metadata for PubMed articles by their IDs.",
+      "intent": [
+        "article abstract",
+        "paper details",
+        "study findings",
+        "research abstract",
+        "paper summary"
+      ],
+      "endpoint": "GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi",
+      "input": {
+        "db": {
+          "type": "string",
+          "default": "pubmed"
+        },
+        "id": {
+          "type": "string",
+          "description": "Comma-separated PubMed IDs",
+          "required": true
+        },
+        "rettype": {
+          "type": "string",
+          "description": "abstract, medline",
+          "default": "abstract"
+        },
+        "retmode": {
+          "type": "string",
+          "default": "text"
+        }
+      },
+      "output": {
+        "type": "abstracts",
+        "fields": [
+          "ArticleTitle",
+          "AbstractText",
+          "AuthorList",
+          "Journal",
+          "PubDate",
+          "DOI"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "flow": "1) esearch to get IDs by keyword. 2) efetch to get abstracts for those IDs.",
+    "rate_limit": "Without API key: 3 req/sec. With key: 10 req/sec.",
+    "mesh_terms": "Use MeSH controlled vocabulary for precise medical searches e.g. Neoplasms[MeSH]"
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
