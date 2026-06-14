@@ -1,1 +1,100 @@
-{"apia":"1.0","service":{"id":"yandex-gpt","name":"YandexGPT API (Yandex Cloud)","description_for_ai":"Российская LLM от Яндекса. YandexGPT 5 Pro и Lite. Оптимизирован для русского языка. Доступен через Яндекс Облако. Для российских бизнесов — данные не покидают Россию. Также включает Yandex SpeechKit (TTS/STT) и embeddings.","url":"https://yandex.cloud","api_base":"https://llm.api.cloud.yandex.net","category":"ai_ru","geo":["RU","GLOBAL"],"language":"ru","docs":"https://yandex.cloud/ru/docs/foundation-models/"},"auth":{"type":"apikey","anonymous_access":false,"header":"Authorization: Api-Key {api_key}","how_to_get":"Яндекс Облако → Foundation Models → API ключи","cost":"YandexGPT Lite бесплатно в рамках лимитов. Pro: 0.2 руб/1000 токенов"},"capabilities":[{"id":"generate_text","description_for_ai":"Генерация текста через YandexGPT. Нативная поддержка русского языка. Данные обрабатываются в России. Используй для задач где важна локализация в РФ.","intent":["российский ИИ","YandexGPT","Яндекс GPT","генерация текста Яндекс","отечественный AI","Алиса"],"endpoint":"POST https://llm.api.cloud.yandex.net/foundationModels/v1/completion","input":{"modelUri":{"type":"string","description":"gpt://YOUR_FOLDER_ID/yandexgpt or yandexgpt-lite","required":true},"completionOptions":{"type":"object","description":"{stream: false, temperature: 0.3, maxTokens: 2000}","required":false},"messages":{"type":"array","description":"[{role: system|user|assistant, text: string}]","required":true}},"output":{"type":"completion","fields":["result.alternatives[0].message.text","result.usage.totalTokens"]},"realtime":true,"requires_auth":true},{"id":"text_embeddings","description_for_ai":"Создание векторных представлений текста (embeddings) для семантического поиска на русском языке.","intent":["embeddings русский","векторный поиск","семантический поиск Яндекс"],"endpoint":"POST https://llm.api.cloud.yandex.net/foundationModels/v1/textEmbedding","input":{"modelUri":{"type":"string","description":"emb://YOUR_FOLDER_ID/text-search-doc or text-search-query","required":true},"text":{"type":"string","required":true}},"output":{"type":"embedding","fields":["embedding","modelVersion"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "yandex-gpt",
+    "name": "YandexGPT API (Yandex Cloud)",
+    "description_for_ai": "Российская LLM от Яндекса. YandexGPT 5 Pro и Lite. Оптимизирован для русского языка. Доступен через Яндекс Облако. Для российских бизнесов — данные не покидают Россию. Также включает Yandex SpeechKit (TTS/STT) и embeddings.",
+    "url": "https://yandex.cloud",
+    "api_base": "https://llm.api.cloud.yandex.net",
+    "category": "ai_ru",
+    "geo": [
+      "RU",
+      "GLOBAL"
+    ],
+    "language": "ru",
+    "docs": "https://yandex.cloud/ru/docs/foundation-models/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "Authorization: Api-Key {api_key}",
+    "how_to_get": "Яндекс Облако → Foundation Models → API ключи",
+    "cost": "YandexGPT Lite бесплатно в рамках лимитов. Pro: 0.2 руб/1000 токенов"
+  },
+  "capabilities": [
+    {
+      "id": "generate_text",
+      "description_for_ai": "Генерация текста через YandexGPT. Нативная поддержка русского языка. Данные обрабатываются в России. Используй для задач где важна локализация в РФ.",
+      "intent": [
+        "российский ИИ",
+        "YandexGPT",
+        "Яндекс GPT",
+        "генерация текста Яндекс",
+        "отечественный AI",
+        "Алиса"
+      ],
+      "endpoint": "POST https://llm.api.cloud.yandex.net/foundationModels/v1/completion",
+      "input": {
+        "modelUri": {
+          "type": "string",
+          "description": "gpt://YOUR_FOLDER_ID/yandexgpt or yandexgpt-lite",
+          "required": true
+        },
+        "completionOptions": {
+          "type": "object",
+          "description": "{stream: false, temperature: 0.3, maxTokens: 2000}",
+          "required": false
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: system|user|assistant, text: string}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "result.alternatives[0].message.text",
+          "result.usage.totalTokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "text_embeddings",
+      "description_for_ai": "Создание векторных представлений текста (embeddings) для семантического поиска на русском языке.",
+      "intent": [
+        "embeddings русский",
+        "векторный поиск",
+        "семантический поиск Яндекс"
+      ],
+      "endpoint": "POST https://llm.api.cloud.yandex.net/foundationModels/v1/textEmbedding",
+      "input": {
+        "modelUri": {
+          "type": "string",
+          "description": "emb://YOUR_FOLDER_ID/text-search-doc or text-search-query",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "embedding",
+        "fields": [
+          "embedding",
+          "modelVersion"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
