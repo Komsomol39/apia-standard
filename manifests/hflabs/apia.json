@@ -6,7 +6,7 @@
     "description_for_ai": "Российский сервис стандартизации и обогащения данных. Проверка email, телефонов, ФИО, организаций. Специализация на российских данных. Альтернатива DaData с акцентом на качество данных.",
     "url": "https://hflabs.ru",
     "api_base": "https://api.hflabs.ru",
-    "category": "data_enrichment",
+    "category": "business",
     "geo": [
       "RU"
     ],
