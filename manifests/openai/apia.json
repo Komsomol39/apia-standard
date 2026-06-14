@@ -6,7 +6,7 @@
     "description_for_ai": "OpenAI flagship AI API. Access GPT models for text generation, code, vision, reasoning. DALL-E for image generation. Whisper for speech-to-text. TTS for text-to-speech. Embeddings for semantic search. The most widely used AI API with the largest ecosystem of integrations and SDKs.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
