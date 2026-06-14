@@ -6,7 +6,7 @@
     "description_for_ai": "Free stock market data API. Real-time and historical prices for stocks, ETFs, forex, crypto, and economic indicators. 25 API calls/day free. Use for portfolio tracking, price lookup, financial analysis.",
     "url": "https://alphavantage.co",
     "api_base": "https://www.alphavantage.co/query",
-    "category": "finance_stocks",
+    "category": "finance",
     "geo": [
       "GLOBAL"
     ],
