@@ -1,1 +1,76 @@
-{"apia":"1.0","service":{"id":"adyen","name":"Adyen API","description_for_ai":"Enterprise global payments platform. Used by Uber, Spotify, Microsoft, McDonald. 200+ payment methods, 40+ currencies. Unified commerce across online, mobile, POS. Use for large-scale global payment processing.","url":"https://adyen.com","api_base":"https://checkout-test.adyen.com/v71","category":"payments_enterprise","geo":["GLOBAL"],"language":"en","docs":"https://docs.adyen.com/api-explorer/"},"auth":{"type":"apikey","anonymous_access":false,"header":"X-API-Key: ...","how_to_get":"Adyen Customer Area → Developers → API credentials","cost":"Interchange++ pricing. Custom enterprise rates."},"capabilities":[{"id":"create_payment","description_for_ai":"Process payment with card, Apple Pay, Google Pay, local payment methods. Enterprise-grade checkout.","intent":["process payment","enterprise checkout","global payment","adyen payment"],"endpoint":"POST https://checkout-test.adyen.com/v71/payments","input":{"amount":{"type":"object","description":"{currency: USD, value: 1000} (value in minor units, 1000=10.00)","required":true},"paymentMethod":{"type":"object","description":"{type: scheme, number, expiryMonth, expiryYear, holderName, cvc} or {type: googlepay, ...}","required":true},"reference":{"type":"string","description":"Unique order reference","required":true},"merchantAccount":{"type":"string","required":true},"returnUrl":{"type":"string","required":true}},"output":{"type":"payment","fields":["pspReference","resultCode","action"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "adyen",
+    "name": "Adyen API",
+    "description_for_ai": "Enterprise global payments platform. Used by Uber, Spotify, Microsoft, McDonald. 200+ payment methods, 40+ currencies. Unified commerce across online, mobile, POS. Use for large-scale global payment processing.",
+    "url": "https://adyen.com",
+    "api_base": "https://checkout-test.adyen.com/v71",
+    "category": "payments_enterprise",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.adyen.com/api-explorer/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "X-API-Key: ...",
+    "how_to_get": "Adyen Customer Area → Developers → API credentials",
+    "cost": "Interchange++ pricing. Custom enterprise rates."
+  },
+  "capabilities": [
+    {
+      "id": "create_payment",
+      "description_for_ai": "Process payment with card, Apple Pay, Google Pay, local payment methods. Enterprise-grade checkout.",
+      "intent": [
+        "process payment",
+        "enterprise checkout",
+        "global payment",
+        "adyen payment"
+      ],
+      "endpoint": "POST https://checkout-test.adyen.com/v71/payments",
+      "input": {
+        "amount": {
+          "type": "object",
+          "description": "{currency: USD, value: 1000} (value in minor units, 1000=10.00)",
+          "required": true
+        },
+        "paymentMethod": {
+          "type": "object",
+          "description": "{type: scheme, number, expiryMonth, expiryYear, holderName, cvc} or {type: googlepay, ...}",
+          "required": true
+        },
+        "reference": {
+          "type": "string",
+          "description": "Unique order reference",
+          "required": true
+        },
+        "merchantAccount": {
+          "type": "string",
+          "required": true
+        },
+        "returnUrl": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "payment",
+        "fields": [
+          "pspReference",
+          "resultCode",
+          "action"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
