@@ -72,7 +72,7 @@
     },
     {
       "id": "get_location_reviews",
-      "description_for_ai": "Get reviews for a specific TripAdvisor location.",
+      "description_for_ai": "Get user reviews for a specific TripAdvisor location with rating, text, date, and reviewer info.",
       "intent": [
         "hotel reviews",
         "restaurant reviews",
