@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "run_model",
-      "description_for_ai": "Run any model on Replicate by owner/model name. Returns output synchronously or as prediction ID for async.",
+      "description_for_ai": "Run 1000+ open-source AI models via API. Images, video, audio, text, 3D. Includes Flux, SDXL, Llama, Whisper, LLaVA and many more. Pay per second of compute. Best for accessing specialized models. Run any model on Replicate by owner/model name. Returns output synchronously or as prediction ID for async.",
       "intent": [
         "run AI model",
         "generate image flux",
