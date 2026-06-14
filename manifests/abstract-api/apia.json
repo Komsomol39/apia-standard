@@ -1,1 +1,149 @@
-{"apia":"1.0","service":{"id":"abstract-api","name":"Abstract API","description_for_ai":"Collection of 20+ utility APIs in one platform: email validation, phone validation, IP geolocation, holidays, timezone, VAT validation, currency exchange, company enrichment. Free tier on each.","url":"https://abstractapi.com","api_base":"https://emailvalidation.abstractapi.com/v1","category":"utilities","geo":["GLOBAL"],"language":"en","docs":"https://docs.abstractapi.com/"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"api_key","param_location":"query","how_to_get":"Register at https://app.abstractapi.com — free tier on each API","cost":"Free: 100-500 req/month per API. Paid from $9/month"},"capabilities":[{"id":"validate_email","description_for_ai":"Validate email address. Check if email is valid format, deliverable, not disposable, not spam trap.","intent":["validate email","check email","email verification","is email valid","email deliverable"],"endpoint":"GET https://emailvalidation.abstractapi.com/v1/","input":{"email":{"type":"string","required":true},"auto_correct":{"type":"boolean","description":"Suggest corrections for typos","default":false}},"output":{"type":"validation","fields":["email","deliverability","quality_score","is_valid_format.value","is_mx_found.value","is_smtp_valid.value","is_disposable_email.value","is_free_email.value"]},"realtime":true,"requires_auth":true},{"id":"validate_phone","description_for_ai":"Validate phone number. Returns country, carrier, line type, formatted number.","intent":["validate phone","phone number check","is phone valid","phone carrier","phone country"],"endpoint":"GET https://phonevalidation.abstractapi.com/v1/","input":{"phone":{"type":"string","description":"Phone number in E.164 or local format","required":true}},"output":{"type":"validation","fields":["phone","valid","format.international","country.name","country.code","carrier","line_type"]},"realtime":true,"requires_auth":true},{"id":"get_holidays","description_for_ai":"Get public holidays for any country and year. Returns all national holidays with dates and names.","intent":["public holidays","national holidays","bank holidays","days off","holiday calendar","праздники"],"endpoint":"GET https://holidays.abstractapi.com/v1/","input":{"country":{"type":"string","description":"ISO 2-letter country code e.g. RU, US, DE","required":true},"year":{"type":"integer","description":"Year e.g. 2026","required":true},"month":{"type":"integer","description":"Month 1-12","required":false},"day":{"type":"integer","required":false}},"output":{"type":"list<holiday>","fields":["name","name_local","date","day_of_week","description","type"]},"realtime":false,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "abstract-api",
+    "name": "Abstract API",
+    "description_for_ai": "Collection of 20+ utility APIs in one platform: email validation, phone validation, IP geolocation, holidays, timezone, VAT validation, currency exchange, company enrichment. Free tier on each.",
+    "url": "https://abstractapi.com",
+    "api_base": "https://emailvalidation.abstractapi.com/v1",
+    "category": "utilities",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://docs.abstractapi.com/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "api_key",
+    "param_location": "query",
+    "how_to_get": "Register at https://app.abstractapi.com — free tier on each API",
+    "cost": "Free: 100-500 req/month per API. Paid from $9/month"
+  },
+  "capabilities": [
+    {
+      "id": "validate_email",
+      "description_for_ai": "Validate email address. Check if email is valid format, deliverable, not disposable, not spam trap.",
+      "intent": [
+        "validate email",
+        "check email",
+        "email verification",
+        "is email valid",
+        "email deliverable"
+      ],
+      "endpoint": "GET https://emailvalidation.abstractapi.com/v1/",
+      "input": {
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "auto_correct": {
+          "type": "boolean",
+          "description": "Suggest corrections for typos",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "validation",
+        "fields": [
+          "email",
+          "deliverability",
+          "quality_score",
+          "is_valid_format.value",
+          "is_mx_found.value",
+          "is_smtp_valid.value",
+          "is_disposable_email.value",
+          "is_free_email.value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "validate_phone",
+      "description_for_ai": "Validate phone number. Returns country, carrier, line type, formatted number.",
+      "intent": [
+        "validate phone",
+        "phone number check",
+        "is phone valid",
+        "phone carrier",
+        "phone country"
+      ],
+      "endpoint": "GET https://phonevalidation.abstractapi.com/v1/",
+      "input": {
+        "phone": {
+          "type": "string",
+          "description": "Phone number in E.164 or local format",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "validation",
+        "fields": [
+          "phone",
+          "valid",
+          "format.international",
+          "country.name",
+          "country.code",
+          "carrier",
+          "line_type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_holidays",
+      "description_for_ai": "Get public holidays for any country and year. Returns all national holidays with dates and names.",
+      "intent": [
+        "public holidays",
+        "national holidays",
+        "bank holidays",
+        "days off",
+        "holiday calendar",
+        "праздники"
+      ],
+      "endpoint": "GET https://holidays.abstractapi.com/v1/",
+      "input": {
+        "country": {
+          "type": "string",
+          "description": "ISO 2-letter country code e.g. RU, US, DE",
+          "required": true
+        },
+        "year": {
+          "type": "integer",
+          "description": "Year e.g. 2026",
+          "required": true
+        },
+        "month": {
+          "type": "integer",
+          "description": "Month 1-12",
+          "required": false
+        },
+        "day": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<holiday>",
+        "fields": [
+          "name",
+          "name_local",
+          "date",
+          "day_of_week",
+          "description",
+          "type"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
