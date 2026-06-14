@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "create_fine_tuning_job",
-      "description_for_ai": "Start fine-tuning a GPT model on custom training data. Training file must be uploaded first via Files API.",
+      "description_for_ai": "Train custom versions of GPT models on your data. Better accuracy for specific tasks, consistent output format, fewer prompt tokens needed. Fine-tune gpt-4o-mini for $0.008/1K training tokens. Start fine-tuning a GPT model on custom training data. Training file must be uploaded first via Files API.",
       "intent": [
         "fine-tune model",
         "custom AI",
@@ -50,7 +50,8 @@
         "hyperparameters": {
           "type": "object",
           "description": "{n_epochs: auto, batch_size: auto, learning_rate_multiplier: auto}",
-          "required": false
+          "required": false,
+          "note": "See description for full object structure"
         },
         "suffix": {
           "type": "string",
