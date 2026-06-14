@@ -71,7 +71,7 @@
     },
     {
       "id": "get_envelope",
-      "description_for_ai": "Get envelope status and signing progress.",
+      "description_for_ai": "Check the signing status of a DocuSign envelope. Returns completed timestamp when all parties have signed.",
       "intent": [
         "signature status",
         "document signed",
