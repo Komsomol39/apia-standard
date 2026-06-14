@@ -6,7 +6,7 @@
     "description_for_ai": "High-quality text-to-speech. 6 voices, fast generation. $15/1M chars. Natural sounding speech in many languages. Use for reading text aloud, voice assistants, audiobook narration.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_speech",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
