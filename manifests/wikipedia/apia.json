@@ -7,7 +7,9 @@
     "url": "https://wikipedia.org",
     "api_base": "https://en.wikipedia.org/api/rest_v1",
     "category": "knowledge",
-    "geo": ["GLOBAL"],
+    "geo": [
+      "GLOBAL"
+    ],
     "language": "multilingual",
     "docs": "https://en.wikipedia.org/api/rest_v1/"
   },
@@ -21,17 +23,38 @@
       "id": "get_summary",
       "description_for_ai": "Get a short summary (intro paragraph) of any Wikipedia article by title. Fast and lightweight. Use for 'what is X', 'who is Y', 'tell me about Z'. Change language by changing the subdomain (ru.wikipedia.org for Russian).",
       "intent": [
-        "what is", "who is", "tell me about", "explain",
-        "что такое", "кто такой", "расскажи о", "definition"
+        "what is",
+        "who is",
+        "tell me about",
+        "explain",
+        "что такое",
+        "кто такой",
+        "расскажи о",
+        "definition"
       ],
       "endpoint": "GET https://{lang}.wikipedia.org/api/rest_v1/page/summary/{title}",
       "input": {
-        "lang": { "type": "string", "description": "Language code: en, ru, de, fr, zh, es, ja etc.", "default": "en" },
-        "title": { "type": "string", "description": "Article title (URL-encoded). E.g. 'Albert_Einstein', 'Python_(programming_language)'", "required": true }
+        "lang": {
+          "type": "string",
+          "description": "Language code: en, ru, de, fr, zh, es, ja etc.",
+          "default": "en"
+        },
+        "title": {
+          "type": "string",
+          "description": "Article title (URL-encoded). E.g. 'Albert_Einstein', 'Python_(programming_language)'",
+          "required": true
+        }
       },
       "output": {
         "type": "summary",
-        "fields": ["title", "displaytitle", "extract", "thumbnail.source", "content_urls.desktop.page", "pageid"]
+        "fields": [
+          "title",
+          "displaytitle",
+          "extract",
+          "thumbnail.source",
+          "content_urls.desktop.page",
+          "pageid"
+        ]
       },
       "realtime": false,
       "requires_auth": false
@@ -40,21 +63,50 @@
       "id": "search",
       "description_for_ai": "Search Wikipedia articles by keyword. Returns list of matching article titles. Use before get_summary when you don't know the exact article title.",
       "intent": [
-        "search Wikipedia", "find article", "look up",
-        "поиск по Wikipedia", "найди статью"
+        "search Wikipedia",
+        "find article",
+        "look up",
+        "поиск по Wikipedia",
+        "найди статью"
       ],
       "endpoint": "GET https://en.wikipedia.org/w/api.php",
       "input": {
-        "action": { "type": "string", "default": "query" },
-        "list": { "type": "string", "default": "search" },
-        "srsearch": { "type": "string", "description": "Search query", "required": true },
-        "srlimit": { "type": "integer", "description": "Number of results", "default": 5 },
-        "format": { "type": "string", "default": "json" },
-        "uselang": { "type": "string", "description": "Interface language", "default": "en" }
+        "action": {
+          "type": "string",
+          "default": "query"
+        },
+        "list": {
+          "type": "string",
+          "default": "search"
+        },
+        "srsearch": {
+          "type": "string",
+          "description": "Search query",
+          "required": true
+        },
+        "srlimit": {
+          "type": "integer",
+          "description": "Number of results",
+          "default": 5
+        },
+        "format": {
+          "type": "string",
+          "default": "json",
+          "description": "Response format: json, xml, or csv"
+        },
+        "uselang": {
+          "type": "string",
+          "description": "Interface language",
+          "default": "en"
+        }
       },
       "output": {
         "type": "list<search_result>",
-        "fields": ["query.search[].title", "query.search[].snippet", "query.search[].pageid"]
+        "fields": [
+          "query.search[].title",
+          "query.search[].snippet",
+          "query.search[].pageid"
+        ]
       },
       "realtime": false,
       "requires_auth": false
@@ -62,14 +114,28 @@
     {
       "id": "get_random",
       "description_for_ai": "Get a random Wikipedia article. Use for 'random fact', 'surprise me', 'something interesting'.",
-      "intent": ["random fact", "surprise me", "random Wikipedia", "interesting article"],
+      "intent": [
+        "random fact",
+        "surprise me",
+        "random Wikipedia",
+        "interesting article"
+      ],
       "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/random/summary",
       "input": {
-        "lang": { "type": "string", "description": "Language code", "default": "en" }
+        "lang": {
+          "type": "string",
+          "description": "Language code e.g. en, ru, de, fr, es",
+          "default": "en"
+        }
       },
       "output": {
         "type": "summary",
-        "fields": ["title", "extract", "thumbnail.source", "content_urls.desktop.page"]
+        "fields": [
+          "title",
+          "extract",
+          "thumbnail.source",
+          "content_urls.desktop.page"
+        ]
       },
       "realtime": false,
       "requires_auth": false
