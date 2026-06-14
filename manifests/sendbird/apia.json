@@ -6,7 +6,7 @@
     "description_for_ai": "In-app messaging platform. Real-time chat channels, group channels, moderation, push notifications, message history. Used by Reddit, Delivery Hero, Khanmigo. Use for building chat features in apps.",
     "url": "https://sendbird.com",
     "api_base": "https://api-{app_id}.sendbird.com/v3",
-    "category": "communication_chat",
+    "category": "social",
     "geo": [
       "GLOBAL"
     ],
