@@ -1,1 +1,90 @@
-{"apia":"1.0","service":{"id":"screenshotapi","name":"ScreenshotAPI","description_for_ai":"Capture website screenshots via API. Full page, viewport, mobile/desktop. Convert URLs to PNG/JPEG/PDF. Used for website monitoring, thumbnails, content archiving. 100 screenshots/month free.","url":"https://screenshotapi.net","api_base":"https://shot.screenshotapi.net","category":"utilities_web","geo":["GLOBAL"],"language":"en","docs":"https://screenshotapi.net/documentation"},"auth":{"type":"apikey","anonymous_access":false,"param_name":"token","param_location":"query","how_to_get":"Register at https://screenshotapi.net","cost":"Free: 100/month. Basic: $19/month 500 screenshots"},"capabilities":[{"id":"capture_screenshot","description_for_ai":"Capture screenshot of any URL. Returns image URL or binary. Use for website previews, monitoring, OG image generation.","intent":["screenshot website","capture URL","website thumbnail","web page image","site preview","скриншот сайта"],"endpoint":"GET https://shot.screenshotapi.net/screenshot","input":{"url":{"type":"string","description":"Full URL to capture e.g. https://example.com","required":true},"width":{"type":"integer","description":"Viewport width in pixels","default":1920},"height":{"type":"integer","description":"Viewport height","default":1080},"full_page":{"type":"boolean","description":"Capture full scrollable page","default":false},"output":{"type":"string","description":"image or json","default":"image"},"delay":{"type":"integer","description":"Wait milliseconds before capture (for JS-heavy sites)","default":0},"fresh":{"type":"boolean","description":"Force fresh capture, ignore cache","default":false}},"output":{"type":"image","fields":["screenshot (binary PNG)","or JSON: {screenshot: url}"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "screenshotapi",
+    "name": "ScreenshotAPI",
+    "description_for_ai": "Capture website screenshots via API. Full page, viewport, mobile/desktop. Convert URLs to PNG/JPEG/PDF. Used for website monitoring, thumbnails, content archiving. 100 screenshots/month free.",
+    "url": "https://screenshotapi.net",
+    "api_base": "https://shot.screenshotapi.net",
+    "category": "utilities_web",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://screenshotapi.net/documentation"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "param_name": "token",
+    "param_location": "query",
+    "how_to_get": "Register at https://screenshotapi.net",
+    "cost": "Free: 100/month. Basic: $19/month 500 screenshots"
+  },
+  "capabilities": [
+    {
+      "id": "capture_screenshot",
+      "description_for_ai": "Capture screenshot of any URL. Returns image URL or binary. Use for website previews, monitoring, OG image generation.",
+      "intent": [
+        "screenshot website",
+        "capture URL",
+        "website thumbnail",
+        "web page image",
+        "site preview",
+        "скриншот сайта"
+      ],
+      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
+      "input": {
+        "url": {
+          "type": "string",
+          "description": "Full URL to capture e.g. https://example.com",
+          "required": true
+        },
+        "width": {
+          "type": "integer",
+          "description": "Viewport width in pixels",
+          "default": 1920
+        },
+        "height": {
+          "type": "integer",
+          "description": "Viewport height",
+          "default": 1080
+        },
+        "full_page": {
+          "type": "boolean",
+          "description": "Capture full scrollable page",
+          "default": false
+        },
+        "output": {
+          "type": "string",
+          "description": "image or json",
+          "default": "image"
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Wait milliseconds before capture (for JS-heavy sites)",
+          "default": 0
+        },
+        "fresh": {
+          "type": "boolean",
+          "description": "Force fresh capture, ignore cache",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "screenshot (binary PNG)",
+          "or JSON: {screenshot: url}"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
