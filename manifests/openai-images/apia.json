@@ -6,7 +6,7 @@
     "description_for_ai": "Generate, edit, and create variations of images using DALL-E 3 and gpt-image-1. High quality photorealistic or artistic images from text descriptions. Inpainting (edit parts of images). Multiple sizes and styles.",
     "url": "https://openai.com",
     "api_base": "https://api.openai.com/v1",
-    "category": "ai_image",
+    "category": "ai_media",
     "geo": [
       "GLOBAL"
     ],
