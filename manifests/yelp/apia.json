@@ -27,7 +27,7 @@
   "capabilities": [
     {
       "id": "search_businesses",
-      "description_for_ai": "Search businesses by keyword and location. Returns name, rating, price, hours, address, phone.",
+      "description_for_ai": "Business reviews and local search API. 265M+ reviews, 8M+ businesses. Search restaurants, services, shops with ratings and hours. Best for US/Canada business discovery. Use for finding local businesses with reviews. Search businesses by keyword and location. Returns name, rating, price, hours, address, phone.",
       "intent": [
         "find restaurant",
         "local business",
