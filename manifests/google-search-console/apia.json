@@ -3,7 +3,7 @@
   "service": {
     "id": "google-search-console",
     "name": "Google Search Console API",
-    "description_for_ai": "SEO data from Google. Search queries, impressions, clicks, CTR, average position for your website in Google Search. Crawl errors, indexing status, sitemaps. Use for SEO monitoring, keyword research, indexing management.",
+    "description_for_ai": "Google Search Console Data API — access your website's SEO performance data directly from Google. Search queries, impressions, clicks, CTR, average position. URL inspection, indexing status, Core Web Vitals. Free for any verified website owner. Essential for SEO monitoring.",
     "url": "https://search.google.com/search-console",
     "api_base": "https://searchconsole.googleapis.com/v1",
     "category": "seo_analytics",
