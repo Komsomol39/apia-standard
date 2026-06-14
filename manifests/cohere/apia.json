@@ -6,7 +6,7 @@
     "description_for_ai": "Enterprise AI API specializing in RAG, embeddings, and reranking. Command models for text generation. Embed v3 for best-in-class embeddings. Rerank for search relevance. Best for enterprise search and document processing.",
     "url": "https://cohere.com",
     "api_base": "https://api.cohere.ai/v1",
-    "category": "ai_llm",
+    "category": "ai",
     "geo": [
       "GLOBAL"
     ],
