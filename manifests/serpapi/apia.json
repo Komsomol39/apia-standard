@@ -41,7 +41,7 @@
         },
         "q": {
           "type": "string",
-          "description": "Search query",
+          "description": "Search query or filter expression",
           "required": true
         },
         "location": {
@@ -97,7 +97,8 @@
         },
         "q": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Search query or filter expression"
         },
         "ll": {
           "type": "string",
