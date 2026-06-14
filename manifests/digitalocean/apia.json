@@ -109,5 +109,11 @@
     "apia_version": "1.0",
     "manifest_author": "APIA community",
     "last_verified": "2026-06-14"
+  },
+  "agent_hints": {
+    "regions": "nyc1/nyc3=New York, sfo3=San Francisco, lon1=London, fra1=Frankfurt, sgp1=Singapore, ams3=Amsterdam, blr1=Bangalore, tor1=Toronto, syd1=Sydney",
+    "sizes": "s-1vcpu-1gb=$6/mo, s-1vcpu-2gb=$12/mo, s-2vcpu-2gb=$18/mo, s-2vcpu-4gb=$24/mo",
+    "ssh_keys": "Upload SSH public key via POST /v2/account/keys before creating droplet. Pass returned ID in ssh_keys array.",
+    "floating_ip": "Use reserved IPs (floating IPs) for production — reassign between droplets without DNS changes."
   }
 }
