@@ -6,7 +6,7 @@
     "description_for_ai": "Google Translate API. 135+ languages. Detect language, translate text, translate documents. Free: 500K chars/month. More languages than DeepL but lower quality for European languages.",
     "url": "https://cloud.google.com/translate",
     "api_base": "https://translation.googleapis.com/language/translate/v2",
-    "category": "translation",
+    "category": "nlp",
     "geo": [
       "GLOBAL"
     ],
