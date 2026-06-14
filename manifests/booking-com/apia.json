@@ -22,7 +22,7 @@
   "capabilities": [
     {
       "id": "search_hotels",
-      "description_for_ai": "Search hotels by location and dates. Returns availability, prices, ratings, facilities.",
+      "description_for_ai": "Hotel and accommodation search. 28M+ listings worldwide. Prices, availability, reviews, photos. Partner API requires approval. Use for travel apps, hotel booking, accommodation search. Search hotels by location and dates. Returns availability, prices, ratings, facilities.",
       "intent": [
         "find hotel",
         "book accommodation",
@@ -47,7 +47,8 @@
         "guests": {
           "type": "object",
           "description": "{number_of_adults: 2, number_of_rooms: 1}",
-          "required": true
+          "required": true,
+          "note": "See description for full object structure"
         },
         "city_id": {
           "type": "integer",
