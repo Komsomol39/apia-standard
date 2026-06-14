@@ -25,7 +25,7 @@
   "capabilities": [
     {
       "id": "search_books",
-      "description_for_ai": "Search books by title, author, ISBN, or topic. Returns book metadata, cover image, and preview link.",
+      "description_for_ai": "Search 40M+ books by title, author, ISBN, or keyword. Returns metadata with cover thumbnails and preview links.",
       "intent": [
         "find book",
         "book info",
@@ -39,35 +39,52 @@
       "input": {
         "q": {
           "type": "string",
-          "description": "Search query. Use intitle:, inauthor:, isbn: prefixes for targeted search",
+          "description": "Search query. Qualifiers: intitle:'Harry Potter', inauthor:'Tolkien', inpublisher:'O Reilly', isbn:9780141439518, subject:fiction",
           "required": true
         },
         "maxResults": {
           "type": "integer",
-          "default": 10,
-          "max": 40
+          "description": "Results per page, max 40",
+          "default": 10
+        },
+        "startIndex": {
+          "type": "integer",
+          "description": "Pagination offset (0-indexed)",
+          "default": 0
         },
         "langRestrict": {
           "type": "string",
-          "description": "Language filter e.g. en, ru, de",
+          "description": "Restrict to language: en, ru, de, fr, es, zh, ja, ko",
           "required": false
         },
         "printType": {
           "type": "string",
-          "description": "books or magazines",
+          "description": "books (books only), magazines (magazines only), or all",
           "default": "books"
+        },
+        "orderBy": {
+          "type": "string",
+          "description": "relevance (default) or newest",
+          "default": "relevance"
+        },
+        "filter": {
+          "type": "string",
+          "description": "ebooks (eBooks), free-ebooks (free), partial (preview), full (full view), paid-ebooks (paid)",
+          "required": false
         }
       },
       "output": {
         "type": "list<book>",
         "fields": [
+          "items[0].id",
           "items[0].volumeInfo.title",
           "items[0].volumeInfo.authors",
-          "items[0].volumeInfo.description",
           "items[0].volumeInfo.publishedDate",
+          "items[0].volumeInfo.description",
           "items[0].volumeInfo.imageLinks.thumbnail",
+          "items[0].volumeInfo.previewLink",
           "items[0].volumeInfo.pageCount",
-          "items[0].volumeInfo.categories"
+          "totalItems"
         ]
       },
       "realtime": false,
@@ -75,16 +92,25 @@
     },
     {
       "id": "get_book",
-      "description_for_ai": "Get full details of a specific book by Google Books volume ID.",
+      "description_for_ai": "Get complete details for a specific book by its Google Books Volume ID.",
       "intent": [
         "book details",
-        "full book info"
+        "get book by ID",
+        "full book info",
+        "book metadata",
+        "read book preview"
       ],
       "endpoint": "GET https://www.googleapis.com/books/v1/volumes/{volumeId}",
       "input": {
         "volumeId": {
           "type": "string",
+          "description": "Google Books volume ID from search results (e.g. 'zyTCAlFPjgYC')",
           "required": true
+        },
+        "projection": {
+          "type": "string",
+          "description": "lite for abbreviated info, or omit for full details",
+          "required": false
         }
       },
       "output": {
@@ -93,8 +119,11 @@
           "volumeInfo.title",
           "volumeInfo.authors",
           "volumeInfo.description",
-          "volumeInfo.imageLinks",
-          "volumeInfo.previewLink"
+          "volumeInfo.imageLinks.thumbnail",
+          "volumeInfo.previewLink",
+          "volumeInfo.categories",
+          "volumeInfo.averageRating",
+          "accessInfo.epub.isAvailable"
         ]
       },
       "realtime": false,
