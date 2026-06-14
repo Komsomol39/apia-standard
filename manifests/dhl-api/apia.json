@@ -6,7 +6,7 @@
     "description_for_ai": "DHL international express shipping. Rates, labels, tracking for 220+ countries. Official DHL API. Use for international business shipping, cross-border e-commerce.",
     "url": "https://developer.dhl.com",
     "api_base": "https://express.api.dhl.com/mydhlapi",
-    "category": "logistics_shipping",
+    "category": "logistics",
     "geo": [
       "GLOBAL"
     ],
