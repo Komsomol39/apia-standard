@@ -56,7 +56,8 @@
         },
         "currency": {
           "type": "string",
-          "default": "BYR"
+          "default": "BYR",
+          "description": "ISO 4217 currency code: USD, EUR, GBP, RUB"
         },
         "experience": {
           "type": "string",
@@ -66,11 +67,13 @@
         "per_page": {
           "type": "integer",
           "default": 20,
-          "max": 100
+          "max": 100,
+          "description": "Results per page. Check API docs for maximum allowed."
         },
         "page": {
           "type": "integer",
-          "default": 0
+          "default": 0,
+          "description": "Page number for pagination (1-indexed)"
         }
       },
       "output": {
@@ -137,7 +140,8 @@
       "input": {
         "locale": {
           "type": "string",
-          "default": "RU"
+          "default": "RU",
+          "description": "Locale code: en-US, ru-RU, de-DE, fr-FR, etc."
         }
       },
       "output": {
