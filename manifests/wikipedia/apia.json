@@ -6,7 +6,7 @@
     "description_for_ai": "Free encyclopedic knowledge API. Get article summaries, full content, search Wikipedia. Covers 60M+ articles in 300+ languages. No API key needed. Use for factual questions, biographical info, historical events, scientific concepts.",
     "url": "https://wikipedia.org",
     "api_base": "https://en.wikipedia.org/api/rest_v1",
-    "category": "knowledge",
+    "category": "science",
     "geo": [
       "GLOBAL"
     ],
