@@ -1,1 +1,87 @@
-{"apia":"1.0","service":{"id":"zapier","name":"Zapier NLA API","description_for_ai":"Connect 6000+ apps through natural language. Execute actions in Gmail, Slack, Trello, Notion, Google Sheets, CRM systems using plain English instructions via AI. No-code automation for AI agents.","url":"https://zapier.com","api_base":"https://nla.zapier.com/api/v1","category":"automation","geo":["GLOBAL"],"language":"en","docs":"https://nla.zapier.com/docs/"},"auth":{"type":"apikey","anonymous_access":false,"header":"X-API-Key: ...","how_to_get":"Enable NLA at https://nla.zapier.com/get-started/","cost":"Free tier included in Zapier plans from $29.99/month"},"capabilities":[{"id":"list_actions","description_for_ai":"List available Zapier actions user has enabled. Returns actions for connected apps like Gmail, Slack, etc.","intent":["what can zapier do","available actions","zapier capabilities","automation options"],"endpoint":"GET https://nla.zapier.com/api/v1/dynamic/exposed/","input":{},"output":{"type":"list<action>","fields":["id","description","params"]},"realtime":false,"requires_auth":true},{"id":"execute_action","description_for_ai":"Execute a Zapier action using natural language. Send email, post to Slack, create Trello card, add to spreadsheet.","intent":["send email via zapier","post to slack","create task","automation action","connect apps"],"endpoint":"POST https://nla.zapier.com/api/v1/dynamic/exposed/{action_id}/execute/","input":{"action_id":{"type":"string","description":"Action ID from list_actions","required":true},"instructions":{"type":"string","description":"Natural language instruction e.g. Send email to john@example.com with subject Hello","required":true}},"output":{"type":"action_result","fields":["id","status","review_url","result"]},"realtime":true,"requires_auth":true}],"meta":{"apia_version":"1.0","manifest_author":"APIA community","last_verified":"2026-06-14"}}
+{
+  "apia": "1.0",
+  "service": {
+    "id": "zapier",
+    "name": "Zapier NLA API",
+    "description_for_ai": "Connect 6000+ apps through natural language. Execute actions in Gmail, Slack, Trello, Notion, Google Sheets, CRM systems using plain English instructions via AI. No-code automation for AI agents.",
+    "url": "https://zapier.com",
+    "api_base": "https://nla.zapier.com/api/v1",
+    "category": "automation",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://nla.zapier.com/docs/"
+  },
+  "auth": {
+    "type": "apikey",
+    "anonymous_access": false,
+    "header": "X-API-Key: ...",
+    "how_to_get": "Enable NLA at https://nla.zapier.com/get-started/",
+    "cost": "Free tier included in Zapier plans from $29.99/month"
+  },
+  "capabilities": [
+    {
+      "id": "list_actions",
+      "description_for_ai": "List available Zapier actions user has enabled. Returns actions for connected apps like Gmail, Slack, etc.",
+      "intent": [
+        "what can zapier do",
+        "available actions",
+        "zapier capabilities",
+        "automation options"
+      ],
+      "endpoint": "GET https://nla.zapier.com/api/v1/dynamic/exposed/",
+      "input": {},
+      "output": {
+        "type": "list<action>",
+        "fields": [
+          "id",
+          "description",
+          "params"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "execute_action",
+      "description_for_ai": "Execute a Zapier action using natural language. Send email, post to Slack, create Trello card, add to spreadsheet.",
+      "intent": [
+        "send email via zapier",
+        "post to slack",
+        "create task",
+        "automation action",
+        "connect apps"
+      ],
+      "endpoint": "POST https://nla.zapier.com/api/v1/dynamic/exposed/{action_id}/execute/",
+      "input": {
+        "action_id": {
+          "type": "string",
+          "description": "Action ID from list_actions",
+          "required": true
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Natural language instruction e.g. Send email to john@example.com with subject Hello",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "action_result",
+        "fields": [
+          "id",
+          "status",
+          "review_url",
+          "result"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-14"
+  }
+}
