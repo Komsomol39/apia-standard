@@ -73,7 +73,7 @@
     },
     {
       "id": "send_message",
-      "description_for_ai": "Send in-app or email message to a user via Intercom.",
+      "description_for_ai": "Send an in-app message or email to a specific Intercom contact from an admin/bot.",
       "intent": [
         "send intercom message",
         "message user",
