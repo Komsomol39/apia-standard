@@ -21,20 +21,20 @@
   },
   "capabilities": [
     {
-      "id": "search_and_answer",
-      "description_for_ai": "Answer questions with real-time web search and citations. Returns answer + source URLs. Use when user needs current information with verifiable sources.",
+      "id": "search_chat",
+      "description_for_ai": "Chat with real-time web search. Returns answer with citations. Models: sonar (fast), sonar-pro (best), sonar-reasoning (thinking+search).",
       "intent": [
-        "search web",
-        "current events",
-        "find sources",
-        "research with citations",
-        "real time search AI"
+        "perplexity search",
+        "AI web search",
+        "answer with sources",
+        "current events AI",
+        "поиск с ИИ perplexity"
       ],
       "endpoint": "POST https://api.perplexity.ai/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "sonar (fast), sonar-pro (thorough), sonar-reasoning (thinking+search)",
+          "description": "sonar (cheap, fast), sonar-pro (best quality), sonar-reasoning (thinking)",
           "required": true
         },
         "messages": {
@@ -43,7 +43,22 @@
         },
         "search_recency_filter": {
           "type": "string",
-          "description": "month, week, day, hour",
+          "description": "month, week, day, hour — filter search results by date",
+          "required": false
+        },
+        "return_citations": {
+          "type": "boolean",
+          "description": "Include source citations in response",
+          "default": true
+        },
+        "return_images": {
+          "type": "boolean",
+          "description": "Include relevant images",
+          "default": false
+        },
+        "search_domain_filter": {
+          "type": "array",
+          "description": "Whitelist domains e.g. ['wikipedia.org', 'arxiv.org']",
           "required": false
         }
       },
@@ -51,7 +66,112 @@
         "type": "completion",
         "fields": [
           "choices[0].message.content",
+          "citations[0]",
+          "usage.prompt_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "deep_research",
+      "description_for_ai": "Deep research mode with extensive web search. Returns comprehensive report with many citations. Use for research tasks.",
+      "intent": [
+        "deep research AI",
+        "comprehensive research",
+        "detailed analysis web",
+        "глубокое исследование perplexity"
+      ],
+      "endpoint": "POST https://api.perplexity.ai/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "sonar-deep-research for comprehensive multi-source research",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "return_citations": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content",
           "citations"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "sonar_reasoning",
+      "description_for_ai": "Think + search combined. Shows reasoning chain then searches web. Best for complex questions requiring both reasoning and current info.",
+      "intent": [
+        "think and search",
+        "reasoning with web",
+        "sonar reasoning",
+        "размышление с поиском perplexity"
+      ],
+      "endpoint": "POST https://api.perplexity.ai/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "sonar-reasoning"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "search_recency_filter": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content",
+          "citations",
+          "choices[0].delta.reasoning_content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "structured_output",
+      "description_for_ai": "Get search results as structured JSON. Enforce schema with response_format.",
+      "intent": [
+        "perplexity JSON",
+        "structured search results",
+        "extract data web",
+        "структурированный ответ perplexity"
+      ],
+      "endpoint": "POST https://api.perplexity.ai/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "sonar"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "response_format": {
+          "type": "object",
+          "description": "{type: 'json_schema', json_schema: {schema: {...your JSON schema...}}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "json",
+        "fields": [
+          "choices[0].message.content (JSON string)"
         ]
       },
       "realtime": true,
