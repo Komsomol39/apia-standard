@@ -23,57 +23,64 @@
   "capabilities": [
     {
       "id": "chat_completion",
-      "description_for_ai": "Generate text responses using GPT models. The core capability — use for any text generation, answering questions, summarization, translation, code writing, analysis. Supports vision (images as input) with gpt-4o models.",
+      "description_for_ai": "Generate text with GPT models. Supports conversation history, system prompts, function calling, JSON mode, vision (images in messages).",
       "intent": [
+        "ask GPT",
+        "AI text generation",
+        "ChatGPT API",
         "generate text",
-        "answer question",
-        "write code",
-        "summarize",
-        "translate",
-        "analyze",
-        "chat"
+        "AI assistant",
+        "спросить GPT",
+        "ИИ генерация"
       ],
       "endpoint": "POST https://api.openai.com/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "Model ID. Recommended: gpt-4o-mini (cheap), gpt-4o (balanced), o3-mini (reasoning)",
+          "description": "gpt-4o (best), gpt-4o-mini (fast/cheap), o1 (reasoning), o3-mini (reasoning cheap)",
           "required": true
         },
         "messages": {
           "type": "array",
-          "description": "Array of {role, content} objects. Roles: system, user, assistant",
+          "description": "[{role: system|user|assistant, content: string or array for vision}]",
           "required": true
         },
         "temperature": {
           "type": "float",
-          "description": "Randomness 0-2. 0=deterministic, 1=default, 2=creative",
-          "default": 1
+          "description": "0=deterministic, 1=creative, 2=very random",
+          "default": 1.0
         },
         "max_tokens": {
           "type": "integer",
-          "description": "Max response tokens",
+          "required": false
+        },
+        "tools": {
+          "type": "array",
+          "description": "Function definitions for tool use",
+          "required": false
+        },
+        "tool_choice": {
+          "type": "string",
+          "description": "auto, none, required, or {type:function,function:{name}}",
+          "required": false
+        },
+        "response_format": {
+          "type": "object",
+          "description": "{type: json_object} for guaranteed JSON output",
           "required": false
         },
         "stream": {
           "type": "boolean",
-          "description": "Stream response tokens as they generate",
           "default": false
-        },
-        "tools": {
-          "type": "array",
-          "description": "Function/tool definitions for tool use",
-          "required": false
         }
       },
       "output": {
         "type": "completion",
         "fields": [
           "choices[0].message.content",
-          "choices[0].message.role",
+          "choices[0].finish_reason",
           "usage.prompt_tokens",
-          "usage.completion_tokens",
-          "usage.total_tokens"
+          "usage.completion_tokens"
         ]
       },
       "realtime": true,
@@ -81,31 +88,38 @@
     },
     {
       "id": "embeddings",
-      "description_for_ai": "Convert text to vector embeddings for semantic search, similarity comparison, and RAG. Use to find similar documents, cluster content, or build knowledge bases.",
+      "description_for_ai": "Convert text to vector embeddings for semantic search, clustering, classification, and RAG. text-embedding-3-small is cheapest.",
       "intent": [
-        "embeddings",
+        "text embeddings",
+        "vector embeddings",
         "semantic search",
-        "vector database",
-        "similar documents",
-        "RAG"
+        "RAG",
+        "text similarity",
+        "векторные представления"
       ],
       "endpoint": "POST https://api.openai.com/v1/embeddings",
       "input": {
         "model": {
           "type": "string",
-          "default": "text-embedding-3-small",
-          "description": "AI/ML model identifier to use for this request"
+          "description": "text-embedding-3-small ($0.02/1M), text-embedding-3-large (best quality)",
+          "required": true
         },
         "input": {
-          "type": "string|array",
+          "type": "string or array",
           "description": "Text or array of texts to embed",
           "required": true
+        },
+        "dimensions": {
+          "type": "integer",
+          "description": "Output dimensions. 3-small: up to 1536, 3-large: up to 3072",
+          "required": false
         }
       },
       "output": {
         "type": "embeddings",
         "fields": [
-          "data[0].embedding",
+          "data[0].embedding (float array)",
+          "data[0].index",
           "usage.total_tokens"
         ]
       },
@@ -114,29 +128,44 @@
     },
     {
       "id": "speech_to_text",
-      "description_for_ai": "Transcribe audio to text using Whisper. Supports 50+ languages. Use for voice input, transcribing calls, processing audio files.",
+      "description_for_ai": "Transcribe audio to text using Whisper. Supports MP3, WAV, M4A, FLAC, WEBM. $0.006 per minute. 97%+ accuracy across 100+ languages.",
       "intent": [
         "transcribe audio",
         "speech to text",
-        "voice input",
-        "transcribe recording"
+        "voice to text",
+        "audio transcription",
+        "whisper",
+        "транскрибация аудио"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file: mp3, mp4, wav, m4a, webm (max 25MB)",
+          "description": "Audio file (max 25MB). Supported: mp3, mp4, mpeg, mpga, m4a, wav, webm",
           "required": true
         },
         "model": {
           "type": "string",
-          "default": "whisper-1",
-          "description": "AI/ML model identifier to use for this request"
+          "default": "whisper-1"
         },
         "language": {
           "type": "string",
-          "description": "ISO 639-1 language code. Auto-detected if omitted.",
+          "description": "ISO 639-1 code e.g. en, ru, de. Auto-detected if omitted.",
           "required": false
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Hints for domain-specific vocabulary",
+          "required": false
+        },
+        "response_format": {
+          "type": "string",
+          "description": "json, text, srt, verbose_json, vtt",
+          "default": "json"
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0
         }
       },
       "output": {
@@ -149,30 +178,80 @@
       "requires_auth": true
     },
     {
-      "id": "image_generation",
-      "description_for_ai": "Generate images from text descriptions using DALL-E 3. Use for creating illustrations, product mockups, or visual content.",
+      "id": "text_to_speech",
+      "description_for_ai": "Convert text to natural-sounding speech. 6 voices, 24kHz audio. $15 per 1M characters.",
+      "intent": [
+        "text to speech",
+        "TTS",
+        "voice generation",
+        "read text aloud",
+        "speech synthesis",
+        "озвучить текст",
+        "синтез речи"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/speech",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "tts-1 (fast, lower quality) or tts-1-hd (slower, studio quality)",
+          "required": true
+        },
+        "input": {
+          "type": "string",
+          "description": "Text to synthesize, max 4096 chars",
+          "required": true
+        },
+        "voice": {
+          "type": "string",
+          "description": "alloy, echo, fable, onyx, nova, shimmer",
+          "required": true
+        },
+        "response_format": {
+          "type": "string",
+          "description": "mp3, opus, aac, flac, wav, pcm",
+          "default": "mp3"
+        },
+        "speed": {
+          "type": "float",
+          "description": "Speed 0.25-4.0",
+          "default": 1.0
+        }
+      },
+      "output": {
+        "type": "audio binary",
+        "fields": [
+          "audio file bytes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_image",
+      "description_for_ai": "Generate images with DALL-E 3. High quality photorealistic or artistic images from text. $0.04-$0.12 per image.",
       "intent": [
         "generate image",
-        "create picture",
-        "draw",
+        "create image",
         "DALL-E",
-        "image from text"
+        "text to image",
+        "AI art",
+        "создать изображение",
+        "нарисовать"
       ],
       "endpoint": "POST https://api.openai.com/v1/images/generations",
       "input": {
         "model": {
           "type": "string",
-          "default": "dall-e-3",
-          "description": "AI/ML model identifier to use for this request"
+          "default": "dall-e-3"
         },
         "prompt": {
           "type": "string",
-          "description": "Image description",
+          "description": "Detailed image description. DALL-E 3 rewrites for safety.",
           "required": true
         },
         "size": {
           "type": "string",
-          "description": "1024x1024, 1792x1024, 1024x1792",
+          "description": "1024x1024, 1792x1024 (landscape), 1024x1792 (portrait)",
           "default": "1024x1024"
         },
         "quality": {
@@ -180,9 +259,14 @@
           "description": "standard or hd",
           "default": "standard"
         },
+        "style": {
+          "type": "string",
+          "description": "vivid (dramatic) or natural (realistic)",
+          "default": "vivid"
+        },
         "n": {
           "type": "integer",
-          "description": "Number of images (1 for DALL-E 3)",
+          "description": "Number of images (DALL-E 3: always 1)",
           "default": 1
         }
       },
@@ -191,6 +275,120 @@
         "fields": [
           "data[0].url",
           "data[0].revised_prompt"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "moderation",
+      "description_for_ai": "Check if text violates OpenAI usage policies — violence, hate, sexual content, self-harm. Free to use.",
+      "intent": [
+        "content moderation",
+        "safe content check",
+        "is this safe",
+        "toxic text",
+        "проверка контента"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/moderations",
+      "input": {
+        "input": {
+          "type": "string or array",
+          "description": "Text to check",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "description": "text-moderation-latest or text-moderation-stable",
+          "default": "text-moderation-latest"
+        }
+      },
+      "output": {
+        "type": "moderation",
+        "fields": [
+          "results[0].flagged",
+          "results[0].categories.violence",
+          "results[0].categories.sexual",
+          "results[0].categories.hate",
+          "results[0].category_scores"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List all available OpenAI models you have access to. Use to check which models are available for your API key.",
+      "intent": [
+        "available models",
+        "list openai models",
+        "what models exist",
+        "model list",
+        "список моделей openai"
+      ],
+      "endpoint": "GET https://api.openai.com/v1/models",
+      "input": {},
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "data[0].id",
+          "data[0].created",
+          "data[0].owned_by"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_assistant",
+      "description_for_ai": "Create an AI assistant with custom instructions, tools (code_interpreter, file_search, function), and knowledge files. Persistent across conversations.",
+      "intent": [
+        "create assistant",
+        "AI agent",
+        "custom GPT",
+        "assistant with tools",
+        "chatbot with memory",
+        "создать ИИ ассистента"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/assistants",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "instructions": {
+          "type": "string",
+          "description": "System prompt / personality for the assistant",
+          "required": false
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{type: code_interpreter}, {type: file_search}, {type: function, function: {...}}]",
+          "required": false
+        },
+        "tool_resources": {
+          "type": "object",
+          "description": "{file_search: {vector_store_ids: [...]}} to attach knowledge files",
+          "required": false
+        },
+        "temperature": {
+          "type": "float",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "assistant",
+        "fields": [
+          "id",
+          "name",
+          "model",
+          "instructions",
+          "tools",
+          "created_at"
         ]
       },
       "realtime": true,
