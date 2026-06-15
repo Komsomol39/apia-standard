@@ -24,108 +24,96 @@
   "capabilities": [
     {
       "id": "geocode",
-      "description_for_ai": "Convert address to coordinates (forward) or coordinates to address (reverse). Best geocoder globally. Use for any address-to-coordinates task outside Russia (for Russia prefer Yandex Maps).",
+      "description_for_ai": "Convert address to coordinates (lat/lng) or coordinates to address (reverse geocoding).",
       "intent": [
-        "find coordinates",
         "address to coordinates",
-        "what address is this",
-        "reverse geocode",
-        "where is this building"
+        "geocoding",
+        "find location",
+        "address lookup",
+        "координаты адреса",
+        "геокодирование"
       ],
       "endpoint": "GET https://maps.googleapis.com/maps/api/geocode/json",
       "input": {
         "address": {
           "type": "string",
-          "description": "Address for forward geocoding. E.g. '1600 Amphitheatre Parkway, Mountain View, CA'",
+          "description": "Street address for forward geocoding",
           "required": false
         },
         "latlng": {
           "type": "string",
-          "description": "Coordinates for reverse geocoding. E.g. '37.4224764,-122.0842499'",
+          "description": "lat,lng for reverse geocoding e.g. 55.7558,37.6173",
           "required": false
         },
         "language": {
           "type": "string",
-          "description": "Response language code",
-          "default": "en"
+          "description": "Response language code: en, ru, de",
+          "required": false
         },
         "region": {
           "type": "string",
-          "description": "Country code bias. E.g. 'us', 'ru', 'de'",
+          "description": "Region bias: us, ru, de",
           "required": false
         }
       },
       "output": {
-        "type": "list<geocode_result>",
+        "type": "geocode",
         "fields": [
-          "formatted_address",
-          "geometry.location.lat",
-          "geometry.location.lng",
-          "place_id",
-          "address_components",
-          "types"
+          "results[0].formatted_address",
+          "results[0].geometry.location.lat",
+          "results[0].geometry.location.lng",
+          "results[0].place_id"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "places_nearby",
-      "description_for_ai": "Find places (restaurants, shops, hospitals, etc.) near coordinates. Returns name, rating, opening hours, price level. Use for 'restaurants nearby', 'find a pharmacy', 'coffee shops around here'.",
+      "description_for_ai": "Find places (restaurants, hospitals, ATMs, etc.) near a location. Filter by type and radius.",
       "intent": [
-        "places nearby",
+        "nearby places",
         "restaurants near me",
-        "find a cafe",
-        "pharmacy nearby",
-        "what's around here",
-        "find places"
+        "find ATM",
+        "places nearby",
+        "что рядом",
+        "кафе рядом"
       ],
       "endpoint": "GET https://maps.googleapis.com/maps/api/place/nearbysearch/json",
       "input": {
         "location": {
           "type": "string",
-          "description": "Center coordinates 'lat,lng'. E.g. '51.5074,-0.1278'",
+          "description": "lat,lng of center point",
           "required": true
         },
         "radius": {
           "type": "integer",
-          "description": "Search radius in meters",
-          "default": 500,
-          "max": 50000
+          "description": "Search radius in meters, max 50000",
+          "required": true
         },
         "type": {
           "type": "string",
-          "description": "Place type: restaurant, cafe, pharmacy, hospital, bank, supermarket, gas_station etc.",
+          "description": "restaurant, hospital, atm, pharmacy, hotel, park, school, bank, cafe, supermarket",
           "required": false
         },
         "keyword": {
           "type": "string",
-          "description": "Free-text filter",
-          "required": false
-        },
-        "opennow": {
-          "type": "boolean",
-          "description": "true = only currently open places",
+          "description": "Keyword to filter by",
           "required": false
         },
         "language": {
           "type": "string",
-          "default": "en",
-          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
+          "required": false
         }
       },
       "output": {
         "type": "list<place>",
         "fields": [
-          "place_id",
-          "name",
-          "vicinity",
-          "geometry.location",
-          "rating",
-          "opening_hours.open_now",
-          "price_level",
-          "types",
-          "photos[0].photo_reference"
+          "results[0].name",
+          "results[0].place_id",
+          "results[0].vicinity",
+          "results[0].rating",
+          "results[0].geometry.location"
         ]
       },
       "realtime": true,
@@ -133,25 +121,26 @@
     },
     {
       "id": "directions",
-      "description_for_ai": "Get directions between two points. Returns route steps, duration, distance, and travel mode options. Use for 'how to get from A to B', 'driving directions', 'transit route'.",
+      "description_for_ai": "Get directions between two locations. Returns route steps, distance, duration. Supports driving, walking, cycling, transit.",
       "intent": [
-        "how to get there",
         "directions",
-        "route from A to B",
-        "driving time",
-        "public transit route",
-        "walking directions"
+        "route",
+        "how to get to",
+        "driving directions",
+        "navigate",
+        "маршрут",
+        "как добраться"
       ],
       "endpoint": "GET https://maps.googleapis.com/maps/api/directions/json",
       "input": {
         "origin": {
           "type": "string",
-          "description": "Start point: address or 'lat,lng'",
+          "description": "Start address or lat,lng",
           "required": true
         },
         "destination": {
           "type": "string",
-          "description": "End point: address or 'lat,lng'",
+          "description": "End address or lat,lng",
           "required": true
         },
         "mode": {
@@ -161,22 +150,214 @@
         },
         "language": {
           "type": "string",
-          "default": "en",
-          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
+          "required": false
+        },
+        "avoid": {
+          "type": "string",
+          "description": "tolls, highways, ferries",
+          "required": false
         },
         "departure_time": {
-          "type": "integer",
-          "description": "Unix timestamp for traffic-aware routing",
+          "type": "string",
+          "description": "Unix timestamp or 'now' for traffic-aware routing",
           "required": false
         }
       },
       "output": {
-        "type": "directions",
+        "type": "route",
         "fields": [
-          "routes[0].legs[0].duration.text",
           "routes[0].legs[0].distance.text",
-          "routes[0].legs[0].steps",
+          "routes[0].legs[0].duration.text",
+          "routes[0].legs[0].steps[0].html_instructions",
           "routes[0].summary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "place_details",
+      "description_for_ai": "Get detailed info about a specific place: address, phone, hours, website, photos, reviews.",
+      "intent": [
+        "place details",
+        "restaurant info",
+        "business hours",
+        "phone number",
+        "информация о месте",
+        "часы работы"
+      ],
+      "endpoint": "GET https://maps.googleapis.com/maps/api/place/details/json",
+      "input": {
+        "place_id": {
+          "type": "string",
+          "description": "Place ID from search results",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "name,formatted_address,formatted_phone_number,opening_hours,website,rating,reviews,photos,price_level",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "place",
+        "fields": [
+          "result.name",
+          "result.formatted_address",
+          "result.formatted_phone_number",
+          "result.opening_hours.weekday_text",
+          "result.website",
+          "result.rating",
+          "result.reviews[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "text_search",
+      "description_for_ai": "Search for places by text query e.g. 'pizza in Moscow' or 'hospitals near Kremlin'.",
+      "intent": [
+        "search places",
+        "find restaurant",
+        "search on map",
+        "поиск на карте",
+        "найти место"
+      ],
+      "endpoint": "GET https://maps.googleapis.com/maps/api/place/textsearch/json",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Text search query e.g. 'sushi restaurant downtown'",
+          "required": true
+        },
+        "location": {
+          "type": "string",
+          "description": "Bias results to this lat,lng",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Bias radius in meters",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<place>",
+        "fields": [
+          "results[0].name",
+          "results[0].formatted_address",
+          "results[0].rating",
+          "results[0].geometry.location",
+          "results[0].place_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "distance_matrix",
+      "description_for_ai": "Calculate travel time and distance from multiple origins to multiple destinations in one call. Ideal for logistics, routing optimization.",
+      "intent": [
+        "distance matrix",
+        "travel time",
+        "how far",
+        "distance between",
+        "расстояние",
+        "время в пути"
+      ],
+      "endpoint": "GET https://maps.googleapis.com/maps/api/distancematrix/json",
+      "input": {
+        "origins": {
+          "type": "string",
+          "description": "Pipe-separated list of addresses or lat,lng e.g. 'Moscow|Saint Petersburg'",
+          "required": true
+        },
+        "destinations": {
+          "type": "string",
+          "description": "Pipe-separated list of destinations",
+          "required": true
+        },
+        "mode": {
+          "type": "string",
+          "default": "driving"
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        },
+        "departure_time": {
+          "type": "string",
+          "description": "Unix timestamp for traffic-aware times",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "matrix",
+        "fields": [
+          "rows[0].elements[0].distance.text",
+          "rows[0].elements[0].duration.text",
+          "rows[0].elements[0].status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "autocomplete",
+      "description_for_ai": "Address and place autocomplete as user types. Returns suggestions for search input fields.",
+      "intent": [
+        "autocomplete",
+        "address suggestions",
+        "place suggestions",
+        "search autocomplete",
+        "автозаполнение адреса"
+      ],
+      "endpoint": "GET https://maps.googleapis.com/maps/api/place/autocomplete/json",
+      "input": {
+        "input": {
+          "type": "string",
+          "description": "Partial text input from user",
+          "required": true
+        },
+        "sessiontoken": {
+          "type": "string",
+          "description": "UUID for billing grouping — reuse within one search session",
+          "required": false
+        },
+        "location": {
+          "type": "string",
+          "description": "Bias results to lat,lng",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "required": false
+        },
+        "types": {
+          "type": "string",
+          "description": "geocode, address, establishment, regions, cities",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<prediction>",
+        "fields": [
+          "predictions[0].description",
+          "predictions[0].place_id",
+          "predictions[0].structured_formatting.main_text"
         ]
       },
       "realtime": true,
