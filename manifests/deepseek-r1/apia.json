@@ -22,22 +22,19 @@
   "capabilities": [
     {
       "id": "reason",
-      "description_for_ai": "Solve complex problems with visible chain-of-thought reasoning. Math, science, coding, logic. Returns reasoning_content (thinking) + content (final answer).",
+      "description_for_ai": "Chain-of-thought reasoning. Returns reasoning_content (thinking) + content (answer). Best for math, logic, algorithm design.",
       "intent": [
-        "complex reasoning",
-        "math problem",
-        "logic puzzle",
-        "think step by step",
-        "chain of thought",
         "deepseek reasoning",
-        "R1 model"
+        "R1 model",
+        "chain of thought",
+        "hard math problem",
+        "логические задачи deepseek"
       ],
       "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "default": "deepseek-reasoner",
-          "description": "AI/ML model identifier to use for this request"
+          "default": "deepseek-reasoner"
         },
         "messages": {
           "type": "array",
@@ -45,8 +42,11 @@
         },
         "max_tokens": {
           "type": "integer",
-          "required": false,
-          "description": "Maximum number of tokens to generate in response"
+          "required": false
+        },
+        "stream": {
+          "type": "boolean",
+          "default": false
         }
       },
       "output": {
@@ -54,7 +54,114 @@
         "fields": [
           "choices[0].message.reasoning_content",
           "choices[0].message.content",
-          "usage.completion_tokens"
+          "usage.reasoning_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "reason_with_context",
+      "description_for_ai": "Multi-turn reasoning conversation. Pass previous reasoning steps in conversation history for complex multi-step problems.",
+      "intent": [
+        "multi-step reasoning",
+        "complex analysis AI",
+        "iterative thinking",
+        "сложный анализ deepseek"
+      ],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "deepseek-reasoner"
+        },
+        "messages": {
+          "type": "array",
+          "description": "Full conversation including prior assistant reasoning. Do not inject reasoning_content into context — only use content.",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.reasoning_content",
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "code_generation",
+      "description_for_ai": "Generate and debug code with reasoning. R1 explains its approach before writing code.",
+      "intent": [
+        "code with reasoning",
+        "algorithm implementation",
+        "debug with reasoning",
+        "код с объяснением deepseek"
+      ],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "deepseek-reasoner"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 8192
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.reasoning_content",
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "math_solver",
+      "description_for_ai": "Solve mathematical problems step by step. Competition math, calculus, statistics, proofs.",
+      "intent": [
+        "solve math",
+        "math problem",
+        "calculus",
+        "statistics",
+        "proof",
+        "решить задачу математика"
+      ],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "deepseek-reasoner"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: user, content: 'Solve: integral of x^2 from 0 to 3'}]",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "description": "Use 0 for math for deterministic answers",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.reasoning_content",
+          "choices[0].message.content"
         ]
       },
       "realtime": true,
