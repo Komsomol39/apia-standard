@@ -23,95 +23,158 @@
   },
   "capabilities": [
     {
-      "id": "search",
-      "description_for_ai": "Search YouTube videos by keyword. Returns title, description, thumbnail, channel, publish date.",
+      "id": "search_videos",
+      "description_for_ai": "Search YouTube videos, channels, playlists. Returns title, views, thumbnail, channel.",
       "intent": [
-        "find youtube video",
-        "search videos",
         "youtube search",
-        "видео на ютубе",
-        "найти видео"
+        "find video",
+        "search youtube",
+        "поиск youtube"
       ],
       "endpoint": "GET https://www.googleapis.com/youtube/v3/search",
       "input": {
         "q": {
           "type": "string",
-          "required": true,
-          "description": "Search query or filter expression"
-        },
-        "part": {
-          "type": "string",
-          "default": "snippet"
+          "required": true
         },
         "type": {
           "type": "string",
-          "default": "video",
-          "description": "Filter or specify item type"
+          "description": "video, channel, playlist",
+          "default": "video"
         },
         "maxResults": {
           "type": "integer",
-          "default": 10,
-          "max": 50
+          "default": 10
         },
         "order": {
           "type": "string",
-          "description": "relevance, date, viewCount, rating",
+          "description": "date, rating, relevance, title, videoCount, viewCount",
           "default": "relevance"
         },
-        "regionCode": {
+        "publishedAfter": {
           "type": "string",
-          "description": "ISO 3166-1 country code",
+          "description": "ISO 8601 datetime filter",
           "required": false
         },
-        "relevanceLanguage": {
+        "videoDuration": {
           "type": "string",
+          "description": "any, long (>20min), medium (4-20min), short (<4min)",
           "required": false
         }
       },
       "output": {
-        "type": "list<video>",
+        "type": "list<item>",
         "fields": [
-          "id.videoId",
-          "snippet.title",
-          "snippet.description",
-          "snippet.thumbnails.default.url",
-          "snippet.channelTitle",
-          "snippet.publishedAt"
+          "items[0].id.videoId",
+          "items[0].snippet.title",
+          "items[0].snippet.channelTitle",
+          "items[0].snippet.publishedAt",
+          "items[0].snippet.thumbnails.default.url"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_video",
-      "description_for_ai": "Get detailed info about a YouTube video: view count, likes, duration, tags, full description.",
+      "id": "get_video_details",
+      "description_for_ai": "Get video metadata: views, likes, duration, tags, category, description.",
       "intent": [
-        "video details",
-        "view count",
-        "youtube video info",
-        "video statistics"
+        "video details youtube",
+        "views count",
+        "video stats",
+        "информация видео youtube"
       ],
       "endpoint": "GET https://www.googleapis.com/youtube/v3/videos",
       "input": {
         "id": {
           "type": "string",
-          "description": "YouTube video ID",
+          "description": "Comma-separated video IDs",
           "required": true
         },
         "part": {
           "type": "string",
+          "description": "snippet,statistics,contentDetails,status",
           "default": "snippet,statistics,contentDetails"
         }
       },
       "output": {
-        "type": "video",
+        "type": "list<video>",
         "fields": [
-          "snippet.title",
-          "snippet.description",
-          "statistics.viewCount",
-          "statistics.likeCount",
-          "contentDetails.duration",
-          "snippet.tags"
+          "items[0].snippet.title",
+          "items[0].statistics.viewCount",
+          "items[0].statistics.likeCount",
+          "items[0].statistics.commentCount",
+          "items[0].contentDetails.duration"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_channel",
+      "description_for_ai": "Get YouTube channel info: subscriber count, video count, description.",
+      "intent": [
+        "youtube channel",
+        "channel info",
+        "subscribers count",
+        "канал youtube"
+      ],
+      "endpoint": "GET https://www.googleapis.com/youtube/v3/channels",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Channel ID",
+          "required": false
+        },
+        "forUsername": {
+          "type": "string",
+          "description": "Channel username",
+          "required": false
+        },
+        "part": {
+          "type": "string",
+          "default": "snippet,statistics"
+        }
+      },
+      "output": {
+        "type": "channel",
+        "fields": [
+          "items[0].snippet.title",
+          "items[0].statistics.subscriberCount",
+          "items[0].statistics.videoCount",
+          "items[0].snippet.description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_captions",
+      "description_for_ai": "List available caption tracks for a video. Use to discover if subtitles are available.",
+      "intent": [
+        "youtube captions",
+        "subtitles youtube",
+        "video transcript",
+        "субтитры youtube"
+      ],
+      "endpoint": "GET https://www.googleapis.com/youtube/v3/captions",
+      "input": {
+        "videoId": {
+          "type": "string",
+          "required": true
+        },
+        "part": {
+          "type": "string",
+          "default": "snippet"
+        }
+      },
+      "output": {
+        "type": "list<caption>",
+        "fields": [
+          "items[0].id",
+          "items[0].snippet.language",
+          "items[0].snippet.trackKind",
+          "items[0].snippet.name"
         ]
       },
       "realtime": true,
