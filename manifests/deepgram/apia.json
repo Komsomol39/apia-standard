@@ -22,67 +22,197 @@
   },
   "capabilities": [
     {
-      "id": "transcribe_url",
-      "description_for_ai": "AI-powered speech-to-text with real-time streaming. 40+ languages, speaker diarization, sentiment analysis, topic detection, summarization. Used by Twilio, NASA, Spotify. $200 free credit. Transcribe audio from URL. Returns text with timestamps, confidence, speaker labels.",
+      "id": "transcribe_file",
+      "description_for_ai": "Transcribe pre-recorded audio file (URL or upload). Returns transcript with word timestamps, speaker diarization, sentiment.",
       "intent": [
-        "speech recognition",
-        "voice to text",
-        "transcribe audio",
+        "transcribe audio deepgram",
+        "speech to text file",
         "audio transcription",
-        "real-time transcription",
-        "podcast transcript",
-        "meeting transcription",
-        "convert speech",
-        "speech to text",
-        "транскрибация"
+        "транскрибация аудио deepgram"
       ],
       "endpoint": "POST https://api.deepgram.com/v1/listen",
       "input": {
         "url": {
           "type": "string",
-          "description": "Public URL to audio file",
-          "required": true
+          "description": "Public audio URL to transcribe (MP3, WAV, FLAC, M4A, OGG)",
+          "required": false
         },
         "model": {
           "type": "string",
-          "description": "nova-2 (best), base, enhanced",
-          "default": "nova-2"
+          "description": "nova-3 (best accuracy), nova-2, enhanced, base",
+          "default": "nova-3"
         },
         "language": {
           "type": "string",
-          "default": "en",
-          "description": "Language code: en, ru, de, fr, es, zh, ja, ko, pt"
+          "description": "ISO 639-1 code: en, ru, de, fr, es. Auto-detected if omitted.",
+          "required": false
+        },
+        "diarize": {
+          "type": "boolean",
+          "description": "Split transcript by speaker",
+          "default": false
         },
         "punctuate": {
           "type": "boolean",
           "default": true
         },
-        "diarize": {
+        "paragraphs": {
           "type": "boolean",
-          "description": "Identify different speakers",
+          "description": "Group into paragraphs",
           "default": false
         },
         "summarize": {
-          "type": "string",
-          "description": "v2 for AI summary",
-          "required": false
-        },
-        "detect_topics": {
           "type": "boolean",
+          "description": "Generate summary (Nova models only)",
           "default": false
         },
-        "sentiment": {
+        "topics": {
           "type": "boolean",
+          "description": "Detect topics in transcript",
           "default": false
         }
       },
       "output": {
-        "type": "transcription",
+        "type": "transcript",
         "fields": [
           "results.channels[0].alternatives[0].transcript",
-          "results.channels[0].alternatives[0].words",
-          "results.summary.short",
-          "results.topics"
+          "results.channels[0].alternatives[0].words[0].word",
+          "results.channels[0].alternatives[0].words[0].start",
+          "metadata.duration"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "streaming_transcribe",
+      "description_for_ai": "Real-time streaming transcription via WebSocket. Send audio chunks, receive transcripts as you speak. Ultra-low latency.",
+      "intent": [
+        "real-time transcription",
+        "live speech to text",
+        "streaming STT",
+        "транскрибация в реальном времени deepgram"
+      ],
+      "endpoint": "WSS wss://api.deepgram.com/v1/listen",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "nova-3 for best streaming accuracy",
+          "default": "nova-3"
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        },
+        "encoding": {
+          "type": "string",
+          "description": "linear16, mulaw, flac, opus, ogg-opus, speex",
+          "required": false
+        },
+        "sample_rate": {
+          "type": "integer",
+          "description": "Audio sample rate Hz e.g. 16000",
+          "required": false
+        },
+        "channels": {
+          "type": "integer",
+          "description": "Number of audio channels",
+          "default": 1
+        },
+        "interim_results": {
+          "type": "boolean",
+          "description": "Send partial results before final",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "streaming",
+        "fields": [
+          "channel.alternatives[0].transcript",
+          "channel.alternatives[0].confidence",
+          "is_final",
+          "speech_final"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "text_to_speech",
+      "description_for_ai": "Generate realistic speech from text. Aura voice models. 12 voice options.",
+      "intent": [
+        "deepgram TTS",
+        "text to speech deepgram",
+        "voice generation deepgram",
+        "синтез речи deepgram"
+      ],
+      "endpoint": "POST https://api.deepgram.com/v1/speak",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "aura-asteria-en (female), aura-orpheus-en (male), aura-athena-en (British female)",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "description": "Text to speak",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "audio",
+        "fields": [
+          "binary audio (MP3 default)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "analyze_audio",
+      "description_for_ai": "Analyze audio for intelligence: topics, entities, sentiment, summaries. Works on pre-recorded files.",
+      "intent": [
+        "audio intelligence",
+        "analyze audio content",
+        "audio topics",
+        "аналитика аудио deepgram"
+      ],
+      "endpoint": "POST https://api.deepgram.com/v1/listen",
+      "input": {
+        "url": {
+          "type": "string",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "nova-3"
+        },
+        "detect_entities": {
+          "type": "boolean",
+          "description": "Extract named entities from transcript",
+          "default": false
+        },
+        "sentiment": {
+          "type": "boolean",
+          "description": "Sentiment analysis per sentence",
+          "default": false
+        },
+        "summarize": {
+          "type": "boolean",
+          "default": true
+        },
+        "topics": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "analysis",
+        "fields": [
+          "results.channels[0].alternatives[0].transcript",
+          "results.summary.result",
+          "results.topics.segments",
+          "results.sentiments.segments"
         ]
       },
       "realtime": false,
