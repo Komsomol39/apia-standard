@@ -25,38 +25,49 @@
   "capabilities": [
     {
       "id": "create_payment",
-      "description_for_ai": "Создать платёж для оплаты на сайте. Возвращает URL для редиректа на страницу оплаты ЮКассы.",
+      "description_for_ai": "Create a payment in ЮКасса. Returns confirmation URL to redirect customer. Supports all Russian payment methods.",
       "intent": [
-        "принять платёж",
-        "оплата картой",
-        "интернет-эквайринг",
-        "онлайн-оплата Россия",
-        "оплата ЮКасса"
+        "принять оплату юкасса",
+        "создать платёж юкасса",
+        "yookassa payment",
+        "оплата картой россия"
       ],
       "endpoint": "POST https://api.yookassa.ru/v3/payments",
       "input": {
         "amount": {
           "type": "object",
-          "description": "{value: 100.00, currency: RUB}",
+          "description": "{value: '100.00', currency: 'RUB'}",
           "required": true
         },
         "confirmation": {
           "type": "object",
-          "description": "{type: redirect, return_url: https://yoursite.ru/success}",
+          "description": "{type: 'redirect', return_url: 'https://yoursite.ru/success'}",
           "required": true
+        },
+        "capture": {
+          "type": "boolean",
+          "description": "true — автоматический захват. false — двухэтапная оплата.",
+          "default": true
         },
         "description": {
           "type": "string",
+          "description": "Описание платежа видимое покупателю",
           "required": false
         },
         "metadata": {
           "type": "object",
+          "description": "Ваши данные для сопоставления: {order_id: '123'}",
           "required": false
         },
-        "capture": {
-          "type": "boolean",
-          "description": "true=автоматическое списание",
-          "default": true
+        "receipt": {
+          "type": "object",
+          "description": "Чек для ФФД: {customer: {email}, items: [{description, quantity, amount, vat_code: 1}]}",
+          "required": false
+        },
+        "payment_method_data": {
+          "type": "object",
+          "description": "{type: 'bank_card'} или не указывать для выбора покупателем",
+          "required": false
         }
       },
       "output": {
@@ -65,7 +76,7 @@
           "id",
           "status",
           "confirmation.confirmation_url",
-          "amount",
+          "amount.value",
           "created_at"
         ]
       },
@@ -73,27 +84,65 @@
       "requires_auth": true
     },
     {
-      "id": "create_refund",
-      "description_for_ai": "Create a full or partial refund for a completed ЮКасса payment. Returns refund status and amount.",
+      "id": "get_payment",
+      "description_for_ai": "Получить информацию о платеже по ID. Используй для проверки статуса после редиректа.",
       "intent": [
-        "возврат платежа",
-        "refund",
-        "вернуть деньги",
-        "отменить платёж"
+        "статус платежа юкасса",
+        "проверить оплату",
+        "payment status yookassa",
+        "получить платёж"
+      ],
+      "endpoint": "GET https://api.yookassa.ru/v3/payments/{paymentId}",
+      "input": {
+        "paymentId": {
+          "type": "string",
+          "description": "ID платежа (uuid формата)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "payment",
+        "fields": [
+          "id",
+          "status (pending|waiting_for_capture|succeeded|canceled)",
+          "paid",
+          "amount.value",
+          "payment_method.type",
+          "captured_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_refund",
+      "description_for_ai": "Создать возврат платежа полностью или частично.",
+      "intent": [
+        "возврат юкасса",
+        "вернуть деньги юкасса",
+        "refund yookassa",
+        "отменить платёж юкасса"
       ],
       "endpoint": "POST https://api.yookassa.ru/v3/refunds",
       "input": {
         "payment_id": {
           "type": "string",
+          "description": "ID платежа для возврата",
           "required": true
         },
         "amount": {
           "type": "object",
-          "description": "{value, currency: RUB}",
-          "required": true
+          "description": "{value: '50.00', currency: 'RUB'} — сумма возврата. Omit для полного возврата.",
+          "required": false
         },
         "description": {
           "type": "string",
+          "description": "Причина возврата",
+          "required": false
+        },
+        "receipt": {
+          "type": "object",
+          "description": "Чек возврата (если был чек при оплате)",
           "required": false
         }
       },
@@ -102,11 +151,61 @@
         "fields": [
           "id",
           "status",
-          "amount",
-          "payment_id"
+          "amount.value",
+          "created_at"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_payments",
+      "description_for_ai": "Получить список платежей с фильтрацией по дате, статусу, методу оплаты.",
+      "intent": [
+        "список платежей юкасса",
+        "история платежей",
+        "payment list yookassa",
+        "отчёт по платежам"
+      ],
+      "endpoint": "GET https://api.yookassa.ru/v3/payments",
+      "input": {
+        "status": {
+          "type": "string",
+          "description": "pending, waiting_for_capture, succeeded, canceled",
+          "required": false
+        },
+        "created_at.gte": {
+          "type": "string",
+          "description": "ISO 8601 — платежи после этой даты",
+          "required": false
+        },
+        "created_at.lte": {
+          "type": "string",
+          "description": "ISO 8601 — платежи до этой даты",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Количество результатов 1-100",
+          "default": 10
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Курсор для пагинации",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<payment>",
+        "fields": [
+          "items[0].id",
+          "items[0].status",
+          "items[0].amount.value",
+          "items[0].created_at",
+          "next_cursor"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
