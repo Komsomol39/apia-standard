@@ -22,19 +22,19 @@
   "capabilities": [
     {
       "id": "detect_labels",
-      "description_for_ai": "Detect objects, scenes, and concepts in images. Returns labels with confidence scores.",
+      "description_for_ai": "Detect objects, scenes, and concepts in images with confidence scores and bounding boxes.",
       "intent": [
-        "detect objects",
-        "image labels",
+        "detect objects AWS",
+        "image labels rekognition",
         "what is in image",
-        "image recognition",
-        "object detection"
+        "object detection AWS",
+        "распознавание объектов AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "Image": {
           "type": "object",
-          "description": "{S3Object: {Bucket, Name}} or {Bytes: base64}",
+          "description": "{S3Object: {Bucket, Name, Version}} or {Bytes: BASE64}",
           "required": true
         },
         "MaxLabels": {
@@ -43,6 +43,7 @@
         },
         "MinConfidence": {
           "type": "float",
+          "description": "Minimum confidence threshold 0-100",
           "default": 55.0
         }
       },
@@ -51,7 +52,8 @@
         "fields": [
           "Labels[0].Name",
           "Labels[0].Confidence",
-          "Labels[0].Instances[0].BoundingBox"
+          "Labels[0].Instances[0].BoundingBox",
+          "Labels[0].Parents"
         ]
       },
       "realtime": true,
@@ -59,28 +61,33 @@
     },
     {
       "id": "detect_text",
-      "description_for_ai": "Extract text from images. Works well for signs, documents, license plates.",
+      "description_for_ai": "Extract text from images — signs, license plates, documents. Returns text with location.",
       "intent": [
-        "extract text",
-        "OCR image",
-        "read text",
-        "sign text",
-        "license plate"
+        "OCR AWS",
+        "extract text rekognition",
+        "read sign",
+        "license plate",
+        "распознать текст AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "Image": {
           "type": "object",
-          "required": true,
-          "description": "Image URL or base64-encoded image data"
+          "required": true
+        },
+        "Filters": {
+          "type": "object",
+          "description": "{WordFilter: {MinConfidence: 80}, RegionsOfInterest: [{BoundingBox: {...}}]}",
+          "required": false
         }
       },
       "output": {
         "type": "text",
         "fields": [
           "TextDetections[0].DetectedText",
+          "TextDetections[0].Type (LINE|WORD)",
           "TextDetections[0].Confidence",
-          "TextDetections[0].Type"
+          "TextDetections[0].Geometry.BoundingBox"
         ]
       },
       "realtime": true,
@@ -88,26 +95,29 @@
     },
     {
       "id": "compare_faces",
-      "description_for_ai": "Compare two face images and determine if they are the same person. Use for face verification.",
+      "description_for_ai": "Compare two face images to determine if same person. Returns similarity score. Use for identity verification.",
       "intent": [
-        "face match",
-        "same person",
-        "face comparison",
+        "face comparison AWS",
+        "same person check",
         "face verification",
-        "identity check"
+        "identity check",
+        "сравнение лиц AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "SourceImage": {
           "type": "object",
+          "description": "Reference face image",
           "required": true
         },
         "TargetImage": {
           "type": "object",
+          "description": "Image to compare against",
           "required": true
         },
         "SimilarityThreshold": {
           "type": "float",
+          "description": "Minimum similarity to return 0-100",
           "default": 80.0
         }
       },
@@ -116,7 +126,45 @@
         "fields": [
           "FaceMatches[0].Similarity",
           "FaceMatches[0].Face.Confidence",
+          "FaceMatches[0].Face.BoundingBox",
           "UnmatchedFaces"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "detect_faces",
+      "description_for_ai": "Detect faces in an image with attributes: age range, emotions, gender, glasses, beard, smile, pose.",
+      "intent": [
+        "detect faces",
+        "face analysis",
+        "emotion detection",
+        "face attributes",
+        "определение лиц AWS"
+      ],
+      "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
+      "input": {
+        "Image": {
+          "type": "object",
+          "required": true
+        },
+        "Attributes": {
+          "type": "array",
+          "description": "['ALL'] for all attributes, ['DEFAULT'] for basic. Includes age, gender, emotions, facial hair.",
+          "default": [
+            "DEFAULT"
+          ]
+        }
+      },
+      "output": {
+        "type": "faces",
+        "fields": [
+          "FaceDetails[0].AgeRange",
+          "FaceDetails[0].Gender.Value",
+          "FaceDetails[0].Emotions[0].Type",
+          "FaceDetails[0].Emotions[0].Confidence",
+          "FaceDetails[0].Smile.Value"
         ]
       },
       "realtime": true,
