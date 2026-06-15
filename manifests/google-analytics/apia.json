@@ -22,45 +22,157 @@
   "capabilities": [
     {
       "id": "run_report",
-      "description_for_ai": "Website and app analytics. Sessions, users, pageviews, events, conversions, revenue. Real-time and historical data. 35M+ websites use Google Analytics. Use for website performance monitoring, user behavior analysis. Get website analytics report with metrics and dimensions for date range.",
+      "description_for_ai": "Run a Google Analytics 4 report. Get sessions, users, pageviews, conversions with dimensions and date ranges.",
       "intent": [
-        "website analytics",
-        "page views",
-        "user sessions",
-        "google analytics",
-        "traffic data",
-        "conversion rate",
-        "website stats"
+        "google analytics report",
+        "website traffic",
+        "GA4 report",
+        "аналитика сайта google"
       ],
       "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property_id}:runReport",
       "input": {
         "property_id": {
           "type": "string",
-          "description": "GA4 property ID e.g. 123456789",
+          "description": "GA4 property ID (numeric) e.g. 123456789",
           "required": true
         },
         "dateRanges": {
           "type": "array",
-          "description": "[{startDate: 7daysAgo, endDate: today}]",
-          "required": true
-        },
-        "metrics": {
-          "type": "array",
-          "description": "[{name: sessions}, {name: activeUsers}, {name: screenPageViews}]",
+          "description": "[{startDate: '30daysAgo', endDate: 'today'}] or [{startDate: '2024-01-01', endDate: '2024-01-31'}]",
           "required": true
         },
         "dimensions": {
           "type": "array",
-          "description": "[{name: date}, {name: country}, {name: pagePath}]",
+          "description": "[{name: 'country'}, {name: 'deviceCategory'}, {name: 'sessionSource'}, {name: 'pagePath'}]",
+          "required": false
+        },
+        "metrics": {
+          "type": "array",
+          "description": "[{name: 'sessions'}, {name: 'activeUsers'}, {name: 'screenPageViews'}, {name: 'conversions'}, {name: 'bounceRate'}]",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "orderBys": {
+          "type": "array",
+          "description": "[{metric: {metricName: 'sessions'}, desc: true}]",
           "required": false
         }
       },
       "output": {
         "type": "report",
         "fields": [
+          "rows[0].dimensionValues[0].value",
+          "rows[0].metricValues[0].value",
+          "totals[0].metricValues[0].value",
+          "rowCount"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_realtime",
+      "description_for_ai": "Get real-time analytics: active users on site right now, with page paths and countries.",
+      "intent": [
+        "realtime analytics",
+        "active users now",
+        "live traffic",
+        "онлайн пользователи google analytics"
+      ],
+      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property_id}:runRealtimeReport",
+      "input": {
+        "property_id": {
+          "type": "string",
+          "required": true
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "[{name: 'country'}, {name: 'city'}, {name: 'unifiedScreenName'}]",
+          "required": false
+        },
+        "metrics": {
+          "type": "array",
+          "description": "[{name: 'activeUsers'}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "realtime",
+        "fields": [
           "rows[0].dimensionValues",
-          "rows[0].metricValues",
-          "totals"
+          "rows[0].metricValues[0].value",
+          "totals[0].metricValues[0].value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_properties",
+      "description_for_ai": "List all GA4 properties accessible to the account.",
+      "intent": [
+        "list GA4 properties",
+        "analytics accounts",
+        "my properties GA4",
+        "свойства google analytics"
+      ],
+      "endpoint": "GET https://analyticsadmin.googleapis.com/v1alpha/properties",
+      "input": {
+        "filter": {
+          "type": "string",
+          "description": "parent:accounts/ACCOUNT_ID to filter by account",
+          "required": false
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 200
+        }
+      },
+      "output": {
+        "type": "list<property>",
+        "fields": [
+          "properties[0].name",
+          "properties[0].displayName",
+          "properties[0].websiteUrl",
+          "properties[0].createTime"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "run_funnel_report",
+      "description_for_ai": "Analyze conversion funnel: how many users complete each step of a defined sequence.",
+      "intent": [
+        "funnel analysis",
+        "conversion funnel",
+        "user journey analytics",
+        "воронка конверсии google analytics"
+      ],
+      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property_id}:runFunnelReport",
+      "input": {
+        "property_id": {
+          "type": "string",
+          "required": true
+        },
+        "dateRanges": {
+          "type": "array",
+          "required": true
+        },
+        "funnel": {
+          "type": "object",
+          "description": "{steps: [{name: 'Visit', filterExpression: {filter: {fieldName: 'eventName', stringFilter: {value: 'session_start'}}}}, {name: 'Purchase', filterExpression: {filter: {fieldName: 'eventName', stringFilter: {value: 'purchase'}}}}]}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "funnel",
+        "fields": [
+          "funnelTable.rows[0].dimensionValues",
+          "funnelTable.rows[0].metricValues"
         ]
       },
       "realtime": false,
