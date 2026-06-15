@@ -23,73 +23,160 @@
   "capabilities": [
     {
       "id": "text_to_speech",
-      "description_for_ai": "Convert text to natural-sounding speech. Choose from 1000+ voices or clone a voice. Use for reading content aloud, voice assistants, audiobook narration.",
+      "description_for_ai": "Convert text to speech with any voice. 1000+ voices, 32 languages. Stream or download MP3/PCM.",
       "intent": [
-        "generate voice",
-        "narrator voice",
-        "text to audio",
-        "озвучить текст",
-        "TTS API",
-        "read aloud",
+        "elevenlabs TTS",
+        "voice generation",
         "text to speech",
-        "voice assistant",
-        "TTS",
-        "audiobook",
-        "голосовой синтез",
-        "voice synthesis"
+        "voice cloning",
+        "синтез речи elevenlabs"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
       "input": {
         "voice_id": {
           "type": "string",
-          "description": "Voice ID. Popular: 21m00Tcm4TlvDq8ikWAM (Rachel), AZnzlk1XvdvUeBnXmlld (Domi)",
+          "description": "Voice ID. Common: 21m00Tcm4TlvDq8ikWAM (Rachel), EXAVITQu4vr4xnSDxMaL (Bella). Get full list from list_voices.",
           "required": true
         },
         "text": {
           "type": "string",
+          "description": "Text to synthesize, max 5000 chars per request",
           "required": true
         },
         "model_id": {
           "type": "string",
-          "description": "eleven_multilingual_v2 (best), eleven_turbo_v2 (fast)",
+          "description": "eleven_turbo_v2 (fastest), eleven_multilingual_v2 (best quality+multilingual), eleven_flash_v2_5 (ultra-fast)",
           "default": "eleven_multilingual_v2"
         },
         "voice_settings": {
           "type": "object",
-          "description": "{stability: 0.5, similarity_boost: 0.8}",
+          "description": "{stability: 0.5, similarity_boost: 0.75, style: 0.0, use_speaker_boost: true}",
+          "required": false
+        },
+        "output_format": {
+          "type": "string",
+          "description": "mp3_44100_128 (default), pcm_16000, pcm_44100, ulaw_8000",
           "required": false
         }
       },
       "output": {
         "type": "audio",
         "fields": [
-          "audio/mpeg stream"
+          "binary audio stream"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_voices",
-      "description_for_ai": "Get list of available voices with their IDs and descriptions.",
+      "id": "list_voices",
+      "description_for_ai": "Get all available voices including pre-made, cloned, and shared community voices.",
       "intent": [
-        "voice options",
-        "list voices",
-        "speech voices",
-        "available voices"
+        "elevenlabs voices",
+        "available voices",
+        "voice list",
+        "список голосов elevenlabs"
       ],
       "endpoint": "GET https://api.elevenlabs.io/v1/voices",
-      "input": {},
+      "input": {
+        "show_legacy": {
+          "type": "boolean",
+          "description": "Include legacy voices",
+          "default": false
+        }
+      },
       "output": {
         "type": "list<voice>",
         "fields": [
-          "voice_id",
-          "name",
-          "category",
-          "labels"
+          "voices[0].voice_id",
+          "voices[0].name",
+          "voices[0].category",
+          "voices[0].labels",
+          "voices[0].preview_url"
         ]
       },
       "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "clone_voice",
+      "description_for_ai": "Create a cloned voice from audio samples. Upload 1-25 audio clips for best results.",
+      "intent": [
+        "clone voice",
+        "voice cloning",
+        "create custom voice",
+        "клонировать голос elevenlabs"
+      ],
+      "endpoint": "POST https://api.elevenlabs.io/v1/voices/add",
+      "input": {
+        "name": {
+          "type": "string",
+          "description": "Name for the cloned voice",
+          "required": true
+        },
+        "files": {
+          "type": "array",
+          "description": "Audio file uploads (MP3/WAV, 1-25 files, 1-5 min each)",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "labels": {
+          "type": "object",
+          "description": "{accent, age, gender, use_case}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "voice",
+        "fields": [
+          "voice_id"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "speech_to_speech",
+      "description_for_ai": "Transform voice in audio — change speaker identity while preserving content and emotion.",
+      "intent": [
+        "voice conversion",
+        "speech to speech",
+        "change voice",
+        "voice transform",
+        "изменить голос elevenlabs"
+      ],
+      "endpoint": "POST https://api.elevenlabs.io/v1/speech-to-speech/{voice_id}",
+      "input": {
+        "voice_id": {
+          "type": "string",
+          "description": "Target voice ID",
+          "required": true
+        },
+        "audio": {
+          "type": "file",
+          "description": "Audio file to transform",
+          "required": true
+        },
+        "model_id": {
+          "type": "string",
+          "default": "eleven_english_sts_v2"
+        },
+        "voice_settings": {
+          "type": "object",
+          "description": "{stability: 0.5, similarity_boost: 0.75}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "audio",
+        "fields": [
+          "binary audio"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
