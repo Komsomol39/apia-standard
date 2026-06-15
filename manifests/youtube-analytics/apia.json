@@ -22,27 +22,18 @@
   "capabilities": [
     {
       "id": "get_channel_stats",
-      "description_for_ai": "Deep analytics for YouTube channels. Views, watch time, revenue, demographics, traffic sources, engagement by video. Use for YouTube creator tools, channel analytics dashboards, content strategy apps. Get YouTube channel analytics: views, watch time, subscribers gained/lost, revenue for date range.",
+      "description_for_ai": "Get channel analytics: views, watch time, subscribers gained, estimated revenue.",
       "intent": [
-        "watch time",
-        "YouTube stats",
-        "video performance",
-        "subscriber growth",
-        "video views",
-        "youtube performance",
-        "youtube revenue",
-        "channel revenue",
         "youtube analytics",
-        "channel analytics",
-        "YouTube metrics",
         "channel stats",
-        "subscribers"
+        "video performance",
+        "аналитика youtube"
       ],
       "endpoint": "GET https://youtubeanalytics.googleapis.com/v2/reports",
       "input": {
         "ids": {
           "type": "string",
-          "description": "channel==MINE for authenticated channel",
+          "description": "channel==MINE or channel==UCxxxxx",
           "default": "channel==MINE"
         },
         "startDate": {
@@ -57,20 +48,157 @@
         },
         "metrics": {
           "type": "string",
-          "description": "views,estimatedMinutesWatched,averageViewDuration,subscribersGained,estimatedRevenue",
+          "description": "views,estimatedMinutesWatched,averageViewDuration,subscribersGained,subscribersLost,likes,dislikes,shares,estimatedRevenue",
           "required": true
         },
         "dimensions": {
           "type": "string",
-          "description": "day, video, country, deviceType",
+          "description": "day, month, video, country, ageGroup, gender, liveOrOnDemand",
           "required": false
         }
       },
       "output": {
-        "type": "analytics",
+        "type": "report",
         "fields": [
-          "columnHeaders",
-          "rows"
+          "columnHeaders[0].name",
+          "rows[0] (array of metric values)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_top_videos",
+      "description_for_ai": "Get top performing videos by views, watch time, or revenue in a date range.",
+      "intent": [
+        "top videos youtube",
+        "best videos analytics",
+        "most viewed",
+        "топ видео youtube аналитика"
+      ],
+      "endpoint": "GET https://youtubeanalytics.googleapis.com/v2/reports",
+      "input": {
+        "ids": {
+          "type": "string",
+          "default": "channel==MINE"
+        },
+        "startDate": {
+          "type": "string",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "required": true
+        },
+        "metrics": {
+          "type": "string",
+          "default": "views,estimatedMinutesWatched,averageViewDuration,subscribersGained"
+        },
+        "dimensions": {
+          "type": "string",
+          "default": "video"
+        },
+        "sort": {
+          "type": "string",
+          "description": "-views (desc by views), -estimatedMinutesWatched",
+          "default": "-views"
+        },
+        "maxResults": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "report",
+        "fields": [
+          "rows[0][0] (video_id)",
+          "rows[0][1] (views)",
+          "rows[0][2] (watch_time_min)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_audience",
+      "description_for_ai": "Get audience demographics: age groups, gender, countries of your channel viewers.",
+      "intent": [
+        "youtube audience",
+        "viewer demographics",
+        "who watches",
+        "аудитория youtube"
+      ],
+      "endpoint": "GET https://youtubeanalytics.googleapis.com/v2/reports",
+      "input": {
+        "ids": {
+          "type": "string",
+          "default": "channel==MINE"
+        },
+        "startDate": {
+          "type": "string",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "required": true
+        },
+        "metrics": {
+          "type": "string",
+          "default": "viewerPercentage"
+        },
+        "dimensions": {
+          "type": "string",
+          "description": "ageGroup,gender or country",
+          "default": "ageGroup,gender"
+        }
+      },
+      "output": {
+        "type": "demographics",
+        "fields": [
+          "rows[0] (ageGroup, gender, viewerPercentage)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_traffic_sources",
+      "description_for_ai": "Get where viewers come from: search, suggested videos, external, notifications.",
+      "intent": [
+        "traffic sources youtube",
+        "how people find videos",
+        "discovery analytics",
+        "источники трафика youtube"
+      ],
+      "endpoint": "GET https://youtubeanalytics.googleapis.com/v2/reports",
+      "input": {
+        "ids": {
+          "type": "string",
+          "default": "channel==MINE"
+        },
+        "startDate": {
+          "type": "string",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "required": true
+        },
+        "metrics": {
+          "type": "string",
+          "default": "views,estimatedMinutesWatched"
+        },
+        "dimensions": {
+          "type": "string",
+          "default": "insightTrafficSourceType"
+        }
+      },
+      "output": {
+        "type": "traffic",
+        "fields": [
+          "rows[0][0] (source type)",
+          "rows[0][1] (views)",
+          "rows[0][2] (watch time)"
         ]
       },
       "realtime": false,
