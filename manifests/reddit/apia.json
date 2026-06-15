@@ -24,70 +24,25 @@
   },
   "capabilities": [
     {
-      "id": "get_subreddit_posts",
-      "description_for_ai": "Get top/hot/new posts from any subreddit. Use for 'what's trending on Reddit', 'popular posts about X', 'news from r/worldnews', monitoring community discussions.",
+      "id": "search_posts",
+      "description_for_ai": "Search Reddit posts across all subreddits or within a specific subreddit.",
       "intent": [
-        "reddit posts",
-        "trending on reddit",
-        "subreddit posts",
-        "what people say about",
-        "community discussion",
-        "hot posts"
+        "reddit search",
+        "find reddit post",
+        "search subreddit",
+        "поиск reddit"
       ],
-      "endpoint": "GET https://www.reddit.com/r/{subreddit}/{sort}.json",
-      "input": {
-        "subreddit": {
-          "type": "string",
-          "description": "Subreddit name without r/. E.g. worldnews, python, gaming, russia",
-          "required": true
-        },
-        "sort": {
-          "type": "string",
-          "description": "hot, new, top, rising",
-          "default": "hot"
-        },
-        "t": {
-          "type": "string",
-          "description": "Time filter for top: hour, day, week, month, year, all",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "description": "Number of posts",
-          "default": 25,
-          "max": 100
-        }
-      },
-      "output": {
-        "type": "list<post>",
-        "fields": [
-          "data.children[].data.title",
-          "data.children[].data.score",
-          "data.children[].data.url",
-          "data.children[].data.selftext",
-          "data.children[].data.num_comments",
-          "data.children[].data.created_utc"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "search",
-      "description_for_ai": "Search Reddit for posts and comments by keyword. Use for 'what does Reddit think about X', 'find Reddit discussions on topic', sentiment research.",
-      "intent": [
-        "search reddit",
-        "reddit opinions",
-        "what does reddit think",
-        "find discussions",
-        "reddit sentiment"
-      ],
-      "endpoint": "GET https://www.reddit.com/search.json",
+      "endpoint": "GET https://oauth.reddit.com/search",
       "input": {
         "q": {
           "type": "string",
-          "description": "Search query or filter expression",
+          "description": "Search query",
           "required": true
+        },
+        "subreddit": {
+          "type": "string",
+          "description": "Limit to specific subreddit",
+          "required": false
         },
         "sort": {
           "type": "string",
@@ -96,76 +51,180 @@
         },
         "t": {
           "type": "string",
-          "description": "Time: hour, day, week, month, year, all",
+          "description": "Time filter: hour, day, week, month, year, all",
           "default": "all"
         },
         "limit": {
           "type": "integer",
-          "default": 25,
-          "max": 100,
-          "description": "Maximum number of results to return"
+          "default": 25
         },
-        "subreddit": {
+        "after": {
           "type": "string",
-          "description": "Limit to specific subreddit",
+          "description": "Pagination cursor",
           "required": false
         }
       },
       "output": {
         "type": "list<post>",
         "fields": [
-          "data.children[].data.title",
-          "data.children[].data.selftext",
-          "data.children[].data.score",
-          "data.children[].data.subreddit",
-          "data.children[].data.url"
+          "data.children[0].data.title",
+          "data.children[0].data.url",
+          "data.children[0].data.score",
+          "data.children[0].data.num_comments",
+          "data.children[0].data.subreddit",
+          "data.children[0].data.selftext"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
+    },
+    {
+      "id": "get_subreddit_posts",
+      "description_for_ai": "Get top/hot/new posts from a subreddit. Great for trending content monitoring.",
+      "intent": [
+        "subreddit posts",
+        "hot posts",
+        "top reddit",
+        "reddit feed",
+        "посты subreddit"
+      ],
+      "endpoint": "GET https://oauth.reddit.com/r/{subreddit}/{sort}",
+      "input": {
+        "subreddit": {
+          "type": "string",
+          "description": "Subreddit name without r/",
+          "required": true
+        },
+        "sort": {
+          "type": "string",
+          "description": "hot, new, top, rising, controversial",
+          "default": "hot"
+        },
+        "t": {
+          "type": "string",
+          "description": "Time: hour, day, week, month, year, all (for top/controversial)",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<post>",
+        "fields": [
+          "data.children[0].data.id",
+          "data.children[0].data.title",
+          "data.children[0].data.url",
+          "data.children[0].data.score",
+          "data.children[0].data.created_utc"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "submit_post",
+      "description_for_ai": "Submit a text or link post to a subreddit. Requires user authentication.",
+      "intent": [
+        "post to reddit",
+        "submit reddit",
+        "create reddit post",
+        "опубликовать reddit"
+      ],
+      "endpoint": "POST https://oauth.reddit.com/api/submit",
+      "input": {
+        "sr": {
+          "type": "string",
+          "description": "Subreddit name",
+          "required": true
+        },
+        "kind": {
+          "type": "string",
+          "description": "self (text post) or link",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "description": "Post title",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "description": "Post body (for self posts)",
+          "required": false
+        },
+        "url": {
+          "type": "string",
+          "description": "URL (for link posts)",
+          "required": false
+        },
+        "nsfw": {
+          "type": "boolean",
+          "default": false
+        },
+        "spoiler": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "post",
+        "fields": [
+          "json.data.url",
+          "json.data.id",
+          "json.data.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     },
     {
       "id": "get_comments",
-      "description_for_ai": "Get comments on a specific Reddit post. Use when user wants to see what people are saying in the discussion.",
+      "description_for_ai": "Get comments for a Reddit post, sorted by best/top/new.",
       "intent": [
         "reddit comments",
-        "discussion thread",
-        "what people say",
-        "post comments"
+        "post comments",
+        "read reddit",
+        "комментарии reddit"
       ],
-      "endpoint": "GET https://www.reddit.com/r/{subreddit}/comments/{post_id}.json",
+      "endpoint": "GET https://oauth.reddit.com/r/{subreddit}/comments/{article}",
       "input": {
         "subreddit": {
           "type": "string",
           "required": true
         },
-        "post_id": {
+        "article": {
           "type": "string",
-          "description": "Post ID from search results",
+          "description": "Post ID (without t3_ prefix)",
           "required": true
-        },
-        "limit": {
-          "type": "integer",
-          "default": 50,
-          "description": "Maximum number of results to return"
         },
         "sort": {
           "type": "string",
-          "description": "confidence, top, new, controversial, old",
-          "default": "top"
+          "description": "confidence, top, new, controversial, old, random, qa, live",
+          "default": "confidence"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        },
+        "depth": {
+          "type": "integer",
+          "description": "Max comment tree depth",
+          "default": 5
         }
       },
       "output": {
-        "type": "list<comment>",
+        "type": "comments",
         "fields": [
-          "data.body",
-          "data.score",
-          "data.author",
-          "data.created_utc"
+          "[1].data.children[0].data.body",
+          "[1].data.children[0].data.author",
+          "[1].data.children[0].data.score",
+          "[1].data.children[0].data.replies"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
     }
   ],
   "agent_hints": {
