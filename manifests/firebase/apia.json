@@ -21,13 +21,97 @@
   },
   "capabilities": [
     {
-      "id": "firestore_query",
-      "description_for_ai": "Query Firestore NoSQL database documents. Filter by fields, order results, paginate.",
+      "id": "get_document",
+      "description_for_ai": "Get a Firestore document by path. Returns document fields.",
       "intent": [
+        "firebase get document",
+        "firestore read",
+        "get firebase data",
+        "читать firebase"
+      ],
+      "endpoint": "GET https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents/{collection}/{document}",
+      "input": {
+        "project": {
+          "type": "string",
+          "description": "Firebase project ID",
+          "required": true
+        },
+        "collection": {
+          "type": "string",
+          "description": "Collection name e.g. users",
+          "required": true
+        },
+        "document": {
+          "type": "string",
+          "description": "Document ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "document",
+        "fields": [
+          "name",
+          "fields (map of field values)",
+          "createTime",
+          "updateTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "set_document",
+      "description_for_ai": "Create or overwrite a Firestore document. Use PATCH to merge/update specific fields.",
+      "intent": [
+        "firebase write",
+        "firestore create document",
+        "save to firebase",
+        "записать в firebase"
+      ],
+      "endpoint": "PATCH https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents/{collection}/{document}",
+      "input": {
+        "project": {
+          "type": "string",
+          "required": true
+        },
+        "collection": {
+          "type": "string",
+          "required": true
+        },
+        "document": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "Document fields in Firestore format: {name: {stringValue: 'John'}, age: {integerValue: 30}}",
+          "required": true
+        },
+        "updateMask.fieldPaths": {
+          "type": "array",
+          "description": "Field paths to update (for partial update). Omit to replace entire document.",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "document",
+        "fields": [
+          "name",
+          "fields",
+          "updateTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "query_collection",
+      "description_for_ai": "Query Firestore collection with filters, ordering, and limits.",
+      "intent": [
+        "firebase query",
         "firestore query",
-        "get documents",
-        "database read",
-        "firebase data"
+        "filter collection firebase",
+        "запрос firestore"
       ],
       "endpoint": "POST https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents:runQuery",
       "input": {
@@ -37,53 +121,45 @@
         },
         "structuredQuery": {
           "type": "object",
-          "description": "Firestore query object with from, where, orderBy, limit",
+          "description": "{from: [{collectionId: 'users'}], where: {fieldFilter: {field: {fieldPath: 'status'}, op: 'EQUAL', value: {stringValue: 'active'}}}, orderBy: [{field: {fieldPath: 'createdAt'}, direction: 'DESCENDING'}], limit: 10}",
           "required": true
         }
       },
       "output": {
         "type": "list<document>",
         "fields": [
-          "document.name",
-          "document.fields"
+          "[0].document.name",
+          "[0].document.fields"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "fcm_send",
-      "description_for_ai": "Send push notification to mobile device via Firebase Cloud Messaging. Use for mobile app notifications.",
+      "id": "send_notification",
+      "description_for_ai": "Send Firebase Cloud Messaging (FCM) push notification to mobile device, topic, or device group.",
       "intent": [
-        "push notification",
+        "push notification firebase",
+        "FCM send",
         "mobile notification",
-        "send notification",
-        "FCM push"
+        "пуш уведомление firebase"
       ],
-      "endpoint": "POST https://fcm.googleapis.com/fcm/send",
+      "endpoint": "POST https://fcm.googleapis.com/v1/projects/{project}/messages:send",
       "input": {
-        "to": {
+        "project": {
           "type": "string",
-          "description": "Device FCM token",
           "required": true
         },
-        "notification": {
+        "message": {
           "type": "object",
-          "description": "{title, body, image}",
+          "description": "{token: 'device_token' or topic: '/topics/news', notification: {title: 'Title', body: 'Message'}, data: {key: 'value'}, android: {priority: 'high'}, apns: {headers: {'apns-priority': '10'}}}",
           "required": true
-        },
-        "data": {
-          "type": "object",
-          "description": "Custom data payload",
-          "required": false
         }
       },
       "output": {
-        "type": "fcm_response",
+        "type": "message",
         "fields": [
-          "message_id",
-          "success",
-          "failure"
+          "name (message resource name)"
         ]
       },
       "realtime": true,
