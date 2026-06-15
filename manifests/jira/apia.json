@@ -23,40 +23,45 @@
   "capabilities": [
     {
       "id": "search_issues",
-      "description_for_ai": "Search Jira issues using JQL (Jira Query Language). Find bugs, tasks, stories by project, status, assignee.",
+      "description_for_ai": "Search Jira issues using JQL (Jira Query Language). Filter by project, status, assignee, sprint, priority, labels.",
       "intent": [
-        "jira issues",
-        "find bugs",
-        "project tasks",
+        "jira search",
+        "find issues",
+        "jira query",
         "sprint issues",
-        "open tickets",
-        "search jira"
+        "задачи jira"
       ],
       "endpoint": "GET https://{domain}.atlassian.net/rest/api/3/search",
       "input": {
         "jql": {
           "type": "string",
-          "description": "JQL query e.g. project=MYPROJECT AND status=Open AND assignee=currentUser()",
+          "description": "JQL query: 'project=MYPROJ AND status=Open', 'assignee=currentUser() AND sprint in openSprints()', 'priority=High ORDER BY created DESC'",
           "required": true
         },
         "maxResults": {
           "type": "integer",
-          "default": 50
+          "default": 20
+        },
+        "startAt": {
+          "type": "integer",
+          "default": 0
         },
         "fields": {
-          "type": "string",
-          "description": "Comma-separated fields: summary,status,assignee,priority,created,updated",
+          "type": "array",
+          "description": "['summary', 'status', 'assignee', 'priority', 'created', 'description']",
           "required": false
         }
       },
       "output": {
         "type": "list<issue>",
         "fields": [
+          "issues[0].id",
           "issues[0].key",
           "issues[0].fields.summary",
           "issues[0].fields.status.name",
           "issues[0].fields.assignee.displayName",
-          "issues[0].fields.priority.name"
+          "issues[0].fields.priority.name",
+          "total"
         ]
       },
       "realtime": true,
@@ -64,43 +69,20 @@
     },
     {
       "id": "create_issue",
-      "description_for_ai": "Create a new Jira issue: bug, task, story, epic.",
+      "description_for_ai": "Create a new Jira issue (bug, story, task, epic) with description, priority, labels, components, and assignee.",
       "intent": [
-        "create issue",
-        "new bug",
-        "add task",
-        "create ticket",
-        "report bug"
+        "create jira issue",
+        "new ticket",
+        "report bug jira",
+        "create story",
+        "создать задачу jira"
       ],
       "endpoint": "POST https://{domain}.atlassian.net/rest/api/3/issue",
       "input": {
-        "project_key": {
-          "type": "string",
-          "description": "Project key e.g. MYPROJ",
-          "required": true
-        },
-        "summary": {
-          "type": "string",
-          "required": true
-        },
-        "issue_type": {
-          "type": "string",
-          "description": "Bug, Task, Story, Epic",
-          "default": "Task"
-        },
-        "description": {
+        "fields": {
           "type": "object",
-          "description": "Atlassian Document Format content",
-          "required": false
-        },
-        "priority": {
-          "type": "string",
-          "description": "Highest, High, Medium, Low, Lowest",
-          "required": false
-        },
-        "assignee_id": {
-          "type": "string",
-          "required": false
+          "description": "{project: {key: 'PROJ'}, summary: 'Issue title', issuetype: {name: 'Bug'|'Story'|'Task'|'Epic'}, description: {type: 'doc', version: 1, content: [{type: 'paragraph', content: [{type: 'text', text: 'Description'}]}]}, priority: {name: 'High'|'Medium'|'Low'}, assignee: {id: 'user_id'}, labels: ['frontend', 'urgent']}",
+          "required": true
         }
       },
       "output": {
@@ -109,6 +91,183 @@
           "id",
           "key",
           "self"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_issue",
+      "description_for_ai": "Update Jira issue fields: change status (via transitions), update summary, description, priority, assignee.",
+      "intent": [
+        "update jira issue",
+        "change status jira",
+        "edit ticket",
+        "assign issue",
+        "обновить задачу jira"
+      ],
+      "endpoint": "PUT https://{domain}.atlassian.net/rest/api/3/issue/{issueKey}",
+      "input": {
+        "issueKey": {
+          "type": "string",
+          "description": "Issue key e.g. PROJ-123",
+          "required": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "{summary: 'New title', priority: {name: 'High'}, assignee: {id: 'user_id'}, labels: ['bug']}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "transition_issue",
+      "description_for_ai": "Move a Jira issue to a different status (To Do → In Progress → Done). Get available transitions first.",
+      "intent": [
+        "move issue jira",
+        "change status",
+        "close ticket",
+        "done jira",
+        "перевести задачу jira"
+      ],
+      "endpoint": "POST https://{domain}.atlassian.net/rest/api/3/issue/{issueKey}/transitions",
+      "input": {
+        "issueKey": {
+          "type": "string",
+          "required": true
+        },
+        "transition": {
+          "type": "object",
+          "description": "{id: 'transition_id'}. Get IDs from GET /issue/{key}/transitions",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_comment",
+      "description_for_ai": "Add a comment to a Jira issue. Supports @mentions and rich text.",
+      "intent": [
+        "comment jira",
+        "add comment issue",
+        "reply jira",
+        "комментарий jira"
+      ],
+      "endpoint": "POST https://{domain}.atlassian.net/rest/api/3/issue/{issueKey}/comment",
+      "input": {
+        "issueKey": {
+          "type": "string",
+          "required": true
+        },
+        "body": {
+          "type": "object",
+          "description": "{type: 'doc', version: 1, content: [{type: 'paragraph', content: [{type: 'text', text: 'Your comment'}]}]}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "comment",
+        "fields": [
+          "id",
+          "author.displayName",
+          "created",
+          "body"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_issue",
+      "description_for_ai": "Get full Jira issue details including all fields, comments, attachments, sub-tasks, and linked issues.",
+      "intent": [
+        "get issue jira",
+        "issue details",
+        "ticket info jira",
+        "issue data",
+        "детали задачи jira"
+      ],
+      "endpoint": "GET https://{domain}.atlassian.net/rest/api/3/issue/{issueKey}",
+      "input": {
+        "issueKey": {
+          "type": "string",
+          "description": "Issue key e.g. PROJ-123",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated: summary,description,status,assignee,priority,comment,attachment",
+          "required": false
+        },
+        "expand": {
+          "type": "string",
+          "description": "renderedFields,names,changelog",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "issue",
+        "fields": [
+          "id",
+          "key",
+          "fields.summary",
+          "fields.status.name",
+          "fields.description",
+          "fields.comments.comments",
+          "fields.assignee.displayName"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_projects",
+      "description_for_ai": "List all accessible Jira projects with keys and leads.",
+      "intent": [
+        "jira projects",
+        "project list",
+        "all projects",
+        "проекты jira"
+      ],
+      "endpoint": "GET https://{domain}.atlassian.net/rest/api/3/project/search",
+      "input": {
+        "maxResults": {
+          "type": "integer",
+          "default": 50
+        },
+        "startAt": {
+          "type": "integer",
+          "default": 0
+        },
+        "query": {
+          "type": "string",
+          "description": "Filter by project name",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<project>",
+        "fields": [
+          "values[0].id",
+          "values[0].key",
+          "values[0].name",
+          "values[0].projectTypeKey",
+          "values[0].lead.displayName"
         ]
       },
       "realtime": true,
