@@ -23,35 +23,44 @@
   "capabilities": [
     {
       "id": "create_payment_intent",
-      "description_for_ai": "Create a payment intent to charge a customer. Returns a client_secret used by the frontend to confirm payment. Core method for accepting one-time payments.",
+      "description_for_ai": "Create a payment intent to charge a customer. Returns client_secret for frontend confirmation. Core method for one-time payments.",
       "intent": [
         "charge customer",
         "accept payment",
         "process payment",
-        "create invoice",
         "collect money",
-        "online payment"
+        "online payment",
+        "принять оплату"
       ],
       "endpoint": "POST https://api.stripe.com/v1/payment_intents",
       "input": {
         "amount": {
           "type": "integer",
-          "description": "Amount in smallest currency unit (cents for USD, kopeks for RUB). E.g. 2000 = $20.00",
+          "description": "Amount in smallest currency unit (cents for USD). E.g. 2000 = $20.00",
           "required": true
         },
         "currency": {
           "type": "string",
-          "description": "ISO 4217 currency code: usd, eur, rub, kzt etc.",
+          "description": "ISO 4217 code: usd, eur, gbp, rub, kzt",
           "required": true
+        },
+        "customer": {
+          "type": "string",
+          "description": "Customer ID (cus_...) to attach payment to",
+          "required": false
         },
         "description": {
           "type": "string",
-          "description": "Payment description",
           "required": false
         },
         "metadata": {
           "type": "object",
-          "description": "Key-value pairs for your own tracking",
+          "description": "Key-value pairs for your tracking",
+          "required": false
+        },
+        "payment_method_types": {
+          "type": "array",
+          "description": "['card', 'sepa_debit', 'ideal']. Default: ['card']",
           "required": false
         }
       },
@@ -70,68 +79,355 @@
       "requires_auth": true
     },
     {
-      "id": "create_payment_link",
-      "description_for_ai": "Create a shareable payment link that customers can open in their browser. Easiest way to collect payment — no code needed on frontend.",
+      "id": "create_refund",
+      "description_for_ai": "Refund a payment fully or partially. Required for returns, cancellations, disputes. Refund goes back to original payment method within 5-10 business days.",
       "intent": [
-        "payment link",
-        "share payment page",
-        "send invoice link",
-        "checkout link",
-        "payment URL"
+        "refund payment",
+        "return money",
+        "cancel charge",
+        "partial refund",
+        "chargeback",
+        "вернуть деньги",
+        "возврат"
       ],
-      "endpoint": "POST https://api.stripe.com/v1/payment_links",
+      "endpoint": "POST https://api.stripe.com/v1/refunds",
       "input": {
-        "line_items[0][price]": {
+        "payment_intent": {
           "type": "string",
-          "description": "Price ID from your Stripe dashboard",
-          "required": true
+          "description": "Payment Intent ID (pi_...) to refund",
+          "required": false
         },
-        "line_items[0][quantity]": {
+        "charge": {
+          "type": "string",
+          "description": "Charge ID (ch_...) to refund. Use instead of payment_intent if you have charge ID.",
+          "required": false
+        },
+        "amount": {
           "type": "integer",
-          "description": "Quantity",
-          "default": 1
+          "description": "Amount to refund in cents. Omit for full refund.",
+          "required": false
+        },
+        "reason": {
+          "type": "string",
+          "description": "duplicate, fraudulent, or requested_by_customer",
+          "required": false
+        },
+        "metadata": {
+          "type": "object",
+          "required": false
         }
       },
       "output": {
-        "type": "payment_link",
+        "type": "refund",
         "fields": [
           "id",
-          "url",
-          "active",
+          "amount",
           "currency",
-          "amount"
+          "status",
+          "payment_intent",
+          "created"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_payment",
-      "description_for_ai": "Retrieve payment status and details by payment intent ID. Use to check if a payment was successful.",
+      "id": "create_customer",
+      "description_for_ai": "Create a customer profile to store payment methods, billing info, and purchase history. Required for subscriptions and saving cards.",
       "intent": [
-        "payment status",
-        "was payment successful",
-        "check payment",
-        "payment details"
+        "create customer",
+        "save customer",
+        "customer profile",
+        "store payment method",
+        "recurring customer",
+        "создать клиента"
       ],
-      "endpoint": "GET https://api.stripe.com/v1/payment_intents/{id}",
+      "endpoint": "POST https://api.stripe.com/v1/customers",
       "input": {
-        "id": {
+        "email": {
           "type": "string",
-          "description": "Payment Intent ID starting with 'pi_'",
-          "required": true
+          "description": "Customer email for receipts and identification",
+          "required": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name",
+          "required": false
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number",
+          "required": false
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "metadata": {
+          "type": "object",
+          "required": false
+        },
+        "address": {
+          "type": "object",
+          "description": "{line1, city, country, postal_code}",
+          "required": false
         }
       },
       "output": {
-        "type": "payment_intent",
+        "type": "customer",
+        "fields": [
+          "id",
+          "email",
+          "name",
+          "created",
+          "default_source"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_subscription",
+      "description_for_ai": "Create a recurring subscription for a customer. Automatically charges the customer on a schedule. Requires a customer and a price/plan.",
+      "intent": [
+        "subscription",
+        "recurring payment",
+        "monthly billing",
+        "saas billing",
+        "subscribe customer",
+        "подписка",
+        "ежемесячный платёж"
+      ],
+      "endpoint": "POST https://api.stripe.com/v1/subscriptions",
+      "input": {
+        "customer": {
+          "type": "string",
+          "description": "Customer ID (cus_...)",
+          "required": true
+        },
+        "items": {
+          "type": "array",
+          "description": "[{price: 'price_xxx'}] — price IDs from your Stripe dashboard",
+          "required": true
+        },
+        "trial_period_days": {
+          "type": "integer",
+          "description": "Number of free trial days before first charge",
+          "required": false
+        },
+        "cancel_at_period_end": {
+          "type": "boolean",
+          "description": "Cancel at end of current billing period",
+          "default": false
+        },
+        "metadata": {
+          "type": "object",
+          "required": false
+        },
+        "default_payment_method": {
+          "type": "string",
+          "description": "Payment method ID to use (pm_...)",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "subscription",
         "fields": [
           "id",
           "status",
-          "amount",
+          "current_period_end",
+          "customer",
+          "items.data[0].price.id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_checkout_session",
+      "description_for_ai": "Create a Stripe Checkout hosted page — easiest way to accept payments. Redirect customer to Stripe's secure page, get redirected back on success.",
+      "intent": [
+        "checkout page",
+        "payment page",
+        "hosted checkout",
+        "stripe checkout",
+        "buy now link",
+        "страница оплаты"
+      ],
+      "endpoint": "POST https://api.stripe.com/v1/checkout/sessions",
+      "input": {
+        "line_items": {
+          "type": "array",
+          "description": "[{price: 'price_xxx', quantity: 1}] or [{price_data: {currency, product_data: {name}, unit_amount}, quantity}]",
+          "required": true
+        },
+        "mode": {
+          "type": "string",
+          "description": "payment (one-time), subscription (recurring), setup (save card)",
+          "required": true
+        },
+        "success_url": {
+          "type": "string",
+          "description": "Redirect URL after successful payment. Can include {CHECKOUT_SESSION_ID}",
+          "required": true
+        },
+        "cancel_url": {
+          "type": "string",
+          "description": "Redirect URL if customer cancels",
+          "required": true
+        },
+        "customer_email": {
+          "type": "string",
+          "description": "Pre-fill customer email",
+          "required": false
+        },
+        "metadata": {
+          "type": "object",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "checkout_session",
+        "fields": [
+          "id",
+          "url",
+          "payment_status",
+          "amount_total",
+          "currency"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_payments",
+      "description_for_ai": "List payment intents with filters. Use for payment history, reconciliation, reporting.",
+      "intent": [
+        "payment history",
+        "list transactions",
+        "payment report",
+        "recent payments",
+        "payment list",
+        "история платежей"
+      ],
+      "endpoint": "GET https://api.stripe.com/v1/payment_intents",
+      "input": {
+        "customer": {
+          "type": "string",
+          "description": "Filter by customer ID",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Results per page 1-100",
+          "default": 10
+        },
+        "starting_after": {
+          "type": "string",
+          "description": "Cursor for next page — last item ID from previous response",
+          "required": false
+        },
+        "created[gte]": {
+          "type": "integer",
+          "description": "Unix timestamp — payments created after this date",
+          "required": false
+        },
+        "created[lte]": {
+          "type": "integer",
+          "description": "Unix timestamp — payments created before this date",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<payment_intent>",
+        "fields": [
+          "data[0].id",
+          "data[0].amount",
+          "data[0].status",
+          "data[0].customer",
+          "data[0].created",
+          "has_more"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_invoice",
+      "description_for_ai": "Create and send an invoice to a customer. Invoice can be paid via link. Good for B2B billing where you need an official invoice document.",
+      "intent": [
+        "create invoice",
+        "send invoice",
+        "bill customer",
+        "invoice",
+        "выставить счёт",
+        "счёт на оплату"
+      ],
+      "endpoint": "POST https://api.stripe.com/v1/invoices",
+      "input": {
+        "customer": {
+          "type": "string",
+          "description": "Customer ID (cus_...)",
+          "required": true
+        },
+        "auto_advance": {
+          "type": "boolean",
+          "description": "Auto-finalize and send invoice. Set false to review first.",
+          "default": true
+        },
+        "collection_method": {
+          "type": "string",
+          "description": "charge_automatically or send_invoice",
+          "default": "charge_automatically"
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "due_date": {
+          "type": "integer",
+          "description": "Unix timestamp for payment due date (only for send_invoice)",
+          "required": false
+        },
+        "metadata": {
+          "type": "object",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "invoice",
+        "fields": [
+          "id",
+          "status",
+          "hosted_invoice_url",
+          "amount_due",
           "currency",
-          "payment_method",
-          "created",
-          "metadata"
+          "customer"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_balance",
+      "description_for_ai": "Get your Stripe account balance — available funds, pending funds, and breakdown by currency.",
+      "intent": [
+        "stripe balance",
+        "account balance",
+        "available funds",
+        "pending balance",
+        "how much money",
+        "баланс stripe"
+      ],
+      "endpoint": "GET https://api.stripe.com/v1/balance",
+      "input": {},
+      "output": {
+        "type": "balance",
+        "fields": [
+          "available[0].amount",
+          "available[0].currency",
+          "pending[0].amount",
+          "pending[0].currency"
         ]
       },
       "realtime": true,
