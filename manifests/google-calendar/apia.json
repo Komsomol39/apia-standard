@@ -22,15 +22,12 @@
   "capabilities": [
     {
       "id": "list_events",
-      "description_for_ai": "Get upcoming or past calendar events with full details. Filter by date range, search query, or calendar. Supports recurring events.",
+      "description_for_ai": "Get calendar events in a time range. Filter by search query, attendee, or calendar.",
       "intent": [
         "calendar events",
         "my schedule",
         "upcoming meetings",
         "what is on calendar",
-        "free slots",
-        "busy times",
-        "meeting list",
         "расписание",
         "встречи"
       ],
@@ -38,43 +35,34 @@
       "input": {
         "calendarId": {
           "type": "string",
-          "description": "Calendar ID. Use 'primary' for main calendar, or full calendar ID like user@gmail.com",
           "default": "primary"
         },
         "timeMin": {
           "type": "string",
-          "description": "Lower bound for event end time, ISO 8601 format with timezone. E.g. 2024-01-15T00:00:00Z",
+          "description": "ISO 8601 start time e.g. 2024-01-15T00:00:00Z",
           "required": false
         },
         "timeMax": {
           "type": "string",
-          "description": "Upper bound for event start time, ISO 8601 format. E.g. 2024-01-22T23:59:59Z",
           "required": false
         },
         "q": {
           "type": "string",
-          "description": "Free-text search query matching event title, description, location, attendees",
+          "description": "Search query",
           "required": false
         },
         "maxResults": {
           "type": "integer",
-          "description": "Max events to return, default 250, max 2500",
           "default": 10
-        },
-        "orderBy": {
-          "type": "string",
-          "description": "startTime (requires singleEvents=true) or updated",
-          "default": "startTime"
         },
         "singleEvents": {
           "type": "boolean",
-          "description": "Expand recurring events into individual instances. Required for orderBy=startTime",
+          "description": "Expand recurring events",
           "default": true
         },
-        "showDeleted": {
-          "type": "boolean",
-          "description": "Include deleted events in results",
-          "default": false
+        "orderBy": {
+          "type": "string",
+          "default": "startTime"
         }
       },
       "output": {
@@ -85,10 +73,8 @@
           "items[0].start.dateTime",
           "items[0].end.dateTime",
           "items[0].location",
-          "items[0].description",
           "items[0].attendees",
-          "items[0].htmlLink",
-          "items[0].status"
+          "items[0].htmlLink"
         ]
       },
       "realtime": true,
@@ -96,22 +82,19 @@
     },
     {
       "id": "create_event",
-      "description_for_ai": "Create a new calendar event with title, time, location, attendees, reminders, and recurrence rules.",
+      "description_for_ai": "Create a calendar event with title, time, location, attendees, reminders, Google Meet link, and recurrence.",
       "intent": [
         "create meeting",
         "add to calendar",
         "schedule event",
-        "book appointment",
-        "set reminder",
+        "new event",
         "новая встреча",
-        "добавить в календарь",
-        "запланировать"
+        "добавить в календарь"
       ],
       "endpoint": "POST https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events",
       "input": {
         "calendarId": {
           "type": "string",
-          "description": "Target calendar ID, use 'primary' for main",
           "default": "primary"
         },
         "summary": {
@@ -121,47 +104,44 @@
         },
         "start": {
           "type": "object",
-          "description": "{dateTime: '2024-01-15T14:00:00', timeZone: 'Europe/Moscow'} for timed events, or {date: '2024-01-15'} for all-day",
+          "description": "{dateTime: '2024-01-15T14:00:00', timeZone: 'Europe/Moscow'} or {date: '2024-01-15'} for all-day",
           "required": true
         },
         "end": {
           "type": "object",
-          "description": "{dateTime: '2024-01-15T15:00:00', timeZone: 'Europe/Moscow'} or {date: '2024-01-16'} for all-day",
           "required": true
         },
         "location": {
           "type": "string",
-          "description": "Physical location or meeting URL",
           "required": false
         },
         "description": {
           "type": "string",
-          "description": "Event description/notes (supports some HTML)",
           "required": false
         },
         "attendees": {
           "type": "array",
-          "description": "[{email: 'user@example.com', optional: false}] — invites guests and sends emails",
+          "description": "[{email: 'user@example.com'}]",
           "required": false
         },
         "reminders": {
           "type": "object",
-          "description": "{useDefault: false, overrides: [{method: 'email'|'popup', minutes: 30}]}",
+          "description": "{useDefault: false, overrides: [{method: 'popup', minutes: 15}]}",
           "required": false
         },
         "recurrence": {
           "type": "array",
-          "description": "['RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR'] for recurring events",
+          "description": "['RRULE:FREQ=WEEKLY;BYDAY=MO,WE']",
           "required": false
         },
         "conferenceData": {
           "type": "object",
-          "description": "{createRequest: {requestId: 'unique-id', conferenceSolutionKey: {type: 'hangoutsMeet'}}} to auto-create Google Meet",
+          "description": "{createRequest: {requestId: 'unique', conferenceSolutionKey: {type: 'hangoutsMeet'}}}",
           "required": false
         },
         "sendUpdates": {
           "type": "string",
-          "description": "all (notify all attendees), externalOnly, or none. Default none.",
+          "description": "all, externalOnly, none",
           "required": false
         }
       },
@@ -170,11 +150,182 @@
         "fields": [
           "id",
           "htmlLink",
+          "hangoutLink",
+          "conferenceData.entryPoints[0].uri",
+          "summary",
+          "start.dateTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_event",
+      "description_for_ai": "Update an existing calendar event. Change time, location, title, attendees, or description.",
+      "intent": [
+        "update meeting",
+        "reschedule event",
+        "change meeting time",
+        "edit event",
+        "перенести встречу"
+      ],
+      "endpoint": "PATCH https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events/{eventId}",
+      "input": {
+        "calendarId": {
+          "type": "string",
+          "default": "primary"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true
+        },
+        "summary": {
+          "type": "string",
+          "required": false
+        },
+        "start": {
+          "type": "object",
+          "required": false
+        },
+        "end": {
+          "type": "object",
+          "required": false
+        },
+        "location": {
+          "type": "string",
+          "required": false
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "attendees": {
+          "type": "array",
+          "required": false
+        },
+        "sendUpdates": {
+          "type": "string",
+          "description": "all — sends update emails to guests",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "event",
+        "fields": [
+          "id",
           "summary",
           "start.dateTime",
-          "end.dateTime",
-          "hangoutLink",
-          "conferenceData.entryPoints[0].uri"
+          "updated"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "delete_event",
+      "description_for_ai": "Delete a calendar event. Optionally notify attendees.",
+      "intent": [
+        "delete event",
+        "cancel meeting",
+        "remove from calendar",
+        "удалить встречу",
+        "отменить событие"
+      ],
+      "endpoint": "DELETE https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events/{eventId}",
+      "input": {
+        "calendarId": {
+          "type": "string",
+          "default": "primary"
+        },
+        "eventId": {
+          "type": "string",
+          "required": true
+        },
+        "sendUpdates": {
+          "type": "string",
+          "description": "all to notify attendees of cancellation",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_calendars",
+      "description_for_ai": "List all calendars in the user's account with IDs. Use calendar IDs in other methods.",
+      "intent": [
+        "list calendars",
+        "all calendars",
+        "calendar list",
+        "список календарей"
+      ],
+      "endpoint": "GET https://www.googleapis.com/calendar/v3/users/me/calendarList",
+      "input": {
+        "showHidden": {
+          "type": "boolean",
+          "default": false
+        },
+        "showDeleted": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "list<calendar>",
+        "fields": [
+          "items[0].id",
+          "items[0].summary",
+          "items[0].primary",
+          "items[0].backgroundColor",
+          "items[0].accessRole"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_freebusy",
+      "description_for_ai": "Check free/busy availability for calendars within a time range. Use for scheduling assistants.",
+      "intent": [
+        "check availability",
+        "free slots",
+        "busy times",
+        "when is free",
+        "когда свободен"
+      ],
+      "endpoint": "POST https://www.googleapis.com/calendar/v3/freeBusy",
+      "input": {
+        "timeMin": {
+          "type": "string",
+          "description": "ISO 8601 start time",
+          "required": true
+        },
+        "timeMax": {
+          "type": "string",
+          "description": "ISO 8601 end time",
+          "required": true
+        },
+        "items": {
+          "type": "array",
+          "description": "[{id: 'primary'}, {id: 'user@example.com'}] — calendars to check",
+          "required": true
+        },
+        "timeZone": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "freebusy",
+        "fields": [
+          "calendars.primary.busy[0].start",
+          "calendars.primary.busy[0].end"
         ]
       },
       "realtime": true,
