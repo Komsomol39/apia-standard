@@ -23,32 +23,26 @@
   "capabilities": [
     {
       "id": "search_photos",
-      "description_for_ai": "Search Unsplash for free high-quality stock photos by keyword. Returns image URLs in multiple sizes.",
+      "description_for_ai": "Search free high-quality stock photos on Unsplash. Returns photos with download URLs and photographer credits.",
       "intent": [
-        "find image",
-        "stock photo",
-        "free image",
-        "photo of",
-        "background image",
-        "картинка"
+        "stock photos",
+        "free images",
+        "unsplash search",
+        "бесплатные фото unsplash"
       ],
       "endpoint": "GET https://api.unsplash.com/search/photos",
       "input": {
         "query": {
           "type": "string",
-          "required": true,
-          "description": "Search query string"
-        },
-        "page": {
-          "type": "integer",
-          "default": 1,
-          "description": "Page number for pagination (1-indexed)"
+          "required": true
         },
         "per_page": {
           "type": "integer",
-          "default": 10,
-          "max": 30,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "default": 10
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         },
         "orientation": {
           "type": "string",
@@ -59,62 +53,121 @@
           "type": "string",
           "description": "black_and_white, black, white, yellow, orange, red, purple, magenta, green, teal, blue",
           "required": false
+        },
+        "order_by": {
+          "type": "string",
+          "description": "relevant or latest",
+          "default": "relevant"
         }
       },
       "output": {
         "type": "list<photo>",
         "fields": [
-          "id",
-          "urls.regular",
-          "urls.thumb",
-          "urls.full",
-          "description",
-          "user.name",
-          "width",
-          "height"
+          "results[0].id",
+          "results[0].urls.regular",
+          "results[0].urls.thumb",
+          "results[0].description",
+          "results[0].user.name",
+          "results[0].links.download"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "random_photo",
-      "description_for_ai": "Get a random high-quality photo, optionally filtered by keyword.",
+      "id": "get_photo",
+      "description_for_ai": "Get a specific photo with full metadata: dimensions, EXIF, location, tags, download link.",
       "intent": [
-        "random photo",
-        "random image",
-        "surprise image",
-        "random background"
+        "photo details unsplash",
+        "get image unsplash",
+        "photo info",
+        "детали фото unsplash"
       ],
-      "endpoint": "GET https://api.unsplash.com/photos/random",
+      "endpoint": "GET https://api.unsplash.com/photos/{id}",
       "input": {
-        "query": {
+        "id": {
           "type": "string",
-          "description": "Filter by topic",
-          "required": false
-        },
-        "orientation": {
-          "type": "string",
-          "required": false
-        },
-        "count": {
-          "type": "integer",
-          "description": "Number of photos",
-          "default": 1,
-          "max": 30
+          "description": "Photo ID from search results",
+          "required": true
         }
       },
       "output": {
         "type": "photo",
         "fields": [
           "id",
-          "urls.regular",
           "urls.full",
-          "description",
-          "user.name"
+          "urls.regular",
+          "user.name",
+          "width",
+          "height",
+          "exif.model",
+          "location.name",
+          "downloads"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "download_photo",
+      "description_for_ai": "Trigger a download event and get the full-resolution download URL. Required by Unsplash guidelines when downloading a photo.",
+      "intent": [
+        "download unsplash photo",
+        "free stock image download",
+        "скачать фото unsplash"
+      ],
+      "endpoint": "GET https://api.unsplash.com/photos/{id}/download",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "download",
+        "fields": [
+          "url (direct download link to full-resolution image)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_random_photo",
+      "description_for_ai": "Get one or multiple random photos. Optionally filter by query, orientation, or collection.",
+      "intent": [
+        "random photo unsplash",
+        "random image",
+        "random stock photo",
+        "случайное фото unsplash"
+      ],
+      "endpoint": "GET https://api.unsplash.com/photos/random",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Filter random photos by topic",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of photos 1-30",
+          "default": 1
+        },
+        "orientation": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "photo or list<photo>",
+        "fields": [
+          "urls.regular",
+          "user.name",
+          "description",
+          "links.download"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
