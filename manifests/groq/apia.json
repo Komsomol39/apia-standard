@@ -21,33 +21,144 @@
   },
   "capabilities": [
     {
-      "id": "chat_completion",
-      "description_for_ai": "Ultra-fast chat completions — 10-20x faster than OpenAI. Same quality, much faster. Best for real-time interactive applications.",
+      "id": "chat",
+      "description_for_ai": "Ultra-fast LLM inference on Groq LPU hardware. 300+ tokens/sec. Llama 3, Mixtral, Gemma. Free tier 6000 tokens/min. Best for latency-critical apps.",
       "intent": [
-        "fast AI",
-        "low latency LLM",
-        "real time AI",
-        "groq",
-        "llama fast"
+        "groq fast AI",
+        "fastest LLM",
+        "low latency AI",
+        "быстрый ИИ groq",
+        "groq llama"
       ],
       "endpoint": "POST https://api.groq.com/openai/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "llama-3.1-8b-instant (fastest), llama-3.3-70b-versatile, mixtral-8x7b-32768",
+          "description": "llama-3.3-70b-versatile (best), llama-3.1-8b-instant (fastest), mixtral-8x7b-32768 (32K context)",
           "required": true
         },
         "messages": {
           "type": "array",
           "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "default": 1.0
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        },
+        "stream": {
+          "type": "boolean",
+          "default": false
+        },
+        "stop": {
+          "type": "array",
+          "description": "Stop sequences",
+          "required": false
         }
       },
       "output": {
         "type": "completion",
         "fields": [
           "choices[0].message.content",
-          "usage",
-          "x_groq.id"
+          "usage.prompt_tokens",
+          "usage.completion_tokens",
+          "x_groq.usage.queue_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "speech_to_text",
+      "description_for_ai": "Fast Whisper STT on Groq. Faster than OpenAI Whisper. Free tier available.",
+      "intent": [
+        "groq whisper",
+        "fast transcription",
+        "speech to text groq",
+        "транскрибация groq"
+      ],
+      "endpoint": "POST https://api.groq.com/openai/v1/audio/transcriptions",
+      "input": {
+        "file": {
+          "type": "file",
+          "description": "Audio file: mp3, mp4, mpeg, mpga, m4a, wav, webm (max 25MB)",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "description": "whisper-large-v3 or whisper-large-v3-turbo (faster)",
+          "default": "whisper-large-v3"
+        },
+        "language": {
+          "type": "string",
+          "description": "ISO 639-1 language code. Auto-detected if omitted.",
+          "required": false
+        },
+        "response_format": {
+          "type": "string",
+          "description": "json, text, srt, vtt, verbose_json",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "transcription",
+        "fields": [
+          "text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List all available Groq models with context window sizes.",
+      "intent": [
+        "groq models",
+        "available models groq",
+        "модели groq"
+      ],
+      "endpoint": "GET https://api.groq.com/openai/v1/models",
+      "input": {},
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "data[0].id",
+          "data[0].context_window",
+          "data[0].owned_by"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "vision",
+      "description_for_ai": "Vision model on Groq — analyze images at Groq speed. Send image URL or base64.",
+      "intent": [
+        "groq vision",
+        "image analysis groq",
+        "fast image AI",
+        "анализ изображения groq"
+      ],
+      "endpoint": "POST https://api.groq.com/openai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "llama-4-scout-17b-16e-instruct or meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: user, content: [{type: image_url, image_url: {url: 'https://...'}}, {type: text, text: 'Describe this'}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
         ]
       },
       "realtime": true,
