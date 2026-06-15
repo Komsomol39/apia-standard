@@ -23,69 +23,54 @@
   "capabilities": [
     {
       "id": "list_records",
-      "description_for_ai": "Get records from an Airtable table with optional filters, sorts, and field selection. Perfect for reading database entries.",
+      "description_for_ai": "List records from an Airtable table with filters, sort, and field selection.",
       "intent": [
         "airtable records",
-        "get data",
-        "table rows",
-        "airtable list",
-        "spreadsheet data"
+        "get data airtable",
+        "list rows",
+        "данные airtable"
       ],
-      "endpoint": "GET https://api.airtable.com/v0/{base_id}/{table_name}",
+      "endpoint": "GET https://api.airtable.com/v0/{baseId}/{tableId}",
       "input": {
-        "base_id": {
+        "baseId": {
           "type": "string",
-          "description": "Airtable base ID from URL: airtable.com/{BASE_ID}/... — starts with 'app'",
           "required": true
         },
-        "table_name": {
+        "tableId": {
           "type": "string",
-          "description": "Table name exactly as shown in Airtable (case-sensitive) e.g. 'Tasks', 'Contacts', 'Products'",
+          "description": "Table ID or name",
           "required": true
         },
         "filterByFormula": {
           "type": "string",
-          "description": "Airtable formula to filter: {Status}='Active', AND({Priority}='High',{Assignee}='John')",
+          "description": "Airtable formula: {Status}='Done', AND({Priority}='High',NOT({Done}))",
           "required": false
-        },
-        "maxRecords": {
-          "type": "integer",
-          "description": "Maximum total records to return",
-          "required": false
-        },
-        "pageSize": {
-          "type": "integer",
-          "description": "Records per page, max 100",
-          "default": 100
         },
         "sort": {
           "type": "array",
-          "description": "[{field: 'Name', direction: 'asc'}, {field: 'Created', direction: 'desc'}]",
-          "required": false
-        },
-        "view": {
-          "type": "string",
-          "description": "View name to apply its filters/sorts (e.g. 'Grid view', 'Active Tasks')",
+          "description": "[{field: 'Created', direction: 'desc'}]",
           "required": false
         },
         "fields": {
           "type": "array",
-          "description": "Array of field names to include: ['Name', 'Status', 'Due Date']",
+          "description": "Field names to return. Omit for all.",
           "required": false
         },
-        "offset": {
-          "type": "string",
-          "description": "Pagination offset from previous response's offset field",
+        "maxRecords": {
+          "type": "integer",
           "required": false
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 100
         }
       },
       "output": {
         "type": "list<record>",
         "fields": [
           "records[0].id",
-          "records[0].fields (all requested field values)",
-          "records[0].createdTime",
-          "offset (for next page if more records exist)"
+          "records[0].fields",
+          "offset (for next page)"
         ]
       },
       "realtime": true,
@@ -93,38 +78,109 @@
     },
     {
       "id": "create_record",
-      "description_for_ai": "Create a new record in an Airtable table with field values.",
+      "description_for_ai": "Create one or multiple records in an Airtable table.",
       "intent": [
-        "add record",
-        "new row",
-        "create entry",
-        "insert data",
-        "add to airtable"
+        "create airtable record",
+        "add row airtable",
+        "new entry airtable",
+        "добавить запись airtable"
       ],
-      "endpoint": "POST https://api.airtable.com/v0/{base_id}/{table_name}",
+      "endpoint": "POST https://api.airtable.com/v0/{baseId}/{tableId}",
       "input": {
-        "base_id": {
+        "baseId": {
           "type": "string",
-          "description": "Airtable base ID from URL",
           "required": true
         },
-        "table_name": {
+        "tableId": {
           "type": "string",
-          "description": "Table name",
           "required": true
         },
-        "fields": {
-          "type": "object",
-          "description": "Field values: {\"Name\": \"New task\", \"Status\": \"In progress\", \"Due Date\": \"2024-12-31\", \"Assignee\": [\"rec_userId\"]} — linked records use record IDs",
+        "records": {
+          "type": "array",
+          "description": "[{fields: {Name: 'Task', Status: 'Todo', Priority: 'High'}}]",
+          "required": true
+        },
+        "typecast": {
+          "type": "boolean",
+          "description": "Auto-convert values to field types",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "list<record>",
+        "fields": [
+          "records[0].id",
+          "records[0].fields",
+          "records[0].createdTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_record",
+      "description_for_ai": "Update specific fields of existing Airtable records by ID.",
+      "intent": [
+        "update airtable",
+        "edit record airtable",
+        "patch airtable",
+        "обновить airtable"
+      ],
+      "endpoint": "PATCH https://api.airtable.com/v0/{baseId}/{tableId}",
+      "input": {
+        "baseId": {
+          "type": "string",
+          "required": true
+        },
+        "tableId": {
+          "type": "string",
+          "required": true
+        },
+        "records": {
+          "type": "array",
+          "description": "[{id: 'recXXXX', fields: {Status: 'Done'}}]",
           "required": true
         }
       },
       "output": {
-        "type": "record",
+        "type": "list<record>",
         "fields": [
-          "id",
-          "fields",
-          "createdTime"
+          "records[0].id",
+          "records[0].fields"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "delete_record",
+      "description_for_ai": "Delete one or multiple Airtable records by ID.",
+      "intent": [
+        "delete airtable record",
+        "remove row airtable",
+        "удалить запись airtable"
+      ],
+      "endpoint": "DELETE https://api.airtable.com/v0/{baseId}/{tableId}",
+      "input": {
+        "baseId": {
+          "type": "string",
+          "required": true
+        },
+        "tableId": {
+          "type": "string",
+          "required": true
+        },
+        "records": {
+          "type": "array",
+          "description": "['recXXXX', 'recYYYY'] — up to 10 IDs",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "records[0].id",
+          "records[0].deleted"
         ]
       },
       "realtime": true,
