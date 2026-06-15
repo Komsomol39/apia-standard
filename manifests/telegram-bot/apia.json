@@ -23,85 +23,55 @@
   "capabilities": [
     {
       "id": "send_message",
-      "description_for_ai": "Send a text message to a Telegram user or group. Supports markdown formatting. Use to notify users, send alerts, or respond in a bot conversation.",
+      "description_for_ai": "Send a text message to a Telegram user or group chat. Supports Markdown/HTML formatting, reply keyboards, inline keyboards.",
       "intent": [
         "send telegram message",
-        "notify via telegram",
-        "telegram notification",
-        "send message to user",
-        "отправить в телеграм"
+        "telegram notify",
+        "message user telegram",
+        "telegram bot send",
+        "отправить сообщение telegram"
       ],
       "endpoint": "POST https://api.telegram.org/bot{token}/sendMessage",
       "input": {
         "chat_id": {
           "type": "string",
-          "description": "User ID, group ID, or @username. E.g. 123456789 or @mychannel",
+          "description": "Telegram chat ID or @username",
           "required": true
         },
         "text": {
           "type": "string",
-          "description": "Message text. Max 4096 chars.",
+          "description": "Message text, max 4096 chars",
           "required": true
         },
         "parse_mode": {
           "type": "string",
-          "description": "Markdown, MarkdownV2, or HTML for formatting",
+          "description": "HTML or MarkdownV2 for formatting",
           "required": false
         },
         "reply_markup": {
           "type": "object",
-          "description": "Inline keyboard buttons",
+          "description": "InlineKeyboardMarkup or ReplyKeyboardMarkup for buttons",
           "required": false
+        },
+        "reply_to_message_id": {
+          "type": "integer",
+          "description": "Reply to specific message",
+          "required": false
+        },
+        "disable_notification": {
+          "type": "boolean",
+          "description": "Send silently (no notification sound)",
+          "default": false
         }
       },
       "output": {
         "type": "message",
         "fields": [
-          "message_id",
-          "chat.id",
-          "text",
-          "date"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_updates",
-      "description_for_ai": "Get new messages sent to the bot (long polling). Use to receive user commands and messages without setting up a webhook.",
-      "intent": [
-        "receive messages",
-        "bot updates",
-        "get commands",
-        "user messages"
-      ],
-      "endpoint": "GET https://api.telegram.org/bot{token}/getUpdates",
-      "input": {
-        "offset": {
-          "type": "integer",
-          "description": "Update ID to start from (for pagination)",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 100,
-          "description": "Maximum number of results to return"
-        },
-        "timeout": {
-          "type": "integer",
-          "description": "Long polling timeout in seconds",
-          "default": 0
-        }
-      },
-      "output": {
-        "type": "list<update>",
-        "fields": [
-          "update_id",
-          "message.text",
-          "message.from.id",
-          "message.from.username",
-          "message.chat.id",
-          "message.date"
+          "ok",
+          "result.message_id",
+          "result.chat.id",
+          "result.text",
+          "result.date"
         ]
       },
       "realtime": true,
@@ -109,11 +79,13 @@
     },
     {
       "id": "send_photo",
-      "description_for_ai": "Send a photo to a Telegram chat. Can be a URL or uploaded file.",
+      "description_for_ai": "Send a photo to Telegram chat. Can use URL, file_id (for previously sent file), or upload bytes.",
       "intent": [
-        "send image telegram",
-        "photo message",
-        "отправить фото"
+        "send photo telegram",
+        "telegram image",
+        "send picture",
+        "photo bot",
+        "отправить фото telegram"
       ],
       "endpoint": "POST https://api.telegram.org/bot{token}/sendPhoto",
       "input": {
@@ -123,21 +95,307 @@
         },
         "photo": {
           "type": "string",
-          "description": "URL of image or file_id of previously uploaded photo",
+          "description": "File URL, file_id, or multipart upload",
           "required": true
         },
         "caption": {
           "type": "string",
-          "description": "Photo caption. Max 1024 chars.",
+          "description": "Photo caption, max 1024 chars",
+          "required": false
+        },
+        "parse_mode": {
+          "type": "string",
           "required": false
         }
       },
       "output": {
         "type": "message",
         "fields": [
-          "message_id",
-          "photo",
-          "caption"
+          "result.message_id",
+          "result.photo[-1].file_id",
+          "result.caption"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_document",
+      "description_for_ai": "Send a file (PDF, DOCX, CSV, ZIP) to Telegram chat. Max 50MB.",
+      "intent": [
+        "send file telegram",
+        "telegram document",
+        "send pdf telegram",
+        "attach file",
+        "отправить файл telegram"
+      ],
+      "endpoint": "POST https://api.telegram.org/bot{token}/sendDocument",
+      "input": {
+        "chat_id": {
+          "type": "string",
+          "required": true
+        },
+        "document": {
+          "type": "string",
+          "description": "File URL, file_id, or multipart upload",
+          "required": true
+        },
+        "caption": {
+          "type": "string",
+          "required": false
+        },
+        "parse_mode": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "result.message_id",
+          "result.document.file_id",
+          "result.document.file_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_updates",
+      "description_for_ai": "Get pending updates (messages, callbacks, inline queries) via long polling. Use for simple bots without webhooks. Call repeatedly to receive messages.",
+      "intent": [
+        "receive messages telegram",
+        "get telegram messages",
+        "polling bot",
+        "check messages",
+        "получить сообщения telegram"
+      ],
+      "endpoint": "GET https://api.telegram.org/bot{token}/getUpdates",
+      "input": {
+        "offset": {
+          "type": "integer",
+          "description": "Identifier of the first update to return. Pass last update_id + 1 to confirm previous updates.",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Max updates to return 1-100",
+          "default": 100
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Long polling timeout in seconds. 0 = short poll",
+          "default": 30
+        },
+        "allowed_updates": {
+          "type": "array",
+          "description": "['message', 'callback_query', 'inline_query'] — filter update types",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "updates",
+        "fields": [
+          "result[0].update_id",
+          "result[0].message.text",
+          "result[0].message.from.id",
+          "result[0].callback_query.data"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "set_webhook",
+      "description_for_ai": "Set a webhook URL — Telegram will POST updates to your server. Preferred over getUpdates for production. Must be HTTPS.",
+      "intent": [
+        "telegram webhook",
+        "set webhook",
+        "receive updates server",
+        "production bot setup",
+        "настроить webhook telegram"
+      ],
+      "endpoint": "POST https://api.telegram.org/bot{token}/setWebhook",
+      "input": {
+        "url": {
+          "type": "string",
+          "description": "HTTPS URL to receive updates. Empty string to remove webhook.",
+          "required": true
+        },
+        "secret_token": {
+          "type": "string",
+          "description": "Secret token sent in X-Telegram-Bot-Api-Secret-Token header to verify requests",
+          "required": false
+        },
+        "allowed_updates": {
+          "type": "array",
+          "description": "Update types to receive",
+          "required": false
+        },
+        "max_connections": {
+          "type": "integer",
+          "description": "Max simultaneous HTTPS connections 1-100",
+          "default": 40
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "ok",
+          "result",
+          "description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "answer_callback_query",
+      "description_for_ai": "Respond to a button click (callback query) from an inline keyboard. Required to clear the loading state after button press.",
+      "intent": [
+        "telegram button click",
+        "callback query",
+        "inline button response",
+        "answer button",
+        "ответить на кнопку telegram"
+      ],
+      "endpoint": "POST https://api.telegram.org/bot{token}/answerCallbackQuery",
+      "input": {
+        "callback_query_id": {
+          "type": "string",
+          "description": "ID from the callback_query update",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "description": "Notification text to show (0-200 chars). Omit for silent acknowledge.",
+          "required": false
+        },
+        "show_alert": {
+          "type": "boolean",
+          "description": "Show as alert dialog instead of notification",
+          "default": false
+        },
+        "url": {
+          "type": "string",
+          "description": "URL to open on client side",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "ok",
+          "result"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "edit_message_text",
+      "description_for_ai": "Edit text of a previously sent message. Use to update bot messages without spamming — e.g. update progress, show results inline.",
+      "intent": [
+        "edit telegram message",
+        "update message",
+        "change message text",
+        "edit bot message",
+        "редактировать сообщение telegram"
+      ],
+      "endpoint": "POST https://api.telegram.org/bot{token}/editMessageText",
+      "input": {
+        "chat_id": {
+          "type": "string",
+          "required": false
+        },
+        "message_id": {
+          "type": "integer",
+          "description": "ID of the message to edit",
+          "required": false
+        },
+        "inline_message_id": {
+          "type": "string",
+          "description": "For inline bot messages",
+          "required": false
+        },
+        "text": {
+          "type": "string",
+          "required": true
+        },
+        "parse_mode": {
+          "type": "string",
+          "required": false
+        },
+        "reply_markup": {
+          "type": "object",
+          "description": "New inline keyboard",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "result.message_id",
+          "result.text",
+          "result.edit_date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_invoice",
+      "description_for_ai": "Send a payment invoice via Telegram Payments. User can pay directly in the Telegram app. Requires payment provider token (Stripe, YooMoney etc.)",
+      "intent": [
+        "telegram payment",
+        "telegram invoice",
+        "pay in telegram",
+        "telegram shop",
+        "оплата через telegram"
+      ],
+      "endpoint": "POST https://api.telegram.org/bot{token}/sendInvoice",
+      "input": {
+        "chat_id": {
+          "type": "string",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "description": "Product name 1-32 chars",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "description": "Product description 1-255 chars",
+          "required": true
+        },
+        "payload": {
+          "type": "string",
+          "description": "Internal payload for your system",
+          "required": true
+        },
+        "provider_token": {
+          "type": "string",
+          "description": "Payment provider token from @BotFather",
+          "required": true
+        },
+        "currency": {
+          "type": "string",
+          "description": "3-letter ISO 4217 currency code",
+          "required": true
+        },
+        "prices": {
+          "type": "array",
+          "description": "[{label: 'Product', amount: 1000}] — amount in smallest units",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "result.message_id",
+          "result.invoice.title",
+          "result.invoice.total_amount"
         ]
       },
       "realtime": true,
