@@ -22,56 +22,59 @@
   "capabilities": [
     {
       "id": "transcribe",
-      "description_for_ai": "Transcribe audio to text with near-human accuracy in 50+ languages. Handles accents, background noise, and technical terminology.",
+      "description_for_ai": "Transcribe audio to text. Best-in-class accuracy for 100+ languages. $0.006/minute. Max 25MB.",
       "intent": [
         "transcribe audio",
         "speech to text",
-        "convert audio to text",
-        "voice transcription",
-        "meeting notes",
-        "podcast transcript"
+        "audio to text",
+        "whisper",
+        "транскрибация whisper"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file: mp3, mp4, mpeg, mpga, m4a, wav, webm. Max 25MB. For larger files compress to mp3 first.",
+          "description": "Audio file (mp3, mp4, mpeg, mpga, m4a, wav, webm). Max 25MB.",
           "required": true
         },
         "model": {
           "type": "string",
-          "description": "Always 'whisper-1' — the only available Whisper model via API",
           "default": "whisper-1"
         },
         "language": {
           "type": "string",
-          "description": "ISO 639-1 language code: en, ru, de, fr, es, zh, ja, ar, etc. Auto-detected if omitted — but specifying improves accuracy.",
+          "description": "ISO 639-1 code. Providing language improves speed and accuracy.",
           "required": false
         },
         "prompt": {
           "type": "string",
-          "description": "Context hint to improve accuracy: technical terms, proper nouns, or speaking style. E.g. 'Meeting about Kubernetes deployment'",
+          "description": "Guide transcription style or vocabulary. 'The following is a medical consultation.' or 'Names: John, Anthropic, GPT-4'",
           "required": false
         },
         "response_format": {
           "type": "string",
-          "description": "json (default), text (plain string), srt (subtitles), vtt (WebVTT), verbose_json (with timestamps)",
+          "description": "json (default), text, srt (subtitles), vtt (subtitles), verbose_json (with timestamps)",
           "default": "json"
         },
         "temperature": {
           "type": "float",
-          "description": "Sampling temperature 0-1. Higher = more creative guesses for unclear audio.",
+          "description": "0 for deterministic. Increase if transcription seems stuck.",
           "default": 0
+        },
+        "timestamp_granularities": {
+          "type": "array",
+          "description": "['word', 'segment'] — requires verbose_json format",
+          "required": false
         }
       },
       "output": {
-        "type": "transcription",
+        "type": "transcript",
         "fields": [
-          "text (transcribed text)",
-          "language (detected)",
-          "duration (seconds)",
-          "words (with timestamps in verbose_json)",
-          "segments (sentence-level timestamps in verbose_json)"
+          "text",
+          "words[0].word (verbose_json)",
+          "words[0].start",
+          "words[0].end",
+          "segments[0].text"
         ]
       },
       "realtime": false,
@@ -79,19 +82,18 @@
     },
     {
       "id": "translate",
-      "description_for_ai": "Transcribe audio in any language and translate to English simultaneously. Useful for multilingual audio content.",
+      "description_for_ai": "Transcribe AND translate audio to English in one call. Any language input → English output.",
       "intent": [
         "translate audio",
+        "transcribe and translate",
         "audio translation",
-        "foreign audio to english",
-        "multilingual transcription",
-        "speech translation"
+        "перевод аудио whisper"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/translations",
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file in any supported language",
+          "description": "Audio file in any language",
           "required": true
         },
         "model": {
@@ -100,12 +102,10 @@
         },
         "prompt": {
           "type": "string",
-          "description": "English text prompt to guide translation style",
           "required": false
         },
         "response_format": {
           "type": "string",
-          "description": "json, text, srt, vtt, or verbose_json",
           "default": "json"
         },
         "temperature": {
@@ -120,6 +120,82 @@
         ]
       },
       "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "transcribe_long",
+      "description_for_ai": "Handle audio longer than 25MB by splitting into chunks. This is a pattern — split audio, transcribe each chunk, merge results.",
+      "intent": [
+        "long audio transcription",
+        "transcribe podcast",
+        "transcribe meeting recording",
+        "длинная транскрибация"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
+      "input": {
+        "file": {
+          "type": "file",
+          "description": "Split audio chunk under 25MB. Use ffmpeg: ffmpeg -i audio.mp3 -segment_time 300 -f segment chunk_%03d.mp3",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "whisper-1"
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        },
+        "response_format": {
+          "type": "string",
+          "description": "verbose_json to get timestamps for accurate merging",
+          "default": "verbose_json"
+        }
+      },
+      "output": {
+        "type": "transcript",
+        "fields": [
+          "text",
+          "segments[0].start",
+          "segments[0].end",
+          "segments[0].text"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "transcribe_realtime",
+      "description_for_ai": "Near-realtime transcription using GPT-4o audio preview model via chat completions API.",
+      "intent": [
+        "realtime whisper",
+        "streaming transcription openai",
+        "live audio openai",
+        "реальное время транскрибация openai"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "gpt-4o-audio-preview"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: user, content: [{type: input_audio, input_audio: {data: BASE64_AUDIO, format: wav|mp3}}]}]",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 1024
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
