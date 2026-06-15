@@ -22,25 +22,24 @@
   },
   "capabilities": [
     {
-      "id": "transcribe",
-      "description_for_ai": "Transcribe audio file to text with timestamps, speaker labels, and AI insights. Submit URL or upload file. Async — returns job ID then poll for result.",
+      "id": "submit_transcription",
+      "description_for_ai": "Submit audio for transcription. Returns job ID to poll. Supports 100+ languages, speaker diarization, auto chapters.",
       "intent": [
-        "transcribe audio",
-        "speech to text",
-        "transcribe recording",
-        "meeting transcription",
-        "podcast transcription"
+        "assemblyai transcribe",
+        "submit audio",
+        "async transcription",
+        "транскрибация assemblyai"
       ],
       "endpoint": "POST https://api.assemblyai.com/v2/transcript",
       "input": {
         "audio_url": {
           "type": "string",
-          "description": "Public URL to audio file (mp3, mp4, wav, m4a, ogg)",
+          "description": "Public URL of audio file",
           "required": true
         },
         "language_code": {
           "type": "string",
-          "description": "en, ru, de, fr, es, etc. Auto-detected if omitted",
+          "description": "en, ru, de, fr, es, etc. Auto-detected if omitted.",
           "required": false
         },
         "speaker_labels": {
@@ -48,30 +47,32 @@
           "description": "Identify different speakers",
           "default": false
         },
-        "sentiment_analysis": {
+        "auto_chapters": {
           "type": "boolean",
+          "description": "Auto-generate chapters with summaries",
           "default": false
         },
-        "auto_chapters": {
+        "sentiment_analysis": {
           "type": "boolean",
           "default": false
         },
         "entity_detection": {
           "type": "boolean",
+          "description": "Detect PII, names, dates, locations",
+          "default": false
+        },
+        "iab_categories": {
+          "type": "boolean",
+          "description": "Classify content into IAB categories",
           "default": false
         }
       },
       "output": {
-        "type": "transcript",
+        "type": "job",
         "fields": [
           "id",
           "status",
-          "text",
-          "words",
-          "utterances",
-          "sentiment_analysis_results",
-          "chapters",
-          "entities"
+          "language_code"
         ]
       },
       "realtime": false,
@@ -79,29 +80,116 @@
     },
     {
       "id": "get_transcript",
-      "description_for_ai": "Poll for transcription result after submitting job. Check status field: queued→processing→completed/error.",
+      "description_for_ai": "Get transcription result by job ID. Poll until status=completed.",
       "intent": [
-        "get transcription result",
-        "check transcription status"
+        "get transcript result",
+        "check transcription status",
+        "poll transcription",
+        "получить транскрипцию assemblyai"
       ],
       "endpoint": "GET https://api.assemblyai.com/v2/transcript/{id}",
       "input": {
         "id": {
           "type": "string",
-          "required": true,
-          "description": "Unique identifier"
+          "description": "Transcript ID from submit_transcription",
+          "required": true
         }
       },
       "output": {
         "type": "transcript",
         "fields": [
-          "status",
+          "id",
+          "status (queued|processing|completed|error)",
           "text",
-          "words",
-          "utterances"
+          "words[0].text",
+          "words[0].start",
+          "words[0].speaker",
+          "chapters[0].summary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "lemur_task",
+      "description_for_ai": "Use LeMUR to ask questions about audio content, generate summaries, extract insights from transcripts using LLMs.",
+      "intent": [
+        "audio Q&A",
+        "summarize audio",
+        "LeMUR",
+        "ask questions about audio",
+        "анализ аудио LLM assemblyai"
+      ],
+      "endpoint": "POST https://api.assemblyai.com/lemur/v3/request",
+      "input": {
+        "transcript_ids": {
+          "type": "array",
+          "description": "List of completed transcript IDs",
+          "required": true
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Question or task e.g. 'Summarize the main points'",
+          "required": true
+        },
+        "final_model": {
+          "type": "string",
+          "description": "anthropic/claude-3-5-haiku (default), anthropic/claude-3-5-sonnet",
+          "required": false
+        },
+        "max_output_size": {
+          "type": "integer",
+          "description": "Max output tokens",
+          "default": 2048
+        }
+      },
+      "output": {
+        "type": "lemur",
+        "fields": [
+          "request_id",
+          "response",
+          "usage.input_tokens",
+          "usage.output_tokens"
         ]
       },
       "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "realtime_transcription",
+      "description_for_ai": "Real-time streaming transcription via WebSocket. Connect, stream audio, get partial and final transcripts.",
+      "intent": [
+        "real-time STT assemblyai",
+        "live transcription",
+        "streaming speech assemblyai",
+        "потоковая транскрибация assemblyai"
+      ],
+      "endpoint": "WSS wss://api.assemblyai.com/v2/realtime/ws",
+      "input": {
+        "sample_rate": {
+          "type": "integer",
+          "description": "Audio sample rate in Hz e.g. 16000",
+          "required": true
+        },
+        "word_boost": {
+          "type": "array",
+          "description": "Domain-specific words to boost accuracy",
+          "required": false
+        },
+        "encoding": {
+          "type": "string",
+          "description": "pcm_s16le (default) or pcm_mulaw",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "streaming",
+        "fields": [
+          "text (partial)",
+          "message_type (PartialTranscript|FinalTranscript)"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
