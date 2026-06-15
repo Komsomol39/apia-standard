@@ -21,49 +21,159 @@
   },
   "capabilities": [
     {
-      "id": "create_speech",
-      "description_for_ai": "High-quality text-to-speech. 6 voices, fast generation. $15/1M chars. Natural sounding speech in many languages. Use for reading text aloud, voice assistants, audiobook narration. Convert text to speech audio. Returns mp3 audio file. 6 natural voices available.",
+      "id": "synthesize",
+      "description_for_ai": "Convert text to speech. 6 voices, multiple formats, speed control. $15/1M characters.",
       "intent": [
-        "text to speech",
-        "read aloud",
-        "voice synthesis",
-        "TTS",
-        "narrate text",
-        "озвучить",
-        "голосовой ответ"
+        "text to speech openai",
+        "TTS openai",
+        "voice from text",
+        "озвучить текст openai"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/speech",
       "input": {
         "model": {
           "type": "string",
-          "description": "tts-1 (fast) or tts-1-hd (high quality)",
-          "default": "tts-1"
+          "description": "tts-1 (fast, lower quality) or tts-1-hd (slower, studio quality)",
+          "required": true
         },
         "input": {
           "type": "string",
-          "description": "Text to convert max 4096 chars",
+          "description": "Text to synthesize. Max 4096 chars. Use sentence breaks for natural pauses.",
           "required": true
         },
         "voice": {
           "type": "string",
-          "description": "alloy (neutral), echo (male), fable (british), onyx (deep), nova (female), shimmer (soft female)",
-          "default": "nova"
+          "description": "alloy (neutral), echo (male), fable (British male), onyx (deep male), nova (female), shimmer (female). Each has distinct character.",
+          "required": true
         },
         "response_format": {
           "type": "string",
-          "description": "mp3, opus, aac, flac, wav, pcm",
+          "description": "mp3 (default, streaming), opus (best compression), aac (Apple), flac (lossless), wav (no compression), pcm (raw 24kHz)",
           "default": "mp3"
         },
         "speed": {
           "type": "float",
-          "description": "0.25 to 4.0 playback speed",
+          "description": "Playback speed 0.25-4.0. Default 1.0. 0.8 for slower, clearer speech.",
           "default": 1.0
         }
       },
       "output": {
         "type": "audio",
         "fields": [
-          "audio/mpeg binary stream"
+          "binary audio stream in specified format"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "synthesize_long",
+      "description_for_ai": "Handle text longer than 4096 chars by splitting at sentence boundaries and concatenating audio.",
+      "intent": [
+        "long text to speech",
+        "synthesize book",
+        "article to audio",
+        "длинный текст в аудио"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/speech",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "tts-1"
+        },
+        "input": {
+          "type": "string",
+          "description": "One chunk under 4096 chars. Split at '. ', '! ', '? ' boundaries.",
+          "required": true
+        },
+        "voice": {
+          "type": "string",
+          "required": true
+        },
+        "response_format": {
+          "type": "string",
+          "description": "Use opus for smaller files when concatenating",
+          "default": "opus"
+        }
+      },
+      "output": {
+        "type": "audio",
+        "fields": [
+          "binary audio chunk"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "synthesize_streaming",
+      "description_for_ai": "Stream TTS audio to client in real-time. Reduces latency — start playback before full generation.",
+      "intent": [
+        "stream TTS",
+        "real-time speech",
+        "streaming audio openai",
+        "потоковое аудио openai"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/speech",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "tts-1 recommended for streaming due to lower latency",
+          "default": "tts-1"
+        },
+        "input": {
+          "type": "string",
+          "required": true
+        },
+        "voice": {
+          "type": "string",
+          "required": true
+        },
+        "response_format": {
+          "type": "string",
+          "description": "mp3 or opus for streaming. Set Accept: audio/mpeg header.",
+          "default": "mp3"
+        }
+      },
+      "output": {
+        "type": "audio_stream",
+        "fields": [
+          "chunked audio bytes — pipe directly to audio player"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "voice_comparison",
+      "description_for_ai": "Generate same text in multiple voices to compare and select best voice for use case.",
+      "intent": [
+        "compare voices",
+        "pick voice",
+        "test voices TTS",
+        "выбрать голос openai"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/speech",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "tts-1"
+        },
+        "input": {
+          "type": "string",
+          "description": "Sample text for comparison",
+          "required": true
+        },
+        "voice": {
+          "type": "string",
+          "description": "One of: alloy, echo, fable, onyx, nova, shimmer. Make separate requests for each.",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "audio",
+        "fields": [
+          "binary audio"
         ]
       },
       "realtime": true,
