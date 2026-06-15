@@ -23,12 +23,12 @@
   "capabilities": [
     {
       "id": "list_sites",
-      "description_for_ai": "List all Netlify sites in account with deploy status and URLs.",
+      "description_for_ai": "List all Netlify sites with deployment status and URLs.",
       "intent": [
         "netlify sites",
+        "list sites netlify",
         "deployed sites",
-        "frontend apps",
-        "static sites"
+        "сайты netlify"
       ],
       "endpoint": "GET https://api.netlify.com/api/v1/sites",
       "input": {
@@ -39,20 +39,22 @@
         },
         "per_page": {
           "type": "integer",
-          "default": 20,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "default": 20
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         }
       },
       "output": {
         "type": "list<site>",
         "fields": [
-          "id",
-          "name",
-          "url",
-          "ssl_url",
-          "published_deploy.state",
-          "published_deploy.published_at",
-          "build_settings.repo_url"
+          "[0].id",
+          "[0].name",
+          "[0].url",
+          "[0].ssl_url",
+          "[0].published_deploy.state",
+          "[0].published_deploy.published_at"
         ]
       },
       "realtime": true,
@@ -60,12 +62,12 @@
     },
     {
       "id": "deploy_site",
-      "description_for_ai": "Trigger a new deploy build for an existing Netlify site. Rebuilds from the connected git repository.",
+      "description_for_ai": "Trigger a new deployment for an existing Netlify site.",
       "intent": [
-        "deploy site",
-        "redeploy",
-        "publish changes",
-        "trigger build"
+        "deploy netlify",
+        "redeploy site",
+        "trigger build netlify",
+        "задеплоить netlify"
       ],
       "endpoint": "POST https://api.netlify.com/api/v1/sites/{site_id}/deploys",
       "input": {
@@ -75,7 +77,13 @@
         },
         "clear_cache": {
           "type": "boolean",
+          "description": "Clear build cache before deploying",
           "default": false
+        },
+        "title": {
+          "type": "string",
+          "description": "Deploy title/message",
+          "required": false
         }
       },
       "output": {
@@ -86,6 +94,72 @@
           "url",
           "deploy_url",
           "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_deploys",
+      "description_for_ai": "Get deploy history for a site with status and timestamps.",
+      "intent": [
+        "netlify deploy history",
+        "deployment log netlify",
+        "netlify builds",
+        "история деплоев netlify"
+      ],
+      "endpoint": "GET https://api.netlify.com/api/v1/sites/{site_id}/deploys",
+      "input": {
+        "site_id": {
+          "type": "string",
+          "required": true
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<deploy>",
+        "fields": [
+          "[0].id",
+          "[0].state",
+          "[0].created_at",
+          "[0].published_at",
+          "[0].error_message",
+          "[0].commit_ref"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_env_vars",
+      "description_for_ai": "Set or update environment variables for a Netlify site.",
+      "intent": [
+        "netlify env vars",
+        "environment variables netlify",
+        "set secrets netlify",
+        "переменные окружения netlify"
+      ],
+      "endpoint": "PATCH https://api.netlify.com/api/v1/sites/{site_id}",
+      "input": {
+        "site_id": {
+          "type": "string",
+          "required": true
+        },
+        "build_settings": {
+          "type": "object",
+          "description": "{env: {MY_VAR: 'value', API_KEY: 'secret'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "site",
+        "fields": [
+          "id",
+          "name",
+          "build_settings.env"
         ]
       },
       "realtime": true,
