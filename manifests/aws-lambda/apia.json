@@ -22,42 +22,204 @@
   "capabilities": [
     {
       "id": "invoke_function",
-      "description_for_ai": "Serverless compute. Run code without servers. Pay per 100ms execution. 1M free invocations/month forever. Supports Node.js, Python, Java, Go, Ruby. Use for event-driven functions, APIs, automation, processing. Invoke a Lambda function synchronously or asynchronously. Returns function response.",
+      "description_for_ai": "Invoke a Lambda function synchronously or asynchronously. Returns execution result.",
       "intent": [
-        "run function",
-        "invoke lambda",
-        "serverless function",
-        "trigger code",
-        "execute function"
+        "run lambda",
+        "invoke function AWS",
+        "execute serverless",
+        "запустить lambda AWS"
       ],
       "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/invocations",
       "input": {
         "FunctionName": {
           "type": "string",
-          "description": "Function name or ARN",
+          "description": "Function name, ARN, or partial ARN",
           "required": true
         },
         "Payload": {
           "type": "object",
-          "description": "JSON payload to pass to function",
+          "description": "Event payload as JSON object passed to function handler",
           "required": false
         },
         "InvocationType": {
           "type": "string",
-          "description": "RequestResponse (sync) or Event (async) or DryRun",
+          "description": "RequestResponse (sync, default), Event (async fire-and-forget), DryRun (validate only)",
           "default": "RequestResponse"
+        },
+        "LogType": {
+          "type": "string",
+          "description": "None or Tail (include last 4KB of logs in response)",
+          "default": "None"
+        },
+        "ClientContext": {
+          "type": "string",
+          "description": "Base64-encoded client context passed to function",
+          "required": false
         }
       },
       "output": {
-        "type": "function_response",
+        "type": "response",
         "fields": [
           "StatusCode",
-          "Payload",
+          "Payload (JSON)",
           "FunctionError",
-          "LogResult"
+          "LogResult (base64 tail log)"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_functions",
+      "description_for_ai": "List all Lambda functions in your account with runtime, memory, and last modified date.",
+      "intent": [
+        "list lambda functions",
+        "AWS functions",
+        "serverless functions list",
+        "список функций lambda"
+      ],
+      "endpoint": "GET https://lambda.{region}.amazonaws.com/2015-03-31/functions/",
+      "input": {
+        "MaxItems": {
+          "type": "integer",
+          "description": "Max functions to return",
+          "default": 50
+        },
+        "Marker": {
+          "type": "string",
+          "description": "Pagination token from previous response",
+          "required": false
+        },
+        "FunctionVersion": {
+          "type": "string",
+          "description": "ALL to include all versions",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<function>",
+        "fields": [
+          "Functions[0].FunctionName",
+          "Functions[0].Runtime",
+          "Functions[0].MemorySize",
+          "Functions[0].Timeout",
+          "Functions[0].LastModified",
+          "Functions[0].FunctionArn"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_function",
+      "description_for_ai": "Deploy a new Lambda function from a ZIP file in S3. Specify runtime, handler, and memory.",
+      "intent": [
+        "create lambda function",
+        "deploy function AWS",
+        "new serverless function",
+        "создать lambda функцию"
+      ],
+      "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/functions",
+      "input": {
+        "FunctionName": {
+          "type": "string",
+          "required": true
+        },
+        "Runtime": {
+          "type": "string",
+          "description": "nodejs20.x, python3.12, java21, go1.x, dotnet8, ruby3.3",
+          "required": true
+        },
+        "Role": {
+          "type": "string",
+          "description": "IAM role ARN with AWSLambdaBasicExecutionRole",
+          "required": true
+        },
+        "Handler": {
+          "type": "string",
+          "description": "Module.function e.g. index.handler or main.handler",
+          "required": true
+        },
+        "Code": {
+          "type": "object",
+          "description": "{S3Bucket, S3Key} or {ZipFile: BASE64}",
+          "required": true
+        },
+        "MemorySize": {
+          "type": "integer",
+          "description": "Memory in MB (128-10240). More memory = more CPU too.",
+          "default": 128
+        },
+        "Timeout": {
+          "type": "integer",
+          "description": "Max execution seconds (1-900)",
+          "default": 3
+        },
+        "Environment": {
+          "type": "object",
+          "description": "{Variables: {KEY: 'value'}}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "function",
+        "fields": [
+          "FunctionName",
+          "FunctionArn",
+          "Runtime",
+          "State",
+          "LastModified"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "update_function_code",
+      "description_for_ai": "Deploy new code to an existing Lambda function.",
+      "intent": [
+        "update lambda code",
+        "redeploy function",
+        "push new lambda code",
+        "обновить код lambda"
+      ],
+      "endpoint": "PUT https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/code",
+      "input": {
+        "FunctionName": {
+          "type": "string",
+          "required": true
+        },
+        "S3Bucket": {
+          "type": "string",
+          "description": "S3 bucket with ZIP package",
+          "required": false
+        },
+        "S3Key": {
+          "type": "string",
+          "description": "S3 object key",
+          "required": false
+        },
+        "ZipFile": {
+          "type": "string",
+          "description": "Base64-encoded ZIP content (max 50MB)",
+          "required": false
+        },
+        "Publish": {
+          "type": "boolean",
+          "description": "Create new version after update",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "function",
+        "fields": [
+          "FunctionName",
+          "CodeSize",
+          "LastModified",
+          "State"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
