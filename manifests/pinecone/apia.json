@@ -23,27 +23,29 @@
   "capabilities": [
     {
       "id": "upsert_vectors",
-      "description_for_ai": "Insert or update vectors in index. Use after generating embeddings to store them for later search.",
+      "description_for_ai": "Insert or update vectors in a Pinecone index. Each vector has an ID, embedding values, and optional metadata for filtering.",
       "intent": [
-        "store embeddings",
-        "upsert vectors",
-        "index documents",
-        "build vector database"
+        "store vectors",
+        "upsert pinecone",
+        "save embeddings",
+        "index vectors",
+        "сохранить векторы pinecone"
       ],
-      "endpoint": "POST https://{index-host}/vectors/upsert",
+      "endpoint": "POST https://{index_host}/vectors/upsert",
       "input": {
         "vectors": {
           "type": "array",
-          "description": "[{id, values: [floats], metadata: {}}]",
+          "description": "[{id: 'doc-1', values: [0.1, 0.2, ...], metadata: {text: 'chunk text', source: 'file.pdf'}}]",
           "required": true
         },
         "namespace": {
           "type": "string",
+          "description": "Logical partition within index. Default namespace if omitted.",
           "required": false
         }
       },
       "output": {
-        "type": "upsert_response",
+        "type": "upsert",
         "fields": [
           "upsertedCount"
         ]
@@ -52,35 +54,41 @@
       "requires_auth": true
     },
     {
-      "id": "query",
-      "description_for_ai": "Search for similar vectors by embedding. Returns top-K most similar items. Core RAG operation — find relevant documents before generating answer.",
+      "id": "query_vectors",
+      "description_for_ai": "Search for similar vectors using semantic similarity. Returns top K nearest neighbors with scores. Core RAG operation.",
       "intent": [
         "vector search",
-        "semantic search",
-        "find similar",
-        "RAG retrieval",
-        "nearest neighbors"
+        "semantic search pinecone",
+        "similar documents",
+        "RAG search",
+        "поиск похожих векторов pinecone"
       ],
-      "endpoint": "POST https://{index-host}/query",
+      "endpoint": "POST https://{index_host}/query",
       "input": {
         "vector": {
           "type": "array",
-          "description": "Query embedding (float array)",
+          "description": "Query embedding vector (float array)",
           "required": true
         },
         "topK": {
           "type": "integer",
-          "description": "Number of results",
+          "description": "Number of results to return",
           "default": 10
         },
         "filter": {
           "type": "object",
-          "description": "Metadata filter",
+          "description": "Metadata filter: {source: {$eq: 'file.pdf'}, score: {$gte: 0.8}}",
           "required": false
         },
         "includeMetadata": {
           "type": "boolean",
+          "description": "Include metadata in results",
           "default": true
+        },
+        "includeValues": {
+          "type": "boolean",
+          "description": "Include vector values in results",
+          "default": false
         },
         "namespace": {
           "type": "string",
@@ -88,11 +96,80 @@
         }
       },
       "output": {
-        "type": "query_response",
+        "type": "matches",
         "fields": [
-          "matches[].id",
-          "matches[].score",
-          "matches[].metadata"
+          "matches[0].id",
+          "matches[0].score",
+          "matches[0].metadata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "delete_vectors",
+      "description_for_ai": "Delete vectors by IDs or filter expression from an index.",
+      "intent": [
+        "delete vectors",
+        "remove embeddings",
+        "clear index",
+        "удалить векторы pinecone"
+      ],
+      "endpoint": "POST https://{index_host}/vectors/delete",
+      "input": {
+        "ids": {
+          "type": "array",
+          "description": "List of vector IDs to delete",
+          "required": false
+        },
+        "deleteAll": {
+          "type": "boolean",
+          "description": "Delete all vectors in namespace",
+          "default": false
+        },
+        "filter": {
+          "type": "object",
+          "description": "Delete by metadata filter",
+          "required": false
+        },
+        "namespace": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "{}"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "describe_index_stats",
+      "description_for_ai": "Get index statistics: total vector count, dimension, namespace breakdown.",
+      "intent": [
+        "pinecone stats",
+        "index info",
+        "vector count",
+        "статистика pinecone"
+      ],
+      "endpoint": "GET https://{index_host}/describe_index_stats",
+      "input": {
+        "filter": {
+          "type": "object",
+          "description": "Optional metadata filter for scoped stats",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "stats",
+        "fields": [
+          "totalVectorCount",
+          "dimension",
+          "indexFullness",
+          "namespaces"
         ]
       },
       "realtime": true,
