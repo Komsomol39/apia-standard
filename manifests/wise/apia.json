@@ -22,35 +22,34 @@
   "capabilities": [
     {
       "id": "get_exchange_rate",
-      "description_for_ai": "Get real mid-market exchange rate between two currencies. More accurate than bank rates, no markup applied.",
+      "description_for_ai": "Get live exchange rate between two currencies. Wise uses mid-market rate (not inflated bank rate).",
       "intent": [
-        "real exchange rate",
-        "mid-market rate",
+        "wise exchange rate",
+        "currency rate",
         "transfer rate",
-        "international rate",
-        "wise rate",
-        "курс перевода"
+        "курс wise",
+        "конвертация валют wise"
       ],
-      "endpoint": "GET https://api.wise.com/v1/rates",
+      "endpoint": "GET https://api.transferwise.com/v1/rates",
       "input": {
         "source": {
           "type": "string",
-          "description": "Source currency ISO code: USD, EUR, GBP, RUB, CNY, JPY, AUD, CAD",
+          "description": "Source currency ISO 4217: EUR, USD, GBP, RUB",
           "required": true
         },
         "target": {
           "type": "string",
-          "description": "Target currency ISO code",
+          "description": "Target currency ISO 4217",
           "required": true
         },
         "time": {
           "type": "string",
-          "description": "ISO 8601 datetime for historical rate lookup. Omit for current rate.",
+          "description": "ISO 8601 datetime for historical rate. Omit for current rate.",
           "required": false
         }
       },
       "output": {
-        "type": "list<rate>",
+        "type": "rate",
         "fields": [
           "[0].rate",
           "[0].source",
@@ -59,43 +58,41 @@
         ]
       },
       "realtime": true,
-      "requires_auth": true
+      "requires_auth": false
     },
     {
-      "id": "get_transfer_quote",
-      "description_for_ai": "Get transfer fee and estimated delivery time for sending money internationally via Wise. Compares payment methods (bank transfer, card, etc.).",
+      "id": "create_quote",
+      "description_for_ai": "Get transfer quote showing exact amount received and fees. Required before creating transfer.",
       "intent": [
-        "transfer fee",
-        "how much to send",
-        "international transfer cost",
-        "wise quote"
+        "wise quote",
+        "transfer estimate",
+        "fee calculation wise",
+        "расчёт перевода wise"
       ],
-      "endpoint": "POST https://api.wise.com/v3/quotes",
+      "endpoint": "POST https://api.transferwise.com/v3/profiles/{profileId}/quotes",
       "input": {
         "sourceCurrency": {
           "type": "string",
-          "description": "Currency you're sending from: USD, EUR, GBP, etc.",
           "required": true
         },
         "targetCurrency": {
           "type": "string",
-          "description": "Currency recipient will receive",
           "required": true
         },
         "sourceAmount": {
           "type": "number",
-          "description": "Amount to send (in sourceCurrency). Provide either sourceAmount or targetAmount.",
+          "description": "Amount in source currency. Use either sourceAmount or targetAmount.",
           "required": false
         },
         "targetAmount": {
           "type": "number",
-          "description": "Amount to deliver to recipient (in targetCurrency). Alternative to sourceAmount.",
+          "description": "Desired target amount to receive",
           "required": false
         },
-        "profile": {
-          "type": "integer",
-          "description": "Your Wise profile ID. Get via GET /v2/profiles. Personal vs business affects fees.",
-          "required": false
+        "payOut": {
+          "type": "string",
+          "description": "BANK_TRANSFER, SWIFT, INTERAC, POLI",
+          "default": "BANK_TRANSFER"
         }
       },
       "output": {
@@ -107,10 +104,85 @@
           "sourceAmount",
           "targetAmount",
           "rate",
-          "paymentOptions[0].payIn (BANK_TRANSFER/DEBIT_CARD/CREDIT_CARD)",
+          "fee",
           "paymentOptions[0].fee.total",
-          "paymentOptions[0].estimatedDelivery",
-          "paymentOptions[0].price.total.value"
+          "paymentOptions[0].estimatedDelivery"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_transfer",
+      "description_for_ai": "Create an international transfer to a recipient account.",
+      "intent": [
+        "send money wise",
+        "international transfer",
+        "wire transfer wise",
+        "перевести деньги wise"
+      ],
+      "endpoint": "POST https://api.transferwise.com/v1/transfers",
+      "input": {
+        "targetAccount": {
+          "type": "integer",
+          "description": "Recipient account ID from create_recipient",
+          "required": true
+        },
+        "quoteUuid": {
+          "type": "string",
+          "description": "Quote ID from create_quote",
+          "required": true
+        },
+        "customerTransactionId": {
+          "type": "string",
+          "description": "Your unique transfer ID (UUID)",
+          "required": true
+        },
+        "details": {
+          "type": "object",
+          "description": "{reference: 'Invoice 123', transferPurpose: 'verification.transfers.purpose.pay.bills', sourceOfFunds: 'verification.source.of.funds.salary'}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "transfer",
+        "fields": [
+          "id",
+          "status",
+          "reference",
+          "created",
+          "rate",
+          "sourceValue",
+          "targetValue"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_transfer_status",
+      "description_for_ai": "Track a Wise transfer by ID. Returns current status and estimated delivery.",
+      "intent": [
+        "wise transfer status",
+        "track transfer",
+        "money sent wise",
+        "статус перевода wise"
+      ],
+      "endpoint": "GET https://api.transferwise.com/v1/transfers/{transferId}",
+      "input": {
+        "transferId": {
+          "type": "integer",
+          "description": "Transfer ID from create_transfer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "transfer",
+        "fields": [
+          "id",
+          "status (incoming_payment_waiting|processing|funds_converted|outgoing_payment_sent|cancelled|bounced_back|funds_refunded)",
+          "created",
+          "estimatedDelivery"
         ]
       },
       "realtime": true,
