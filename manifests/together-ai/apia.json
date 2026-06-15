@@ -21,24 +21,37 @@
   },
   "capabilities": [
     {
-      "id": "chat_completion",
-      "description_for_ai": "OpenAI-compatible chat completions using open-source models. Access Llama 3, Mixtral, Qwen at significantly lower prices than OpenAI.",
+      "id": "chat",
+      "description_for_ai": "Chat completion with 100+ open source models. Llama 3, Mistral, Qwen, Gemma, DeepSeek. Cheapest inference for open models.",
       "intent": [
-        "cheap open source LLM",
+        "together AI chat",
+        "cheap open model",
         "llama API",
-        "mixtral API",
-        "together AI"
+        "open source LLM API",
+        "дешёвый llama API"
       ],
       "endpoint": "POST https://api.together.xyz/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "meta-llama/Llama-3.1-8B-Instruct, mistralai/Mixtral-8x7B-Instruct-v0.1, Qwen/Qwen2-72B-Instruct",
+          "description": "meta-llama/Llama-3.3-70B-Instruct-Turbo, mistralai/Mixtral-8x7B-Instruct-v0.1, Qwen/Qwen2.5-72B-Instruct-Turbo, deepseek-ai/DeepSeek-V3",
           "required": true
         },
         "messages": {
           "type": "array",
           "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0.7
+        },
+        "stream": {
+          "type": "boolean",
+          "default": false
         }
       },
       "output": {
@@ -49,6 +62,111 @@
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "image_generation",
+      "description_for_ai": "Generate images with Flux, SDXL, and other diffusion models via Together AI. Cheaper than Stability AI.",
+      "intent": [
+        "together image generation",
+        "flux API",
+        "cheap image generation",
+        "генерация изображений together"
+      ],
+      "endpoint": "POST https://api.together.xyz/v1/images/generations",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "black-forest-labs/FLUX.1-schnell-Free (free!), black-forest-labs/FLUX.1.1-pro, stabilityai/stable-diffusion-xl-base-1.0",
+          "required": true
+        },
+        "prompt": {
+          "type": "string",
+          "required": true
+        },
+        "width": {
+          "type": "integer",
+          "description": "Image width in pixels",
+          "default": 1024
+        },
+        "height": {
+          "type": "integer",
+          "default": 1024
+        },
+        "steps": {
+          "type": "integer",
+          "description": "Diffusion steps, more = better quality",
+          "default": 4
+        },
+        "n": {
+          "type": "integer",
+          "description": "Number of images",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "data[0].url",
+          "data[0].b64_json"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "embeddings",
+      "description_for_ai": "Generate text embeddings using open models. BAAI/bge and M2-BERT models. OpenAI-compatible format.",
+      "intent": [
+        "together embeddings",
+        "open embeddings API",
+        "text vectors together",
+        "эмбеддинги together"
+      ],
+      "endpoint": "POST https://api.together.xyz/v1/embeddings",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "togethercomputer/m2-bert-80M-8k-retrieval, BAAI/bge-large-en-v1.5",
+          "required": true
+        },
+        "input": {
+          "type": "string or array",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "embeddings",
+        "fields": [
+          "data[0].embedding",
+          "usage.total_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List all available models with pricing and context windows.",
+      "intent": [
+        "together models",
+        "available open models",
+        "model list together",
+        "список моделей together"
+      ],
+      "endpoint": "GET https://api.together.xyz/v1/models",
+      "input": {},
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "[0].id",
+          "[0].display_name",
+          "[0].context_length",
+          "[0].pricing.input",
+          "[0].type"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
