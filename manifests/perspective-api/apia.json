@@ -24,17 +24,13 @@
   "capabilities": [
     {
       "id": "analyze_comment",
-      "description_for_ai": "Score a comment for toxicity, threats, insults, profanity, identity attacks. Returns probability scores 0-1 for each requested attribute. Free. 100+ languages.",
+      "description_for_ai": "Score text for toxicity, threats, insults, profanity, identity attacks. Returns 0-1 probability for each attribute. Free. 100+ languages.",
       "intent": [
-        "toxic comment",
-        "moderation check",
-        "hate speech detection",
-        "comment score",
-        "is this toxic",
-        "offensive content",
+        "toxicity check",
         "content moderation",
-        "проверка токсичности",
-        "модерация"
+        "hate speech detection",
+        "is comment toxic",
+        "проверка токсичности"
       ],
       "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
       "input": {
@@ -45,23 +41,18 @@
         },
         "requestedAttributes": {
           "type": "object",
-          "description": "Attributes to score: {TOXICITY: {}, SEVERE_TOXICITY: {}, THREAT: {}, INSULT: {}, PROFANITY: {}, IDENTITY_ATTACK: {}, SEXUALLY_EXPLICIT: {}, FLIRTATION: {}}. Request only what you need.",
+          "description": "Attributes to score: {TOXICITY: {}, SEVERE_TOXICITY: {}, IDENTITY_ATTACK: {}, INSULT: {}, PROFANITY: {}, THREAT: {}, SEXUALLY_EXPLICIT: {}, FLIRTATION: {}}",
           "required": true
         },
         "languages": {
           "type": "array",
-          "description": "Language codes: ['en', 'ru', 'de', 'fr', 'es', 'it', 'pt', 'zh']. Auto-detected if omitted.",
+          "description": "['en', 'ru', 'de', 'fr', 'es', 'it', 'pt', 'zh']. Auto-detected if omitted.",
           "required": false
         },
         "doNotStore": {
           "type": "boolean",
-          "description": "Set true to prevent Google from storing the comment",
+          "description": "Prevent Google from storing comment. Set true for GDPR compliance.",
           "default": false
-        },
-        "sessionId": {
-          "type": "string",
-          "description": "Opaque session identifier for tracking",
-          "required": false
         }
       },
       "output": {
@@ -69,13 +60,109 @@
         "fields": [
           "attributeScores.TOXICITY.summaryScore.value (0-1)",
           "attributeScores.SEVERE_TOXICITY.summaryScore.value",
-          "attributeScores.THREAT.summaryScore.value",
+          "attributeScores.IDENTITY_ATTACK.summaryScore.value",
           "attributeScores.INSULT.summaryScore.value",
-          "attributeScores.PROFANITY.summaryScore.value",
-          "attributeScores.IDENTITY_ATTACK.summaryScore.value"
+          "attributeScores.THREAT.summaryScore.value"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "batch_analyze",
+      "description_for_ai": "Analyze multiple texts for toxicity in one API call to reduce latency.",
+      "intent": [
+        "batch moderation",
+        "moderate multiple comments",
+        "bulk toxicity check",
+        "пакетная модерация"
+      ],
+      "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
+      "input": {
+        "comment": {
+          "type": "object",
+          "description": "{text: 'Comment text'}",
+          "required": true
+        },
+        "requestedAttributes": {
+          "type": "object",
+          "description": "{TOXICITY: {scoreThreshold: 0.5}} — only return attributes exceeding threshold",
+          "required": true
+        },
+        "sessionId": {
+          "type": "string",
+          "description": "Session ID to group related comments",
+          "required": false
+        },
+        "communityId": {
+          "type": "string",
+          "description": "Community identifier for better context",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "scores",
+        "fields": [
+          "attributeScores.TOXICITY.summaryScore.value",
+          "attributeScores.TOXICITY.spanScores"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "suggest_score",
+      "description_for_ai": "Submit a human-provided score to improve model accuracy. Used for active learning.",
+      "intent": [
+        "submit feedback perspective",
+        "improve toxicity model",
+        "report score perspective",
+        "улучшить модель perspective"
+      ],
+      "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:suggestscore",
+      "input": {
+        "comment": {
+          "type": "object",
+          "description": "{text: 'Comment text'}",
+          "required": true
+        },
+        "attributeScores": {
+          "type": "object",
+          "description": "{TOXICITY: {summaryScore: {value: 0.9, type: PROBABILITY}}}",
+          "required": true
+        },
+        "communityId": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "{}"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_attribute_info",
+      "description_for_ai": "Get information about available Perspective API attributes and which languages they support.",
+      "intent": [
+        "perspective attributes",
+        "available toxicity models",
+        "language support perspective",
+        "список атрибутов perspective"
+      ],
+      "endpoint": "GET https://commentanalyzer.googleapis.com/v1alpha1/attributes",
+      "input": {},
+      "output": {
+        "type": "attributes",
+        "fields": [
+          "Available attributes with supported languages"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
