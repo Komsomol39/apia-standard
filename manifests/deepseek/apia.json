@@ -22,37 +22,34 @@
   },
   "capabilities": [
     {
-      "id": "chat_completion",
-      "description_for_ai": "OpenAI-compatible chat completions at dramatically lower cost. DeepSeek-V3 for general tasks, DeepSeek-R1 for reasoning/math/code. Best price-to-quality ratio in 2026.",
+      "id": "chat",
+      "description_for_ai": "Chat completion with DeepSeek V3 — fastest and cheapest frontier model. OpenAI-compatible API. $0.14/1M input tokens. Best for everyday tasks.",
       "intent": [
-        "cheap LLM",
-        "low cost AI",
-        "high volume AI",
-        "deepseek",
-        "reasoning model",
-        "math problems"
+        "deepseek chat",
+        "cheap AI",
+        "fast LLM",
+        "OpenAI alternative cheap",
+        "дешёвый ИИ"
       ],
       "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "deepseek-chat (V3, general), deepseek-reasoner (R1, reasoning/math)",
-          "required": true
+          "default": "deepseek-chat"
         },
         "messages": {
           "type": "array",
-          "description": "OpenAI-compatible format: [{role, content}]",
+          "description": "[{role: system|user|assistant, content: string}]",
           "required": true
         },
         "temperature": {
           "type": "float",
-          "default": 1,
-          "description": "Randomness 0.0-1.0: lower=deterministic, higher=creative"
+          "description": "0-2",
+          "default": 1.0
         },
         "max_tokens": {
           "type": "integer",
-          "required": false,
-          "description": "Maximum number of tokens to generate in response"
+          "required": false
         },
         "stream": {
           "type": "boolean",
@@ -63,9 +60,88 @@
         "type": "completion",
         "fields": [
           "choices[0].message.content",
-          "choices[0].message.reasoning_content",
           "usage.prompt_tokens",
           "usage.completion_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "chat_with_prefix",
+      "description_for_ai": "Chat with prefix caching — pass assistant prefix to force output format. Reduces cost 10x for repeated prompts via cache hits.",
+      "intent": [
+        "prefix caching deepseek",
+        "forced output format",
+        "cache deepseek",
+        "кэш deepseek"
+      ],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "deepseek-chat"
+        },
+        "messages": {
+          "type": "array",
+          "description": "Last message can be from assistant role to force prefix",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content",
+          "usage.prompt_cache_hit_tokens",
+          "usage.prompt_cache_miss_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List available DeepSeek models.",
+      "intent": [
+        "deepseek models",
+        "available models",
+        "модели deepseek"
+      ],
+      "endpoint": "GET https://api.deepseek.com/v1/models",
+      "input": {},
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "data[0].id",
+          "data[0].owned_by"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user_balance",
+      "description_for_ai": "Get current API balance and usage statistics for your DeepSeek account.",
+      "intent": [
+        "deepseek balance",
+        "API credits",
+        "account balance",
+        "баланс deepseek"
+      ],
+      "endpoint": "GET https://api.deepseek.com/user/balance",
+      "input": {},
+      "output": {
+        "type": "balance",
+        "fields": [
+          "is_available",
+          "balance_infos[0].currency",
+          "balance_infos[0].total_balance",
+          "balance_infos[0].granted_balance",
+          "balance_infos[0].topped_up_balance"
         ]
       },
       "realtime": true,
