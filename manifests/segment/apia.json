@@ -23,50 +23,50 @@
   "capabilities": [
     {
       "id": "track",
-      "description_for_ai": "Track a user event and send to all 450+ connected destinations simultaneously. One call routes to analytics, CRM, email, ads, and more.",
+      "description_for_ai": "Track a user action/event. Segment forwards to 300+ destinations (analytics, CRM, email, etc.).",
       "intent": [
-        "track event",
-        "unified analytics",
+        "segment track",
+        "analytics event segment",
         "CDP event",
-        "multi-destination analytics"
+        "событие segment"
       ],
       "endpoint": "POST https://api.segment.io/v1/track",
       "input": {
         "userId": {
           "type": "string",
-          "description": "Unique user identifier (your internal ID). Use anonymousId for pre-login users.",
+          "description": "User ID for logged-in users",
           "required": false
         },
         "anonymousId": {
           "type": "string",
-          "description": "Anonymous user ID (UUID) for users without an account. Use one or the other with userId.",
+          "description": "Anonymous ID for non-logged in users",
           "required": false
         },
         "event": {
           "type": "string",
-          "description": "Event name. Use noun+verb pattern: 'Order Completed', 'Product Added', 'User Signed Up', 'Page Viewed'",
+          "description": "Event name: 'Signed Up', 'Order Completed', 'Product Viewed'",
           "required": true
         },
         "properties": {
           "type": "object",
-          "description": "Event properties: {revenue: 29.99, currency: 'USD', product_id: 'SKU-123', category: 'Electronics'}",
+          "description": "Event properties: {revenue: 99.99, currency: 'USD', product: 'Pro Plan'}",
           "required": false
         },
         "timestamp": {
           "type": "string",
-          "description": "ISO 8601 event time. Defaults to server receive time.",
+          "description": "ISO 8601 timestamp",
           "required": false
         },
         "context": {
           "type": "object",
-          "description": "{ip: '1.2.3.4', locale: 'en-US', userAgent: '...', page: {url, title, referrer}}",
+          "description": "{ip, userAgent, campaign: {source, medium, name}}",
           "required": false
         }
       },
       "output": {
-        "type": "success",
+        "type": "empty",
         "fields": [
-          "HTTP 200 with empty body on success"
+          "200 OK on success"
         ]
       },
       "realtime": true,
@@ -74,41 +74,112 @@
     },
     {
       "id": "identify",
-      "description_for_ai": "Update user profile traits in Segment. Syncs to CRM, email tools, and analytics. Call after login or whenever user attributes change.",
+      "description_for_ai": "Associate a user ID with traits (properties). Syncs user data to all connected tools.",
       "intent": [
-        "identify user",
-        "user profile",
-        "update user",
+        "segment identify",
         "user traits",
-        "CRM sync"
+        "profile segment",
+        "профиль segment"
       ],
       "endpoint": "POST https://api.segment.io/v1/identify",
       "input": {
         "userId": {
           "type": "string",
-          "description": "Your internal user ID",
           "required": true
         },
         "traits": {
           "type": "object",
-          "description": "User attributes: {email, name, firstName, lastName, phone, company: {name, id}, plan: 'pro', createdAt: '2024-01-01', address: {city, country}}",
-          "required": true
+          "description": "User attributes: {email, name, plan, company, createdAt, phone}",
+          "required": false
         },
-        "context": {
-          "type": "object",
-          "description": "Request context: {ip, locale, timezone}",
+        "anonymousId": {
+          "type": "string",
+          "description": "Alias previously anonymous activity to this user",
           "required": false
         },
         "timestamp": {
           "type": "string",
-          "description": "ISO 8601 time of identification",
           "required": false
         }
       },
       "output": {
-        "type": "success",
+        "type": "empty",
         "fields": [
-          "HTTP 200 with empty body on success"
+          "200 OK"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "page",
+      "description_for_ai": "Track a page view with URL, referrer, and properties.",
+      "intent": [
+        "track pageview segment",
+        "page event segment",
+        "website analytics segment",
+        "просмотр страницы segment"
+      ],
+      "endpoint": "POST https://api.segment.io/v1/page",
+      "input": {
+        "userId": {
+          "type": "string",
+          "required": false
+        },
+        "anonymousId": {
+          "type": "string",
+          "required": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Page name e.g. 'Home', 'Product', 'Checkout'",
+          "required": false
+        },
+        "properties": {
+          "type": "object",
+          "description": "{url, path, referrer, search, title}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "200 OK"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "group",
+      "description_for_ai": "Associate a user with an account/company for B2B analytics.",
+      "intent": [
+        "group segment",
+        "B2B analytics",
+        "company tracking segment",
+        "компания segment"
+      ],
+      "endpoint": "POST https://api.segment.io/v1/group",
+      "input": {
+        "userId": {
+          "type": "string",
+          "required": true
+        },
+        "groupId": {
+          "type": "string",
+          "description": "Company/organization ID",
+          "required": true
+        },
+        "traits": {
+          "type": "object",
+          "description": "Company traits: {name, plan, employees, industry, website}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "200 OK"
         ]
       },
       "realtime": true,
