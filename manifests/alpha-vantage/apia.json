@@ -23,14 +23,13 @@
   },
   "capabilities": [
     {
-      "id": "get_stock_quote",
-      "description_for_ai": "Get current stock price and daily stats for any ticker symbol. Use for stock price lookup, portfolio valuation.",
+      "id": "quote",
+      "description_for_ai": "Get real-time (15-min delayed) stock price, volume, and change for a ticker symbol.",
       "intent": [
         "stock price",
-        "share price",
         "stock quote",
-        "market price",
         "ticker price",
+        "share price",
         "цена акции"
       ],
       "endpoint": "GET https://www.alphavantage.co/query",
@@ -41,7 +40,7 @@
         },
         "symbol": {
           "type": "string",
-          "description": "Stock ticker e.g. AAPL, MSFT, TSLA, GAZP",
+          "description": "Stock ticker: AAPL, GOOGL, TSLA, MSFT, AMZN",
           "required": true
         }
       },
@@ -49,22 +48,24 @@
         "type": "quote",
         "fields": [
           "Global Quote.05. price",
+          "Global Quote.06. volume",
           "Global Quote.09. change",
           "Global Quote.10. change percent",
-          "Global Quote.06. volume"
+          "Global Quote.07. latest trading day"
         ]
       },
-      "realtime": true,
+      "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "get_daily_history",
-      "description_for_ai": "Get daily OHLCV (open/high/low/close/volume) price history for a stock. Use for charts, trend analysis.",
+      "id": "time_series_daily",
+      "description_for_ai": "Get daily OHLCV (open, high, low, close, volume) price history for a stock. Up to 20 years of history.",
       "intent": [
         "stock history",
-        "price chart",
-        "historical prices",
-        "OHLCV data"
+        "daily prices",
+        "OHLCV data",
+        "historical stock data",
+        "история цен акции"
       ],
       "endpoint": "GET https://www.alphavantage.co/query",
       "input": {
@@ -78,19 +79,99 @@
         },
         "outputsize": {
           "type": "string",
-          "description": "compact (100 days) or full (20+ years)",
+          "description": "compact (100 latest days) or full (20 years)",
           "default": "compact"
+        },
+        "datatype": {
+          "type": "string",
+          "description": "json or csv",
+          "default": "json"
         }
       },
       "output": {
         "type": "time_series",
         "fields": [
-          "Time Series (Daily).{date}.1. open",
-          "Time Series (Daily).{date}.4. close",
-          "Time Series (Daily).{date}.5. volume"
+          "Time Series (Daily).2024-01-15.1. open",
+          "Time Series (Daily).2024-01-15.4. close",
+          "Time Series (Daily).2024-01-15.5. volume"
         ]
       },
       "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "forex_rate",
+      "description_for_ai": "Get real-time exchange rate between two currencies.",
+      "intent": [
+        "forex rate",
+        "currency exchange rate",
+        "FX rate",
+        "exchange rate",
+        "курс валют alpha vantage"
+      ],
+      "endpoint": "GET https://www.alphavantage.co/query",
+      "input": {
+        "function": {
+          "type": "string",
+          "default": "CURRENCY_EXCHANGE_RATE"
+        },
+        "from_currency": {
+          "type": "string",
+          "description": "Source currency: USD, EUR, GBP, RUB",
+          "required": true
+        },
+        "to_currency": {
+          "type": "string",
+          "description": "Target currency",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "rate",
+        "fields": [
+          "Realtime Currency Exchange Rate.5. Exchange Rate",
+          "Realtime Currency Exchange Rate.6. Last Refreshed",
+          "Realtime Currency Exchange Rate.8. Bid Price"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "crypto_rate",
+      "description_for_ai": "Get real-time cryptocurrency price in any currency.",
+      "intent": [
+        "crypto price alpha vantage",
+        "bitcoin price",
+        "ethereum price",
+        "crypto exchange rate",
+        "цена криптовалюты alpha vantage"
+      ],
+      "endpoint": "GET https://www.alphavantage.co/query",
+      "input": {
+        "function": {
+          "type": "string",
+          "default": "CURRENCY_EXCHANGE_RATE"
+        },
+        "from_currency": {
+          "type": "string",
+          "description": "Crypto symbol: BTC, ETH, BNB, SOL, XRP",
+          "required": true
+        },
+        "to_currency": {
+          "type": "string",
+          "description": "Fiat currency: USD, EUR, RUB",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "rate",
+        "fields": [
+          "Realtime Currency Exchange Rate.5. Exchange Rate",
+          "Realtime Currency Exchange Rate.6. Last Refreshed"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
