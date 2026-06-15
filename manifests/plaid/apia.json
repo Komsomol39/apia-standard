@@ -27,41 +27,126 @@
   },
   "capabilities": [
     {
-      "id": "get_transactions",
-      "description_for_ai": "Retrieve bank transactions for linked account. Returns categorized transactions with merchant name, amount, date.",
+      "id": "create_link_token",
+      "description_for_ai": "Create a Plaid Link token to initialize the account connection flow. First step to link a bank account.",
       "intent": [
-        "bank transactions",
-        "spending history",
-        "account transactions",
-        "personal finance",
-        "expense tracking"
+        "plaid link",
+        "connect bank account",
+        "bank integration plaid",
+        "подключить банк plaid"
       ],
-      "endpoint": "POST https://production.plaid.com/transactions/get",
+      "endpoint": "POST https://sandbox.plaid.com/link/token/create",
+      "input": {
+        "user": {
+          "type": "object",
+          "description": "{client_user_id: 'user-unique-id'}",
+          "required": true
+        },
+        "client_name": {
+          "type": "string",
+          "description": "Your app name shown to user in Plaid Link UI",
+          "required": true
+        },
+        "products": {
+          "type": "array",
+          "description": "['transactions', 'auth', 'balance', 'identity', 'investments', 'liabilities']",
+          "required": true
+        },
+        "country_codes": {
+          "type": "array",
+          "description": "['US', 'GB', 'CA', 'DE', 'FR', 'ES', 'NL', 'IE', 'SE']",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "description": "en, fr, es, de, nl, ru",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "link_token",
+        "fields": [
+          "link_token",
+          "expiration",
+          "request_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "exchange_public_token",
+      "description_for_ai": "Exchange the public_token from Plaid Link for a permanent access_token. Second step after user connects account.",
+      "intent": [
+        "plaid token exchange",
+        "get access token plaid",
+        "finalize plaid connection",
+        "обмен токена plaid"
+      ],
+      "endpoint": "POST https://sandbox.plaid.com/item/public_token/exchange",
+      "input": {
+        "public_token": {
+          "type": "string",
+          "description": "Public token received after user completes Plaid Link flow",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "tokens",
+        "fields": [
+          "access_token",
+          "item_id",
+          "request_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_transactions",
+      "description_for_ai": "Get transaction history for a linked bank account. Categorized transactions with merchant info.",
+      "intent": [
+        "bank transactions plaid",
+        "transaction history",
+        "spending data plaid",
+        "история транзакций plaid"
+      ],
+      "endpoint": "POST https://sandbox.plaid.com/transactions/get",
       "input": {
         "access_token": {
           "type": "string",
-          "description": "User bank access token from Link flow",
+          "description": "Access token from exchange_public_token",
           "required": true
         },
         "start_date": {
           "type": "string",
-          "description": "Start date in YYYY-MM-DD format",
+          "description": "YYYY-MM-DD",
           "required": true
         },
         "end_date": {
           "type": "string",
-          "description": "End date in YYYY-MM-DD format",
+          "description": "YYYY-MM-DD",
           "required": true
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of transactions",
+          "default": 100
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0
         }
       },
       "output": {
         "type": "transactions",
         "fields": [
-          "transactions[].name",
-          "transactions[].amount",
-          "transactions[].date",
-          "transactions[].category",
-          "transactions[].merchant_name"
+          "transactions[0].transaction_id",
+          "transactions[0].amount",
+          "transactions[0].date",
+          "transactions[0].merchant_name",
+          "transactions[0].category[0]",
+          "accounts[0].balances.available"
         ]
       },
       "realtime": false,
@@ -69,28 +154,34 @@
     },
     {
       "id": "get_balance",
-      "description_for_ai": "Get real-time bank account balances for a linked account. Returns available and current balance for all accounts.",
+      "description_for_ai": "Get real-time bank account balances for all linked accounts.",
       "intent": [
-        "bank balance",
+        "bank balance plaid",
         "account balance",
-        "how much money",
-        "check balance"
+        "checking balance plaid",
+        "баланс счёта plaid"
       ],
-      "endpoint": "POST https://production.plaid.com/accounts/balance/get",
+      "endpoint": "POST https://sandbox.plaid.com/accounts/balance/get",
       "input": {
         "access_token": {
           "type": "string",
-          "required": true,
-          "description": "OAuth2 access token"
+          "required": true
+        },
+        "options": {
+          "type": "object",
+          "description": "{account_ids: ['specific_account_id']} to filter accounts",
+          "required": false
         }
       },
       "output": {
-        "type": "balance",
+        "type": "accounts",
         "fields": [
-          "accounts[].name",
-          "accounts[].balances.current",
-          "accounts[].balances.available",
-          "accounts[].type"
+          "accounts[0].account_id",
+          "accounts[0].name",
+          "accounts[0].type",
+          "accounts[0].balances.available",
+          "accounts[0].balances.current",
+          "accounts[0].balances.iso_currency_code"
         ]
       },
       "realtime": true,
