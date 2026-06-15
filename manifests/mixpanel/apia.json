@@ -23,81 +23,114 @@
   "capabilities": [
     {
       "id": "track_event",
-      "description_for_ai": "Track a user action/event in Mixpanel. Events power funnels, retention analysis, A/B tests, and user segmentation.",
+      "description_for_ai": "Track a user event in Mixpanel with properties. Use for product analytics, funnel tracking.",
       "intent": [
-        "track event",
+        "track event mixpanel",
         "analytics event",
-        "user action",
-        "product tracking",
-        "event tracking"
+        "user event tracking",
+        "отслеживание события mixpanel"
       ],
       "endpoint": "POST https://api.mixpanel.com/track",
       "input": {
-        "event": {
+        "data": {
           "type": "string",
-          "description": "Event name — use consistent noun+verb pattern: 'Purchase Completed', 'Video Played', 'Button Clicked', 'Page Viewed'",
-          "required": true
-        },
-        "properties": {
-          "type": "object",
-          "description": "MUST include token and distinct_id: {token: 'YOUR_PROJECT_TOKEN', distinct_id: 'user_123', revenue: 49.99, plan: 'pro', source: 'email_campaign'}. Time is auto-set if not provided.",
+          "description": "Base64-encoded JSON array of events: [{event: 'Purchase', properties: {distinct_id: 'user123', token: 'TOKEN', amount: 99.99, plan: 'pro', time: 1234567890}}]",
           "required": true
         }
       },
       "output": {
-        "type": "success",
+        "type": "result",
         "fields": [
-          "HTTP 200 with '1' body on success"
+          "1 (success) or 0 (failure)"
         ]
       },
       "realtime": true,
-      "requires_auth": true
+      "requires_auth": false
     },
     {
-      "id": "export_events",
-      "description_for_ai": "Export raw event data as JSONL for a date range. Returns one JSON event per line. Use for data warehousing and custom analysis.",
+      "id": "import_events",
+      "description_for_ai": "Import historical events in bulk. Use for data migration or batch ingestion.",
       "intent": [
-        "export analytics",
-        "raw events",
-        "data export",
-        "analytics data"
+        "bulk import mixpanel",
+        "historical data",
+        "batch events",
+        "массовый импорт mixpanel"
       ],
-      "endpoint": "GET https://data.mixpanel.com/api/2.0/export",
+      "endpoint": "POST https://api.mixpanel.com/import",
       "input": {
-        "from_date": {
-          "type": "string",
-          "description": "Start date in YYYY-MM-DD format. Max 60-day range on free plan.",
+        "data": {
+          "type": "array",
+          "description": "[{event: 'Sign Up', properties: {distinct_id, token, time}}] — up to 2000 events per request",
           "required": true
         },
-        "to_date": {
-          "type": "string",
-          "description": "End date in YYYY-MM-DD format",
-          "required": true
-        },
-        "event": {
-          "type": "string",
-          "description": "Filter by event name (optional). Use ['Event 1','Event 2'] for multiple.",
-          "required": false
-        },
-        "where": {
-          "type": "string",
-          "description": "Mixpanel expression filter: 'properties[\"plan\"] == \"pro\"'",
-          "required": false
-        },
-        "limit": {
+        "strict": {
           "type": "integer",
-          "description": "Max events to return",
-          "required": false
+          "description": "1 to reject invalid events, 0 to skip them",
+          "default": 0
         }
       },
       "output": {
-        "type": "jsonl",
+        "type": "result",
         "fields": [
-          "Each line: {event, properties: {distinct_id, time, $browser, $city, $country_code, ...custom_properties}}"
+          "num_records_imported",
+          "failed_imported (if strict=0)"
         ]
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "query_jql",
+      "description_for_ai": "Query event data using JQL (JavaScript Query Language). Powerful custom analytics queries.",
+      "intent": [
+        "mixpanel query",
+        "JQL analytics",
+        "custom report mixpanel",
+        "запрос mixpanel JQL"
+      ],
+      "endpoint": "POST https://mixpanel.com/api/2.0/jql",
+      "input": {
+        "script": {
+          "type": "string",
+          "description": "JQL script: 'function main() { return Events({from_date: \"2024-01-01\", to_date: \"2024-01-31\", event_selectors: [{event: \"Purchase\"}]}).groupBy([\"properties.plan\"], mixpanel.reducer.count()); }'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "query_result",
+        "fields": [
+          "[0].key[0] (dimension value)",
+          "[0].value (aggregate value)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "update_profile",
+      "description_for_ai": "Create or update a user profile with properties for segmentation.",
+      "intent": [
+        "mixpanel profile",
+        "user profile update",
+        "set user property",
+        "профиль пользователя mixpanel"
+      ],
+      "endpoint": "POST https://api.mixpanel.com/engage",
+      "input": {
+        "data": {
+          "type": "string",
+          "description": "Base64-encoded: {$token: 'TOKEN', $distinct_id: 'user123', $set: {name: 'John Doe', email: 'john@example.com', plan: 'pro', $created: '2024-01-15T10:00:00'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "1 (success)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "meta": {
