@@ -22,94 +22,36 @@
   },
   "capabilities": [
     {
-      "id": "search_everything",
-      "description_for_ai": "Search all news articles by keyword, date range, language, source. Returns article title, description, URL, source, published date.",
-      "intent": [
-        "новости о",
-        "news about",
-        "press coverage",
-        "find articles",
-        "поиск новостей",
-        "media monitoring",
-        "articles about",
-        "latest news on",
-        "news search"
-      ],
-      "endpoint": "GET https://newsapi.org/v2/everything",
-      "input": {
-        "q": {
-          "type": "string",
-          "description": "Search keywords",
-          "required": true
-        },
-        "language": {
-          "type": "string",
-          "description": "en, ru, de, fr, es, zh, ar etc.",
-          "required": false
-        },
-        "from": {
-          "type": "string",
-          "description": "Date ISO 8601",
-          "required": false
-        },
-        "to": {
-          "type": "string",
-          "description": "Date ISO 8601",
-          "required": false
-        },
-        "sortBy": {
-          "type": "string",
-          "description": "relevancy, popularity, publishedAt",
-          "default": "publishedAt"
-        },
-        "pageSize": {
-          "type": "integer",
-          "default": 20,
-          "max": 100
-        }
-      },
-      "output": {
-        "type": "list<article>",
-        "fields": [
-          "title",
-          "description",
-          "url",
-          "source.name",
-          "publishedAt",
-          "urlToImage"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "top_headlines",
-      "description_for_ai": "Get top headlines from a country or category. Use for breaking news, top stories by category.",
+      "description_for_ai": "Get breaking news headlines by country, category, or source.",
       "intent": [
-        "top stories",
-        "latest headlines",
-        "главные новости",
-        "headlines",
-        "daily news",
         "top news",
-        "breaking news"
+        "breaking news",
+        "headlines",
+        "последние новости",
+        "топ новости"
       ],
       "endpoint": "GET https://newsapi.org/v2/top-headlines",
       "input": {
         "country": {
           "type": "string",
-          "description": "ISO 3166-1 2-letter code: us, ru, gb, de, fr",
+          "description": "ae, ar, at, au, be, bg, br, ca, ch, cn, co, cu, cz, de, eg, fr, gb, gr, hk, hu, id, ie, il, in, it, jp, kr, lt, lv, ma, mx, my, ng, nl, no, nz, ph, pl, pt, ro, rs, ru, sa, se, sg, si, sk, th, tr, tw, ua, us, ve, za",
           "required": false
         },
         "category": {
           "type": "string",
-          "description": "business, entertainment, health, science, sports, technology",
+          "description": "business, entertainment, general, health, science, sports, technology",
+          "required": false
+        },
+        "sources": {
+          "type": "string",
+          "description": "Comma-separated source IDs. Cannot mix with country/category.",
           "required": false
         },
         "q": {
           "type": "string",
-          "required": false,
-          "description": "Search query or filter expression"
+          "description": "Keywords to filter headlines",
+          "required": false
         },
         "pageSize": {
           "type": "integer",
@@ -119,11 +61,148 @@
       "output": {
         "type": "list<article>",
         "fields": [
-          "title",
-          "description",
-          "url",
-          "source.name",
-          "publishedAt"
+          "articles[0].title",
+          "articles[0].source.name",
+          "articles[0].author",
+          "articles[0].publishedAt",
+          "articles[0].url",
+          "articles[0].description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_news",
+      "description_for_ai": "Search all news articles with keyword, date range, language, and source filters.",
+      "intent": [
+        "search news",
+        "news articles",
+        "find news about",
+        "поиск новостей",
+        "статьи про"
+      ],
+      "endpoint": "GET https://newsapi.org/v2/everything",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Keywords: bitcoin, 'apple AND iphone', 'elon musk'",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "description": "ar, de, en, es, fr, he, it, nl, no, pt, ru, sv, ud, zh",
+          "required": false
+        },
+        "from": {
+          "type": "string",
+          "description": "ISO 8601 date",
+          "required": false
+        },
+        "to": {
+          "type": "string",
+          "required": false
+        },
+        "sortBy": {
+          "type": "string",
+          "description": "relevancy, popularity, publishedAt",
+          "default": "publishedAt"
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 20
+        },
+        "sources": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<article>",
+        "fields": [
+          "articles[0].title",
+          "articles[0].description",
+          "articles[0].url",
+          "articles[0].source.name",
+          "articles[0].publishedAt",
+          "totalResults"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_sources",
+      "description_for_ai": "List available news sources filtered by category, language, or country.",
+      "intent": [
+        "news sources",
+        "available publishers",
+        "news websites",
+        "источники новостей newsapi"
+      ],
+      "endpoint": "GET https://newsapi.org/v2/top-headlines/sources",
+      "input": {
+        "category": {
+          "type": "string",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        },
+        "country": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<source>",
+        "fields": [
+          "sources[0].id",
+          "sources[0].name",
+          "sources[0].description",
+          "sources[0].url",
+          "sources[0].country"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "search_news_ru",
+      "description_for_ai": "Поиск русскоязычных новостей на NewsAPI.",
+      "intent": [
+        "русские новости",
+        "новости на русском",
+        "поиск новостей russia",
+        "Russian news"
+      ],
+      "endpoint": "GET https://newsapi.org/v2/everything",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "default": "ru"
+        },
+        "sortBy": {
+          "type": "string",
+          "default": "publishedAt"
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<article>",
+        "fields": [
+          "articles[0].title",
+          "articles[0].url",
+          "articles[0].source.name",
+          "articles[0].publishedAt"
         ]
       },
       "realtime": true,
