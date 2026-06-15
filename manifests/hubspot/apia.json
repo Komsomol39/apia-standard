@@ -22,26 +22,25 @@
   },
   "capabilities": [
     {
-      "id": "get_contacts",
-      "description_for_ai": "Get CRM contacts with properties. Supports filtering, sorting, and pagination. Returns up to 100 contacts per page.",
+      "id": "search_contacts",
+      "description_for_ai": "Search CRM contacts by email, name, or any property. Returns paginated list.",
       "intent": [
-        "get contacts",
-        "CRM contacts",
-        "customer list",
-        "leads list",
-        "contact search",
-        "клиенты CRM"
+        "find contact hubspot",
+        "search crm",
+        "customer lookup",
+        "lead search",
+        "найти контакт hubspot"
       ],
       "endpoint": "POST https://api.hubapi.com/crm/v3/objects/contacts/search",
       "input": {
         "filterGroups": {
           "type": "array",
-          "description": "[{filters: [{propertyName: 'email', operator: 'EQ', value: 'test@example.com'}]}] — filter by any property. Operators: EQ, NEQ, LT, LTE, GT, GTE, CONTAINS_TOKEN, NOT_CONTAINS_TOKEN",
+          "description": "[{filters: [{propertyName: 'email', operator: 'EQ', value: 'test@example.com'}]}]. Operators: EQ, NEQ, CONTAINS_TOKEN, HAS_PROPERTY",
           "required": false
         },
         "properties": {
           "type": "array",
-          "description": "List of property names to return: ['email', 'firstname', 'lastname', 'phone', 'company', 'lifecyclestage', 'hs_lead_status']",
+          "description": "['email', 'firstname', 'lastname', 'phone', 'company', 'lifecyclestage']",
           "required": false
         },
         "sorts": {
@@ -51,12 +50,11 @@
         },
         "limit": {
           "type": "integer",
-          "description": "Results per page, max 100",
           "default": 10
         },
         "after": {
           "type": "string",
-          "description": "Pagination cursor from previous paging.next.after",
+          "description": "Pagination cursor",
           "required": false
         }
       },
@@ -66,7 +64,6 @@
           "results[0].id",
           "results[0].properties.email",
           "results[0].properties.firstname",
-          "results[0].properties.lastname",
           "results[0].properties.phone",
           "results[0].properties.lifecyclestage",
           "paging.next.after"
@@ -79,17 +76,17 @@
       "id": "create_contact",
       "description_for_ai": "Create a new CRM contact with email, name, phone, and any custom properties.",
       "intent": [
-        "add contact",
+        "create contact",
         "new lead",
-        "create customer",
-        "add to CRM",
-        "new contact HubSpot"
+        "add customer crm",
+        "create contact hubspot",
+        "добавить контакт hubspot"
       ],
       "endpoint": "POST https://api.hubapi.com/crm/v3/objects/contacts",
       "input": {
         "properties": {
           "type": "object",
-          "description": "Contact properties: {email: 'user@example.com', firstname: 'John', lastname: 'Doe', phone: '+1234567890', company: 'Acme Inc', lifecyclestage: 'lead', hs_lead_status: 'NEW'}",
+          "description": "{email, firstname, lastname, phone, company, jobtitle, lifecyclestage: 'lead'|'customer', hs_lead_status: 'NEW'}",
           "required": true
         }
       },
@@ -106,24 +103,24 @@
     },
     {
       "id": "create_deal",
-      "description_for_ai": "Create a sales deal in HubSpot pipeline with amount, stage, and close date.",
+      "description_for_ai": "Create a sales deal with amount, stage, close date, and associate with contacts.",
       "intent": [
         "create deal",
         "sales opportunity",
-        "new deal",
+        "new deal hubspot",
         "pipeline entry",
-        "HubSpot deal"
+        "сделка hubspot"
       ],
       "endpoint": "POST https://api.hubapi.com/crm/v3/objects/deals",
       "input": {
         "properties": {
           "type": "object",
-          "description": "{dealname: 'Enterprise License', amount: '50000', dealstage: 'presentationscheduled', closedate: '2024-03-31', pipeline: 'default', hubspot_owner_id: 'owner_id'}",
+          "description": "{dealname, amount, dealstage: 'appointmentscheduled', closedate: '2024-12-31', pipeline: 'default', hubspot_owner_id}",
           "required": true
         },
         "associations": {
           "type": "array",
-          "description": "Link to contacts/companies: [{types: [{associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 3}], to: {id: 'contact_id'}}]",
+          "description": "[{types: [{associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 3}], to: {id: contact_id}}]",
           "required": false
         }
       },
@@ -134,6 +131,182 @@
           "properties.dealname",
           "properties.amount",
           "properties.dealstage"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_deals",
+      "description_for_ai": "List all deals in the pipeline with stage, amount, owner, and close date.",
+      "intent": [
+        "hubspot deals",
+        "sales pipeline",
+        "pipeline deals",
+        "opportunity list",
+        "сделки hubspot"
+      ],
+      "endpoint": "GET https://api.hubapi.com/crm/v3/objects/deals",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "after": {
+          "type": "string",
+          "required": false
+        },
+        "properties": {
+          "type": "string",
+          "description": "Comma-separated: dealname,amount,dealstage,closedate,hubspot_owner_id",
+          "required": false
+        },
+        "archived": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "list<deal>",
+        "fields": [
+          "results[0].id",
+          "results[0].properties.dealname",
+          "results[0].properties.amount",
+          "results[0].properties.dealstage",
+          "paging.next.after"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_note",
+      "description_for_ai": "Add a note to a contact, deal, or company. Notes appear in the activity timeline.",
+      "intent": [
+        "add note hubspot",
+        "contact note",
+        "crm note",
+        "activity note",
+        "заметка hubspot"
+      ],
+      "endpoint": "POST https://api.hubapi.com/crm/v3/objects/notes",
+      "input": {
+        "properties": {
+          "type": "object",
+          "description": "{hs_note_body: 'Note text', hs_timestamp: '2024-01-15T12:00:00Z'}",
+          "required": true
+        },
+        "associations": {
+          "type": "array",
+          "description": "[{to: {id: contact_id}, types: [{associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 1}]}]",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "note",
+        "fields": [
+          "id",
+          "properties.hs_note_body",
+          "properties.hs_timestamp"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_task",
+      "description_for_ai": "Create a follow-up task for a contact or deal. Tasks appear in the To-Do list.",
+      "intent": [
+        "create task hubspot",
+        "follow up task",
+        "to do crm",
+        "task hubspot",
+        "задача hubspot"
+      ],
+      "endpoint": "POST https://api.hubapi.com/crm/v3/objects/tasks",
+      "input": {
+        "properties": {
+          "type": "object",
+          "description": "{hs_task_subject: 'Call John', hs_task_body: 'Follow up on proposal', hs_task_priority: 'HIGH', hs_timestamp: '2024-01-20T09:00:00Z', hs_task_type: 'CALL'|'EMAIL'|'TODO'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "task",
+        "fields": [
+          "id",
+          "properties.hs_task_subject",
+          "properties.hs_task_priority"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_email",
+      "description_for_ai": "Send a one-to-one CRM email to a contact and log it in HubSpot timeline.",
+      "intent": [
+        "send email hubspot",
+        "email contact crm",
+        "crm email",
+        "log email",
+        "письмо hubspot"
+      ],
+      "endpoint": "POST https://api.hubapi.com/crm/v3/objects/emails",
+      "input": {
+        "properties": {
+          "type": "object",
+          "description": "{hs_email_subject: 'Subject', hs_email_text: 'Body', hs_email_to_email: 'user@example.com', hs_email_from_email: 'rep@company.com', hs_timestamp: 'now'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "email",
+        "fields": [
+          "id",
+          "properties.hs_email_subject",
+          "properties.hs_email_status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_contact",
+      "description_for_ai": "Get full contact record by ID or email with all properties and associations.",
+      "intent": [
+        "get contact hubspot",
+        "contact details",
+        "contact info crm",
+        "профиль контакта hubspot"
+      ],
+      "endpoint": "GET https://api.hubapi.com/crm/v3/objects/contacts/{contactId}",
+      "input": {
+        "contactId": {
+          "type": "string",
+          "description": "Contact ID or use idProperty=email for email lookup",
+          "required": true
+        },
+        "properties": {
+          "type": "string",
+          "description": "Comma-separated property names",
+          "required": false
+        },
+        "associations": {
+          "type": "string",
+          "description": "deals,companies,tickets to include",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "contact",
+        "fields": [
+          "id",
+          "properties.email",
+          "properties.firstname",
+          "properties.company",
+          "properties.lifecyclestage",
+          "associations"
         ]
       },
       "realtime": true,
