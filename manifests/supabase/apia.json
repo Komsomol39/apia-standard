@@ -23,58 +23,123 @@
   "capabilities": [
     {
       "id": "query_database",
-      "description_for_ai": "Query Supabase Postgres database via REST API. Filter rows, select columns, join tables, paginate results. Requires Row Level Security to be configured.",
+      "description_for_ai": "Query PostgreSQL database using REST API. Filter, sort, select columns, paginate.",
       "intent": [
-        "query database",
-        "get records",
-        "insert data",
-        "update record",
+        "supabase query",
         "database query",
-        "PostgreSQL REST"
+        "fetch rows supabase",
+        "запрос базы supabase"
       ],
       "endpoint": "GET https://{project_id}.supabase.co/rest/v1/{table}",
       "input": {
         "table": {
           "type": "string",
-          "description": "Table name to query e.g. 'users', 'products', 'orders'",
+          "description": "Table name",
           "required": true
         },
         "select": {
           "type": "string",
-          "description": "Columns to return: '*' for all, or 'id,name,email' for specific. Support joins: 'id,profiles(avatar_url)'",
+          "description": "Columns: *, id,name,email, or related: *, profile(*)",
           "default": "*"
         },
         "filter": {
           "type": "string",
-          "description": "URL query filter params appended: ?column=eq.value, ?age=gt.18, ?name=ilike.*john*, ?status=in.(active,pending)",
+          "description": "Append as query params: ?status=eq.active&age=gte.18&name=ilike.*john*",
           "required": false
         },
         "order": {
           "type": "string",
-          "description": "Sort: column.asc or column.desc e.g. 'created_at.desc'",
+          "description": "?order=created_at.desc.nullslast",
           "required": false
         },
         "limit": {
           "type": "integer",
-          "description": "Max rows to return",
-          "required": false
+          "description": "?limit=10",
+          "default": 20
         },
         "offset": {
           "type": "integer",
-          "description": "Rows to skip for pagination",
-          "required": false
-        },
-        "count": {
-          "type": "string",
-          "description": "exact or estimated — adds total count to response headers",
-          "required": false
+          "description": "?offset=20 for pagination",
+          "default": 0
         }
       },
       "output": {
         "type": "list<row>",
         "fields": [
-          "Array of row objects with requested columns",
-          "Content-Range header for total count when count param set"
+          "[0].id",
+          "[0] (all selected columns)",
+          "Content-Range header for total count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "insert_row",
+      "description_for_ai": "Insert one or multiple rows into a Supabase table.",
+      "intent": [
+        "insert row supabase",
+        "add data supabase",
+        "create record supabase",
+        "добавить запись supabase"
+      ],
+      "endpoint": "POST https://{project_id}.supabase.co/rest/v1/{table}",
+      "input": {
+        "table": {
+          "type": "string",
+          "required": true
+        },
+        "data": {
+          "type": "object or array",
+          "description": "Single object or array of objects. Column names as keys. Omit id for auto-generate.",
+          "required": true
+        },
+        "prefer": {
+          "type": "string",
+          "description": "return=representation to get inserted rows back",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "inserted",
+        "fields": [
+          "[0].id",
+          "[0] (all columns if Prefer: return=representation)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_row",
+      "description_for_ai": "Update rows matching a filter in Supabase table.",
+      "intent": [
+        "update supabase",
+        "edit row supabase",
+        "patch record supabase",
+        "обновить запись supabase"
+      ],
+      "endpoint": "PATCH https://{project_id}.supabase.co/rest/v1/{table}?{filter}",
+      "input": {
+        "table": {
+          "type": "string",
+          "required": true
+        },
+        "filter": {
+          "type": "string",
+          "description": "Query params to filter: id=eq.123 or status=eq.active",
+          "required": true
+        },
+        "data": {
+          "type": "object",
+          "description": "Fields to update",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "updated",
+        "fields": [
+          "Updated rows if Prefer: return=representation"
         ]
       },
       "realtime": true,
@@ -82,12 +147,12 @@
     },
     {
       "id": "auth_signup",
-      "description_for_ai": "Register new user with email and password. Returns user object and session token.",
+      "description_for_ai": "Register a new user with email and password. Returns session tokens.",
       "intent": [
+        "supabase signup",
         "register user",
-        "sign up",
-        "create account",
-        "user registration"
+        "create account supabase",
+        "регистрация supabase"
       ],
       "endpoint": "POST https://{project_id}.supabase.co/auth/v1/signup",
       "input": {
@@ -98,52 +163,25 @@
         "password": {
           "type": "string",
           "required": true
+        },
+        "data": {
+          "type": "object",
+          "description": "Additional user metadata",
+          "required": false
         }
       },
       "output": {
-        "type": "auth",
+        "type": "session",
         "fields": [
           "user.id",
           "user.email",
-          "session.access_token"
+          "session.access_token",
+          "session.refresh_token",
+          "session.expires_in"
         ]
       },
       "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "storage_upload",
-      "description_for_ai": "Upload a file to a Supabase Storage bucket. Returns the file path. Make bucket public or use signed URLs for access.",
-      "intent": [
-        "upload file",
-        "store image",
-        "file storage",
-        "upload document"
-      ],
-      "endpoint": "POST https://{project_id}.supabase.co/storage/v1/object/{bucket}/{path}",
-      "input": {
-        "bucket": {
-          "type": "string",
-          "required": true
-        },
-        "path": {
-          "type": "string",
-          "required": true
-        },
-        "file": {
-          "type": "binary",
-          "required": true,
-          "description": "File path, URL, or binary content"
-        }
-      },
-      "output": {
-        "type": "upload",
-        "fields": [
-          "Key"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
+      "requires_auth": false
     }
   ],
   "meta": {
