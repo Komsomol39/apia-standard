@@ -21,21 +21,20 @@
   },
   "capabilities": [
     {
-      "id": "query",
-      "description_for_ai": "Query Salesforce objects using SOQL. Get leads, opportunities, accounts, contacts with custom filters.",
+      "id": "soql_query",
+      "description_for_ai": "Query Salesforce data using SOQL (Salesforce Object Query Language). Like SQL for Salesforce objects.",
       "intent": [
         "salesforce query",
-        "CRM data",
-        "get opportunities",
-        "account data",
-        "SOQL query",
-        "sales pipeline"
+        "soql",
+        "query crm data",
+        "salesforce data",
+        "запрос salesforce"
       ],
       "endpoint": "GET https://{instance}.salesforce.com/services/data/v59.0/query",
       "input": {
         "q": {
           "type": "string",
-          "description": "SOQL query e.g. SELECT Id,Name,Amount,StageName FROM Opportunity WHERE StageName=Prospecting",
+          "description": "SOQL query: 'SELECT Id, Name, Email FROM Contact WHERE Account.Name = \\'Acme\\' LIMIT 10', 'SELECT Id, Amount, StageName FROM Opportunity WHERE CloseDate = THIS_MONTH ORDER BY Amount DESC'",
           "required": true
         }
       },
@@ -43,9 +42,9 @@
         "type": "query_result",
         "fields": [
           "totalSize",
+          "done",
           "records[0].Id",
-          "records[0].Name",
-          "records"
+          "records[0] (all queried fields)"
         ]
       },
       "realtime": true,
@@ -53,24 +52,24 @@
     },
     {
       "id": "create_record",
-      "description_for_ai": "Create a new Salesforce record: Lead, Contact, Account, Opportunity, Case.",
+      "description_for_ai": "Create a new Salesforce record (Contact, Lead, Account, Opportunity, Case, or any custom object).",
       "intent": [
-        "create lead",
+        "create salesforce record",
+        "new lead salesforce",
+        "create contact salesforce",
         "new opportunity",
-        "add account",
-        "create contact",
-        "new case"
+        "создать запись salesforce"
       ],
-      "endpoint": "POST https://{instance}.salesforce.com/services/data/v59.0/sobjects/{object_name}",
+      "endpoint": "POST https://{instance}.salesforce.com/services/data/v59.0/sobjects/{object}",
       "input": {
-        "object_name": {
+        "object": {
           "type": "string",
-          "description": "Lead, Contact, Account, Opportunity, Case",
+          "description": "Object type: Contact, Lead, Account, Opportunity, Case, Task",
           "required": true
         },
         "fields": {
           "type": "object",
-          "description": "Object fields as key-value pairs",
+          "description": "Object fields: {FirstName, LastName, Email, Phone, Company (for Lead), AccountId (for Contact)}",
           "required": true
         }
       },
@@ -78,10 +77,144 @@
         "type": "record",
         "fields": [
           "id",
-          "success"
+          "success",
+          "errors"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_record",
+      "description_for_ai": "Update fields of an existing Salesforce record by ID.",
+      "intent": [
+        "update salesforce",
+        "edit record",
+        "change stage",
+        "update opportunity",
+        "обновить запись salesforce"
+      ],
+      "endpoint": "PATCH https://{instance}.salesforce.com/services/data/v59.0/sobjects/{object}/{id}",
+      "input": {
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "id": {
+          "type": "string",
+          "description": "Salesforce record ID (15 or 18 chars)",
+          "required": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "Fields to update",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_record",
+      "description_for_ai": "Get a single Salesforce record with all or specific fields.",
+      "intent": [
+        "get salesforce record",
+        "contact details salesforce",
+        "record by id",
+        "данные записи salesforce"
+      ],
+      "endpoint": "GET https://{instance}.salesforce.com/services/data/v59.0/sobjects/{object}/{id}",
+      "input": {
+        "object": {
+          "type": "string",
+          "required": true
+        },
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated field names. Omit for all.",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "record",
+        "fields": [
+          "Id",
+          "Name",
+          "all requested fields"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search",
+      "description_for_ai": "Full-text search across Salesforce using SOSL (Salesforce Object Search Language). Searches across multiple objects at once.",
+      "intent": [
+        "search salesforce",
+        "find in crm",
+        "salesforce search",
+        "full text search",
+        "поиск salesforce"
+      ],
+      "endpoint": "GET https://{instance}.salesforce.com/services/data/v59.0/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "SOSL query: 'FIND {John Smith} IN ALL FIELDS RETURNING Contact(Id, Name, Email), Lead(Id, Name)'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "search_result",
+        "fields": [
+          "searchRecords[0].Id",
+          "searchRecords[0].Name",
+          "searchRecords[0].attributes.type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_metadata",
+      "description_for_ai": "Get schema/metadata for a Salesforce object — all available fields, types, relationships. Use to discover field names before querying.",
+      "intent": [
+        "salesforce schema",
+        "object metadata",
+        "field names salesforce",
+        "describe object",
+        "схема salesforce"
+      ],
+      "endpoint": "GET https://{instance}.salesforce.com/services/data/v59.0/sobjects/{object}/describe",
+      "input": {
+        "object": {
+          "type": "string",
+          "description": "Object name: Contact, Lead, Account, Opportunity, or any custom object",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "metadata",
+        "fields": [
+          "name",
+          "label",
+          "fields[0].name",
+          "fields[0].label",
+          "fields[0].type",
+          "fields[0].referenceTo"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
