@@ -23,41 +23,37 @@
   "capabilities": [
     {
       "id": "query_database",
-      "description_for_ai": "Query a Notion database with filters and sorts. Returns pages matching criteria with all their properties. The database must be shared with your integration.",
+      "description_for_ai": "Query a Notion database with filters and sorts. Returns pages with all properties. Database must be shared with integration.",
       "intent": [
-        "notion database query",
+        "notion database",
         "get notion records",
         "filter notion",
-        "search notion database",
-        "notion tasks",
-        "notion projects",
-        "notion CRM"
+        "search notion",
+        "задачи notion",
+        "проекты notion"
       ],
       "endpoint": "POST https://api.notion.com/v1/databases/{database_id}/query",
       "input": {
         "database_id": {
           "type": "string",
-          "description": "Database ID from Notion URL (32-char hex or UUID format)",
           "required": true
         },
         "filter": {
           "type": "object",
-          "description": "Filter object: {property: 'Status', select: {equals: 'Done'}} or {and: [{property: ...}, {property: ...}]} for multiple",
+          "description": "{property: 'Status', select: {equals: 'Done'}} or {and: [{...}, {...}]}",
           "required": false
         },
         "sorts": {
           "type": "array",
-          "description": "[{property: 'Created', direction: 'descending'}] or [{timestamp: 'created_time', direction: 'ascending'}]",
+          "description": "[{property: 'Created', direction: 'descending'}]",
           "required": false
         },
         "page_size": {
           "type": "integer",
-          "description": "Results per page, max 100",
           "default": 100
         },
         "start_cursor": {
           "type": "string",
-          "description": "Pagination cursor from previous response's next_cursor",
           "required": false
         }
       },
@@ -76,39 +72,34 @@
     },
     {
       "id": "create_page",
-      "description_for_ai": "Create a new page in a Notion database or as a subpage. Set properties and add content blocks.",
+      "description_for_ai": "Create a new page in a Notion database or as a subpage. Set properties and content blocks.",
       "intent": [
         "create notion page",
-        "add to notion database",
+        "add to notion",
         "new notion entry",
         "write to notion",
-        "add task notion"
+        "добавить в notion"
       ],
       "endpoint": "POST https://api.notion.com/v1/pages",
       "input": {
         "parent": {
           "type": "object",
-          "description": "{database_id: 'uuid'} to create in database, or {page_id: 'uuid'} for subpage",
+          "description": "{database_id: 'uuid'} or {page_id: 'uuid'}",
           "required": true
         },
         "properties": {
           "type": "object",
-          "description": "Page properties matching database schema. Title: {Name: {title: [{text: {content: 'My Page'}}]}}. Select: {Status: {select: {name: 'Done'}}}. Date: {Due: {date: {start: '2024-01-15'}}}",
+          "description": "Properties matching database schema. Title: {Name: {title: [{text: {content: 'text'}}]}}",
           "required": true
         },
         "children": {
           "type": "array",
-          "description": "Page content blocks: [{object: 'block', type: 'paragraph', paragraph: {rich_text: [{text: {content: 'Hello'}}]}}]",
+          "description": "Content blocks: [{object: 'block', type: 'paragraph', paragraph: {rich_text: [{text: {content: 'text'}}]}}]",
           "required": false
         },
         "icon": {
           "type": "object",
-          "description": "{type: 'emoji', emoji: '✅'} or {type: 'external', external: {url: 'https://...'}} — page icon",
-          "required": false
-        },
-        "cover": {
-          "type": "object",
-          "description": "{type: 'external', external: {url: 'https://image.url'}} — page cover image",
+          "description": "{type: 'emoji', emoji: '✅'}",
           "required": false
         }
       },
@@ -125,29 +116,140 @@
       "requires_auth": true
     },
     {
+      "id": "update_page",
+      "description_for_ai": "Update properties of an existing Notion page. Use to change status, dates, assignees without touching content.",
+      "intent": [
+        "update notion",
+        "change notion page",
+        "set status notion",
+        "edit notion record",
+        "обновить notion"
+      ],
+      "endpoint": "PATCH https://api.notion.com/v1/pages/{page_id}",
+      "input": {
+        "page_id": {
+          "type": "string",
+          "required": true
+        },
+        "properties": {
+          "type": "object",
+          "description": "Properties to update. Same format as create_page.",
+          "required": false
+        },
+        "archived": {
+          "type": "boolean",
+          "description": "true to archive (soft-delete) page",
+          "required": false
+        },
+        "icon": {
+          "type": "object",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "page",
+        "fields": [
+          "id",
+          "url",
+          "properties",
+          "last_edited_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_page",
+      "description_for_ai": "Get a Notion page metadata and properties by ID. Does not include block content — use retrieve_block_children for content.",
+      "intent": [
+        "get notion page",
+        "notion page details",
+        "page properties",
+        "страница notion"
+      ],
+      "endpoint": "GET https://api.notion.com/v1/pages/{page_id}",
+      "input": {
+        "page_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "page",
+        "fields": [
+          "id",
+          "url",
+          "properties",
+          "created_time",
+          "last_edited_time",
+          "icon",
+          "cover"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_block_children",
+      "description_for_ai": "Get the content blocks of a Notion page. Returns paragraphs, headings, lists, code blocks, and nested content.",
+      "intent": [
+        "notion page content",
+        "read notion page",
+        "notion blocks",
+        "page text",
+        "содержимое страницы notion"
+      ],
+      "endpoint": "GET https://api.notion.com/v1/blocks/{block_id}/children",
+      "input": {
+        "block_id": {
+          "type": "string",
+          "description": "Page ID or block ID",
+          "required": true
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 100
+        },
+        "start_cursor": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<block>",
+        "fields": [
+          "results[0].type",
+          "results[0].paragraph.rich_text[0].text.content",
+          "results[0].heading_1.rich_text[0].text.content",
+          "has_more"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
       "id": "search",
-      "description_for_ai": "Search pages and databases in the Notion workspace by keyword. Returns titles and URLs of matching pages.",
+      "description_for_ai": "Search all pages and databases in Notion workspace by title keyword.",
       "intent": [
         "search notion",
         "find notion page",
-        "look up note",
-        "notion search"
+        "notion search",
+        "поиск notion"
       ],
       "endpoint": "POST https://api.notion.com/v1/search",
       "input": {
         "query": {
           "type": "string",
-          "description": "Text to search for in page titles",
           "required": false
         },
         "filter": {
           "type": "object",
-          "description": "{property: 'object', value: 'page'} to filter pages only, or 'database' for databases only",
+          "description": "{property: 'object', value: 'page'} or 'database'",
           "required": false
         },
         "sort": {
           "type": "object",
-          "description": "{direction: 'ascending'|'descending', timestamp: 'last_edited_time'}",
+          "description": "{direction: 'descending', timestamp: 'last_edited_time'}",
           "required": false
         },
         "page_size": {
@@ -162,6 +264,38 @@
           "results[0].id",
           "results[0].url",
           "results[0].properties.title"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "append_block_children",
+      "description_for_ai": "Append content blocks to a Notion page. Add paragraphs, headings, bullet lists, code blocks, images.",
+      "intent": [
+        "add content notion",
+        "append to notion page",
+        "write to notion page",
+        "добавить текст notion"
+      ],
+      "endpoint": "PATCH https://api.notion.com/v1/blocks/{block_id}/children",
+      "input": {
+        "block_id": {
+          "type": "string",
+          "description": "Page ID to append content to",
+          "required": true
+        },
+        "children": {
+          "type": "array",
+          "description": "Blocks: [{type: 'paragraph', paragraph: {rich_text: [{text: {content: 'text'}}]}}, {type: 'heading_1', heading_1: {rich_text: [{text: {content: 'Title'}}]}}, {type: 'bulleted_list_item', bulleted_list_item: {rich_text: [{text: {content: 'item'}}]}}, {type: 'code', code: {rich_text: [{text: {content: 'code'}}], language: 'python'}}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<block>",
+        "fields": [
+          "results[0].id",
+          "results[0].type"
         ]
       },
       "realtime": true,
