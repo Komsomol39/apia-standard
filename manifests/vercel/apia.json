@@ -23,95 +23,67 @@
   "capabilities": [
     {
       "id": "list_deployments",
-      "description_for_ai": "Get recent Vercel deployments with build status, URL, and git commit info. Use for CI/CD monitoring and deployment tracking.",
+      "description_for_ai": "List deployments with status, URL, branch, and deployment time.",
       "intent": [
-        "deployment status",
-        "list deployments",
-        "build status",
         "vercel deployments",
-        "deploy history"
+        "list deploys",
+        "deployment history",
+        "деплои vercel"
       ],
       "endpoint": "GET https://api.vercel.com/v6/deployments",
       "input": {
-        "limit": {
-          "type": "integer",
-          "description": "Max deployments to return, default 20",
-          "default": 20
+        "teamId": {
+          "type": "string",
+          "description": "Team ID for team projects",
+          "required": false
         },
         "projectId": {
           "type": "string",
-          "description": "Filter by specific project ID (optional)",
+          "description": "Filter by project ID",
           "required": false
         },
         "state": {
           "type": "string",
-          "description": "Filter by state: BUILDING, ERROR, INITIALIZING, QUEUED, READY, CANCELED",
+          "description": "QUEUED, BUILDING, ERROR, INITIALIZING, READY, CANCELED",
           "required": false
         },
-        "teamId": {
-          "type": "string",
-          "description": "Team ID for team deployments",
-          "required": false
-        },
-        "target": {
-          "type": "string",
-          "description": "Filter by environment: production or preview",
-          "required": false
+        "limit": {
+          "type": "integer",
+          "default": 10
         }
       },
       "output": {
         "type": "list<deployment>",
         "fields": [
           "deployments[0].uid",
+          "deployments[0].name",
           "deployments[0].url",
           "deployments[0].state",
-          "deployments[0].createdAt",
-          "deployments[0].meta.githubCommitMessage",
-          "deployments[0].meta.githubCommitRef",
-          "deployments[0].name"
+          "deployments[0].created",
+          "deployments[0].meta.githubCommitMessage"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_deployment",
-      "description_for_ai": "Deploy a project to Vercel from a git repository. Returns deployment object with URL. Deployment builds asynchronously.",
+      "id": "get_deployment",
+      "description_for_ai": "Get details of a specific deployment including build logs URL and error info.",
       "intent": [
-        "deploy to vercel",
-        "new deployment",
-        "publish site"
+        "vercel deployment details",
+        "deploy status",
+        "check deploy",
+        "статус деплоя vercel"
       ],
-      "endpoint": "POST https://api.vercel.com/v13/deployments",
+      "endpoint": "GET https://api.vercel.com/v13/deployments/{idOrUrl}",
       "input": {
-        "name": {
+        "idOrUrl": {
           "type": "string",
-          "description": "Project name on Vercel",
+          "description": "Deployment ID (dpl_...) or deployment URL",
           "required": true
         },
-        "gitSource": {
-          "type": "object",
-          "description": "{type: 'github', repoId: '123456', ref: 'main'} for GitHub deploy. Also supports 'gitlab' and 'bitbucket'.",
-          "required": false
-        },
-        "files": {
-          "type": "array",
-          "description": "Files to deploy directly: [{file: 'path/to/file.js', data: 'content', encoding: 'utf-8'}]",
-          "required": false
-        },
-        "projectSettings": {
-          "type": "object",
-          "description": "{framework: 'nextjs'|'vite'|'create-react-app', buildCommand: 'npm run build', outputDirectory: 'dist'}",
-          "required": false
-        },
-        "env": {
-          "type": "array",
-          "description": "[{key: 'API_URL', value: 'https://api.example.com', type: 'plain'|'secret'}] environment variables",
-          "required": false
-        },
-        "target": {
+        "teamId": {
           "type": "string",
-          "description": "Deployment environment: production or preview",
           "required": false
         }
       },
@@ -120,8 +92,82 @@
         "fields": [
           "id",
           "url",
-          "readyState",
-          "createdAt"
+          "state",
+          "errorCode",
+          "errorMessage",
+          "buildingAt",
+          "ready",
+          "creator.username"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_projects",
+      "description_for_ai": "List all Vercel projects with their production deployment URLs.",
+      "intent": [
+        "vercel projects",
+        "list projects",
+        "my deployments",
+        "проекты vercel"
+      ],
+      "endpoint": "GET https://api.vercel.com/v9/projects",
+      "input": {
+        "teamId": {
+          "type": "string",
+          "required": false
+        },
+        "search": {
+          "type": "string",
+          "description": "Filter by project name",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<project>",
+        "fields": [
+          "projects[0].id",
+          "projects[0].name",
+          "projects[0].latestDeployments[0].url",
+          "projects[0].framework",
+          "projects[0].updatedAt"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "cancel_deployment",
+      "description_for_ai": "Cancel a running deployment.",
+      "intent": [
+        "cancel vercel deploy",
+        "stop deployment",
+        "cancel build vercel",
+        "отменить деплой vercel"
+      ],
+      "endpoint": "PATCH https://api.vercel.com/v12/deployments/{id}/cancel",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Deployment ID (dpl_...)",
+          "required": true
+        },
+        "teamId": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "deployment",
+        "fields": [
+          "id",
+          "state",
+          "canceledAt"
         ]
       },
       "realtime": true,
