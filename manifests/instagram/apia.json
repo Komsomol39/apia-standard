@@ -22,36 +22,84 @@
   "capabilities": [
     {
       "id": "get_media",
-      "description_for_ai": "Get Instagram posts, images, videos, reels for authenticated account.",
+      "description_for_ai": "Get media (posts, reels, stories) from an Instagram Business account with engagement metrics.",
       "intent": [
         "instagram posts",
-        "my instagram",
-        "social media content",
-        "instagram feed",
-        "instagram photos"
+        "get media instagram",
+        "instagram content",
+        "посты instagram"
       ],
-      "endpoint": "GET https://graph.instagram.com/me/media",
+      "endpoint": "GET https://graph.facebook.com/v20.0/{user-id}/media",
       "input": {
+        "user-id": {
+          "type": "string",
+          "description": "Instagram Business Account ID",
+          "required": true
+        },
         "fields": {
           "type": "string",
-          "description": "id,caption,media_type,media_url,permalink,thumbnail_url,timestamp",
-          "default": "id,caption,media_type,timestamp"
+          "description": "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count",
+          "required": false
         },
         "limit": {
           "type": "integer",
-          "default": 12,
-          "description": "Maximum number of results to return"
+          "default": 10
         }
       },
       "output": {
         "type": "list<media>",
         "fields": [
-          "id",
-          "caption",
-          "media_type",
-          "media_url",
-          "permalink",
-          "timestamp"
+          "data[0].id",
+          "data[0].caption",
+          "data[0].media_type (IMAGE|VIDEO|CAROUSEL_ALBUM)",
+          "data[0].media_url",
+          "data[0].like_count",
+          "data[0].timestamp"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "publish_post",
+      "description_for_ai": "Publish a photo or video post to Instagram Business account. Two-step: create container then publish.",
+      "intent": [
+        "post to instagram",
+        "instagram publish",
+        "upload photo instagram",
+        "опубликовать instagram"
+      ],
+      "endpoint": "POST https://graph.facebook.com/v20.0/{user-id}/media",
+      "input": {
+        "user-id": {
+          "type": "string",
+          "required": true
+        },
+        "image_url": {
+          "type": "string",
+          "description": "Public URL of image to post (JPEG, max 8MB)",
+          "required": false
+        },
+        "video_url": {
+          "type": "string",
+          "description": "Public URL of video for Reels",
+          "required": false
+        },
+        "caption": {
+          "type": "string",
+          "description": "Post caption with hashtags and mentions",
+          "required": false
+        },
+        "media_type": {
+          "type": "string",
+          "description": "IMAGE (default) or REELS",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "container",
+        "fields": [
+          "id (container ID — use to publish)"
         ]
       },
       "realtime": true,
@@ -59,36 +107,81 @@
     },
     {
       "id": "get_insights",
-      "description_for_ai": "Get Instagram account analytics: impressions, reach, profile views, follower count.",
+      "description_for_ai": "Get analytics for Instagram account or specific media: reach, impressions, engagement, profile views.",
       "intent": [
         "instagram analytics",
         "instagram insights",
-        "follower count",
-        "reach",
-        "impressions",
-        "social stats"
+        "post performance",
+        "аналитика instagram"
       ],
-      "endpoint": "GET https://graph.instagram.com/{media_id}/insights",
+      "endpoint": "GET https://graph.facebook.com/v20.0/{user-id}/insights",
       "input": {
+        "user-id": {
+          "type": "string",
+          "required": true
+        },
         "metric": {
           "type": "string",
-          "description": "impressions,reach,likes,comments,shares,saved",
+          "description": "impressions, reach, follower_count, profile_views, email_contacts, get_directions_clicks, phone_call_clicks, website_clicks",
           "required": true
         },
         "period": {
           "type": "string",
-          "description": "day, week, days_28, month",
-          "default": "day"
+          "description": "day, week, days_28, month, lifetime",
+          "required": true
+        },
+        "since": {
+          "type": "integer",
+          "description": "Unix timestamp for start date",
+          "required": false
+        },
+        "until": {
+          "type": "integer",
+          "description": "Unix timestamp for end date",
+          "required": false
         }
       },
       "output": {
         "type": "insights",
         "fields": [
           "data[0].name",
-          "data[0].values[0].value"
+          "data[0].period",
+          "data[0].values[0].value",
+          "data[0].values[0].end_time"
         ]
       },
       "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "reply_to_comment",
+      "description_for_ai": "Reply to a comment on an Instagram post. Good for community management automation.",
+      "intent": [
+        "reply instagram comment",
+        "respond to comment",
+        "instagram comment reply",
+        "ответить на комментарий instagram"
+      ],
+      "endpoint": "POST https://graph.facebook.com/v20.0/{comment-id}/replies",
+      "input": {
+        "comment-id": {
+          "type": "string",
+          "description": "Comment ID to reply to",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "description": "Reply text",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "comment",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
