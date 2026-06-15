@@ -22,33 +22,33 @@
   "capabilities": [
     {
       "id": "send_message",
-      "description_for_ai": "Send a message to a Discord channel. Supports rich embeds with title, description, color, fields, and images. Use for notifications, alerts, or bot responses.",
+      "description_for_ai": "Send a message to a Discord channel. Supports text, embeds, file attachments, and components (buttons).",
       "intent": [
         "send discord message",
-        "discord message",
-        "сообщение в дискорд",
-        "discord notification",
-        "bot message",
-        "discord alert",
-        "server message",
-        "post in channel",
-        "post to discord channel"
+        "discord notify",
+        "post in discord",
+        "discord channel message",
+        "отправить в discord"
       ],
       "endpoint": "POST https://discord.com/api/v10/channels/{channel_id}/messages",
       "input": {
         "channel_id": {
           "type": "string",
-          "description": "Discord channel ID (18-digit number)",
           "required": true
         },
         "content": {
           "type": "string",
-          "description": "Plain text message",
+          "description": "Message text, max 2000 chars",
           "required": false
         },
         "embeds": {
           "type": "array",
-          "description": "Rich embed objects with title, description, color, fields",
+          "description": "[{title, description, color: 0x00ff00, fields: [{name, value, inline}], footer: {text}, timestamp}]",
+          "required": false
+        },
+        "components": {
+          "type": "array",
+          "description": "Action rows with buttons",
           "required": false
         }
       },
@@ -66,75 +66,252 @@
       "requires_auth": true
     },
     {
-      "id": "get_guild_info",
-      "description_for_ai": "Get information about a Discord server (guild): name, member count, channels, roles.",
+      "id": "create_channel",
+      "description_for_ai": "Create a text, voice, or category channel in a Discord server (guild).",
       "intent": [
-        "discord server info",
-        "guild members",
-        "server details"
+        "create discord channel",
+        "new channel discord",
+        "discord category",
+        "voice channel",
+        "создать канал discord"
       ],
-      "endpoint": "GET https://discord.com/api/v10/guilds/{guild_id}",
+      "endpoint": "POST https://discord.com/api/v10/guilds/{guild_id}/channels",
       "input": {
         "guild_id": {
           "type": "string",
           "required": true
         },
-        "with_counts": {
-          "type": "boolean",
-          "default": true
+        "name": {
+          "type": "string",
+          "description": "Channel name (lowercase, hyphens)",
+          "required": true
+        },
+        "type": {
+          "type": "integer",
+          "description": "0=text, 2=voice, 4=category, 5=announcement, 15=forum",
+          "default": 0
+        },
+        "parent_id": {
+          "type": "string",
+          "description": "Category channel ID",
+          "required": false
+        },
+        "topic": {
+          "type": "string",
+          "description": "Channel description",
+          "required": false
+        },
+        "permission_overwrites": {
+          "type": "array",
+          "description": "Role/user permission overrides",
+          "required": false
         }
       },
       "output": {
-        "type": "guild",
+        "type": "channel",
         "fields": [
           "id",
           "name",
-          "approximate_member_count",
-          "approximate_presence_count",
-          "description",
-          "features"
+          "type",
+          "guild_id",
+          "parent_id"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "send_webhook",
-      "description_for_ai": "Send a message via Discord webhook — no bot token needed, just a webhook URL. Simplest way to post notifications to Discord. Use for CI/CD alerts, monitoring, or any one-way notification.",
+      "id": "get_guild_members",
+      "description_for_ai": "List members of a Discord server with roles, nicknames, and join dates.",
       "intent": [
-        "discord webhook",
-        "simple discord notification",
-        "post to discord",
-        "discord alert no bot"
+        "discord members",
+        "server members",
+        "guild members",
+        "who is in server",
+        "участники discord"
       ],
-      "endpoint": "POST {webhook_url}",
+      "endpoint": "GET https://discord.com/api/v10/guilds/{guild_id}/members",
       "input": {
-        "webhook_url": {
+        "guild_id": {
           "type": "string",
-          "description": "Full webhook URL from Discord channel settings",
           "required": true
         },
-        "content": {
-          "type": "string",
-          "description": "Message text",
-          "required": false
+        "limit": {
+          "type": "integer",
+          "description": "1-1000",
+          "default": 100
         },
-        "username": {
+        "after": {
           "type": "string",
-          "description": "Override bot display name",
-          "required": false
-        },
-        "embeds": {
-          "type": "array",
+          "description": "User ID for pagination",
           "required": false
         }
       },
       "output": {
-        "type": "empty",
-        "fields": []
+        "type": "list<member>",
+        "fields": [
+          "[0].user.id",
+          "[0].user.username",
+          "[0].nick",
+          "[0].roles",
+          "[0].joined_at"
+        ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
+    },
+    {
+      "id": "add_role",
+      "description_for_ai": "Add a role to a guild member.",
+      "intent": [
+        "add role discord",
+        "give role",
+        "assign role",
+        "discord role",
+        "выдать роль discord"
+      ],
+      "endpoint": "PUT https://discord.com/api/v10/guilds/{guild_id}/members/{user_id}/roles/{role_id}",
+      "input": {
+        "guild_id": {
+          "type": "string",
+          "required": true
+        },
+        "user_id": {
+          "type": "string",
+          "required": true
+        },
+        "role_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_webhook",
+      "description_for_ai": "Create a webhook for a channel to receive external notifications (CI/CD, monitoring, etc.).",
+      "intent": [
+        "discord webhook",
+        "notification webhook",
+        "channel webhook",
+        "integration discord",
+        "вебхук discord"
+      ],
+      "endpoint": "POST https://discord.com/api/v10/channels/{channel_id}/webhooks",
+      "input": {
+        "channel_id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Webhook display name",
+          "required": true
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Avatar image URL",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "webhook",
+        "fields": [
+          "id",
+          "token",
+          "url",
+          "channel_id",
+          "name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_messages",
+      "description_for_ai": "Get message history from a Discord channel.",
+      "intent": [
+        "discord history",
+        "channel messages",
+        "read discord",
+        "message history",
+        "история discord"
+      ],
+      "endpoint": "GET https://discord.com/api/v10/channels/{channel_id}/messages",
+      "input": {
+        "channel_id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "description": "1-100",
+          "default": 50
+        },
+        "before": {
+          "type": "string",
+          "description": "Message ID — get messages before this",
+          "required": false
+        },
+        "after": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<message>",
+        "fields": [
+          "[0].id",
+          "[0].content",
+          "[0].author.username",
+          "[0].timestamp",
+          "[0].attachments"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_reaction",
+      "description_for_ai": "Add an emoji reaction to a message.",
+      "intent": [
+        "react discord",
+        "discord emoji reaction",
+        "add reaction",
+        "emoji message",
+        "реакция discord"
+      ],
+      "endpoint": "PUT https://discord.com/api/v10/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/@me",
+      "input": {
+        "channel_id": {
+          "type": "string",
+          "required": true
+        },
+        "message_id": {
+          "type": "string",
+          "required": true
+        },
+        "emoji": {
+          "type": "string",
+          "description": "Unicode emoji (👍) or custom emoji format (name:id)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
