@@ -23,77 +23,57 @@
   "capabilities": [
     {
       "id": "messages",
-      "description_for_ai": "Send messages to Claude for text generation, analysis, coding, translation. Supports multi-turn conversations, system prompts, tool use, and vision. Most capable model available for complex reasoning tasks.",
+      "description_for_ai": "Send messages to Claude for text generation, analysis, coding, translation. Core messages API supporting multi-turn conversations, system prompts, and streaming.",
       "intent": [
         "ask Claude",
         "AI assistant",
         "generate text",
-        "analyze document",
+        "analyze",
         "write code",
-        "summarize",
-        "translate",
-        "explain",
-        "claude AI",
-        "спросить ИИ",
-        "написать текст",
-        "анализ документа",
-        "генерация текста"
+        "спросить Claude",
+        "ИИ помощник"
       ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
         "model": {
           "type": "string",
-          "description": "claude-sonnet-4-5 (best quality/price), claude-haiku-4-5 (fastest/cheapest), claude-opus-4 (most capable)",
+          "description": "claude-sonnet-4-5 (best quality), claude-haiku-4-5 (fast/cheap), claude-opus-4 (most capable)",
           "required": true
         },
         "messages": {
           "type": "array",
-          "description": "Conversation history: [{role: 'user'|'assistant', content: 'string or array of content blocks'}]",
+          "description": "[{role: 'user'|'assistant', content: 'string or array'}]",
           "required": true
         },
         "system": {
           "type": "string",
-          "description": "System prompt — sets Claude behavior, persona, constraints. E.g. 'You are a helpful assistant that responds in Russian.'",
+          "description": "System prompt for behavior and persona",
           "required": false
         },
         "max_tokens": {
           "type": "integer",
-          "description": "Maximum tokens to generate. Min 1, max 8192 (Sonnet/Haiku) or 32000 (Opus). Required.",
           "required": true
         },
         "temperature": {
           "type": "float",
-          "description": "Randomness 0.0-1.0. 0=deterministic/consistent, 1=creative/varied. Default 1.0.",
-          "required": false
-        },
-        "tools": {
-          "type": "array",
-          "description": "Tool definitions: [{name, description, input_schema: {type: 'object', properties: {param: {type, description}}}}]. Claude will call tools when needed.",
-          "required": false
-        },
-        "tool_choice": {
-          "type": "object",
-          "description": "{type: 'auto'} lets Claude decide, {type: 'any'} forces tool use, {type: 'tool', name: 'tool_name'} forces specific tool",
+          "description": "0.0-1.0, default 1.0",
           "required": false
         },
         "stream": {
           "type": "boolean",
-          "description": "Stream response tokens as Server-Sent Events for real-time display",
           "default": false
         },
-        "thinking": {
-          "type": "object",
-          "description": "{type: 'enabled', budget_tokens: 5000} — enables extended chain-of-thought reasoning before answering. Improves accuracy on complex problems.",
+        "tools": {
+          "type": "array",
+          "description": "Tool definitions for function calling",
           "required": false
         }
       },
       "output": {
         "type": "message",
         "fields": [
-          "id",
           "content[0].text",
-          "content[0].type (text|tool_use)",
-          "stop_reason (end_turn|tool_use|max_tokens)",
+          "stop_reason",
           "usage.input_tokens",
           "usage.output_tokens"
         ]
@@ -103,43 +83,163 @@
     },
     {
       "id": "vision",
-      "description_for_ai": "Analyze images and PDFs with Claude. Describe content, extract text from images, answer questions about visual material. Pass images as base64 or URL.",
+      "description_for_ai": "Analyze images and PDFs with Claude. Describe content, extract text, answer questions about images. Pass base64 or URL.",
       "intent": [
         "analyze image",
-        "describe photo",
-        "read document",
-        "image OCR",
-        "PDF analysis",
-        "what is in image",
         "image understanding",
-        "анализ изображения",
-        "что на картинке",
-        "прочитать документ"
+        "PDF analysis",
+        "OCR Claude",
+        "анализ изображения Claude"
       ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
         "model": {
           "type": "string",
-          "description": "claude-sonnet-4-5 recommended for vision tasks",
           "default": "claude-sonnet-4-5"
         },
         "messages": {
           "type": "array",
-          "description": "Content array with image and text: [{role: 'user', content: [{type: 'image', source: {type: 'base64', media_type: 'image/jpeg', data: 'BASE64_STRING'}}, {type: 'text', text: 'What is in this image?'}]}]",
+          "description": "[{role: 'user', content: [{type: 'image', source: {type: 'base64', media_type: 'image/jpeg', data: 'BASE64'}}, {type: 'text', text: 'What is in this image?'}]}]",
           "required": true
         },
         "max_tokens": {
           "type": "integer",
-          "description": "Max response length",
-          "default": 1024
+          "required": true
         }
       },
       "output": {
         "type": "message",
         "fields": [
-          "content[0].text",
-          "usage.input_tokens",
-          "usage.output_tokens"
+          "content[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "tool_use",
+      "description_for_ai": "Use Claude with custom tools (function calling). Claude decides when to call tools and returns structured results. Build AI agents with real-world capabilities.",
+      "intent": [
+        "function calling Claude",
+        "Claude tools",
+        "AI agent Claude",
+        "Claude tool use",
+        "агент Claude"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{name: 'get_weather', description: 'Get weather for a city', input_schema: {type: 'object', properties: {city: {type: 'string'}}, required: ['city']}}]",
+          "required": true
+        },
+        "tool_choice": {
+          "type": "object",
+          "description": "{type: 'auto'|'any'|'tool', name: 'tool_name'}",
+          "required": false
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "content[0].type (tool_use)",
+          "content[0].name",
+          "content[0].input",
+          "stop_reason (tool_use|end_turn)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "extended_thinking",
+      "description_for_ai": "Enable Claude's extended thinking for hard reasoning problems. Claude shows its reasoning process before answering. Best for math, logic, complex analysis.",
+      "intent": [
+        "Claude thinking",
+        "chain of thought Claude",
+        "reasoning Claude",
+        "hard problems Claude",
+        "расширенное мышление Claude"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "claude-sonnet-4-5 or claude-opus-4 — thinking not available on Haiku",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "thinking": {
+          "type": "object",
+          "description": "{type: 'enabled', budget_tokens: 10000} — controls thinking depth. More tokens = deeper reasoning.",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "description": "Must be greater than budget_tokens",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "content[0].type (thinking)",
+          "content[0].thinking (reasoning text)",
+          "content[1].type (text)",
+          "content[1].text (final answer)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "count_tokens",
+      "description_for_ai": "Count tokens in a message before sending to estimate cost. Supports all content types including images and tools.",
+      "intent": [
+        "count tokens",
+        "token count Claude",
+        "estimate cost",
+        "message size",
+        "подсчёт токенов Claude"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages/count_tokens",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "system": {
+          "type": "string",
+          "required": false
+        },
+        "tools": {
+          "type": "array",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "token_count",
+        "fields": [
+          "input_tokens"
         ]
       },
       "realtime": true,
