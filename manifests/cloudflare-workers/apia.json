@@ -23,43 +23,71 @@
   "capabilities": [
     {
       "id": "deploy_worker",
-      "description_for_ai": "Deploy or update a Cloudflare Worker script to the edge network. Worker runs at 300+ global locations with zero cold starts.",
+      "description_for_ai": "Deploy or update a Worker script to Cloudflare edge (300+ locations worldwide). Instant global deployment.",
       "intent": [
-        "deploy serverless",
-        "edge function",
-        "cloudflare worker",
-        "deploy script"
+        "deploy worker cloudflare",
+        "edge function cloudflare",
+        "upload worker",
+        "задеплоить cloudflare worker"
       ],
       "endpoint": "PUT https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/scripts/{script_name}",
       "input": {
         "account_id": {
           "type": "string",
-          "description": "Your Cloudflare Account ID from dashboard.cloudflare.com → right sidebar",
           "required": true
         },
         "script_name": {
           "type": "string",
-          "description": "Worker script name (URL-safe, unique per account). Used as subdomain: {name}.{subdomain}.workers.dev",
+          "description": "Worker name (letters, numbers, hyphens)",
           "required": true
         },
-        "script_content": {
+        "script": {
           "type": "string",
-          "description": "JavaScript/TypeScript Worker code as string. Must export default handler: export default { fetch(request, env) { return new Response('Hello') } }",
+          "description": "Worker JavaScript/TypeScript code as string",
           "required": true
         },
         "bindings": {
           "type": "array",
-          "description": "Resource bindings: [{type: 'kv_namespace', name: 'MY_KV', namespace_id: '...'}, {type: 'r2_bucket', name: 'MY_BUCKET', bucket_name: '...'}]",
+          "description": "[{type: 'kv_namespace', name: 'MY_KV', namespace_id: '...'}, {type: 'secret_text', name: 'API_KEY'}]",
           "required": false
         }
       },
       "output": {
         "type": "worker",
         "fields": [
-          "result.id",
-          "result.etag",
-          "result.size",
-          "success"
+          "id",
+          "created_on",
+          "modified_on",
+          "script"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_worker",
+      "description_for_ai": "Get source code of an existing Worker script.",
+      "intent": [
+        "get worker code",
+        "read worker",
+        "worker source",
+        "код worker cloudflare"
+      ],
+      "endpoint": "GET https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/scripts/{script_name}",
+      "input": {
+        "account_id": {
+          "type": "string",
+          "required": true
+        },
+        "script_name": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "script",
+        "fields": [
+          "JavaScript source code as text"
         ]
       },
       "realtime": true,
@@ -67,52 +95,91 @@
     },
     {
       "id": "kv_put",
-      "description_for_ai": "Store a key-value pair in Cloudflare KV namespace. KV is globally distributed, eventually consistent storage for config, sessions, content.",
+      "description_for_ai": "Write a key-value pair to Cloudflare KV Storage. Available globally at edge.",
       "intent": [
-        "store data",
-        "KV storage",
-        "edge cache",
-        "cloudflare KV"
+        "KV store cloudflare",
+        "store data edge",
+        "cloudflare KV write",
+        "запись KV cloudflare"
       ],
       "endpoint": "PUT https://api.cloudflare.com/client/v4/accounts/{account_id}/storage/kv/namespaces/{namespace_id}/values/{key}",
       "input": {
         "account_id": {
           "type": "string",
-          "description": "Cloudflare Account ID",
           "required": true
         },
         "namespace_id": {
           "type": "string",
-          "description": "KV Namespace ID from dashboard or /storage/kv/namespaces API",
           "required": true
         },
         "key": {
           "type": "string",
-          "description": "Key name (up to 512 bytes, no special chars)",
           "required": true
         },
         "value": {
           "type": "string",
-          "description": "Value to store (up to 25MB, stored as string)",
+          "description": "Value to store (max 25MB)",
           "required": true
         },
         "expiration_ttl": {
           "type": "integer",
-          "description": "Time-to-live in seconds. Key auto-deletes after this time. Min 60 seconds.",
+          "description": "TTL in seconds. After expiry, key is deleted.",
           "required": false
         },
-        "expiration": {
-          "type": "integer",
-          "description": "Unix timestamp when key expires. Alternative to expiration_ttl.",
+        "metadata": {
+          "type": "object",
+          "description": "JSON metadata to attach to key",
           "required": false
         }
       },
       "output": {
-        "type": "success",
+        "type": "result",
         "fields": [
           "success",
-          "errors",
-          "messages"
+          "result"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "r2_upload",
+      "description_for_ai": "Upload object to Cloudflare R2 (S3-compatible object storage with zero egress fees).",
+      "intent": [
+        "R2 upload",
+        "cloudflare storage",
+        "R2 object store",
+        "хранилище cloudflare R2"
+      ],
+      "endpoint": "PUT https://{account_id}.r2.cloudflarestorage.com/{bucket}/{key}",
+      "input": {
+        "account_id": {
+          "type": "string",
+          "required": true
+        },
+        "bucket": {
+          "type": "string",
+          "required": true
+        },
+        "key": {
+          "type": "string",
+          "description": "Object key/path",
+          "required": true
+        },
+        "body": {
+          "type": "binary",
+          "description": "File content",
+          "required": true
+        },
+        "ContentType": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "upload",
+        "fields": [
+          "ETag"
         ]
       },
       "realtime": true,
