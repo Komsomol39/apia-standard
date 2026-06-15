@@ -23,18 +23,19 @@
   "capabilities": [
     {
       "id": "text_generation",
-      "description_for_ai": "Generate text using any Hugging Face model. Use model ID like meta-llama/Llama-3.1-8B-Instruct or mistralai/Mistral-7B-Instruct.",
+      "description_for_ai": "Run any text generation model from HuggingFace Hub. 300K+ models. Llama, Mistral, Falcon, custom fine-tunes.",
       "intent": [
-        "open source LLM",
-        "free AI",
         "huggingface model",
-        "run llama free"
+        "run LLM",
+        "open source model",
+        "custom model inference",
+        "запустить модель huggingface"
       ],
-      "endpoint": "POST https://api-inference.huggingface.co/models/{model_id}",
+      "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
       "input": {
-        "model_id": {
+        "model": {
           "type": "string",
-          "description": "HuggingFace model ID e.g. meta-llama/Llama-3.1-8B-Instruct",
+          "description": "Model ID e.g. meta-llama/Llama-3.1-8B-Instruct, mistralai/Mixtral-8x7B-Instruct-v0.1",
           "required": true
         },
         "inputs": {
@@ -44,14 +45,113 @@
         },
         "parameters": {
           "type": "object",
-          "description": "max_new_tokens, temperature, top_p",
+          "description": "{max_new_tokens: 500, temperature: 0.7, return_full_text: false, do_sample: true}",
           "required": false
         }
       },
       "output": {
-        "type": "list",
+        "type": "list<generation>",
         "fields": [
-          "generated_text"
+          "[0].generated_text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "image_classification",
+      "description_for_ai": "Classify an image using any vision model. Returns top labels with confidence scores.",
+      "intent": [
+        "classify image huggingface",
+        "image labels",
+        "what is in image HF",
+        "классификация изображения huggingface"
+      ],
+      "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "google/vit-base-patch16-224, microsoft/resnet-50",
+          "required": true
+        },
+        "data": {
+          "type": "binary",
+          "description": "Image binary data",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<label>",
+        "fields": [
+          "[0].label",
+          "[0].score"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "feature_extraction",
+      "description_for_ai": "Generate embeddings/features from text or images. Use for semantic search, clustering, RAG.",
+      "intent": [
+        "huggingface embeddings",
+        "text embeddings HF",
+        "feature vectors",
+        "эмбеддинги huggingface"
+      ],
+      "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "sentence-transformers/all-MiniLM-L6-v2, BAAI/bge-large-en-v1.5",
+          "required": true
+        },
+        "inputs": {
+          "type": "string or array",
+          "description": "Text or list of texts to embed",
+          "required": true
+        },
+        "options": {
+          "type": "object",
+          "description": "{wait_for_model: true}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "embeddings",
+        "fields": [
+          "array of float arrays — one per input text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "image_to_text",
+      "description_for_ai": "Generate text descriptions from images (image captioning) or extract text from images (OCR models).",
+      "intent": [
+        "image captioning",
+        "describe image HF",
+        "image OCR huggingface",
+        "описание изображения huggingface"
+      ],
+      "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "Salesforce/blip-image-captioning-large, microsoft/trocr-base-printed (OCR)",
+          "required": true
+        },
+        "data": {
+          "type": "binary",
+          "description": "Image binary",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<caption>",
+        "fields": [
+          "[0].generated_text"
         ]
       },
       "realtime": true,
