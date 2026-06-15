@@ -23,25 +23,30 @@
   "capabilities": [
     {
       "id": "create_order",
-      "description_for_ai": "Create PayPal payment order. Returns approval URL to redirect user to PayPal checkout.",
+      "description_for_ai": "Create a PayPal order for checkout. Returns approval URL to redirect customer to PayPal. Standard one-time payment flow.",
       "intent": [
         "paypal payment",
-        "accept payment",
-        "checkout",
-        "buy button",
-        "pay with paypal"
+        "create order paypal",
+        "accept payment paypal",
+        "paypal checkout",
+        "оплата paypal"
       ],
       "endpoint": "POST https://api-m.paypal.com/v2/checkout/orders",
       "input": {
         "intent": {
           "type": "string",
-          "description": "CAPTURE or AUTHORIZE",
-          "default": "CAPTURE"
+          "description": "CAPTURE (immediate) or AUTHORIZE (capture later)",
+          "required": true
         },
         "purchase_units": {
           "type": "array",
-          "description": "[{amount: {currency_code: USD, value: 10.00}, description: Product name}]",
+          "description": "[{amount: {currency_code: 'USD', value: '10.00'}, description: 'Product'}]",
           "required": true
+        },
+        "application_context": {
+          "type": "object",
+          "description": "{return_url, cancel_url, brand_name, user_action: 'PAY_NOW'}",
+          "required": false
         }
       },
       "output": {
@@ -56,25 +61,132 @@
       "requires_auth": true
     },
     {
-      "id": "send_payout",
-      "description_for_ai": "Send money to PayPal accounts or emails. Use for marketplace seller payouts, refunds, rewards.",
+      "id": "capture_order",
+      "description_for_ai": "Capture payment for an approved PayPal order. Call after customer approves payment and returns from PayPal.",
       "intent": [
-        "send money",
-        "payout",
-        "transfer funds",
-        "pay seller",
-        "mass payout"
+        "capture payment paypal",
+        "complete payment",
+        "finalize paypal",
+        "collect payment",
+        "захватить платёж paypal"
+      ],
+      "endpoint": "POST https://api-m.paypal.com/v2/checkout/orders/{id}/capture",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Order ID from create_order response",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "capture",
+        "fields": [
+          "id",
+          "status",
+          "purchase_units[0].payments.captures[0].id",
+          "purchase_units[0].payments.captures[0].amount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_refund",
+      "description_for_ai": "Refund a captured PayPal payment fully or partially.",
+      "intent": [
+        "paypal refund",
+        "return money paypal",
+        "cancel payment paypal",
+        "возврат paypal"
+      ],
+      "endpoint": "POST https://api-m.paypal.com/v2/payments/captures/{capture_id}/refund",
+      "input": {
+        "capture_id": {
+          "type": "string",
+          "description": "Capture ID from captured order",
+          "required": true
+        },
+        "amount": {
+          "type": "object",
+          "description": "{value: '5.00', currency_code: 'USD'}. Omit for full refund.",
+          "required": false
+        },
+        "note_to_payer": {
+          "type": "string",
+          "description": "Reason shown to customer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "refund",
+        "fields": [
+          "id",
+          "status",
+          "amount.value",
+          "amount.currency_code"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_subscription",
+      "description_for_ai": "Create a recurring subscription using a billing plan. Customer approves once, then charged automatically.",
+      "intent": [
+        "paypal subscription",
+        "recurring payment paypal",
+        "monthly billing paypal",
+        "подписка paypal"
+      ],
+      "endpoint": "POST https://api-m.paypal.com/v1/billing/subscriptions",
+      "input": {
+        "plan_id": {
+          "type": "string",
+          "description": "Billing plan ID (create plans in PayPal dashboard)",
+          "required": true
+        },
+        "subscriber": {
+          "type": "object",
+          "description": "{name: {given_name, surname}, email_address}",
+          "required": false
+        },
+        "application_context": {
+          "type": "object",
+          "description": "{return_url, cancel_url, brand_name}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "subscription",
+        "fields": [
+          "id",
+          "status",
+          "links[0].href (approve URL)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_payout",
+      "description_for_ai": "Send money to one or more PayPal accounts or email addresses. For marketplace payouts, affiliates, seller payments.",
+      "intent": [
+        "paypal payout",
+        "send money paypal",
+        "mass payment",
+        "payout to seller",
+        "выплата paypal"
       ],
       "endpoint": "POST https://api-m.paypal.com/v1/payments/payouts",
       "input": {
         "sender_batch_header": {
           "type": "object",
-          "description": "{sender_batch_id, email_subject}",
+          "description": "{sender_batch_id: 'unique_id', email_subject: 'You have a payment', email_message: 'Payment for...'}",
           "required": true
         },
         "items": {
           "type": "array",
-          "description": "[{recipient_type: EMAIL, amount: {value, currency}, receiver: email@example.com}]",
+          "description": "[{recipient_type: 'EMAIL', amount: {value: '10.00', currency: 'USD'}, receiver: 'user@example.com', note: 'Payment'}]",
           "required": true
         }
       },
@@ -86,6 +198,77 @@
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_order",
+      "description_for_ai": "Get PayPal order status and details by order ID.",
+      "intent": [
+        "paypal order status",
+        "check payment paypal",
+        "order details paypal",
+        "статус заказа paypal"
+      ],
+      "endpoint": "GET https://api-m.paypal.com/v2/checkout/orders/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
+          "id",
+          "status",
+          "intent",
+          "purchase_units[0].amount",
+          "create_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_transactions",
+      "description_for_ai": "Get transaction history for your PayPal account within a date range.",
+      "intent": [
+        "paypal transactions",
+        "payment history paypal",
+        "transaction list",
+        "история транзакций paypal"
+      ],
+      "endpoint": "GET https://api-m.paypal.com/v1/reporting/transactions",
+      "input": {
+        "start_date": {
+          "type": "string",
+          "description": "ISO 8601 e.g. 2024-01-01T00:00:00-0700",
+          "required": true
+        },
+        "end_date": {
+          "type": "string",
+          "description": "ISO 8601, max 31 days from start_date",
+          "required": true
+        },
+        "transaction_status": {
+          "type": "string",
+          "description": "S (success), P (pending), V (reversed)",
+          "required": false
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "list<transaction>",
+        "fields": [
+          "transaction_details[0].transaction_info.transaction_id",
+          "transaction_details[0].transaction_info.transaction_amount",
+          "transaction_details[0].transaction_info.transaction_status"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
