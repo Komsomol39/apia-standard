@@ -488,7 +488,7 @@ Every public API speaks its own language. **APIA is the shared contract** — on
 | Language | Package | Install |
 |---|---|---|
 | Python | [apia-py](https://github.com/Komsomol39/apia-py) | `pip install apia` |
-| JavaScript/TypeScript | [apia-js](https://github.com/Komsomol39/apia-js) | `npm install @apia/sdk` |
+| JavaScript/TypeScript | [apia-js](https://github.com/Komsomol39/apia-js) | `npm install apia-sdk` |
 
 ```python
 # Python
@@ -500,7 +500,7 @@ tools = apis[0].to_openai_tools()
 
 ```ts
 // TypeScript / JavaScript
-import { Registry } from "@apia/sdk";
+import { Registry } from "apia-sdk";
 const r = new Registry();
 const apis = await r.find("send telegram message");
 const tools = apis[0].toOpenAITools();
