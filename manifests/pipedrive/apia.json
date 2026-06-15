@@ -23,68 +23,55 @@
   },
   "capabilities": [
     {
-      "id": "get_deals",
-      "description_for_ai": "Get sales deals from Pipedrive pipeline. Filter by status, stage, owner. Returns deal value, close date, and associated contacts/companies.",
+      "id": "search_deals",
+      "description_for_ai": "Search Pipedrive CRM deals by title, value, status, stage, and owner.",
       "intent": [
-        "sales deals",
-        "pipeline deals",
-        "open opportunities",
-        "deal list",
-        "sales pipeline"
+        "pipedrive deals",
+        "CRM deals",
+        "sales pipeline search",
+        "сделки pipedrive"
       ],
-      "endpoint": "GET https://api.pipedrive.com/v1/deals",
+      "endpoint": "GET https://{company}.pipedrive.com/api/v1/deals",
       "input": {
         "status": {
           "type": "string",
-          "description": "open, won, lost, or all. Default open.",
+          "description": "open, won, lost, deleted, all_not_deleted",
           "default": "open"
+        },
+        "filter_id": {
+          "type": "integer",
+          "description": "Saved filter ID",
+          "required": false
         },
         "stage_id": {
           "type": "integer",
-          "description": "Pipeline stage ID to filter by. Get stage IDs from GET /stages",
+          "description": "Filter by pipeline stage",
           "required": false
         },
         "user_id": {
           "type": "integer",
-          "description": "Filter by owner/assignee user ID",
+          "description": "Filter by owner",
           "required": false
-        },
-        "filter_id": {
-          "type": "integer",
-          "description": "Apply a saved filter by its ID",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "description": "Results per page, max 500",
-          "default": 100
         },
         "start": {
           "type": "integer",
-          "description": "Pagination offset",
           "default": 0
         },
-        "sort": {
-          "type": "string",
-          "description": "Sort field and direction e.g. 'add_time DESC', 'value ASC'",
-          "required": false
+        "limit": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
         "type": "list<deal>",
         "fields": [
-          "id",
-          "title",
-          "value",
-          "currency",
-          "status",
-          "stage_id",
-          "person_id.name",
-          "org_id.name",
-          "close_time",
-          "won_time",
-          "expected_close_date",
-          "owner_name"
+          "data[0].id",
+          "data[0].title",
+          "data[0].value",
+          "data[0].currency",
+          "data[0].status",
+          "data[0].stage_id",
+          "data[0].person_name"
         ]
       },
       "realtime": true,
@@ -92,58 +79,50 @@
     },
     {
       "id": "create_deal",
-      "description_for_ai": "Create a new sales deal in Pipedrive pipeline with value, close date, and links to contacts/organizations.",
+      "description_for_ai": "Create a new deal in Pipedrive with value, stage, expected close date, and linked contact.",
       "intent": [
-        "new deal",
-        "add opportunity",
-        "create sale",
-        "pipeline entry"
+        "create deal pipedrive",
+        "new opportunity",
+        "add deal CRM",
+        "создать сделку pipedrive"
       ],
-      "endpoint": "POST https://api.pipedrive.com/v1/deals",
+      "endpoint": "POST https://{company}.pipedrive.com/api/v1/deals",
       "input": {
         "title": {
           "type": "string",
-          "description": "Deal title/name",
           "required": true
         },
         "value": {
           "type": "number",
-          "description": "Deal monetary value",
           "required": false
         },
         "currency": {
           "type": "string",
-          "description": "3-letter currency code e.g. USD, EUR, RUB",
           "default": "USD"
+        },
+        "status": {
+          "type": "string",
+          "description": "open, won, lost",
+          "default": "open"
+        },
+        "stage_id": {
+          "type": "integer",
+          "description": "Pipeline stage ID",
+          "required": false
         },
         "person_id": {
           "type": "integer",
-          "description": "Contact person ID to link deal to",
+          "description": "Contact ID to link",
           "required": false
         },
         "org_id": {
           "type": "integer",
-          "description": "Organization ID to link deal to",
+          "description": "Organization ID",
           "required": false
         },
-        "stage_id": {
-          "type": "integer",
-          "description": "Pipeline stage ID. First stage is default.",
-          "required": false
-        },
-        "close_time": {
+        "expected_close_date": {
           "type": "string",
-          "description": "Expected close date YYYY-MM-DD",
-          "required": false
-        },
-        "user_id": {
-          "type": "integer",
-          "description": "Owner user ID. Defaults to API token owner.",
-          "required": false
-        },
-        "pipeline_id": {
-          "type": "integer",
-          "description": "Pipeline ID. Default pipeline if not specified.",
+          "description": "YYYY-MM-DD",
           "required": false
         }
       },
@@ -153,7 +132,90 @@
           "data.id",
           "data.title",
           "data.value",
-          "data.status"
+          "data.status",
+          "data.stage_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_person",
+      "description_for_ai": "Create a new contact person in Pipedrive.",
+      "intent": [
+        "create contact pipedrive",
+        "new person CRM",
+        "add contact",
+        "добавить контакт pipedrive"
+      ],
+      "endpoint": "POST https://{company}.pipedrive.com/api/v1/persons",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "array",
+          "description": "[{value: 'email@example.com', primary: true}]",
+          "required": false
+        },
+        "phone": {
+          "type": "array",
+          "description": "[{value: '+1234567890', primary: true}]",
+          "required": false
+        },
+        "org_id": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "person",
+        "fields": [
+          "data.id",
+          "data.name",
+          "data.email[0].value",
+          "data.phone[0].value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_note",
+      "description_for_ai": "Add a note to a deal, person, or organization in Pipedrive.",
+      "intent": [
+        "note pipedrive",
+        "add note CRM",
+        "deal note",
+        "заметка pipedrive"
+      ],
+      "endpoint": "POST https://{company}.pipedrive.com/api/v1/notes",
+      "input": {
+        "content": {
+          "type": "string",
+          "description": "Note text (HTML supported)",
+          "required": true
+        },
+        "deal_id": {
+          "type": "integer",
+          "required": false
+        },
+        "person_id": {
+          "type": "integer",
+          "required": false
+        },
+        "org_id": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "note",
+        "fields": [
+          "data.id",
+          "data.content",
+          "data.add_time"
         ]
       },
       "realtime": true,
