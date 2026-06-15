@@ -40,48 +40,35 @@
   "capabilities": [
     {
       "id": "search_vacancies",
-      "description_for_ai": "Поиск вакансий по ключевому слову и геолокации. Основной метод для запросов типа 'найди работу Python-разработчика рядом со мной' или 'вакансии курьера в Казани с зарплатой от 50000'.",
+      "description_for_ai": "Поиск вакансий на hh.ru по тексту, городу, зарплате, опыту и типу занятости.",
       "intent": [
-        "найти работу",
-        "вакансии рядом",
-        "поиск работы",
-        "ищу работу",
-        "найди вакансии",
-        "работа в городе",
-        "сколько платят",
-        "вакансии с зарплатой"
+        "вакансии hh.ru",
+        "работа hh",
+        "найти вакансию",
+        "job search hh.ru",
+        "поиск работы"
       ],
       "endpoint": "GET https://api.hh.ru/vacancies",
       "input": {
         "text": {
           "type": "string",
-          "description": "Поисковый запрос. Например: 'Python разработчик', 'курьер'",
+          "description": "Ключевые слова для поиска в названии и описании вакансии",
           "required": false
         },
         "area": {
           "type": "integer",
-          "description": "ID региона. Москва=1, СПб=2. Получить через get_areas",
-          "required": false
-        },
-        "lat": {
-          "type": "float",
-          "description": "Широта пользователя для геопоиска",
-          "required": false
-        },
-        "lng": {
-          "type": "float",
-          "description": "Долгота пользователя для геопоиска",
+          "description": "ID города. Москва=1, СПб=2, получить все города: GET /areas",
           "required": false
         },
         "salary": {
           "type": "integer",
-          "description": "Желаемая зарплата в рублях",
+          "description": "Желаемая зарплата (минимум)",
           "required": false
         },
-        "only_with_salary": {
-          "type": "boolean",
-          "description": "true — только вакансии с указанной зарплатой",
-          "default": false
+        "currency": {
+          "type": "string",
+          "description": "Валюта зарплаты: RUR, USD, EUR",
+          "default": "RUR"
         },
         "experience": {
           "type": "string",
@@ -90,7 +77,7 @@
         },
         "employment": {
           "type": "string",
-          "description": "full, part, project, volunteer, probation",
+          "description": "full — полная, part — частичная, project, volunteer, probation",
           "required": false
         },
         "schedule": {
@@ -100,89 +87,129 @@
         },
         "per_page": {
           "type": "integer",
-          "default": 20,
-          "max": 100,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "default": 20
         },
         "page": {
           "type": "integer",
-          "default": 0,
-          "description": "Page number for pagination (1-indexed)"
+          "default": 0
         }
       },
       "output": {
         "type": "list<vacancy>",
         "fields": [
-          "id",
-          "name",
-          "area.name",
-          "salary.from",
-          "salary.to",
-          "salary.currency",
-          "employer.name",
-          "experience.name",
-          "schedule.name",
-          "url",
-          "published_at"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false,
-      "rate_limit": "1000/day"
-    },
-    {
-      "id": "get_vacancy",
-      "description_for_ai": "Полное описание вакансии по ID. Используй после search_vacancies когда пользователь хочет подробности: требования, описание, адрес офиса, контакты.",
-      "intent": [
-        "подробнее о вакансии",
-        "что требуется",
-        "описание вакансии",
-        "адрес офиса"
-      ],
-      "endpoint": "GET https://api.hh.ru/vacancies/{vacancy_id}",
-      "input": {
-        "vacancy_id": {
-          "type": "string",
-          "description": "ID вакансии из search_vacancies",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "vacancy",
-        "fields": [
-          "name",
-          "description",
-          "key_skills",
-          "employer.name",
-          "employer.url",
-          "salary",
-          "experience",
-          "schedule",
-          "employment",
-          "address.raw",
-          "contacts",
-          "published_at"
+          "items[0].id",
+          "items[0].name",
+          "items[0].area.name",
+          "items[0].salary.from",
+          "items[0].salary.to",
+          "items[0].salary.currency",
+          "items[0].employer.name",
+          "items[0].alternate_url"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_areas",
-      "description_for_ai": "Get hierarchical list of geographic areas available for job search: countries, regions, cities with their IDs.",
+      "id": "get_vacancy",
+      "description_for_ai": "Получить полное описание вакансии: требования, обязанности, условия, контакты работодателя.",
       "intent": [
-        "найти ID города",
-        "список городов",
-        "регионы России"
+        "вакансия hh",
+        "описание вакансии",
+        "job details hh.ru",
+        "требования вакансии"
+      ],
+      "endpoint": "GET https://api.hh.ru/vacancies/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "ID вакансии из результатов поиска",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "vacancy",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "salary",
+          "employer.name",
+          "experience.name",
+          "schedule.name",
+          "employment.name",
+          "key_skills[0].name",
+          "contacts.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_resumes",
+      "description_for_ai": "Поиск резюме соискателей (только для работодателей с доступом к базе резюме).",
+      "intent": [
+        "поиск резюме",
+        "кандидаты hh",
+        "база резюме",
+        "найти соискателя"
+      ],
+      "endpoint": "GET https://api.hh.ru/resumes",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": false
+        },
+        "area": {
+          "type": "integer",
+          "required": false
+        },
+        "salary": {
+          "type": "integer",
+          "description": "Ожидаемая зарплата кандидата",
+          "required": false
+        },
+        "experience": {
+          "type": "string",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<resume>",
+        "fields": [
+          "items[0].id",
+          "items[0].title",
+          "items[0].area.name",
+          "items[0].salary.amount",
+          "items[0].experience[0].company",
+          "items[0].alternate_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_areas",
+      "description_for_ai": "Получить список регионов и городов с их ID для использования в поиске вакансий.",
+      "intent": [
+        "города hh",
+        "регионы hh",
+        "area ids hh",
+        "список городов hh.ru"
       ],
       "endpoint": "GET https://api.hh.ru/areas",
       "input": {},
       "output": {
         "type": "list<area>",
         "fields": [
-          "id",
-          "name",
-          "areas"
+          "[0].id",
+          "[0].name",
+          "[0].areas[0].id (города в регионе)",
+          "[0].areas[0].name"
         ]
       },
       "realtime": false,
@@ -190,53 +217,26 @@
     },
     {
       "id": "get_dictionaries",
-      "description_for_ai": "Get reference dictionaries: employment types, experience levels, salary currencies, schedule types, and other field options.",
+      "description_for_ai": "Получить справочники значений: типы занятости, опыт, расписание, валюты.",
       "intent": [
-        "какие есть фильтры",
-        "типы занятости",
-        "варианты опыта"
+        "справочники hh",
+        "типы вакансий",
+        "опыт работы значения",
+        "hh dictionaries"
       ],
       "endpoint": "GET https://api.hh.ru/dictionaries",
       "input": {},
       "output": {
         "type": "dictionaries",
         "fields": [
-          "experience",
-          "employment",
-          "schedule",
-          "currency"
+          "experience[0].id",
+          "experience[0].name",
+          "employment[0].id",
+          "schedule[0].id",
+          "currency[0].code"
         ]
       },
       "realtime": false,
-      "requires_auth": false
-    },
-    {
-      "id": "get_employer",
-      "description_for_ai": "Информация о работодателе: описание, сайт, количество вакансий. Используй когда пользователь хочет узнать больше о компании.",
-      "intent": [
-        "что за компания",
-        "о работодателе",
-        "сайт компании"
-      ],
-      "endpoint": "GET https://api.hh.ru/employers/{employer_id}",
-      "input": {
-        "employer_id": {
-          "type": "string",
-          "description": "ID работодателя из данных вакансии",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "employer",
-        "fields": [
-          "name",
-          "description",
-          "site_url",
-          "open_vacancies",
-          "area.name"
-        ]
-      },
-      "realtime": true,
       "requires_auth": false
     }
   ],
