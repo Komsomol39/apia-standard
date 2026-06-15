@@ -23,73 +23,40 @@
   "capabilities": [
     {
       "id": "send_sms",
-      "description_for_ai": "Send an SMS message to any phone number worldwide. Use when user wants to send a text notification, OTP code, alert or reminder to a phone number.",
+      "description_for_ai": "Send an SMS message. Supports domestic and international. Delivery receipts via webhook.",
       "intent": [
         "send SMS",
         "text message",
-        "send notification to phone",
-        "OTP code",
-        "send alert",
-        "mobile notification"
+        "SMS notify",
+        "отправить СМС",
+        "SMS уведомление"
       ],
       "endpoint": "POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json",
       "input": {
         "To": {
           "type": "string",
-          "description": "Recipient phone number in E.164 format. E.g. '+79161234567'",
+          "description": "Recipient phone in E.164 format e.g. +79001234567",
           "required": true
         },
         "From": {
           "type": "string",
-          "description": "Your Twilio phone number or Messaging Service SID",
+          "description": "Your Twilio number or messaging service SID",
           "required": true
         },
         "Body": {
           "type": "string",
-          "description": "Message text (max 1600 chars)",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "message",
-        "fields": [
-          "sid",
-          "status",
-          "to",
-          "from",
-          "body",
-          "date_created",
-          "price",
-          "error_code"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "send_whatsapp",
-      "description_for_ai": "Send a WhatsApp message via Twilio. Use when user explicitly wants WhatsApp instead of SMS.",
-      "intent": [
-        "send WhatsApp",
-        "WhatsApp message",
-        "message via WhatsApp"
-      ],
-      "endpoint": "POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json",
-      "input": {
-        "To": {
-          "type": "string",
-          "description": "WhatsApp number: 'whatsapp:+79161234567'",
+          "description": "SMS text, max 1600 chars (splits into segments at 160)",
           "required": true
         },
-        "From": {
+        "StatusCallback": {
           "type": "string",
-          "description": "Twilio WhatsApp number: 'whatsapp:+14155238886'",
-          "required": true
+          "description": "Webhook URL for delivery status updates",
+          "required": false
         },
-        "Body": {
+        "MediaUrl": {
           "type": "string",
-          "description": "Message text",
-          "required": true
+          "description": "MMS media URL (US/CA only)",
+          "required": false
         }
       },
       "output": {
@@ -101,6 +68,208 @@
           "from",
           "body",
           "date_created"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "make_call",
+      "description_for_ai": "Make an outbound phone call. Supply TwiML URL for call flow (IVR, voice messages, recording).",
+      "intent": [
+        "make call",
+        "phone call",
+        "voice call",
+        "outbound call",
+        "позвонить twilio"
+      ],
+      "endpoint": "POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Calls.json",
+      "input": {
+        "To": {
+          "type": "string",
+          "description": "Phone number to call in E.164",
+          "required": true
+        },
+        "From": {
+          "type": "string",
+          "description": "Your Twilio phone number",
+          "required": true
+        },
+        "Url": {
+          "type": "string",
+          "description": "TwiML URL that controls call flow",
+          "required": true
+        },
+        "Record": {
+          "type": "boolean",
+          "description": "Record the call",
+          "default": false
+        },
+        "StatusCallback": {
+          "type": "string",
+          "description": "Webhook for call status events",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "call",
+        "fields": [
+          "sid",
+          "status",
+          "to",
+          "from",
+          "direction"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_whatsapp",
+      "description_for_ai": "Send a WhatsApp message via Twilio. Requires WhatsApp-enabled sender number or sandbox.",
+      "intent": [
+        "whatsapp message",
+        "send whatsapp",
+        "whatsapp bot",
+        "whatsapp notify",
+        "WhatsApp сообщение"
+      ],
+      "endpoint": "POST https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json",
+      "input": {
+        "To": {
+          "type": "string",
+          "description": "WhatsApp number: whatsapp:+79001234567",
+          "required": true
+        },
+        "From": {
+          "type": "string",
+          "description": "Your WhatsApp sender: whatsapp:+14155238886 (sandbox)",
+          "required": true
+        },
+        "Body": {
+          "type": "string",
+          "required": true
+        },
+        "MediaUrl": {
+          "type": "string",
+          "description": "URL of media to send (image, document)",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "sid",
+          "status",
+          "to",
+          "from",
+          "body"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_otp",
+      "description_for_ai": "Send a one-time password (OTP) verification code via SMS, WhatsApp, or call using Twilio Verify.",
+      "intent": [
+        "send OTP",
+        "phone verification",
+        "2FA code",
+        "verification code",
+        "отправить код верификации"
+      ],
+      "endpoint": "POST https://verify.twilio.com/v2/Services/{ServiceSid}/Verifications",
+      "input": {
+        "To": {
+          "type": "string",
+          "description": "Phone number in E.164",
+          "required": true
+        },
+        "Channel": {
+          "type": "string",
+          "description": "sms, whatsapp, call, email",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "verification",
+        "fields": [
+          "sid",
+          "to",
+          "channel",
+          "status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "verify_otp",
+      "description_for_ai": "Verify the OTP code entered by user. Returns approved or denied.",
+      "intent": [
+        "verify OTP",
+        "check code",
+        "confirm phone",
+        "validate code",
+        "проверить код OTP"
+      ],
+      "endpoint": "POST https://verify.twilio.com/v2/Services/{ServiceSid}/VerificationCheck",
+      "input": {
+        "To": {
+          "type": "string",
+          "description": "Same phone number from send_otp",
+          "required": true
+        },
+        "Code": {
+          "type": "string",
+          "description": "6-digit code entered by user",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "verification_check",
+        "fields": [
+          "sid",
+          "to",
+          "status (approved|denied)",
+          "valid"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "lookup_phone",
+      "description_for_ai": "Look up phone number metadata: carrier, line type (mobile/landline/VoIP), country, validity.",
+      "intent": [
+        "phone lookup",
+        "carrier lookup",
+        "is phone valid",
+        "phone type",
+        "проверка номера телефона"
+      ],
+      "endpoint": "GET https://lookups.twilio.com/v2/PhoneNumbers/{PhoneNumber}",
+      "input": {
+        "PhoneNumber": {
+          "type": "string",
+          "description": "Phone number in E.164",
+          "required": true
+        },
+        "Fields": {
+          "type": "string",
+          "description": "line_type_intelligence, caller_name, sim_swap",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "lookup",
+        "fields": [
+          "phone_number",
+          "country_code",
+          "valid",
+          "line_type_intelligence.type (mobile|landline|voip)",
+          "line_type_intelligence.mobile_network_code"
         ]
       },
       "realtime": true,
