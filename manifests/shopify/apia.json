@@ -21,64 +21,42 @@
   },
   "capabilities": [
     {
-      "id": "get_products",
-      "description_for_ai": "Get products from a Shopify store with prices, variants, inventory levels, and images. Use for product catalog display, inventory sync, price monitoring.",
+      "id": "list_products",
+      "description_for_ai": "List store products with variants, prices, inventory, and images.",
       "intent": [
-        "get products",
+        "shopify products",
         "product list",
-        "store inventory",
-        "shopify products"
+        "store catalog",
+        "inventory",
+        "товары shopify"
       ],
-      "endpoint": "GET https://{shop}.myshopify.com/admin/api/2024-01/products.json",
+      "endpoint": "GET https://{store}.myshopify.com/admin/api/2024-01/products.json",
       "input": {
         "limit": {
           "type": "integer",
-          "description": "Products per page, max 250",
           "default": 50
-        },
-        "page_info": {
-          "type": "string",
-          "description": "Cursor for cursor-based pagination (from previous response Link header)",
-          "required": false
         },
         "status": {
           "type": "string",
-          "description": "active (published), archived, draft, or any",
+          "description": "active, archived, draft",
           "default": "active"
         },
-        "title": {
+        "ids": {
           "type": "string",
-          "description": "Filter by exact title match",
+          "description": "Comma-separated product IDs",
           "required": false
         },
         "vendor": {
           "type": "string",
-          "description": "Filter by product vendor/brand",
-          "required": false
-        },
-        "product_type": {
-          "type": "string",
-          "description": "Filter by product type category",
           "required": false
         },
         "collection_id": {
           "type": "integer",
-          "description": "Filter by collection/category ID",
           "required": false
         },
-        "created_at_min": {
+        "page_info": {
           "type": "string",
-          "description": "ISO 8601 — return products created after this date",
-          "required": false
-        },
-        "updated_at_min": {
-          "type": "string",
-          "description": "ISO 8601 — return products updated after this date",
-          "required": false
-        },
-        "fields": {
-          "type": "string",
-          "description": "Comma-separated fields: id,title,variants,images,handle,product_type,vendor",
+          "description": "Pagination cursor",
           "required": false
         }
       },
@@ -87,61 +65,80 @@
         "fields": [
           "products[0].id",
           "products[0].title",
-          "products[0].handle",
+          "products[0].status",
           "products[0].variants[0].price",
           "products[0].variants[0].inventory_quantity",
-          "products[0].images[0].src",
-          "products[0].product_type",
-          "products[0].vendor"
+          "products[0].images[0].src"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_orders",
-      "description_for_ai": "Get orders from Shopify store with customer info, line items, and fulfillment status. Use for order management, shipping, analytics.",
+      "id": "create_product",
+      "description_for_ai": "Create a new product with variants, images, SEO metadata, and pricing.",
       "intent": [
-        "get orders",
+        "create product",
+        "add product",
+        "new product shopify",
+        "create listing",
+        "добавить товар shopify"
+      ],
+      "endpoint": "POST https://{store}.myshopify.com/admin/api/2024-01/products.json",
+      "input": {
+        "product": {
+          "type": "object",
+          "description": "{title: 'Product Name', body_html: '<p>Description</p>', vendor: 'Brand', product_type: 'Category', tags: 'tag1,tag2', variants: [{price: '29.99', sku: 'SKU001', inventory_quantity: 100}], images: [{src: 'https://...'}]}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "product",
+        "fields": [
+          "product.id",
+          "product.title",
+          "product.handle",
+          "product.variants[0].id",
+          "product.status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_orders",
+      "description_for_ai": "List customer orders with status, line items, shipping, and payment info.",
+      "intent": [
+        "shopify orders",
+        "customer orders",
         "order list",
         "sales orders",
-        "shopify orders"
+        "заказы shopify"
       ],
-      "endpoint": "GET https://{shop}.myshopify.com/admin/api/2024-01/orders.json",
+      "endpoint": "GET https://{store}.myshopify.com/admin/api/2024-01/orders.json",
       "input": {
         "status": {
           "type": "string",
-          "description": "open (active), closed, cancelled, or any",
+          "description": "open, closed, cancelled, any",
           "default": "open"
-        },
-        "fulfillment_status": {
-          "type": "string",
-          "description": "shipped, partial, unshipped, unfulfilled, or any",
-          "required": false
         },
         "financial_status": {
           "type": "string",
-          "description": "paid, unpaid, pending, refunded, voided, authorized, or any",
+          "description": "paid, pending, refunded, partially_paid",
+          "required": false
+        },
+        "fulfillment_status": {
+          "type": "string",
+          "description": "shipped, partial, unshipped, unfulfilled",
           "required": false
         },
         "limit": {
           "type": "integer",
-          "description": "Orders per page, max 250",
           "default": 50
         },
         "created_at_min": {
           "type": "string",
-          "description": "ISO 8601 date — return orders created after this",
-          "required": false
-        },
-        "created_at_max": {
-          "type": "string",
-          "description": "ISO 8601 date — return orders created before this",
-          "required": false
-        },
-        "fields": {
-          "type": "string",
-          "description": "Fields to return: id,name,total_price,financial_status,customer,line_items,shipping_address",
+          "description": "ISO 8601 date filter",
           "required": false
         }
       },
@@ -149,16 +146,244 @@
         "type": "list<order>",
         "fields": [
           "orders[0].id",
-          "orders[0].name (#1001)",
+          "orders[0].order_number",
+          "orders[0].email",
           "orders[0].total_price",
           "orders[0].financial_status",
           "orders[0].fulfillment_status",
-          "orders[0].customer.email",
-          "orders[0].line_items[0].title",
-          "orders[0].shipping_address"
+          "orders[0].line_items[0].title"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_order",
+      "description_for_ai": "Get full order details including customer, line items, shipping address, fulfillments, and transactions.",
+      "intent": [
+        "order details",
+        "order info",
+        "single order",
+        "order data",
+        "детали заказа shopify"
+      ],
+      "endpoint": "GET https://{store}.myshopify.com/admin/api/2024-01/orders/{order_id}.json",
+      "input": {
+        "order_id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
+          "order.id",
+          "order.email",
+          "order.customer.first_name",
+          "order.shipping_address.address1",
+          "order.line_items",
+          "order.financial_status",
+          "order.fulfillment_status",
+          "order.total_price"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_customer",
+      "description_for_ai": "Create a new customer record with contact info, addresses, and tags.",
+      "intent": [
+        "create customer shopify",
+        "add customer",
+        "register customer",
+        "customer profile",
+        "добавить клиента shopify"
+      ],
+      "endpoint": "POST https://{store}.myshopify.com/admin/api/2024-01/customers.json",
+      "input": {
+        "customer": {
+          "type": "object",
+          "description": "{first_name, last_name, email, phone, verified_email: true, addresses: [{address1, city, country}], tags: 'vip,wholesale'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "customer",
+        "fields": [
+          "customer.id",
+          "customer.email",
+          "customer.first_name",
+          "customer.created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_inventory",
+      "description_for_ai": "Set inventory level for a product variant at a specific location.",
+      "intent": [
+        "update inventory",
+        "set stock",
+        "inventory level",
+        "adjust inventory",
+        "обновить остатки"
+      ],
+      "endpoint": "POST https://{store}.myshopify.com/admin/api/2024-01/inventory_levels/set.json",
+      "input": {
+        "inventory_item_id": {
+          "type": "integer",
+          "description": "From product variant inventory_item_id field",
+          "required": true
+        },
+        "location_id": {
+          "type": "integer",
+          "description": "Get from /locations.json",
+          "required": true
+        },
+        "available": {
+          "type": "integer",
+          "description": "New available quantity",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "inventory_level",
+        "fields": [
+          "inventory_item_id",
+          "location_id",
+          "available",
+          "updated_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_discount",
+      "description_for_ai": "Create a discount code (percentage or fixed amount) for products, collections, or entire order.",
+      "intent": [
+        "discount code",
+        "coupon",
+        "promo code",
+        "sale discount",
+        "промокод shopify"
+      ],
+      "endpoint": "POST https://{store}.myshopify.com/admin/api/2024-01/price_rules.json",
+      "input": {
+        "price_rule": {
+          "type": "object",
+          "description": "{title: 'SALE10', value_type: 'percentage' or 'fixed_amount', value: '-10.0', target_type: 'line_item', customer_selection: 'all', starts_at: '2024-01-01', usage_limit: 100}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "price_rule",
+        "fields": [
+          "price_rule.id",
+          "price_rule.title",
+          "price_rule.value",
+          "price_rule.value_type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_fulfillment",
+      "description_for_ai": "Fulfill (ship) an order or line items. Adds tracking number and notifies customer.",
+      "intent": [
+        "fulfill order",
+        "ship order",
+        "add tracking",
+        "mark shipped",
+        "отправить заказ shopify"
+      ],
+      "endpoint": "POST https://{store}.myshopify.com/admin/api/2024-01/orders/{order_id}/fulfillments.json",
+      "input": {
+        "order_id": {
+          "type": "integer",
+          "required": true
+        },
+        "fulfillment": {
+          "type": "object",
+          "description": "{location_id, tracking_number: 'TRACK123', tracking_company: 'DHL', notify_customer: true, line_items_by_fulfillment_order: [{fulfillment_order_id, fulfillment_order_line_items: [{id, quantity}]}]}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "fulfillment",
+        "fields": [
+          "fulfillment.id",
+          "fulfillment.status",
+          "fulfillment.tracking_number",
+          "fulfillment.shipment_status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_webhook",
+      "description_for_ai": "Subscribe to Shopify events: orders created/paid/fulfilled, products created, customers created.",
+      "intent": [
+        "shopify webhook",
+        "event notification",
+        "order webhook",
+        "real-time events",
+        "события shopify"
+      ],
+      "endpoint": "POST https://{store}.myshopify.com/admin/api/2024-01/webhooks.json",
+      "input": {
+        "webhook": {
+          "type": "object",
+          "description": "{topic: 'orders/create', address: 'https://yoursite.com/webhook', format: 'json'}. Topics: orders/create, orders/paid, orders/fulfilled, products/create, customers/create, checkouts/create",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "webhook",
+        "fields": [
+          "webhook.id",
+          "webhook.topic",
+          "webhook.address",
+          "webhook.created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_analytics",
+      "description_for_ai": "Get store analytics: total sales, orders count, average order value for a date range.",
+      "intent": [
+        "shopify analytics",
+        "sales report",
+        "revenue report",
+        "store stats",
+        "аналитика shopify"
+      ],
+      "endpoint": "GET https://{store}.myshopify.com/admin/api/2024-01/reports.json",
+      "input": {
+        "since_id": {
+          "type": "integer",
+          "required": false
+        },
+        "updated_at_min": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "reports",
+        "fields": [
+          "reports[0].id",
+          "reports[0].name",
+          "reports[0].shopify_ql"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
