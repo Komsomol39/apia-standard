@@ -21,58 +21,57 @@
   },
   "capabilities": [
     {
-      "id": "upload_object",
-      "description_for_ai": "Upload a file or data to an S3 bucket. Returns ETag confirming upload success. File is immediately available at its URL.",
+      "id": "put_object",
+      "description_for_ai": "Upload a file to S3. Set permissions, content type, metadata, and server-side encryption.",
       "intent": [
-        "upload file",
-        "store file",
+        "upload to S3",
+        "store file AWS",
         "S3 upload",
-        "cloud storage",
-        "сохранить файл"
+        "загрузить файл S3"
       ],
       "endpoint": "PUT https://{bucket}.s3.{region}.amazonaws.com/{key}",
       "input": {
-        "bucket": {
+        "Bucket": {
           "type": "string",
-          "description": "S3 bucket name e.g. 'my-company-assets'. Must exist and you must have write permission.",
           "required": true
         },
-        "key": {
+        "Key": {
           "type": "string",
-          "description": "Object path/name in bucket e.g. 'images/product-123.jpg' or 'backups/2024-01-15.tar.gz'",
+          "description": "Object path e.g. images/photo.jpg",
           "required": true
         },
-        "body": {
+        "Body": {
           "type": "binary",
-          "description": "File content as binary stream, string, or bytes object",
+          "description": "File content",
           "required": true
         },
         "ContentType": {
           "type": "string",
-          "description": "MIME type: image/jpeg, image/png, application/pdf, text/html, application/json, video/mp4",
+          "description": "MIME type: image/jpeg, application/pdf, text/plain",
           "required": false
         },
         "ACL": {
           "type": "string",
-          "description": "Access control: private (default), public-read, public-read-write, authenticated-read",
+          "description": "private (default), public-read, authenticated-read",
           "required": false
         },
         "Metadata": {
           "type": "object",
-          "description": "Custom metadata as key-value pairs: {author: 'John', version: '2.0'}",
+          "description": "Custom key-value metadata",
           "required": false
         },
-        "StorageClass": {
+        "ServerSideEncryption": {
           "type": "string",
-          "description": "STANDARD, STANDARD_IA (infrequent), GLACIER (archive), DEEP_ARCHIVE",
-          "default": "STANDARD"
+          "description": "AES256 or aws:kms",
+          "required": false
         }
       },
       "output": {
-        "type": "upload",
+        "type": "put_result",
         "fields": [
-          "ETag (MD5 hash in quotes)",
-          "VersionId (if versioning enabled)"
+          "ETag",
+          "VersionId",
+          "ServerSideEncryption"
         ]
       },
       "realtime": true,
@@ -80,44 +79,132 @@
     },
     {
       "id": "get_object",
-      "description_for_ai": "Download a file from S3 bucket. Returns the object body as a stream.",
+      "description_for_ai": "Download a file from S3. Returns file content.",
       "intent": [
-        "download file",
-        "get from S3",
-        "retrieve file",
-        "read file"
+        "download from S3",
+        "get S3 file",
+        "read S3 object",
+        "скачать файл S3"
       ],
       "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/{key}",
       "input": {
-        "bucket": {
+        "Bucket": {
           "type": "string",
-          "description": "S3 bucket name",
           "required": true
         },
-        "key": {
+        "Key": {
           "type": "string",
-          "description": "Object key (file path in bucket)",
           "required": true
         },
         "Range": {
           "type": "string",
-          "description": "Byte range for partial download: 'bytes=0-1023' for first 1KB",
+          "description": "Partial content: bytes=0-1023",
           "required": false
         },
         "VersionId": {
           "type": "string",
-          "description": "Specific version ID if versioning enabled",
+          "description": "Specific version",
           "required": false
         }
       },
       "output": {
-        "type": "binary",
+        "type": "object",
         "fields": [
-          "Body (file content stream)",
+          "Body (file content)",
           "ContentType",
           "ContentLength",
           "LastModified",
-          "ETag"
+          "ETag",
+          "Metadata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_objects",
+      "description_for_ai": "List files in an S3 bucket with size, last modified, and storage class.",
+      "intent": [
+        "list S3 files",
+        "S3 bucket contents",
+        "list objects",
+        "файлы в S3 bucket"
+      ],
+      "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/",
+      "input": {
+        "Bucket": {
+          "type": "string",
+          "required": true
+        },
+        "Prefix": {
+          "type": "string",
+          "description": "Filter by key prefix e.g. images/",
+          "required": false
+        },
+        "MaxKeys": {
+          "type": "integer",
+          "description": "Max results 1-1000",
+          "default": 1000
+        },
+        "ContinuationToken": {
+          "type": "string",
+          "description": "Pagination token",
+          "required": false
+        },
+        "Delimiter": {
+          "type": "string",
+          "description": "Group keys by delimiter e.g. / for folder-like listing",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list",
+        "fields": [
+          "Contents[0].Key",
+          "Contents[0].Size",
+          "Contents[0].LastModified",
+          "Contents[0].StorageClass",
+          "IsTruncated",
+          "NextContinuationToken"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_presigned_url",
+      "description_for_ai": "Generate a temporary URL to access a private S3 object. Set expiration time. Use for download links without exposing AWS credentials.",
+      "intent": [
+        "S3 download link",
+        "presigned URL",
+        "share S3 file",
+        "временная ссылка S3"
+      ],
+      "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/{key}?X-Amz-Signature=...",
+      "input": {
+        "Bucket": {
+          "type": "string",
+          "required": true
+        },
+        "Key": {
+          "type": "string",
+          "required": true
+        },
+        "ExpiresIn": {
+          "type": "integer",
+          "description": "URL validity in seconds. Default 1 hour. Max 7 days.",
+          "default": 3600
+        },
+        "ResponseContentDisposition": {
+          "type": "string",
+          "description": "attachment; filename=file.pdf — forces download",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "url",
+        "fields": [
+          "presigned URL string with embedded auth parameters"
         ]
       },
       "realtime": true,
