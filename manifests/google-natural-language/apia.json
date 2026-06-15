@@ -24,20 +24,19 @@
   "capabilities": [
     {
       "id": "analyze_sentiment",
-      "description_for_ai": "Analyze sentiment of text: overall positive/negative/neutral score and per-sentence breakdown.",
+      "description_for_ai": "Analyze overall and per-sentence sentiment: positive/negative/neutral score (-1 to 1) and magnitude.",
       "intent": [
         "sentiment analysis",
-        "is this positive",
-        "customer feedback analysis",
-        "review sentiment",
-        "text mood",
-        "тональность текста"
+        "is text positive",
+        "customer sentiment",
+        "тональность текста",
+        "анализ тональности"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeSentiment",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: PLAIN_TEXT or HTML, content: text_to_analyze, language: en|ru|de|fr}",
+          "description": "{type: PLAIN_TEXT or HTML, content: 'text to analyze', language: 'en'}",
           "required": true
         },
         "encodingType": {
@@ -48,8 +47,8 @@
       "output": {
         "type": "sentiment",
         "fields": [
-          "documentSentiment.score",
-          "documentSentiment.magnitude",
+          "documentSentiment.score (-1 to 1)",
+          "documentSentiment.magnitude (0 to inf)",
           "sentences[0].sentiment.score",
           "sentences[0].text.content"
         ]
@@ -59,28 +58,31 @@
     },
     {
       "id": "analyze_entities",
-      "description_for_ai": "Extract named entities from text: people, organizations, locations, dates, numbers. Returns Wikipedia knowledge graph links.",
+      "description_for_ai": "Extract named entities: people, organizations, locations, dates, events. Returns Wikipedia links and salience scores.",
       "intent": [
-        "extract entities",
         "named entity recognition",
         "NER",
+        "extract entities",
         "find people in text",
-        "company mentions",
-        "entity extraction"
+        "организации в тексте"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeEntities",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: PLAIN_TEXT, content: text, language: en}",
+          "description": "{type: PLAIN_TEXT, content: text, language: 'en'}",
           "required": true
+        },
+        "encodingType": {
+          "type": "string",
+          "default": "UTF8"
         }
       },
       "output": {
         "type": "entities",
         "fields": [
           "entities[0].name",
-          "entities[0].type",
+          "entities[0].type (PERSON|ORGANIZATION|LOCATION|EVENT|DATE)",
           "entities[0].salience",
           "entities[0].metadata.wikipedia_url"
         ]
@@ -90,24 +92,24 @@
     },
     {
       "id": "classify_content",
-      "description_for_ai": "Classify text into 700+ content categories. Useful for content moderation, topic detection, ad targeting.",
+      "description_for_ai": "Classify text into 700+ content categories (IAB taxonomy). For content routing, ad targeting, topic detection.",
       "intent": [
         "classify text",
         "content category",
         "topic detection",
         "content classification",
-        "text category"
+        "классификация контента"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:classifyText",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: PLAIN_TEXT, content: text}",
+          "description": "{type: PLAIN_TEXT, content: 'text at least 20 words'}",
           "required": true
         },
         "classificationModelOptions": {
           "type": "object",
-          "description": "{v2Model: {contentCategoriesVersion: V2}}",
+          "description": "{v2Model: {contentCategoriesVersion: V2}} for 1000+ categories",
           "required": false
         }
       },
@@ -116,6 +118,40 @@
         "fields": [
           "categories[0].name",
           "categories[0].confidence"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "analyze_syntax",
+      "description_for_ai": "Parse text syntax: tokens, part-of-speech tags, dependency tree, lemmas. For NLP pipelines.",
+      "intent": [
+        "syntax analysis",
+        "POS tagging",
+        "parse text",
+        "dependency parsing",
+        "синтаксический анализ"
+      ],
+      "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeSyntax",
+      "input": {
+        "document": {
+          "type": "object",
+          "description": "{type: PLAIN_TEXT, content: text, language: 'en'}",
+          "required": true
+        },
+        "encodingType": {
+          "type": "string",
+          "default": "UTF8"
+        }
+      },
+      "output": {
+        "type": "syntax",
+        "fields": [
+          "tokens[0].text.content",
+          "tokens[0].partOfSpeech.tag (NOUN|VERB|ADJ...)",
+          "tokens[0].lemma",
+          "tokens[0].dependencyEdge.label"
         ]
       },
       "realtime": true,
