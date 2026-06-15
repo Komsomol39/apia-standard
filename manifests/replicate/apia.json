@@ -22,28 +22,30 @@
   },
   "capabilities": [
     {
-      "id": "run_model",
-      "description_for_ai": "Run 1000+ open-source AI models via API. Images, video, audio, text, 3D. Includes Flux, SDXL, Llama, Whisper, LLaVA and many more. Pay per second of compute. Best for accessing specialized models. Run any model on Replicate by owner/model name. Returns output synchronously or as prediction ID for async.",
+      "id": "run_prediction",
+      "description_for_ai": "Run any Replicate model. Millions of open-source models: image generation (Flux, SDXL), video, audio, LLMs, upscaling.",
       "intent": [
+        "replicate model",
         "run AI model",
-        "generate image flux",
-        "run llama",
-        "open source AI"
+        "flux replicate",
+        "video generation replicate",
+        "запустить модель replicate"
       ],
-      "endpoint": "POST https://api.replicate.com/v1/models/{owner}/{model}/predictions",
+      "endpoint": "POST https://api.replicate.com/v1/models/{owner}/{name}/predictions",
       "input": {
         "owner": {
           "type": "string",
+          "description": "Model owner username e.g. black-forest-labs",
           "required": true
         },
-        "model": {
+        "name": {
           "type": "string",
-          "required": true,
-          "description": "AI/ML model identifier to use for this request"
+          "description": "Model name e.g. flux-schnell",
+          "required": true
         },
         "input": {
           "type": "object",
-          "description": "Model-specific inputs",
+          "description": "Model-specific inputs. Check model page for schema. Flux: {prompt, aspect_ratio, num_outputs}. LLaMA: {prompt, max_tokens}",
           "required": true
         }
       },
@@ -53,10 +55,106 @@
           "id",
           "status",
           "output",
-          "urls"
+          "urls.get"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_prediction",
+      "description_for_ai": "Check status and get output of an async Replicate prediction. Poll until status=succeeded.",
+      "intent": [
+        "check replicate prediction",
+        "get prediction result",
+        "prediction status",
+        "статус предсказания replicate"
+      ],
+      "endpoint": "GET https://api.replicate.com/v1/predictions/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Prediction ID from run_prediction",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "prediction",
+        "fields": [
+          "id",
+          "status (starting|processing|succeeded|failed)",
+          "output",
+          "error",
+          "metrics.predict_time"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "run_sync",
+      "description_for_ai": "Run a model with version ID and wait for output (synchronous). Good for fast models.",
+      "intent": [
+        "replicate sync",
+        "wait for output",
+        "synchronous replicate",
+        "синхронный запуск replicate"
+      ],
+      "endpoint": "POST https://api.replicate.com/v1/predictions",
+      "input": {
+        "version": {
+          "type": "string",
+          "description": "Full model version hash from model page",
+          "required": true
+        },
+        "input": {
+          "type": "object",
+          "required": true
+        },
+        "webhook": {
+          "type": "string",
+          "description": "Optional webhook URL to call on completion",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "prediction",
+        "fields": [
+          "id",
+          "status",
+          "output"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List Replicate models by topic/collection. Discover available models.",
+      "intent": [
+        "replicate models",
+        "browse models",
+        "available models replicate",
+        "поиск моделей replicate"
+      ],
+      "endpoint": "GET https://api.replicate.com/v1/collections/{collection_slug}",
+      "input": {
+        "collection_slug": {
+          "type": "string",
+          "description": "Collection: text-to-image, image-to-text, audio-generation, video-generation, language-models, super-resolution",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "models[0].name",
+          "models[0].url",
+          "models[0].description",
+          "models[0].run_count"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
