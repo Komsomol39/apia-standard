@@ -23,39 +23,44 @@
   "capabilities": [
     {
       "id": "post_message",
-      "description_for_ai": "Send message to a Slack channel or user. Supports rich formatting with blocks and attachments.",
+      "description_for_ai": "Send a message to a Slack channel or DM. Supports rich text blocks, attachments, mentions, and threading.",
       "intent": [
         "send slack message",
+        "slack notify",
         "post to slack",
-        "slack notification",
-        "team message",
-        "message channel",
-        "слак сообщение"
+        "slack bot message",
+        "отправить в slack"
       ],
       "endpoint": "POST https://slack.com/api/chat.postMessage",
       "input": {
         "channel": {
           "type": "string",
-          "description": "Channel ID (C1234567890) or @username or #channel-name",
+          "description": "Channel ID (C...), DM ID (D...), or @username",
           "required": true
         },
         "text": {
           "type": "string",
-          "description": "Message text. Use mrkdwn for formatting.",
+          "description": "Message text (fallback for blocks)",
           "required": false
         },
         "blocks": {
           "type": "array",
-          "description": "Rich Block Kit layout elements",
-          "required": false
-        },
-        "attachments": {
-          "type": "array",
+          "description": "Block Kit blocks for rich messages. See https://api.slack.com/block-kit",
           "required": false
         },
         "thread_ts": {
           "type": "string",
-          "description": "Reply to thread: timestamp of parent message",
+          "description": "Parent message timestamp to reply in thread",
+          "required": false
+        },
+        "username": {
+          "type": "string",
+          "description": "Override bot display name",
+          "required": false
+        },
+        "icon_emoji": {
+          "type": "string",
+          "description": "Override bot emoji icon e.g. :robot_face:",
           "required": false
         }
       },
@@ -63,8 +68,8 @@
         "type": "message",
         "fields": [
           "ok",
-          "channel",
           "ts",
+          "channel",
           "message.text"
         ]
       },
@@ -72,29 +77,159 @@
       "requires_auth": true
     },
     {
+      "id": "list_channels",
+      "description_for_ai": "List public channels in the workspace. Returns channel names, IDs, member counts, and topics.",
+      "intent": [
+        "slack channels",
+        "list channels",
+        "workspace channels",
+        "find channel",
+        "каналы slack"
+      ],
+      "endpoint": "GET https://slack.com/api/conversations.list",
+      "input": {
+        "types": {
+          "type": "string",
+          "description": "public_channel, private_channel, mpim, im. Default: public_channel",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Pagination cursor from response_metadata.next_cursor",
+          "required": false
+        },
+        "exclude_archived": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "list<channel>",
+        "fields": [
+          "channels[0].id",
+          "channels[0].name",
+          "channels[0].num_members",
+          "channels[0].topic.value",
+          "response_metadata.next_cursor"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_channel_history",
+      "description_for_ai": "Retrieve message history from a Slack channel. Use for reading recent messages, searching conversation history.",
+      "intent": [
+        "slack history",
+        "channel messages",
+        "read slack",
+        "conversation history",
+        "история slack"
+      ],
+      "endpoint": "GET https://slack.com/api/conversations.history",
+      "input": {
+        "channel": {
+          "type": "string",
+          "description": "Channel ID",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        },
+        "oldest": {
+          "type": "string",
+          "description": "Unix timestamp — return messages after this time",
+          "required": false
+        },
+        "latest": {
+          "type": "string",
+          "description": "Unix timestamp — return messages before this time",
+          "required": false
+        },
+        "inclusive": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "list<message>",
+        "fields": [
+          "messages[0].text",
+          "messages[0].user",
+          "messages[0].ts",
+          "messages[0].thread_ts",
+          "has_more"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "upload_file",
+      "description_for_ai": "Upload a file to Slack and share it in a channel. Supports any file type.",
+      "intent": [
+        "upload file slack",
+        "share file slack",
+        "send document slack",
+        "attach file",
+        "загрузить файл slack"
+      ],
+      "endpoint": "POST https://slack.com/api/files.getUploadURLExternal",
+      "input": {
+        "filename": {
+          "type": "string",
+          "required": true
+        },
+        "length": {
+          "type": "integer",
+          "description": "File size in bytes",
+          "required": true
+        },
+        "channel_id": {
+          "type": "string",
+          "description": "Share to this channel after upload",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "upload",
+        "fields": [
+          "upload_url",
+          "file_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
       "id": "search_messages",
-      "description_for_ai": "Search Slack workspace messages by keyword. Returns matching messages with channel, timestamp, and permalink.",
+      "description_for_ai": "Search messages across the entire Slack workspace. Returns matching messages with context.",
       "intent": [
         "search slack",
         "find message",
-        "slack history",
-        "past messages"
+        "slack search",
+        "find in slack",
+        "поиск в slack"
       ],
       "endpoint": "GET https://slack.com/api/search.messages",
       "input": {
         "query": {
           "type": "string",
-          "required": true,
-          "description": "Search query string"
+          "description": "Search query. Modifiers: from:@user, in:#channel, has:link, before:YYYY-MM-DD, after:YYYY-MM-DD",
+          "required": true
         },
         "count": {
           "type": "integer",
-          "default": 20,
-          "description": "Number of items to return"
+          "default": 20
         },
         "sort": {
           "type": "string",
-          "description": "score or timestamp",
+          "description": "score (relevance) or timestamp",
           "default": "score"
         }
       },
@@ -102,9 +237,113 @@
         "type": "search_results",
         "fields": [
           "messages.matches[0].text",
+          "messages.matches[0].username",
           "messages.matches[0].channel.name",
-          "messages.matches[0].ts",
-          "messages.total"
+          "messages.matches[0].permalink"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user_info",
+      "description_for_ai": "Get Slack user profile: name, email, timezone, status, avatar.",
+      "intent": [
+        "slack user",
+        "user info slack",
+        "who is user",
+        "user profile slack",
+        "профиль пользователя slack"
+      ],
+      "endpoint": "GET https://slack.com/api/users.info",
+      "input": {
+        "user": {
+          "type": "string",
+          "description": "User ID (U...)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "user",
+        "fields": [
+          "user.id",
+          "user.name",
+          "user.profile.real_name",
+          "user.profile.email",
+          "user.profile.title",
+          "user.tz",
+          "user.profile.image_72"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_reaction",
+      "description_for_ai": "Add an emoji reaction to a message. Use for acknowledging messages, voting, or status tracking.",
+      "intent": [
+        "react to message",
+        "emoji reaction slack",
+        "add reaction",
+        "thumbs up slack",
+        "поставить реакцию slack"
+      ],
+      "endpoint": "POST https://slack.com/api/reactions.add",
+      "input": {
+        "name": {
+          "type": "string",
+          "description": "Emoji name without colons: thumbsup, white_check_mark, rocket",
+          "required": true
+        },
+        "channel": {
+          "type": "string",
+          "required": true
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Message timestamp (ts)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "ok"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_channel",
+      "description_for_ai": "Create a new Slack channel (public or private).",
+      "intent": [
+        "create slack channel",
+        "new channel",
+        "make channel",
+        "create group",
+        "создать канал slack"
+      ],
+      "endpoint": "POST https://slack.com/api/conversations.create",
+      "input": {
+        "name": {
+          "type": "string",
+          "description": "Channel name (lowercase, no spaces, use hyphens)",
+          "required": true
+        },
+        "is_private": {
+          "type": "boolean",
+          "description": "true for private channel",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "channel",
+        "fields": [
+          "channel.id",
+          "channel.name",
+          "channel.is_private",
+          "channel.created"
         ]
       },
       "realtime": true,
