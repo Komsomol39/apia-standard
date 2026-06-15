@@ -23,24 +23,27 @@
   "capabilities": [
     {
       "id": "list_droplets",
-      "description_for_ai": "List all cloud servers (Droplets) in your account with status, IP, specs.",
+      "description_for_ai": "List all cloud servers (Droplets) with status, IP, size, and region.",
       "intent": [
-        "list servers",
-        "cloud VMs",
-        "droplet status",
-        "server list",
-        "cloud instances"
+        "digitalocean servers",
+        "list droplets",
+        "VPS list",
+        "серверы digitalocean"
       ],
       "endpoint": "GET https://api.digitalocean.com/v2/droplets",
       "input": {
         "per_page": {
           "type": "integer",
-          "default": 20,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "default": 20
         },
         "tag_name": {
           "type": "string",
+          "description": "Filter by tag",
           "required": false
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         }
       },
       "output": {
@@ -59,39 +62,49 @@
     },
     {
       "id": "create_droplet",
-      "description_for_ai": "Create a new cloud server (Droplet) with specified size, OS image, and SSH keys. Returns immediately; server ready in ~30 seconds.",
+      "description_for_ai": "Create a new cloud server with specified OS, region, and size.",
       "intent": [
-        "create server",
-        "new VM",
-        "deploy server",
-        "spin up droplet"
+        "create server digitalocean",
+        "new VPS",
+        "spin up droplet",
+        "создать сервер digitalocean"
       ],
       "endpoint": "POST https://api.digitalocean.com/v2/droplets",
       "input": {
         "name": {
           "type": "string",
-          "required": true,
-          "description": "Name identifier"
+          "description": "Hostname for the Droplet",
+          "required": true
         },
         "region": {
           "type": "string",
-          "description": "nyc1, sfo3, lon1, fra1, sgp1, ams3",
+          "description": "nyc3, sfo3, lon1, fra1, sgp1, ams3, blr1, tor1, syd1",
           "required": true
         },
         "size": {
           "type": "string",
-          "description": "s-1vcpu-1gb ($6/mo), s-2vcpu-2gb ($18/mo)",
+          "description": "s-1vcpu-1gb ($6/mo), s-2vcpu-2gb ($18/mo), s-2vcpu-4gb ($24/mo)",
           "required": true
         },
         "image": {
           "type": "string",
-          "description": "ubuntu-24-04-x64, debian-12-x64, fedora-41-x64",
+          "description": "ubuntu-24-04-x64, debian-12-x64, fedora-41-x64, centos-stream-9-x64",
           "required": true
         },
         "ssh_keys": {
           "type": "array",
-          "description": "SSH key IDs to add",
+          "description": "SSH key IDs (get from /v2/account/keys)",
           "required": false
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags for organization",
+          "required": false
+        },
+        "backups": {
+          "type": "boolean",
+          "description": "Enable automatic weekly backups (+20% cost)",
+          "default": false
         }
       },
       "output": {
@@ -101,6 +114,74 @@
           "droplet.name",
           "droplet.status",
           "droplet.networks"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "droplet_action",
+      "description_for_ai": "Perform action on a Droplet: reboot, power_on, power_off, shutdown, rebuild, resize, snapshot.",
+      "intent": [
+        "reboot server",
+        "restart droplet",
+        "power off server",
+        "перезагрузить сервер digitalocean"
+      ],
+      "endpoint": "POST https://api.digitalocean.com/v2/droplets/{droplet_id}/actions",
+      "input": {
+        "droplet_id": {
+          "type": "integer",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "reboot, power_on, power_off, shutdown, rebuild, resize, snapshot, enable_backups",
+          "required": true
+        },
+        "size": {
+          "type": "string",
+          "description": "New size slug for resize action",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "action",
+        "fields": [
+          "action.id",
+          "action.status",
+          "action.type",
+          "action.started_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "manage_databases",
+      "description_for_ai": "Create or list managed databases: PostgreSQL, MySQL, Redis, MongoDB, Kafka.",
+      "intent": [
+        "managed database digitalocean",
+        "create postgres",
+        "managed redis",
+        "база данных digitalocean"
+      ],
+      "endpoint": "GET https://api.digitalocean.com/v2/databases",
+      "input": {
+        "engine": {
+          "type": "string",
+          "description": "pg (PostgreSQL), mysql, redis, mongodb, kafka",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<database>",
+        "fields": [
+          "databases[0].id",
+          "databases[0].name",
+          "databases[0].engine",
+          "databases[0].status",
+          "databases[0].connection.uri"
         ]
       },
       "realtime": true,
