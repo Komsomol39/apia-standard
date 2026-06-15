@@ -22,56 +22,44 @@
   "capabilities": [
     {
       "id": "search_tweets",
-      "description_for_ai": "Search recent tweets by keyword, hashtag, username, or advanced operators. Returns up to 100 tweets per request with engagement metrics.",
+      "description_for_ai": "Search recent tweets (last 7 days free, historical requires Academic). Filter by keyword, hashtag, user, language, date.",
       "intent": [
         "search tweets",
         "twitter search",
         "find tweets",
         "twitter mentions",
         "hashtag search",
-        "twitter sentiment",
-        "social listening"
+        "поиск twitter"
       ],
       "endpoint": "GET https://api.twitter.com/2/tweets/search/recent",
       "input": {
         "query": {
           "type": "string",
-          "description": "Search query with operators: 'from:elonmusk' (from user), '#AI' (hashtag), '-is:retweet' (exclude RT), 'lang:en' (language), '(word1 OR word2)' (boolean). Max 512 chars.",
+          "description": "Query with operators: 'OpenAI', '#AI', 'from:elonmusk', '-is:retweet lang:en', '(AI OR GPT)'",
           "required": true
         },
         "max_results": {
           "type": "integer",
-          "description": "Results per request, 10-100",
+          "description": "10-100",
           "default": 10
         },
         "tweet.fields": {
           "type": "string",
-          "description": "Comma-separated: created_at,public_metrics,author_id,lang,geo,entities,context_annotations",
+          "description": "created_at,public_metrics,author_id,lang,entities",
           "required": false
         },
         "expansions": {
           "type": "string",
-          "description": "author_id to get user info, attachments.media_keys for media",
-          "required": false
-        },
-        "user.fields": {
-          "type": "string",
-          "description": "With expansions=author_id: name,username,profile_image_url,public_metrics",
+          "description": "author_id to get user info",
           "required": false
         },
         "start_time": {
           "type": "string",
-          "description": "ISO 8601 start time, max 7 days ago for free tier",
+          "description": "ISO 8601 start time",
           "required": false
         },
         "end_time": {
           "type": "string",
-          "description": "ISO 8601 end time",
-          "required": false
-        },
-        "next_token": {
-          "type": "string",
-          "description": "Pagination token from previous response",
           "required": false
         }
       },
@@ -83,9 +71,7 @@
           "data[0].created_at",
           "data[0].public_metrics.like_count",
           "data[0].public_metrics.retweet_count",
-          "data[0].public_metrics.reply_count",
-          "meta.result_count",
-          "meta.next_token"
+          "meta.result_count"
         ]
       },
       "realtime": true,
@@ -93,39 +79,38 @@
     },
     {
       "id": "post_tweet",
-      "description_for_ai": "Post a new tweet to the authenticated user's timeline.",
+      "description_for_ai": "Post a new tweet. Supports text, media, polls, replies, and quote tweets.",
       "intent": [
         "post tweet",
         "tweet",
-        "publish on twitter",
-        "share on X",
-        "tweet something"
+        "publish twitter",
+        "post on X",
+        "написать твит"
       ],
       "endpoint": "POST https://api.twitter.com/2/tweets",
       "input": {
         "text": {
           "type": "string",
-          "description": "Tweet text, max 280 characters. Supports mentions @username, hashtags #tag, and URLs",
+          "description": "Tweet text, max 280 chars",
           "required": true
         },
         "reply": {
           "type": "object",
-          "description": "{in_reply_to_tweet_id: '1234567890'} to reply to a tweet",
+          "description": "{in_reply_to_tweet_id: '...'}",
           "required": false
         },
         "quote_tweet_id": {
           "type": "string",
-          "description": "Tweet ID to quote-tweet",
           "required": false
         },
         "media": {
           "type": "object",
-          "description": "{media_ids: ['id1', 'id2']} to attach uploaded media (upload first via v1.1/media/upload)",
+          "description": "{media_ids: ['id1']}",
           "required": false
         },
         "poll": {
           "type": "object",
-          "description": "{duration_minutes: 1440, options: ['Option A', 'Option B', 'Option C']}",
+          "description": "{duration_minutes: 1440, options: ['Yes', 'No']}",
           "required": false
         }
       },
@@ -134,6 +119,160 @@
         "fields": [
           "data.id",
           "data.text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user",
+      "description_for_ai": "Get Twitter/X user profile by username or ID. Returns followers, following, bio, metrics.",
+      "intent": [
+        "twitter user",
+        "user profile twitter",
+        "twitter account info",
+        "followers count",
+        "профиль twitter"
+      ],
+      "endpoint": "GET https://api.twitter.com/2/users/by/username/{username}",
+      "input": {
+        "username": {
+          "type": "string",
+          "description": "Twitter username without @",
+          "required": true
+        },
+        "user.fields": {
+          "type": "string",
+          "description": "description,public_metrics,profile_image_url,location,created_at,verified",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "user",
+        "fields": [
+          "data.id",
+          "data.name",
+          "data.username",
+          "data.description",
+          "data.public_metrics.followers_count",
+          "data.public_metrics.tweet_count",
+          "data.verified"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user_tweets",
+      "description_for_ai": "Get recent tweets from a specific user timeline.",
+      "intent": [
+        "user tweets",
+        "twitter timeline",
+        "user timeline",
+        "tweets from user",
+        "твиты пользователя"
+      ],
+      "endpoint": "GET https://api.twitter.com/2/users/{id}/tweets",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "User ID (get from get_user)",
+          "required": true
+        },
+        "max_results": {
+          "type": "integer",
+          "description": "5-100",
+          "default": 10
+        },
+        "tweet.fields": {
+          "type": "string",
+          "description": "created_at,public_metrics,entities",
+          "required": false
+        },
+        "exclude": {
+          "type": "string",
+          "description": "retweets,replies",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<tweet>",
+        "fields": [
+          "data[0].id",
+          "data[0].text",
+          "data[0].created_at",
+          "data[0].public_metrics"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "like_tweet",
+      "description_for_ai": "Like a tweet on behalf of an authenticated user.",
+      "intent": [
+        "like tweet",
+        "favorite tweet",
+        "twitter like",
+        "лайк twitter"
+      ],
+      "endpoint": "POST https://api.twitter.com/2/users/{id}/likes",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "User ID of the liker",
+          "required": true
+        },
+        "tweet_id": {
+          "type": "string",
+          "description": "Tweet to like",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "data.liked"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_tweet",
+      "description_for_ai": "Get a single tweet by ID with full metrics, entities, and author info.",
+      "intent": [
+        "get tweet",
+        "tweet details",
+        "single tweet",
+        "tweet by id",
+        "получить твит"
+      ],
+      "endpoint": "GET https://api.twitter.com/2/tweets/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "tweet.fields": {
+          "type": "string",
+          "description": "created_at,public_metrics,author_id,lang,entities,context_annotations",
+          "required": false
+        },
+        "expansions": {
+          "type": "string",
+          "description": "author_id,attachments.media_keys",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "tweet",
+        "fields": [
+          "data.id",
+          "data.text",
+          "data.public_metrics",
+          "data.created_at",
+          "data.lang"
         ]
       },
       "realtime": true,
