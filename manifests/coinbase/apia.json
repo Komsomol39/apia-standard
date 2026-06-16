@@ -25,24 +25,19 @@
   },
   "capabilities": [
     {
-      "id": "get_price",
-      "description_for_ai": "Get current buy/sell/spot price for any crypto in any currency.",
+      "id": "get_spot_price",
+      "description_for_ai": "Get current spot price for a cryptocurrency pair.",
       "intent": [
-        "coinbase price",
-        "crypto price USD",
-        "bitcoin price coinbase",
-        "цена bitcoin coinbase"
+        "crypto price Coinbase",
+        "BTC price",
+        "coin price",
+        "цена криптовалюты Coinbase"
       ],
-      "endpoint": "GET https://api.coinbase.com/v2/prices/{currency_pair}/{price_type}",
+      "endpoint": "GET https://api.coinbase.com/v2/prices/{currency_pair}/spot",
       "input": {
         "currency_pair": {
           "type": "string",
-          "description": "e.g. BTC-USD, ETH-EUR, SOL-RUB",
-          "required": true
-        },
-        "price_type": {
-          "type": "string",
-          "description": "buy, sell, or spot",
+          "description": "e.g. BTC-USD, ETH-EUR, SOL-USDT",
           "required": true
         }
       },
@@ -58,19 +53,172 @@
       "requires_auth": false
     },
     {
-      "id": "list_exchange_rates",
-      "description_for_ai": "Get exchange rates from a base currency to all others. Includes 170+ fiat and crypto.",
+      "id": "get_accounts",
+      "description_for_ai": "Get all cryptocurrency wallet accounts and balances.",
+      "intent": [
+        "Coinbase balance",
+        "crypto wallet",
+        "account balance Coinbase",
+        "кошелёк Coinbase"
+      ],
+      "endpoint": "GET https://api.coinbase.com/v2/accounts",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<account>",
+        "fields": [
+          "data[0].id",
+          "data[0].name",
+          "data[0].currency",
+          "data[0].balance.amount",
+          "data[0].balance.currency"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_address",
+      "description_for_ai": "Generate a crypto receive address for an account.",
+      "intent": [
+        "receive crypto",
+        "deposit address",
+        "crypto address",
+        "адрес для получения крипто"
+      ],
+      "endpoint": "POST https://api.coinbase.com/v2/accounts/{account_id}/addresses",
+      "input": {
+        "account_id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Label for the address",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "data.id",
+          "data.address",
+          "data.name",
+          "data.network",
+          "data.uri_scheme"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_transactions",
+      "description_for_ai": "List transactions for a Coinbase account.",
+      "intent": [
+        "Coinbase transactions",
+        "crypto history",
+        "transaction list",
+        "история транзакций Coinbase"
+      ],
+      "endpoint": "GET https://api.coinbase.com/v2/accounts/{account_id}/transactions",
+      "input": {
+        "account_id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 25
+        },
+        "order": {
+          "type": "string",
+          "description": "asc or desc",
+          "default": "desc"
+        }
+      },
+      "output": {
+        "type": "list<transaction>",
+        "fields": [
+          "data[0].id",
+          "data[0].type",
+          "data[0].status",
+          "data[0].amount.amount",
+          "data[0].amount.currency",
+          "data[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_money",
+      "description_for_ai": "Send cryptocurrency to an address or email.",
+      "intent": [
+        "send crypto",
+        "transfer crypto",
+        "crypto payment Coinbase",
+        "отправить крипто Coinbase"
+      ],
+      "endpoint": "POST https://api.coinbase.com/v2/accounts/{account_id}/transactions",
+      "input": {
+        "account_id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "default": "send"
+        },
+        "to": {
+          "type": "string",
+          "description": "Crypto address or email",
+          "required": true
+        },
+        "amount": {
+          "type": "string",
+          "description": "Amount to send",
+          "required": true
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code: BTC, ETH, USDT",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "transaction",
+        "fields": [
+          "data.id",
+          "data.status",
+          "data.amount.amount",
+          "data.network.hash"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_exchange_rates",
+      "description_for_ai": "Get exchange rates for a currency against all others.",
       "intent": [
         "exchange rates",
-        "currency rates",
-        "coinbase rates",
-        "курсы валют coinbase"
+        "crypto rates",
+        "convert currency",
+        "курсы валют Coinbase"
       ],
       "endpoint": "GET https://api.coinbase.com/v2/exchange-rates",
       "input": {
         "currency": {
           "type": "string",
-          "description": "Base currency e.g. USD, EUR, BTC",
+          "description": "Base currency: USD, EUR, BTC, ETH",
           "default": "USD"
         }
       },
@@ -81,49 +229,6 @@
           "data.rates.BTC",
           "data.rates.ETH",
           "data.rates.EUR"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "list_cryptocurrencies",
-      "description_for_ai": "List all cryptocurrencies supported by Coinbase with names and min sizes.",
-      "intent": [
-        "list crypto coinbase",
-        "supported cryptocurrencies",
-        "coinbase assets",
-        "монеты coinbase"
-      ],
-      "endpoint": "GET https://api.coinbase.com/v2/currencies/crypto",
-      "input": {},
-      "output": {
-        "type": "list<currency>",
-        "fields": [
-          "data[0].code",
-          "data[0].name",
-          "data[0].color",
-          "data[0].sort_index"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": false
-    },
-    {
-      "id": "get_time",
-      "description_for_ai": "Get Coinbase server time. Use for timestamping authenticated requests.",
-      "intent": [
-        "coinbase server time",
-        "api time",
-        "timestamp coinbase"
-      ],
-      "endpoint": "GET https://api.coinbase.com/v2/time",
-      "input": {},
-      "output": {
-        "type": "time",
-        "fields": [
-          "data.iso",
-          "data.epoch"
         ]
       },
       "realtime": true,
