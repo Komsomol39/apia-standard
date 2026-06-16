@@ -23,28 +23,27 @@
   "capabilities": [
     {
       "id": "scan_url",
-      "description_for_ai": "Check if a URL is malicious using 70+ security engines. Returns threat scores per engine.",
+      "description_for_ai": "Scan a URL for malware, phishing, and suspicious content using 70+ antivirus engines.",
       "intent": [
-        "check URL safety",
-        "is this link safe",
-        "malware check",
-        "phishing detection",
-        "scan URL",
-        "безопасная ссылка"
+        "check URL malware",
+        "virustotal scan",
+        "phishing check",
+        "is URL safe",
+        "проверить URL virustotal"
       ],
       "endpoint": "POST https://www.virustotal.com/api/v3/urls",
       "input": {
         "url": {
           "type": "string",
-          "description": "Full URL including protocol (https://...)",
+          "description": "URL to scan",
           "required": true
         }
       },
       "output": {
-        "type": "analysis",
+        "type": "scan",
         "fields": [
-          "data.id",
-          "meta.url_info.url"
+          "data.id (scan ID to check results)",
+          "data.type"
         ]
       },
       "realtime": true,
@@ -52,61 +51,98 @@
     },
     {
       "id": "get_url_report",
-      "description_for_ai": "Get scan results for a URL. Returns malicious/suspicious/harmless votes from all engines.",
+      "description_for_ai": "Get analysis results for a scanned URL. Check malicious/suspicious verdicts from 70+ vendors.",
       "intent": [
-        "URL scan results",
-        "malicious check",
-        "security report",
-        "URL reputation"
+        "url scan results",
+        "malware verdict",
+        "virustotal report",
+        "результат проверки virustotal"
       ],
       "endpoint": "GET https://www.virustotal.com/api/v3/analyses/{id}",
       "input": {
         "id": {
           "type": "string",
-          "description": "Analysis ID from scan_url",
+          "description": "Analysis ID from scan_url response (base64url of url)",
           "required": true
         }
       },
       "output": {
-        "type": "report",
+        "type": "analysis",
         "fields": [
+          "data.attributes.status",
           "data.attributes.stats.malicious",
           "data.attributes.stats.suspicious",
-          "data.attributes.stats.harmless",
-          "data.attributes.results"
+          "data.attributes.stats.undetected",
+          "data.attributes.results.{engine}.result"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_ip_report",
-      "description_for_ai": "Get reputation and threat info for an IP address.",
+      "id": "scan_file_hash",
+      "description_for_ai": "Check if a file hash (MD5/SHA1/SHA256) is known malware.",
       "intent": [
-        "IP reputation",
-        "check IP",
-        "malicious IP",
-        "IP threat intel",
-        "IP scan"
+        "file hash check",
+        "malware hash",
+        "virustotal hash",
+        "хэш файла virustotal"
       ],
-      "endpoint": "GET https://www.virustotal.com/api/v3/ip_addresses/{ip}",
+      "endpoint": "GET https://www.virustotal.com/api/v3/files/{hash}",
       "input": {
-        "ip": {
+        "hash": {
           "type": "string",
-          "description": "IP address to check",
+          "description": "MD5, SHA-1, or SHA-256 hash of the file",
           "required": true
         }
       },
       "output": {
-        "type": "ip_report",
+        "type": "file",
         "fields": [
-          "data.attributes.last_analysis_stats",
-          "data.attributes.reputation",
-          "data.attributes.country",
-          "data.attributes.as_owner"
+          "data.attributes.meaningful_name",
+          "data.attributes.type_description",
+          "data.attributes.last_analysis_stats.malicious",
+          "data.attributes.last_analysis_stats.undetected",
+          "data.attributes.names"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search",
+      "description_for_ai": "Search VirusTotal for IPs, domains, URLs, files using intelligence queries.",
+      "intent": [
+        "virustotal search",
+        "threat intelligence",
+        "IP reputation",
+        "репутация IP virustotal"
+      ],
+      "endpoint": "GET https://www.virustotal.com/api/v3/search",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "entity: IP (1.2.3.4), domain (evil.com), hash, or VTI query: entity:ip country:RU malicious-votes:>=10",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        },
+        "cursor": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "results",
+        "fields": [
+          "data[0].id",
+          "data[0].type",
+          "data[0].attributes.last_analysis_stats"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
