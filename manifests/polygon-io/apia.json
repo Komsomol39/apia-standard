@@ -24,31 +24,67 @@
   },
   "capabilities": [
     {
-      "id": "get_quote",
-      "description_for_ai": "Get real-time stock snapshot: price, bid/ask, volume, VWAP, open/close.",
+      "id": "get_ticker_details",
+      "description_for_ai": "Get stock details: name, sector, description, market cap, employees, website.",
       "intent": [
-        "polygon stock price",
-        "real-time quote",
-        "stock ticker polygon",
-        "биржевая котировка polygon"
+        "stock info",
+        "company details",
+        "ticker info",
+        "информация об акции"
       ],
-      "endpoint": "GET https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers/{stocksTicker}",
+      "endpoint": "GET https://api.polygon.io/v3/reference/tickers/{stocksTicker}",
       "input": {
         "stocksTicker": {
           "type": "string",
-          "description": "Stock ticker: AAPL, MSFT, TSLA",
+          "description": "Stock symbol: AAPL, TSLA, MSFT",
           "required": true
         }
       },
       "output": {
-        "type": "snapshot",
+        "type": "ticker",
         "fields": [
-          "ticker.day.c (close)",
-          "ticker.day.o (open)",
-          "ticker.day.v (volume)",
-          "ticker.lastTrade.p (price)",
-          "ticker.lastQuote.P (ask)",
-          "ticker.prevDay.c"
+          "results.ticker",
+          "results.name",
+          "results.description",
+          "results.market_cap",
+          "results.total_employees",
+          "results.homepage_url",
+          "results.sic_description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_previous_close",
+      "description_for_ai": "Get the previous day's open, high, low, close, volume for a stock.",
+      "intent": [
+        "stock price",
+        "yesterday close",
+        "OHLCV stock",
+        "цена акции"
+      ],
+      "endpoint": "GET https://api.polygon.io/v2/aggs/ticker/{stocksTicker}/prev",
+      "input": {
+        "stocksTicker": {
+          "type": "string",
+          "required": true
+        },
+        "adjusted": {
+          "type": "boolean",
+          "description": "Adjust for splits",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "ohlcv",
+        "fields": [
+          "results[0].c (close)",
+          "results[0].h (high)",
+          "results[0].l (low)",
+          "results[0].o (open)",
+          "results[0].v (volume)",
+          "results[0].vw (VWAP)"
         ]
       },
       "realtime": true,
@@ -56,13 +92,12 @@
     },
     {
       "id": "get_aggregates",
-      "description_for_ai": "Get OHLCV bar data for any timeframe: minute, hour, day, week, month. Use for charting.",
+      "description_for_ai": "Get historical price bars (OHLCV) for a stock. Aggregate by minute, hour, day, week, month.",
       "intent": [
-        "stock chart data",
-        "OHLCV bars",
-        "candlestick data",
-        "price history polygon",
-        "свечи polygon"
+        "stock history",
+        "price chart",
+        "historical data stock",
+        "история цен акции"
       ],
       "endpoint": "GET https://api.polygon.io/v2/aggs/ticker/{stocksTicker}/range/{multiplier}/{timespan}/{from}/{to}",
       "input": {
@@ -72,7 +107,7 @@
         },
         "multiplier": {
           "type": "integer",
-          "description": "Timespan multiplier e.g. 1 (for 1-day bars)",
+          "description": "Size of timespan e.g. 1",
           "required": true
         },
         "timespan": {
@@ -92,7 +127,6 @@
         },
         "adjusted": {
           "type": "boolean",
-          "description": "Adjust for splits and dividends",
           "default": true
         },
         "limit": {
@@ -101,49 +135,76 @@
         }
       },
       "output": {
-        "type": "bars",
+        "type": "list<bar>",
         "fields": [
-          "results[0].t (timestamp ms)",
-          "results[0].o (open)",
-          "results[0].h (high)",
-          "results[0].l (low)",
-          "results[0].c (close)",
-          "results[0].v (volume)",
-          "results[0].vw (VWAP)"
+          "results[0].t (timestamp)",
+          "results[0].o",
+          "results[0].h",
+          "results[0].l",
+          "results[0].c",
+          "results[0].v"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_last_quote",
+      "description_for_ai": "Get real-time bid/ask quote for a stock.",
+      "intent": [
+        "stock quote",
+        "bid ask price",
+        "real time stock",
+        "котировка акции"
+      ],
+      "endpoint": "GET https://api.polygon.io/v2/last/nbbo/{stocksTicker}",
+      "input": {
+        "stocksTicker": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "quote",
+        "fields": [
+          "results.P (ask price)",
+          "results.p (bid price)",
+          "results.S (ask size)",
+          "results.s (bid size)",
+          "results.t (timestamp)"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "search_tickers",
-      "description_for_ai": "Search for stock tickers by company name. Find ticker symbols.",
+      "description_for_ai": "Search stocks, ETFs, and other securities by keyword.",
       "intent": [
-        "find ticker",
         "search stock",
-        "company ticker",
-        "найти акцию polygon"
+        "find ticker",
+        "stock symbol lookup",
+        "поиск акции"
       ],
       "endpoint": "GET https://api.polygon.io/v3/reference/tickers",
       "input": {
         "search": {
           "type": "string",
-          "description": "Company name or ticker prefix",
+          "description": "Company name or symbol",
           "required": false
         },
-        "ticker": {
+        "type": {
           "type": "string",
-          "description": "Exact ticker symbol",
+          "description": "CS (stock), ETF, FUND, IND (index), FX, CRYPTO",
           "required": false
         },
         "market": {
           "type": "string",
-          "description": "stocks, crypto, fx, otc",
+          "description": "stocks, options, forex, crypto, otc",
           "required": false
         },
         "active": {
           "type": "boolean",
-          "description": "Filter to only active tickers",
           "default": true
         },
         "limit": {
@@ -156,49 +217,52 @@
         "fields": [
           "results[0].ticker",
           "results[0].name",
+          "results[0].type",
           "results[0].market",
-          "results[0].primary_exchange",
-          "results[0].currency_name"
+          "results[0].primary_exchange"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_ticker_details",
-      "description_for_ai": "Get company details for a ticker: description, employees, revenue, SIC, address, website.",
+      "id": "get_news",
+      "description_for_ai": "Get financial news for a stock or general market news.",
       "intent": [
-        "company info polygon",
-        "stock details",
-        "company description",
-        "описание компании polygon"
+        "stock news",
+        "company news",
+        "market news",
+        "новости акции"
       ],
-      "endpoint": "GET https://api.polygon.io/v3/reference/tickers/{ticker}",
+      "endpoint": "GET https://api.polygon.io/v2/reference/news",
       "input": {
         "ticker": {
           "type": "string",
-          "description": "Stock ticker symbol",
-          "required": true
-        },
-        "date": {
-          "type": "string",
-          "description": "Historical details as of date YYYY-MM-DD",
+          "description": "Filter by ticker symbol",
           "required": false
+        },
+        "published_utc.gte": {
+          "type": "string",
+          "description": "Articles published after date: 2024-01-01",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
         }
       },
       "output": {
-        "type": "ticker_details",
+        "type": "list<article>",
         "fields": [
-          "results.name",
-          "results.description",
-          "results.total_employees",
-          "results.homepage_url",
-          "results.address.address1",
-          "results.sic_description",
-          "results.market_cap"
+          "results[0].title",
+          "results[0].article_url",
+          "results[0].publisher.name",
+          "results[0].published_utc",
+          "results[0].tickers",
+          "results[0].description"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     }
   ],
