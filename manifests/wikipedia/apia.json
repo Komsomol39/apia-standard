@@ -23,10 +23,10 @@
       "id": "search",
       "description_for_ai": "Search Wikipedia articles by keyword. Returns titles and snippets.",
       "intent": [
-        "wikipedia search",
-        "wiki article",
-        "encyclopedia search",
-        "поиск wikipedia"
+        "search Wikipedia",
+        "find article",
+        "Wikipedia search",
+        "поиск Википедия"
       ],
       "endpoint": "GET https://en.wikipedia.org/w/api.php",
       "input": {
@@ -47,22 +47,17 @@
           "type": "integer",
           "default": 10
         },
-        "srprop": {
+        "format": {
           "type": "string",
-          "description": "snippet, size, timestamp",
-          "default": "snippet"
+          "default": "json"
         },
         "utf8": {
           "type": "integer",
           "default": 1
-        },
-        "format": {
-          "type": "string",
-          "default": "json"
         }
       },
       "output": {
-        "type": "search",
+        "type": "list<article>",
         "fields": [
           "query.search[0].title",
           "query.search[0].snippet",
@@ -75,23 +70,22 @@
     },
     {
       "id": "get_summary",
-      "description_for_ai": "Get a concise article summary from Wikipedia REST API. Faster than full page parse.",
+      "description_for_ai": "Get a Wikipedia page summary (intro paragraph) for any article.",
       "intent": [
         "wikipedia summary",
-        "article summary",
-        "wiki intro",
-        "краткое содержание wikipedia"
+        "article intro",
+        "topic summary",
+        "краткое описание Wikipedia"
       ],
       "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/summary/{title}",
       "input": {
         "title": {
           "type": "string",
-          "description": "Article title (URL encoded). Use exact title from search results.",
+          "description": "Article title (use underscores for spaces: Albert_Einstein)",
           "required": true
         },
         "redirect": {
           "type": "boolean",
-          "description": "Follow redirects",
           "default": true
         }
       },
@@ -99,23 +93,23 @@
         "type": "summary",
         "fields": [
           "title",
-          "extract",
+          "extract (plain text intro)",
+          "description",
           "thumbnail.source",
-          "content_urls.desktop.page",
-          "description"
+          "content_urls.desktop.page"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_page_content",
-      "description_for_ai": "Get full Wikipedia article content as wikitext or HTML.",
+      "id": "get_article_content",
+      "description_for_ai": "Get the full text content of a Wikipedia article.",
       "intent": [
-        "wikipedia article content",
-        "full wiki page",
-        "read wikipedia",
-        "текст статьи wikipedia"
+        "wikipedia article",
+        "full article text",
+        "Wikipedia content",
+        "полный текст Wikipedia"
       ],
       "endpoint": "GET https://en.wikipedia.org/w/api.php",
       "input": {
@@ -123,25 +117,24 @@
           "type": "string",
           "default": "query"
         },
+        "prop": {
+          "type": "string",
+          "default": "extracts"
+        },
         "titles": {
           "type": "string",
           "description": "Article title",
           "required": true
         },
-        "prop": {
-          "type": "string",
-          "description": "extracts for HTML text, revisions for wikitext",
-          "default": "extracts"
+        "explaintext": {
+          "type": "boolean",
+          "description": "Return plain text instead of HTML",
+          "default": true
         },
         "exintro": {
           "type": "boolean",
-          "description": "Only intro section",
+          "description": "Only return intro section",
           "default": false
-        },
-        "explaintext": {
-          "type": "boolean",
-          "description": "Plain text without HTML",
-          "default": true
         },
         "format": {
           "type": "string",
@@ -149,33 +142,58 @@
         }
       },
       "output": {
-        "type": "page",
+        "type": "article",
         "fields": [
           "query.pages.{pageid}.title",
-          "query.pages.{pageid}.extract"
+          "query.pages.{pageid}.extract (plain text)"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_in_language",
-      "description_for_ai": "Get Wikipedia article in a specific language.",
+      "id": "get_random_article",
+      "description_for_ai": "Get a random Wikipedia article.",
       "intent": [
-        "wikipedia in russian",
-        "wiki auf deutsch",
-        "wikipedia lang",
-        "wikipedia на русском"
+        "random Wikipedia",
+        "random article",
+        "discover Wikipedia",
+        "случайная статья Wikipedia"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/random/summary",
+      "input": {},
+      "output": {
+        "type": "summary",
+        "fields": [
+          "title",
+          "extract",
+          "description",
+          "thumbnail.source",
+          "content_urls.desktop.page"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_in_other_languages",
+      "description_for_ai": "Get a Wikipedia article in another language.",
+      "intent": [
+        "Wikipedia in Russian",
+        "Wikipedia другой язык",
+        "translate Wikipedia",
+        "Википедия на русском"
       ],
       "endpoint": "GET https://{lang}.wikipedia.org/api/rest_v1/page/summary/{title}",
       "input": {
         "lang": {
           "type": "string",
-          "description": "Language code: en, ru, de, fr, es, zh, ja, ar, pt, it",
+          "description": "Language code: ru, de, fr, es, zh, ja, ar",
           "required": true
         },
         "title": {
           "type": "string",
+          "description": "Article title in that language or use lang links API first",
           "required": true
         }
       },
@@ -184,7 +202,6 @@
         "fields": [
           "title",
           "extract",
-          "description",
           "content_urls.desktop.page"
         ]
       },
