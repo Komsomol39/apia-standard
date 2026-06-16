@@ -23,17 +23,18 @@
   "capabilities": [
     {
       "id": "analyze_text",
-      "description_for_ai": "Analyze text with TextRazor: extract entities, topics, relations, and sentiment.",
+      "description_for_ai": "Perform deep NLP analysis on text: entities, topics, relations, sentiment.",
       "intent": [
-        "textrazor analyze",
+        "text analysis TextRazor",
+        "NLP analysis",
         "entity extraction",
-        "text analysis NLP",
-        "анализ текста textrazor"
+        "анализ текста TextRazor"
       ],
-      "endpoint": "POST https://api.textrazor.com",
+      "endpoint": "POST https://api.textrazor.com/",
       "input": {
         "text": {
           "type": "string",
+          "description": "Text to analyze",
           "required": true
         },
         "extractors": {
@@ -46,8 +47,9 @@
         "type": "analysis",
         "fields": [
           "response.entities[0].matchedText",
-          "response.entities[0].entityId",
+          "response.entities[0].entityId (DBpedia/Wikidata)",
           "response.entities[0].type",
+          "response.entities[0].relevanceScore",
           "response.topics[0].label",
           "response.topics[0].score"
         ]
@@ -57,14 +59,14 @@
     },
     {
       "id": "extract_entities",
-      "description_for_ai": "Extract named entities from text: people, places, organizations.",
+      "description_for_ai": "Extract named entities linked to knowledge bases (DBpedia, Wikidata, Freebase).",
       "intent": [
-        "NER textrazor",
-        "entity recognition",
-        "extract names places",
-        "извлечение сущностей textrazor"
+        "entity linking TextRazor",
+        "knowledge graph entities",
+        "named entity recognition",
+        "извлечение сущностей TextRazor"
       ],
-      "endpoint": "POST https://api.textrazor.com",
+      "endpoint": "POST https://api.textrazor.com/",
       "input": {
         "text": {
           "type": "string",
@@ -76,7 +78,7 @@
         },
         "entities.filterDbpediaTypes": {
           "type": "string",
-          "description": "Filter by type: Person, Place, Organisation",
+          "description": "Filter: Person, Place, Organisation",
           "required": false
         }
       },
@@ -85,8 +87,9 @@
         "fields": [
           "response.entities[0].matchedText",
           "response.entities[0].entityId",
-          "response.entities[0].type[0]",
-          "response.entities[0].confidenceScore"
+          "response.entities[0].dbpediaTypes",
+          "response.entities[0].wikidataId",
+          "response.entities[0].freebaseId"
         ]
       },
       "realtime": true,
@@ -94,14 +97,14 @@
     },
     {
       "id": "classify_topics",
-      "description_for_ai": "Classify text into IAB topics and custom categories.",
+      "description_for_ai": "Classify text into IAB categories and custom taxonomy.",
       "intent": [
-        "topic classification textrazor",
+        "topic classification TextRazor",
         "content categorization",
-        "text topics",
-        "классификация тем textrazor"
+        "IAB taxonomy",
+        "классификация тем TextRazor"
       ],
-      "endpoint": "POST https://api.textrazor.com",
+      "endpoint": "POST https://api.textrazor.com/",
       "input": {
         "text": {
           "type": "string",
@@ -113,7 +116,7 @@
         },
         "classifiers": {
           "type": "string",
-          "description": "textrazor_iab_categories_1.0, textrazor_newscodes, custom classifiers",
+          "description": "textrazor_iab_taxonomy_2.0, textrazor_newscodes",
           "required": false
         }
       },
@@ -121,8 +124,8 @@
         "type": "topics",
         "fields": [
           "response.topics[0].label",
-          "response.topics[0].score (0-1)",
-          "response.topics[0].wikiLink"
+          "response.topics[0].score",
+          "response.coarseTopics[0].label"
         ]
       },
       "realtime": true,
@@ -130,14 +133,14 @@
     },
     {
       "id": "analyze_relations",
-      "description_for_ai": "Extract semantic relations (subject-verb-object) from text.",
+      "description_for_ai": "Extract semantic relations and subject-verb-object triples from text.",
       "intent": [
-        "relations extraction textrazor",
-        "SVO triples",
-        "semantic relations",
-        "семантические отношения textrazor"
+        "relation extraction",
+        "semantic triples",
+        "subject verb object",
+        "семантические отношения TextRazor"
       ],
-      "endpoint": "POST https://api.textrazor.com",
+      "endpoint": "POST https://api.textrazor.com/",
       "input": {
         "text": {
           "type": "string",
@@ -145,49 +148,47 @@
         },
         "extractors": {
           "type": "string",
-          "default": "relations,entities"
+          "default": "relations"
         }
       },
       "output": {
         "type": "relations",
         "fields": [
-          "response.relations[0].predicate.matchedText",
-          "response.relations[0].params[0].role",
-          "response.relations[0].params[0].entity.matchedText"
+          "response.relations[0].predicatePositions[0].matchedText",
+          "response.relations[0].params[0].relation (SUBJECT/OBJECT)",
+          "response.relations[0].params[0].entityPositions"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "custom_rule_classifier",
-      "description_for_ai": "Run custom TextRazor rules to extract domain-specific information.",
+      "id": "analyze_url",
+      "description_for_ai": "Analyze a webpage URL directly with TextRazor.",
       "intent": [
-        "custom rules textrazor",
-        "domain extraction",
-        "rule-based NLP",
-        "пользовательские правила textrazor"
+        "analyze URL TextRazor",
+        "webpage analysis NLP",
+        "extract entities URL",
+        "анализ URL TextRazor"
       ],
-      "endpoint": "POST https://api.textrazor.com",
+      "endpoint": "POST https://api.textrazor.com/",
       "input": {
-        "text": {
+        "url": {
           "type": "string",
-          "required": true
-        },
-        "rules": {
-          "type": "string",
-          "description": "TextRazor rules string",
+          "description": "Webpage URL to fetch and analyze",
           "required": true
         },
         "extractors": {
           "type": "string",
-          "default": "entities,relations"
+          "default": "entities,topics"
         }
       },
       "output": {
-        "type": "custom",
+        "type": "analysis",
         "fields": [
-          "response.customAnnotations[0].contents"
+          "response.entities[0].matchedText",
+          "response.topics[0].label",
+          "response.cleanedText"
         ]
       },
       "realtime": true,
