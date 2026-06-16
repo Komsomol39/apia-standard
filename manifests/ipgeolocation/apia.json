@@ -23,42 +23,204 @@
   },
   "capabilities": [
     {
-      "id": "get_ip_info",
-      "description_for_ai": "Get location, timezone, currency, and ISP info from any IP address. Use to detect user country/city without GPS, localize content, detect VPN/proxy. Get geographic location, timezone, currency and ISP for any IP address. Omit ip param to get info for caller IP.",
+      "id": "get_geolocation",
+      "description_for_ai": "Get full geolocation for an IP: country, city, ISP, timezone, currency.",
       "intent": [
-        "IP location",
-        "where is this IP",
-        "detect user country",
-        "user timezone from IP",
-        "IP geolocation"
+        "IP geolocation",
+        "IP address info",
+        "locate IP",
+        "геолокация IP адреса"
       ],
       "endpoint": "GET https://api.ipgeolocation.io/ipgeo",
       "input": {
+        "apiKey": {
+          "type": "string",
+          "required": true
+        },
         "ip": {
           "type": "string",
-          "description": "IP address to look up. Omit for current request IP.",
+          "description": "IPv4/IPv6 address. Omit for your own IP.",
           "required": false
         },
         "fields": {
           "type": "string",
-          "description": "Comma-separated fields: geo,isp,timezone,currency",
+          "description": "Comma-separated: geo,isp,domain,hostname,organization",
+          "required": false
+        },
+        "lang": {
+          "type": "string",
+          "description": "ru, de, fr, cn, ja, es",
           "required": false
         }
       },
       "output": {
-        "type": "ip_info",
+        "type": "geolocation",
         "fields": [
           "ip",
+          "city",
           "country_name",
           "country_code2",
-          "city",
-          "latitude",
-          "longitude",
-          "timezone.name",
-          "timezone.current_time",
-          "currency.code",
           "isp",
-          "is_proxy"
+          "organization",
+          "timezone.name",
+          "currency.code",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_timezone",
+      "description_for_ai": "Get timezone info for an IP or specific location.",
+      "intent": [
+        "timezone by IP",
+        "timezone lookup",
+        "time zone info",
+        "часовой пояс по IP"
+      ],
+      "endpoint": "GET https://api.ipgeolocation.io/timezone",
+      "input": {
+        "apiKey": {
+          "type": "string",
+          "required": true
+        },
+        "ip": {
+          "type": "string",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "required": false
+        },
+        "long": {
+          "type": "float",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "timezone",
+        "fields": [
+          "timezone",
+          "timezone_offset",
+          "date",
+          "date_time_txt",
+          "is_dst",
+          "dst_savings"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user_agent",
+      "description_for_ai": "Parse a User-Agent string to detect browser, OS, device type.",
+      "intent": [
+        "parse user agent",
+        "browser detection",
+        "device detection UA",
+        "определить браузер"
+      ],
+      "endpoint": "GET https://api.ipgeolocation.io/user-agent",
+      "input": {
+        "apiKey": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "user_agent",
+        "fields": [
+          "user_agent_string",
+          "name",
+          "type",
+          "version",
+          "operating_system.name",
+          "device.name",
+          "device.type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_astronomy",
+      "description_for_ai": "Get sunrise, sunset, moon phase for any location.",
+      "intent": [
+        "sunrise sunset",
+        "moon phase",
+        "astronomy data",
+        "восход закат"
+      ],
+      "endpoint": "GET https://api.ipgeolocation.io/astronomy",
+      "input": {
+        "apiKey": {
+          "type": "string",
+          "required": true
+        },
+        "ip": {
+          "type": "string",
+          "required": false
+        },
+        "lat": {
+          "type": "float",
+          "required": false
+        },
+        "long": {
+          "type": "float",
+          "required": false
+        },
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD. Default: today.",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "astronomy",
+        "fields": [
+          "date",
+          "sunrise",
+          "sunset",
+          "sun_status",
+          "moonrise",
+          "moonset",
+          "moon_altitude",
+          "moon_illumination_percentage"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "bulk_geolocation",
+      "description_for_ai": "Look up geolocation for up to 50 IPs in a single request.",
+      "intent": [
+        "bulk IP lookup",
+        "multiple IPs geolocation",
+        "batch IP info",
+        "пакетная геолокация"
+      ],
+      "endpoint": "POST https://api.ipgeolocation.io/ipgeo-bulk",
+      "input": {
+        "apiKey": {
+          "type": "string",
+          "required": true
+        },
+        "ips": {
+          "type": "array",
+          "description": "Array of up to 50 IP addresses",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<geolocation>",
+        "fields": [
+          "[0].ip",
+          "[0].city",
+          "[0].country_name",
+          "[0].isp"
         ]
       },
       "realtime": true,
