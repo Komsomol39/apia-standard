@@ -25,9 +25,9 @@
       "description_for_ai": "Invoke an AWS Lambda function synchronously or asynchronously.",
       "intent": [
         "invoke Lambda",
-        "call function AWS",
-        "run serverless function",
-        "вызов Lambda функции"
+        "run Lambda function",
+        "call AWS function",
+        "вызвать Lambda"
       ],
       "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/invocations",
       "input": {
@@ -38,7 +38,7 @@
         },
         "Payload": {
           "type": "object",
-          "description": "JSON payload passed to the function",
+          "description": "JSON input to the function",
           "required": false
         },
         "InvocationType": {
@@ -48,17 +48,16 @@
         },
         "LogType": {
           "type": "string",
-          "description": "Tail to get logs in response",
-          "required": false
+          "description": "None or Tail (returns last 4KB of logs)",
+          "default": "None"
         }
       },
       "output": {
-        "type": "invocation",
+        "type": "response",
         "fields": [
-          "StatusCode",
-          "Payload (function return value)",
-          "LogResult (base64 logs if requested)",
-          "FunctionError"
+          "StatusCode (200 for sync, 202 for async)",
+          "Payload (function response)",
+          "LogResult (base64 logs if Tail)"
         ]
       },
       "realtime": true,
@@ -66,23 +65,23 @@
     },
     {
       "id": "list_functions",
-      "description_for_ai": "List all Lambda functions in an account/region.",
+      "description_for_ai": "List all Lambda functions in an AWS account.",
       "intent": [
         "list Lambda functions",
         "AWS functions",
-        "serverless functions list",
-        "список Lambda функций"
+        "my Lambda functions",
+        "функции Lambda"
       ],
-      "endpoint": "GET https://lambda.{region}.amazonaws.com/2015-03-31/functions",
+      "endpoint": "GET https://lambda.{region}.amazonaws.com/2015-03-31/functions/",
       "input": {
+        "FunctionVersion": {
+          "type": "string",
+          "description": "ALL to include versions",
+          "required": false
+        },
         "MaxItems": {
           "type": "integer",
           "default": 50
-        },
-        "Marker": {
-          "type": "string",
-          "description": "Pagination token",
-          "required": false
         }
       },
       "output": {
@@ -90,67 +89,8 @@
         "fields": [
           "Functions[0].FunctionName",
           "Functions[0].Runtime",
-          "Functions[0].Handler",
           "Functions[0].LastModified",
-          "Functions[0].MemorySize"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "create_function",
-      "description_for_ai": "Create a new Lambda function from a ZIP file or container image.",
-      "intent": [
-        "create Lambda function",
-        "deploy serverless",
-        "new function AWS",
-        "создать Lambda функцию"
-      ],
-      "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/functions",
-      "input": {
-        "FunctionName": {
-          "type": "string",
-          "required": true
-        },
-        "Runtime": {
-          "type": "string",
-          "description": "python3.12, nodejs20.x, java21, go1.x, dotnet8",
-          "required": true
-        },
-        "Role": {
-          "type": "string",
-          "description": "IAM role ARN",
-          "required": true
-        },
-        "Handler": {
-          "type": "string",
-          "description": "Function handler e.g. index.handler",
-          "required": true
-        },
-        "Code": {
-          "type": "object",
-          "description": "{ZipFile: 'base64'} or {S3Bucket, S3Key} or {ImageUri}",
-          "required": true
-        },
-        "MemorySize": {
-          "type": "integer",
-          "description": "128-10240 MB",
-          "default": 128
-        },
-        "Timeout": {
-          "type": "integer",
-          "description": "Seconds 1-900",
-          "default": 3
-        }
-      },
-      "output": {
-        "type": "function",
-        "fields": [
-          "FunctionArn",
-          "FunctionName",
-          "State",
-          "Runtime"
+          "Functions[0].Description"
         ]
       },
       "realtime": true,
@@ -158,11 +98,11 @@
     },
     {
       "id": "update_function_code",
-      "description_for_ai": "Update Lambda function code by uploading new ZIP or pointing to S3.",
+      "description_for_ai": "Deploy new code to a Lambda function from a ZIP or S3.",
       "intent": [
+        "deploy Lambda",
         "update Lambda code",
-        "deploy new version",
-        "redeploy Lambda",
+        "Lambda deployment",
         "обновить код Lambda"
       ],
       "endpoint": "PUT https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/code",
@@ -172,25 +112,27 @@
           "required": true
         },
         "ZipFile": {
-          "type": "string",
+          "type": "binary",
           "description": "Base64-encoded ZIP file",
           "required": false
         },
         "S3Bucket": {
           "type": "string",
+          "description": "S3 bucket with code",
           "required": false
         },
         "S3Key": {
           "type": "string",
+          "description": "S3 object key",
           "required": false
         }
       },
       "output": {
         "type": "function",
         "fields": [
-          "FunctionArn",
-          "CodeSize",
+          "FunctionName",
           "LastModified",
+          "CodeSize",
           "Version"
         ]
       },
@@ -199,28 +141,22 @@
     },
     {
       "id": "get_function_logs",
-      "description_for_ai": "Get recent execution logs for a Lambda function from CloudWatch.",
+      "description_for_ai": "Get CloudWatch logs for a Lambda function.",
       "intent": [
         "Lambda logs",
+        "CloudWatch Lambda",
         "function errors",
-        "execution log Lambda",
-        "логи Lambda функции"
+        "логи Lambda"
       ],
-      "endpoint": "GET https://logs.{region}.amazonaws.com/?Action=FilterLogEvents",
+      "endpoint": "GET https://logs.{region}.amazonaws.com/log-groups?logGroupNamePrefix=/aws/lambda/{FunctionName}",
       "input": {
-        "logGroupName": {
+        "FunctionName": {
           "type": "string",
-          "description": "/aws/lambda/{FunctionName}",
           "required": true
         },
         "startTime": {
           "type": "integer",
-          "description": "Unix timestamp ms",
-          "required": false
-        },
-        "filterPattern": {
-          "type": "string",
-          "description": "Filter: ERROR, REPORT, or custom pattern",
+          "description": "Millisecond timestamp",
           "required": false
         },
         "limit": {
@@ -229,10 +165,51 @@
         }
       },
       "output": {
-        "type": "logs",
+        "type": "list<log>",
         "fields": [
           "events[0].message",
           "events[0].timestamp"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_event_source",
+      "description_for_ai": "Map a Lambda function to trigger from SQS, DynamoDB Streams, or Kinesis.",
+      "intent": [
+        "Lambda trigger",
+        "event source Lambda",
+        "SQS to Lambda",
+        "триггер Lambda"
+      ],
+      "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/event-source-mappings/",
+      "input": {
+        "EventSourceArn": {
+          "type": "string",
+          "description": "ARN of SQS queue, DynamoDB stream, or Kinesis stream",
+          "required": true
+        },
+        "FunctionName": {
+          "type": "string",
+          "required": true
+        },
+        "BatchSize": {
+          "type": "integer",
+          "default": 10
+        },
+        "Enabled": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "mapping",
+        "fields": [
+          "UUID",
+          "EventSourceArn",
+          "FunctionArn",
+          "State"
         ]
       },
       "realtime": true,
