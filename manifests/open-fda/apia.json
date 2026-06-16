@@ -132,6 +132,69 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "drug_adverse_events",
+      "description_for_ai": "Search FDA drug adverse event reports (side effects).",
+      "intent": [
+        "FDA adverse events",
+        "drug side effects",
+        "FDA reports",
+        "побочные эффекты лекарств FDA"
+      ],
+      "endpoint": "GET https://api.fda.gov/drug/event.json",
+      "input": {
+        "search": {
+          "type": "string",
+          "description": "patient.drug.medicinalproduct:aspirin OR patient.reaction.reactionmeddrapt:headache",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<event>",
+        "fields": [
+          "results[0].patient.reaction[0].reactionmeddrapt",
+          "results[0].patient.drug[0].medicinalproduct",
+          "results[0].serious"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "drug_recall",
+      "description_for_ai": "Search FDA drug recall enforcement reports.",
+      "intent": [
+        "FDA drug recall",
+        "medication recall",
+        "отзыв лекарства FDA"
+      ],
+      "endpoint": "GET https://api.fda.gov/drug/enforcement.json",
+      "input": {
+        "search": {
+          "type": "string",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<recall>",
+        "fields": [
+          "results[0].product_description",
+          "results[0].reason_for_recall",
+          "results[0].classification",
+          "results[0].recall_initiation_date"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
