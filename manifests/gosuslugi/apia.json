@@ -23,42 +23,177 @@
   },
   "capabilities": [
     {
-      "id": "auth_citizen",
-      "description_for_ai": "Авторизация гражданина через ЕСИА (аналог 'Войти через Госуслуги'). Позволяет получить подтверждённые данные пользователя: ФИО, СНИЛС, паспорт. Используется для верификации личности в государственных и коммерческих сервисах.",
+      "id": "get_services",
+      "description_for_ai": "Get list of available government services on Gosuslugi (EPGU).",
       "intent": [
-        "войти через госуслуги",
-        "подтвердить личность",
-        "верификация гражданина",
-        "ЕСИА авторизация"
+        "госуслуги сервисы",
+        "gosuslugi services",
+        "государственные услуги api",
+        "список госуслуг"
       ],
-      "endpoint": "GET https://esia.gosuslugi.ru/aas/oauth2/ac",
+      "endpoint": "GET https://esia.gosuslugi.ru/api/public/v1/services",
       "input": {
-        "client_id": {
+        "category": {
           "type": "string",
-          "description": "ID зарегистрированного приложения в ЕСИА",
+          "description": "Service category ID",
+          "required": false
+        },
+        "query": {
+          "type": "string",
+          "description": "Service name search",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<service>",
+        "fields": [
+          "services[0].id",
+          "services[0].title",
+          "services[0].shortDescription",
+          "services[0].gosNumber"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "check_document",
+      "description_for_ai": "Check authenticity of a Russian official document via Gosuslugi API.",
+      "intent": [
+        "проверить документ госуслуги",
+        "gosuslugi document check",
+        "verify document Russia",
+        "подлинность документа"
+      ],
+      "endpoint": "POST https://api.gosuslugi.ru/api/public/v1/check_document",
+      "input": {
+        "documentType": {
+          "type": "string",
+          "description": "passport, snils, inn, driverLicense",
           "required": true
         },
-        "redirect_uri": {
+        "documentNumber": {
           "type": "string",
-          "description": "URL возврата после авторизации",
           "required": true
         },
-        "scope": {
+        "documentSeries": {
           "type": "string",
-          "description": "Запрашиваемые данные: fullname, birthdate, snils, inn, email, mobile",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "check",
+        "fields": [
+          "isValid (boolean)",
+          "status",
+          "message"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_mvd_fines",
+      "description_for_ai": "Get traffic fines from GIBDD (traffic police) via Gosuslugi.",
+      "intent": [
+        "штрафы ГИБДД",
+        "traffic fines Russia",
+        "gosuslugi fines",
+        "штрафы ПДД"
+      ],
+      "endpoint": "POST https://api.gosuslugi.ru/api/mvd/v1/get_fines",
+      "input": {
+        "sts": {
+          "type": "string",
+          "description": "Registration certificate number (СТС)",
           "required": true
         },
-        "state": {
+        "govRegSign": {
           "type": "string",
-          "description": "Случайная строка для защиты от CSRF",
+          "description": "License plate: A001AA77",
           "required": true
         }
       },
       "output": {
-        "type": "auth_code",
+        "type": "list<fine>",
         "fields": [
-          "code",
-          "state"
+          "fines[0].amount",
+          "fines[0].date",
+          "fines[0].article",
+          "fines[0].description",
+          "fines[0].paymentStatus"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_tax_debt",
+      "description_for_ai": "Check tax debt for an individual using INN via Gosuslugi.",
+      "intent": [
+        "налоговая задолженность",
+        "tax debt gosuslugi",
+        "задолженность ФНС",
+        "долг по налогам"
+      ],
+      "endpoint": "POST https://api.gosuslugi.ru/api/fns/v1/get_debt",
+      "input": {
+        "inn": {
+          "type": "string",
+          "description": "Individual INN (12 digits)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "debt",
+        "fields": [
+          "totalDebt",
+          "taxDebt",
+          "penaltyDebt",
+          "fineDebt"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "book_appointment",
+      "description_for_ai": "Book an appointment at a government office via Gosuslugi MFC.",
+      "intent": [
+        "записаться МФЦ",
+        "booking gosuslugi",
+        "госуслуги запись",
+        "appointment MFC Russia"
+      ],
+      "endpoint": "POST https://api.gosuslugi.ru/api/public/v1/appointments",
+      "input": {
+        "serviceId": {
+          "type": "string",
+          "required": true
+        },
+        "officeId": {
+          "type": "string",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "time": {
+          "type": "string",
+          "description": "HH:MM",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "appointment",
+        "fields": [
+          "confirmationCode",
+          "date",
+          "time",
+          "officeName",
+          "address"
         ]
       },
       "realtime": true,
