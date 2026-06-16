@@ -25,22 +25,23 @@
   "capabilities": [
     {
       "id": "search_posts",
-      "description_for_ai": "Search Reddit posts across all or specific subreddits.",
+      "description_for_ai": "Search Reddit posts across all subreddits or within a specific subreddit.",
       "intent": [
-        "reddit search",
-        "find posts reddit",
-        "reddit content",
-        "поиск reddit"
+        "search Reddit",
+        "find Reddit post",
+        "Reddit search",
+        "поиск Reddit"
       ],
-      "endpoint": "GET https://www.reddit.com/search.json",
+      "endpoint": "GET https://oauth.reddit.com/search.json",
       "input": {
         "q": {
           "type": "string",
+          "description": "Search query",
           "required": true
         },
         "subreddit": {
           "type": "string",
-          "description": "Limit search to this subreddit",
+          "description": "Limit to subreddit e.g. python",
           "required": false
         },
         "sort": {
@@ -50,7 +51,7 @@
         },
         "t": {
           "type": "string",
-          "description": "Time filter: hour, day, week, month, year, all",
+          "description": "Time range: hour, day, week, month, year, all",
           "default": "all"
         },
         "limit": {
@@ -65,22 +66,22 @@
           "data.children[0].data.score",
           "data.children[0].data.url",
           "data.children[0].data.subreddit",
-          "data.children[0].data.num_comments"
+          "data.children[0].data.author"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
     },
     {
-      "id": "get_subreddit_posts",
-      "description_for_ai": "Get posts from a subreddit — hot, new, top, or rising.",
+      "id": "get_subreddit",
+      "description_for_ai": "Get subreddit info and top/hot/new posts.",
       "intent": [
+        "subreddit info",
+        "Reddit community",
         "subreddit posts",
-        "reddit hot posts",
-        "top reddit",
-        "посты subreddit"
+        "сабреддит Reddit"
       ],
-      "endpoint": "GET https://www.reddit.com/r/{subreddit}/{sort}.json",
+      "endpoint": "GET https://oauth.reddit.com/r/{subreddit}/{sort}.json",
       "input": {
         "subreddit": {
           "type": "string",
@@ -93,7 +94,7 @@
         },
         "t": {
           "type": "string",
-          "description": "For top/controversial: hour, day, week, month, year, all",
+          "description": "Time range for top: hour, day, week, month, year, all",
           "required": false
         },
         "limit": {
@@ -107,22 +108,23 @@
           "data.children[0].data.title",
           "data.children[0].data.score",
           "data.children[0].data.url",
-          "data.children[0].data.selftext",
-          "data.children[0].data.author"
+          "data.children[0].data.num_comments",
+          "data.children[0].data.created_utc"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
     },
     {
-      "id": "get_post_comments",
-      "description_for_ai": "Get comments for a Reddit post sorted by best, new, or top.",
+      "id": "get_comments",
+      "description_for_ai": "Get comments for a Reddit post.",
       "intent": [
-        "reddit comments",
-        "post comments reddit",
-        "комментарии reddit"
+        "Reddit comments",
+        "post discussion",
+        "comment thread",
+        "комментарии Reddit"
       ],
-      "endpoint": "GET https://www.reddit.com/r/{subreddit}/comments/{post_id}.json",
+      "endpoint": "GET https://oauth.reddit.com/r/{subreddit}/comments/{post_id}.json",
       "input": {
         "subreddit": {
           "type": "string",
@@ -134,8 +136,8 @@
         },
         "sort": {
           "type": "string",
-          "description": "best, top, new, controversial",
-          "default": "best"
+          "description": "confidence, top, new, controversial, old, qa",
+          "default": "confidence"
         },
         "limit": {
           "type": "integer",
@@ -146,23 +148,102 @@
         "type": "list<comment>",
         "fields": [
           "[1].data.children[0].data.body",
-          "[1].data.children[0].data.author",
-          "[1].data.children[0].data.score"
+          "[1].data.children[0].data.score",
+          "[1].data.children[0].data.author"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
+    },
+    {
+      "id": "submit_post",
+      "description_for_ai": "Submit a new post (link or text) to a subreddit.",
+      "intent": [
+        "post to Reddit",
+        "submit Reddit post",
+        "create Reddit thread",
+        "опубликовать на Reddit"
+      ],
+      "endpoint": "POST https://oauth.reddit.com/api/submit",
+      "input": {
+        "sr": {
+          "type": "string",
+          "description": "Subreddit name",
+          "required": true
+        },
+        "kind": {
+          "type": "string",
+          "description": "link (URL post) or self (text post)",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "url": {
+          "type": "string",
+          "description": "URL for link posts",
+          "required": false
+        },
+        "text": {
+          "type": "string",
+          "description": "Markdown text for self posts",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "post",
+        "fields": [
+          "json.data.url",
+          "json.data.id",
+          "json.data.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "submit_comment",
+      "description_for_ai": "Reply to a Reddit post or comment.",
+      "intent": [
+        "comment on Reddit",
+        "reply Reddit",
+        "Reddit comment",
+        "комментарий Reddit"
+      ],
+      "endpoint": "POST https://oauth.reddit.com/api/comment",
+      "input": {
+        "thing_id": {
+          "type": "string",
+          "description": "Fullname of post (t3_xxx) or comment (t1_xxx) to reply to",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "description": "Markdown comment text",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "comment",
+        "fields": [
+          "json.data.things[0].data.id",
+          "json.data.things[0].data.body"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     },
     {
       "id": "get_user_info",
-      "description_for_ai": "Get Reddit user profile: karma, account age, trophies.",
+      "description_for_ai": "Get Reddit user profile: karma, posts, age, awards.",
       "intent": [
-        "reddit user",
-        "user profile reddit",
-        "karma reddit",
-        "профиль reddit"
+        "Reddit user info",
+        "user profile Reddit",
+        "karma check",
+        "профиль пользователя Reddit"
       ],
-      "endpoint": "GET https://www.reddit.com/user/{username}/about.json",
+      "endpoint": "GET https://oauth.reddit.com/user/{username}/about.json",
       "input": {
         "username": {
           "type": "string",
@@ -176,12 +257,11 @@
           "data.link_karma",
           "data.comment_karma",
           "data.created_utc",
-          "data.icon_img",
-          "data.is_gold"
+          "data.icon_img"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
     }
   ],
   "agent_hints": {
