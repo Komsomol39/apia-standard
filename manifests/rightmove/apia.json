@@ -24,16 +24,16 @@
       "id": "search_properties",
       "description_for_ai": "Search UK properties for sale or rent on Rightmove.",
       "intent": [
-        "rightmove properties",
         "UK property search",
+        "Rightmove listings",
         "buy house UK",
-        "недвижимость Великобритания rightmove"
+        "поиск недвижимости Rightmove"
       ],
-      "endpoint": "GET https://api.rightmove.co.uk/api/sale/property/search",
+      "endpoint": "GET https://api.rightmove.co.uk/api/sale/find",
       "input": {
         "locationIdentifier": {
           "type": "string",
-          "description": "Rightmove location ID: REGION^93917 (London), POSTCODE^SW1A (Westminster)",
+          "description": "Location: REGION^61325 (London), USERDEFINEDAREA^{json}",
           "required": true
         },
         "minBedrooms": {
@@ -49,39 +49,38 @@
           "description": "detached, semi-detached, terraced, flat, bungalow",
           "required": false
         },
-        "sortType": {
+        "numberOfPropertiesPerPage": {
           "type": "integer",
-          "description": "1=Highest Price, 2=Lowest Price, 6=Newest Listed",
-          "default": 6
+          "default": 24
         }
       },
       "output": {
         "type": "list<property>",
         "fields": [
           "properties[0].id",
-          "properties[0].bedrooms",
+          "properties[0].price.amount",
           "properties[0].displayAddress",
-          "properties[0].price.displayPrices[0].displayPrice",
-          "properties[0].propertySubType",
-          "properties[0].listingUpdate.listingUpdateReason"
+          "properties[0].bedrooms",
+          "properties[0].bathrooms",
+          "properties[0].propertySubType"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_property",
-      "description_for_ai": "Get full details of a Rightmove property listing.",
+      "id": "get_property_details",
+      "description_for_ai": "Get full property listing details from Rightmove.",
       "intent": [
-        "property details rightmove",
-        "house info UK",
-        "listing details",
-        "детали недвижимости rightmove"
+        "property details Rightmove",
+        "house details UK",
+        "listing info",
+        "детали объекта Rightmove"
       ],
-      "endpoint": "GET https://api.rightmove.co.uk/api/property/{propertyId}",
+      "endpoint": "GET https://api.rightmove.co.uk/api/properties/{property_id}",
       "input": {
-        "propertyId": {
-          "type": "integer",
+        "property_id": {
+          "type": "string",
           "required": true
         }
       },
@@ -89,13 +88,14 @@
         "type": "property",
         "fields": [
           "id",
+          "price.amount",
+          "displayAddress",
+          "description",
           "bedrooms",
           "bathrooms",
-          "displayAddress",
-          "price.displayPrices[0].displayPrice",
-          "text.description",
           "images[0].url",
-          "floorplanImages[0].url"
+          "floorplans[0].url",
+          "nearestStations[0].name"
         ]
       },
       "realtime": true,
@@ -103,14 +103,14 @@
     },
     {
       "id": "search_to_rent",
-      "description_for_ai": "Search UK rental properties on Rightmove.",
+      "description_for_ai": "Search rental properties on Rightmove.",
       "intent": [
-        "rightmove rent",
-        "UK rental search",
         "rent property UK",
-        "аренда Великобритания rightmove"
+        "Rightmove rent",
+        "UK rental",
+        "аренда Rightmove"
       ],
-      "endpoint": "GET https://api.rightmove.co.uk/api/rent/property/search",
+      "endpoint": "GET https://api.rightmove.co.uk/api/rent/find",
       "input": {
         "locationIdentifier": {
           "type": "string",
@@ -122,20 +122,21 @@
         },
         "maxPrice": {
           "type": "integer",
-          "description": "Max monthly rent",
+          "description": "Max monthly rent in GBP",
           "required": false
         },
-        "furnishTypes": {
+        "letFurnishType": {
           "type": "string",
-          "description": "furnished, partFurnished, unfurnished",
+          "description": "furnished, unfurnished, partFurnished",
           "required": false
         }
       },
       "output": {
-        "type": "list<property>",
+        "type": "list<rental>",
         "fields": [
           "properties[0].id",
-          "properties[0].price.displayPrices[0].displayPrice",
+          "properties[0].price.amount",
+          "properties[0].price.frequency",
           "properties[0].displayAddress",
           "properties[0].bedrooms"
         ]
@@ -144,60 +145,67 @@
       "requires_auth": true
     },
     {
-      "id": "get_location_ids",
-      "description_for_ai": "Get Rightmove location identifier for a postcode or area.",
+      "id": "get_price_trends",
+      "description_for_ai": "Get UK house price trend data by area.",
       "intent": [
-        "rightmove location id",
-        "area ID rightmove",
-        "postcode search rightmove",
-        "поиск по почтовому индексу Rightmove"
+        "UK house prices",
+        "price trends Rightmove",
+        "property market data",
+        "тренды цен Rightmove"
       ],
-      "endpoint": "GET https://api.rightmove.co.uk/api/typeAhead/v1/search",
+      "endpoint": "GET https://api.rightmove.co.uk/api/statistics/trends",
       "input": {
-        "searchTerm": {
+        "locationIdentifier": {
           "type": "string",
-          "description": "Postcode, town, or area name: SW1A, London, Manchester",
           "required": true
+        },
+        "propertyType": {
+          "type": "string",
+          "description": "detached, semi-detached, terraced, flat",
+          "required": false
         }
       },
       "output": {
-        "type": "list<location>",
+        "type": "trends",
         "fields": [
-          "typeAheadLocations[0].locationIdentifier",
-          "typeAheadLocations[0].displayName",
-          "typeAheadLocations[0].locationType"
+          "currentAveragePrice",
+          "priceChange12Month",
+          "priceChange5Year",
+          "totalAvailableProperties"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_price_history",
-      "description_for_ai": "Get property price history for a UK area.",
+      "id": "find_agents",
+      "description_for_ai": "Find estate agents in a UK area.",
       "intent": [
-        "price history UK",
-        "property prices",
-        "house price trend",
-        "история цен недвижимость UK"
+        "estate agents UK",
+        "property agents",
+        "find agent Rightmove",
+        "агенты Rightmove"
       ],
-      "endpoint": "GET https://api.rightmove.co.uk/api/stats/price/history",
+      "endpoint": "GET https://api.rightmove.co.uk/api/agents/find",
       "input": {
-        "locationId": {
+        "locationIdentifier": {
           "type": "string",
           "required": true
         },
-        "propertyType": {
+        "agentType": {
           "type": "string",
-          "description": "all, detached, semiDetached, terraced, flat",
-          "default": "all"
+          "description": "sale, lettings",
+          "default": "sale"
         }
       },
       "output": {
-        "type": "price_history",
+        "type": "list<agent>",
         "fields": [
-          "priceHistory[0].year",
-          "priceHistory[0].price",
-          "priceHistory[0].numberOfSales"
+          "agents[0].id",
+          "agents[0].name",
+          "agents[0].address",
+          "agents[0].totalLiveProperties",
+          "agents[0].logoUrl"
         ]
       },
       "realtime": true,
