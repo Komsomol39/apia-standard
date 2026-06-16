@@ -21,121 +21,13 @@
   },
   "capabilities": [
     {
-      "id": "add_subscriber",
-      "description_for_ai": "Add or update a subscriber in a Mailchimp audience list.",
+      "id": "get_lists",
+      "description_for_ai": "Get all Mailchimp email audiences (lists) with subscriber counts.",
       "intent": [
-        "mailchimp subscribe",
-        "add to mailchimp",
-        "email list mailchimp",
-        "подписать на рассылку mailchimp"
-      ],
-      "endpoint": "PUT https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}",
-      "input": {
-        "list_id": {
-          "type": "string",
-          "description": "Audience list ID",
-          "required": true
-        },
-        "subscriber_hash": {
-          "type": "string",
-          "description": "MD5 hash of lowercase email address",
-          "required": true
-        },
-        "email_address": {
-          "type": "string",
-          "required": true
-        },
-        "status": {
-          "type": "string",
-          "description": "subscribed, unsubscribed, pending, cleaned",
-          "default": "subscribed"
-        },
-        "merge_fields": {
-          "type": "object",
-          "description": "{FNAME: 'John', LNAME: 'Doe'}",
-          "required": false
-        },
-        "tags": {
-          "type": "array",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "member",
-        "fields": [
-          "id",
-          "email_address",
-          "status",
-          "unique_email_id"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "send_campaign",
-      "description_for_ai": "Create and send an email campaign to an audience.",
-      "intent": [
-        "send campaign mailchimp",
-        "email campaign",
-        "newsletter mailchimp",
-        "рассылка mailchimp"
-      ],
-      "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/campaigns/{campaign_id}/actions/send",
-      "input": {
-        "campaign_id": {
-          "type": "string",
-          "description": "Campaign ID (create first via /3.0/campaigns)",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "empty",
-        "fields": [
-          "204 No Content on success"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_campaign_report",
-      "description_for_ai": "Get email campaign performance: opens, clicks, bounces, unsubscribes.",
-      "intent": [
-        "mailchimp report",
-        "campaign stats",
-        "email performance mailchimp",
-        "статистика рассылки mailchimp"
-      ],
-      "endpoint": "GET https://{dc}.api.mailchimp.com/3.0/reports/{campaign_id}",
-      "input": {
-        "campaign_id": {
-          "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "report",
-        "fields": [
-          "emails_sent",
-          "opens.open_rate",
-          "clicks.click_rate",
-          "bounces.hard_bounces",
-          "unsubscribed",
-          "abuse_reports"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "list_audiences",
-      "description_for_ai": "Get all Mailchimp audience lists with subscriber counts.",
-      "intent": [
-        "mailchimp lists",
-        "audiences mailchimp",
-        "email lists",
-        "списки mailchimp"
+        "Mailchimp lists",
+        "email audiences",
+        "subscriber lists",
+        "списки Mailchimp"
       ],
       "endpoint": "GET https://{dc}.api.mailchimp.com/3.0/lists",
       "input": {
@@ -154,7 +46,55 @@
           "lists[0].id",
           "lists[0].name",
           "lists[0].stats.member_count",
-          "lists[0].stats.open_rate"
+          "lists[0].stats.open_rate",
+          "lists[0].stats.click_rate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_subscriber",
+      "description_for_ai": "Add or update a subscriber in a Mailchimp list.",
+      "intent": [
+        "add subscriber Mailchimp",
+        "subscribe email",
+        "add to list",
+        "добавить подписчика Mailchimp"
+      ],
+      "endpoint": "PUT https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members/{subscriber_hash}",
+      "input": {
+        "list_id": {
+          "type": "string",
+          "required": true
+        },
+        "email_address": {
+          "type": "string",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "subscribed, unsubscribed, cleaned, pending",
+          "default": "subscribed"
+        },
+        "merge_fields": {
+          "type": "object",
+          "description": "{FNAME: 'John', LNAME: 'Doe', PHONE: '+1234567890'}",
+          "required": false
+        },
+        "tags": {
+          "type": "array",
+          "description": "String tags to apply",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "member",
+        "fields": [
+          "id",
+          "email_address",
+          "status",
+          "merge_fields"
         ]
       },
       "realtime": true,
@@ -162,28 +102,23 @@
     },
     {
       "id": "create_campaign",
-      "description_for_ai": "Create an email campaign in Mailchimp (step 1 before sending).",
+      "description_for_ai": "Create an email campaign in Mailchimp.",
       "intent": [
-        "create campaign mailchimp",
+        "create campaign Mailchimp",
         "email campaign",
-        "newsletter create",
-        "создать рассылку mailchimp"
+        "newsletter Mailchimp",
+        "рассылка Mailchimp"
       ],
       "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/campaigns",
       "input": {
         "type": {
           "type": "string",
-          "description": "regular, plaintext, rss, variate",
-          "required": true
-        },
-        "recipients": {
-          "type": "object",
-          "description": "{list_id: 'AUDIENCE_ID'}",
-          "required": true
+          "description": "regular, plaintext, absplit, rss, variate",
+          "default": "regular"
         },
         "settings": {
           "type": "object",
-          "description": "{subject_line: 'Subject', from_name: 'Company', reply_to: 'reply@example.com'}",
+          "description": "{subject_line, preview_text, title, from_name, reply_to, list_id}",
           "required": true
         }
       },
@@ -191,9 +126,97 @@
         "type": "campaign",
         "fields": [
           "id",
-          "status",
           "type",
-          "create_time"
+          "status",
+          "emails_sent",
+          "web_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_campaign",
+      "description_for_ai": "Send a ready Mailchimp campaign to its audience.",
+      "intent": [
+        "send campaign Mailchimp",
+        "send email Mailchimp",
+        "blast email",
+        "отправить рассылку Mailchimp"
+      ],
+      "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/campaigns/{campaign_id}/actions/send",
+      "input": {
+        "campaign_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "status",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_campaign_report",
+      "description_for_ai": "Get email campaign statistics: opens, clicks, bounces, unsubscribes.",
+      "intent": [
+        "campaign stats Mailchimp",
+        "email analytics",
+        "open rate",
+        "статистика рассылки Mailchimp"
+      ],
+      "endpoint": "GET https://{dc}.api.mailchimp.com/3.0/reports/{campaign_id}",
+      "input": {
+        "campaign_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "report",
+        "fields": [
+          "emails_sent",
+          "opens.open_rate",
+          "clicks.click_rate",
+          "bounces.hard_bounces",
+          "unsubscribes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_members",
+      "description_for_ai": "Search for subscribers in Mailchimp by email or name.",
+      "intent": [
+        "search subscriber Mailchimp",
+        "find member",
+        "subscriber lookup",
+        "найти подписчика Mailchimp"
+      ],
+      "endpoint": "GET https://{dc}.api.mailchimp.com/3.0/search-members",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Email or name to search",
+          "required": true
+        },
+        "list_id": {
+          "type": "string",
+          "description": "Filter to specific list",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<member>",
+        "fields": [
+          "exact_matches.members[0].email_address",
+          "full_search.members[0].status",
+          "full_search.members[0].merge_fields"
         ]
       },
       "realtime": true,
