@@ -152,6 +152,71 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "validate_email",
+      "description_for_ai": "Validate email deliverability, check if it's disposable or role-based.",
+      "intent": [
+        "validate email abstract",
+        "email check",
+        "проверить email"
+      ],
+      "endpoint": "GET https://emailvalidation.abstractapi.com/v1/",
+      "input": {
+        "api_key": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "validation",
+        "fields": [
+          "email",
+          "deliverability",
+          "is_valid_format.value",
+          "is_disposable_email.value",
+          "is_mx_found.value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "ip_geolocation",
+      "description_for_ai": "Geolocate an IP address: country, city, timezone, ISP.",
+      "intent": [
+        "IP geolocation",
+        "IP lookup",
+        "геолокация IP"
+      ],
+      "endpoint": "GET https://ipgeolocation.abstractapi.com/v1/",
+      "input": {
+        "api_key": {
+          "type": "string",
+          "required": true
+        },
+        "ip_address": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "geolocation",
+        "fields": [
+          "ip_address",
+          "city",
+          "region",
+          "country",
+          "timezone.name",
+          "connection.isp_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
