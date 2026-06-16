@@ -25,130 +25,233 @@
   "capabilities": [
     {
       "id": "apod",
-      "description_for_ai": "Get NASA Astronomy Picture of the Day with description by astronomer. Image or video with explanation.",
+      "description_for_ai": "Get NASA's Astronomy Picture of the Day with explanation. Free, no auth needed.",
       "intent": [
+        "NASA APOD",
         "astronomy picture",
-        "space photo",
-        "NASA image",
-        "picture of day",
-        "cosmos photo",
-        "space image"
+        "space photo NASA",
+        "астрономическое фото NASA"
       ],
       "endpoint": "GET https://api.nasa.gov/planetary/apod",
       "input": {
         "date": {
           "type": "string",
-          "description": "YYYY-MM-DD. Omit for today.",
+          "description": "YYYY-MM-DD for specific date. Omit for today.",
+          "required": false
+        },
+        "start_date": {
+          "type": "string",
+          "description": "Start date for range (YYYY-MM-DD)",
+          "required": false
+        },
+        "end_date": {
+          "type": "string",
+          "description": "End date for range",
           "required": false
         },
         "count": {
           "type": "integer",
-          "description": "Random images count",
+          "description": "Get N random APODs",
           "required": false
         },
         "thumbs": {
           "type": "boolean",
-          "description": "Return video thumbnails",
+          "description": "Return video thumbnail URLs",
           "default": false
+        },
+        "api_key": {
+          "type": "string",
+          "description": "Use DEMO_KEY for testing (30 req/hour)",
+          "required": true
         }
       },
       "output": {
         "type": "apod",
         "fields": [
+          "date",
           "title",
           "explanation",
           "url",
-          "media_type",
-          "date",
+          "hdurl",
+          "media_type (image/video)",
           "copyright"
         ]
       },
-      "realtime": false,
-      "requires_auth": false
+      "realtime": true,
+      "requires_auth": true
     },
     {
-      "id": "mars_photos",
-      "description_for_ai": "Get photos from Mars rovers (Curiosity, Perseverance, Opportunity). Filter by sol (Martian day) or Earth date and camera.",
+      "id": "mars_rover_photos",
+      "description_for_ai": "Get photos from NASA Mars rovers: Curiosity, Perseverance, Opportunity, Spirit.",
       "intent": [
-        "mars photos",
-        "Mars rover",
-        "space exploration",
-        "NASA Mars",
-        "red planet photos"
+        "Mars photos",
+        "NASA rover",
+        "space pictures",
+        "фото Марса NASA"
       ],
       "endpoint": "GET https://api.nasa.gov/mars-photos/api/v1/rovers/{rover}/photos",
       "input": {
         "rover": {
           "type": "string",
-          "description": "curiosity, perseverance, opportunity",
+          "description": "curiosity, perseverance, opportunity, spirit",
           "required": true
         },
         "sol": {
           "type": "integer",
-          "description": "Martian sol (day) number",
+          "description": "Martian sol (day) number. Sol 0 = landing day.",
           "required": false
         },
         "earth_date": {
           "type": "string",
-          "description": "YYYY-MM-DD alternative to sol",
+          "description": "Earth date YYYY-MM-DD as alternative to sol",
           "required": false
         },
         "camera": {
           "type": "string",
-          "description": "FHAZ, RHAZ, MAST, CHEMCAM, MAHLI, MARDI, NAVCAM",
+          "description": "FHAZ, RHAZ, MAST, CHEMCAM, MAHLI, MARDI, NAVCAM, PANCAM, MINITES",
           "required": false
         },
-        "page": {
-          "type": "integer",
-          "default": 1,
-          "description": "Page number for pagination (1-indexed)"
+        "api_key": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
         "type": "list<photo>",
         "fields": [
-          "id",
-          "img_src",
-          "earth_date",
-          "camera.full_name",
-          "rover.name"
+          "photos[0].id",
+          "photos[0].img_src",
+          "photos[0].earth_date",
+          "photos[0].camera.full_name",
+          "photos[0].rover.name"
         ]
       },
-      "realtime": false,
-      "requires_auth": false
+      "realtime": true,
+      "requires_auth": true
     },
     {
-      "id": "near_earth_objects",
-      "description_for_ai": "Get asteroids and comets approaching Earth. Use for space awareness, educational apps.",
+      "id": "neo_feed",
+      "description_for_ai": "Get Near Earth Objects (asteroids) approaching Earth in a date range.",
       "intent": [
-        "asteroids",
+        "asteroids NASA",
         "near earth objects",
-        "space rocks",
-        "NEO",
-        "asteroid approach"
+        "NEO feed",
+        "астероиды NASA"
       ],
       "endpoint": "GET https://api.nasa.gov/neo/rest/v1/feed",
       "input": {
         "start_date": {
           "type": "string",
-          "description": "Start date in YYYY-MM-DD format",
-          "required": false
+          "description": "YYYY-MM-DD",
+          "required": true
         },
         "end_date": {
           "type": "string",
-          "description": "YYYY-MM-DD, max 7 days from start",
-          "required": false
+          "description": "YYYY-MM-DD (max 7 days after start)",
+          "required": true
+        },
+        "api_key": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
         "type": "neo_feed",
         "fields": [
           "near_earth_objects.{date}[0].name",
+          "near_earth_objects.{date}[0].is_potentially_hazardous_asteroid",
           "near_earth_objects.{date}[0].close_approach_data[0].miss_distance.kilometers",
-          "near_earth_objects.{date}[0].is_potentially_hazardous_asteroid"
+          "near_earth_objects.{date}[0].estimated_diameter.meters.estimated_diameter_max"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "earth_imagery",
+      "description_for_ai": "Get Earth satellite imagery for any location via Landsat 8 imagery.",
+      "intent": [
+        "satellite image Earth",
+        "aerial photo location",
+        "NASA Earth",
+        "спутниковое фото Земли"
+      ],
+      "endpoint": "GET https://api.nasa.gov/planetary/earth/imagery",
+      "input": {
+        "lon": {
+          "type": "float",
+          "description": "Longitude",
+          "required": true
+        },
+        "lat": {
+          "type": "float",
+          "description": "Latitude",
+          "required": true
+        },
+        "dim": {
+          "type": "float",
+          "description": "Width and height of image in degrees",
+          "default": 0.025
+        },
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        },
+        "api_key": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "PNG satellite image of the location"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_images",
+      "description_for_ai": "Search NASA's image and video library.",
+      "intent": [
+        "NASA images",
+        "space photos",
+        "astronomy images search",
+        "поиск изображений NASA"
+      ],
+      "endpoint": "GET https://images-api.nasa.gov/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Search terms: 'Apollo 11', 'black hole', 'Hubble'",
+          "required": false
+        },
+        "media_type": {
+          "type": "string",
+          "description": "image, video, audio",
+          "required": false
+        },
+        "year_start": {
+          "type": "string",
+          "description": "YYYY",
+          "required": false
+        },
+        "year_end": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<item>",
+        "fields": [
+          "collection.items[0].data[0].title",
+          "collection.items[0].data[0].description",
+          "collection.items[0].links[0].href (preview image URL)"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
     }
   ],
