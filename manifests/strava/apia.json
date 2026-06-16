@@ -137,6 +137,84 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "get_activities",
+      "description_for_ai": "Get athlete's activities list: runs, rides, swims.",
+      "intent": [
+        "strava activities",
+        "workout history",
+        "training log",
+        "тренировки strava"
+      ],
+      "endpoint": "GET https://www.strava.com/api/v3/athlete/activities",
+      "input": {
+        "before": {
+          "type": "integer",
+          "description": "Unix timestamp",
+          "required": false
+        },
+        "after": {
+          "type": "integer",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 30
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<activity>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].type",
+          "[0].distance",
+          "[0].moving_time",
+          "[0].start_date_local",
+          "[0].average_heartrate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_activity",
+      "description_for_ai": "Get detailed stats for a specific Strava activity.",
+      "intent": [
+        "activity details strava",
+        "run details",
+        "workout stats strava",
+        "детали тренировки strava"
+      ],
+      "endpoint": "GET https://www.strava.com/api/v3/activities/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "activity",
+        "fields": [
+          "name",
+          "type",
+          "distance",
+          "moving_time",
+          "elapsed_time",
+          "total_elevation_gain",
+          "average_heartrate",
+          "max_heartrate",
+          "average_speed",
+          "max_speed"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
