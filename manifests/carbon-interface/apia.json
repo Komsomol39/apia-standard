@@ -117,6 +117,123 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "flight_estimate",
+      "description_for_ai": "Estimate CO2 emissions for a flight.",
+      "intent": [
+        "flight emissions",
+        "carbon flight",
+        "выбросы CO2 полёт",
+        "carbon footprint flight"
+      ],
+      "endpoint": "POST https://www.carboninterface.com/api/v1/estimates",
+      "input": {
+        "type": {
+          "type": "string",
+          "default": "flight"
+        },
+        "passengers": {
+          "type": "integer",
+          "default": 1
+        },
+        "legs": {
+          "type": "array",
+          "description": "[{departure_airport: 'SFO', destination_airport: 'YYZ'}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "estimate",
+        "fields": [
+          "data.attributes.carbon_kg",
+          "data.attributes.carbon_lb",
+          "data.attributes.distance_km"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "vehicle_estimate",
+      "description_for_ai": "Estimate CO2 emissions for vehicle travel.",
+      "intent": [
+        "car emissions",
+        "vehicle carbon",
+        "выбросы автомобиль",
+        "carbon footprint car"
+      ],
+      "endpoint": "POST https://www.carboninterface.com/api/v1/estimates",
+      "input": {
+        "type": {
+          "type": "string",
+          "default": "vehicle"
+        },
+        "distance_unit": {
+          "type": "string",
+          "description": "km or mi",
+          "required": true
+        },
+        "distance_value": {
+          "type": "number",
+          "required": true
+        },
+        "vehicle_model_id": {
+          "type": "string",
+          "description": "Get from /vehicle_makes endpoint",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "estimate",
+        "fields": [
+          "data.attributes.carbon_kg",
+          "data.attributes.distance_km"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "electricity_estimate",
+      "description_for_ai": "Estimate CO2 emissions for electricity consumption.",
+      "intent": [
+        "electricity emissions",
+        "carbon electricity",
+        "выбросы электричество",
+        "энергопотребление CO2"
+      ],
+      "endpoint": "POST https://www.carboninterface.com/api/v1/estimates",
+      "input": {
+        "type": {
+          "type": "string",
+          "default": "electricity"
+        },
+        "electricity_unit": {
+          "type": "string",
+          "description": "mwh or kwh",
+          "required": true
+        },
+        "electricity_value": {
+          "type": "number",
+          "required": true
+        },
+        "country": {
+          "type": "string",
+          "description": "us, gb, de, fr, ru",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "estimate",
+        "fields": [
+          "data.attributes.carbon_kg",
+          "data.attributes.electricity_unit",
+          "data.attributes.country"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
