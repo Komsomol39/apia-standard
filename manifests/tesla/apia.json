@@ -95,6 +95,92 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_vehicles",
+      "description_for_ai": "List all Tesla vehicles in the account.",
+      "intent": [
+        "Tesla vehicles",
+        "my Tesla",
+        "list cars Tesla",
+        "мои Tesla"
+      ],
+      "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles",
+      "input": {},
+      "output": {
+        "type": "list<vehicle>",
+        "fields": [
+          "response[0].id",
+          "response[0].vin",
+          "response[0].display_name",
+          "response[0].state",
+          "response[0].option_codes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_vehicle_state",
+      "description_for_ai": "Get current state of a Tesla vehicle: battery, location, climate.",
+      "intent": [
+        "Tesla state",
+        "vehicle status Tesla",
+        "battery Tesla",
+        "состояние Tesla"
+      ],
+      "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles/{id}/vehicle_data",
+      "input": {
+        "id": {
+          "type": "integer",
+          "description": "Vehicle ID from list_vehicles",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "state",
+        "fields": [
+          "response.charge_state.battery_level",
+          "response.charge_state.est_battery_range",
+          "response.drive_state.latitude",
+          "response.drive_state.longitude",
+          "response.climate_state.inside_temp",
+          "response.vehicle_state.locked"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_command",
+      "description_for_ai": "Send a command to a Tesla: flash lights, honk, lock/unlock, climate on/off.",
+      "intent": [
+        "Tesla command",
+        "control Tesla",
+        "unlock Tesla",
+        "команда Tesla"
+      ],
+      "endpoint": "POST https://owner-api.teslamotors.com/api/1/vehicles/{id}/command/{command}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        },
+        "command": {
+          "type": "string",
+          "description": "flash_lights, honk_horn, door_lock, door_unlock, auto_conditioning_start, auto_conditioning_stop, charge_start, charge_stop",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "response.result",
+          "response.reason"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
