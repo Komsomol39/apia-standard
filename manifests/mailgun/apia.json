@@ -23,60 +23,56 @@
   "capabilities": [
     {
       "id": "send_email",
-      "description_for_ai": "Send email via Mailgun. Reliable transactional email with tracking and analytics.",
+      "description_for_ai": "Send transactional email via Mailgun. Supports HTML/text, attachments, and scheduling.",
       "intent": [
-        "send email mailgun",
-        "mailgun email",
-        "transactional mail",
-        "отправить письмо mailgun"
+        "send email Mailgun",
+        "transactional email",
+        "email API",
+        "отправить письмо Mailgun"
       ],
       "endpoint": "POST https://api.mailgun.net/v3/{domain}/messages",
       "input": {
         "domain": {
           "type": "string",
-          "description": "Your Mailgun domain e.g. mg.example.com",
           "required": true
         },
         "from": {
           "type": "string",
-          "description": "Sender: Name <from@domain.com>",
+          "description": "Sender: Name <email@domain.com>",
           "required": true
         },
         "to": {
-          "type": "string",
-          "description": "Recipient email(s), comma-separated",
+          "type": "string or array",
+          "description": "Recipient(s)",
           "required": true
         },
         "subject": {
           "type": "string",
           "required": true
         },
-        "html": {
-          "type": "string",
-          "description": "HTML email body",
-          "required": false
-        },
         "text": {
           "type": "string",
           "description": "Plain text body",
           "required": false
         },
-        "cc": {
+        "html": {
           "type": "string",
+          "description": "HTML body",
           "required": false
         },
-        "bcc": {
-          "type": "string",
+        "o:tag": {
+          "type": "array",
+          "description": "Tags for tracking: ['transactional', 'password_reset']",
           "required": false
         },
-        "h:X-Mailgun-Variables": {
+        "o:deliverytime": {
           "type": "string",
-          "description": "JSON string of custom tracking variables",
+          "description": "Schedule: 'Thu, 13 Jan 2024 12:00:00 UTC'",
           "required": false
         }
       },
       "output": {
-        "type": "send_result",
+        "type": "message",
         "fields": [
           "id",
           "message"
@@ -87,12 +83,12 @@
     },
     {
       "id": "get_events",
-      "description_for_ai": "Get email event logs: delivered, opened, clicked, bounced, complained.",
+      "description_for_ai": "Get email delivery events: delivered, failed, opened, clicked, unsubscribed.",
       "intent": [
-        "mailgun events",
-        "email logs",
-        "delivery tracking",
-        "события mailgun"
+        "email events Mailgun",
+        "delivery status",
+        "email tracking",
+        "статус доставки Mailgun"
       ],
       "endpoint": "GET https://api.mailgun.net/v3/{domain}/events",
       "input": {
@@ -102,12 +98,17 @@
         },
         "event": {
           "type": "string",
-          "description": "delivered, opened, clicked, bounced, complained, unsubscribed, rejected",
+          "description": "accepted, rejected, delivered, failed, opened, clicked, unsubscribed, complained",
+          "required": false
+        },
+        "recipient": {
+          "type": "string",
+          "description": "Filter by email address",
           "required": false
         },
         "begin": {
           "type": "string",
-          "description": "RFC 2822 or Unix timestamp",
+          "description": "Start datetime",
           "required": false
         },
         "end": {
@@ -124,22 +125,21 @@
         "fields": [
           "items[0].event",
           "items[0].recipient",
-          "items[0].timestamp",
-          "items[0].message.headers.subject"
+          "items[0].message.headers.message-id",
+          "items[0].timestamp"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "validate_email",
-      "description_for_ai": "Validate an email address — check if it's real, deliverable, and not disposable.",
+      "description_for_ai": "Validate an email address to check if it's real and deliverable.",
       "intent": [
+        "email validation",
         "validate email",
-        "email check",
-        "email verification",
-        "проверить email",
-        "валидация email"
+        "check email",
+        "проверить email Mailgun"
       ],
       "endpoint": "GET https://api.mailgun.net/v4/address/validate",
       "input": {
@@ -154,77 +154,81 @@
         "fields": [
           "address",
           "is_valid",
-          "reason",
-          "is_disposable_address",
-          "is_role_address",
-          "result"
+          "mailbox_verification",
+          "did_you_mean",
+          "risk (low/medium/high)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "add_mailing_list_member",
-      "description_for_ai": "Add a subscriber to a Mailgun mailing list.",
+      "id": "manage_suppression",
+      "description_for_ai": "Manage unsubscribes, bounces, and complaints (suppression list).",
       "intent": [
-        "mailing list mailgun",
-        "add subscriber",
-        "email list",
-        "список рассылки mailgun"
+        "unsubscribes Mailgun",
+        "suppression list",
+        "bounced emails",
+        "список отписок Mailgun"
       ],
-      "endpoint": "POST https://api.mailgun.net/v3/lists/{address}/members",
+      "endpoint": "GET https://api.mailgun.net/v3/{domain}/unsubscribes",
+      "input": {
+        "domain": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "list<suppression>",
+        "fields": [
+          "items[0].address",
+          "items[0].tag",
+          "items[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_mailing_list",
+      "description_for_ai": "Create a mailing list for sending to multiple recipients.",
+      "intent": [
+        "mailing list Mailgun",
+        "email list",
+        "create list Mailgun",
+        "список рассылки Mailgun"
+      ],
+      "endpoint": "POST https://api.mailgun.net/v3/lists",
       "input": {
         "address": {
           "type": "string",
-          "description": "Mailing list address e.g. list@mg.example.com",
-          "required": true
-        },
-        "member_address": {
-          "type": "string",
-          "description": "Subscriber email",
+          "description": "List email: mylist@domain.com",
           "required": true
         },
         "name": {
           "type": "string",
           "required": false
         },
-        "subscribed": {
-          "type": "boolean",
-          "default": true
+        "description": {
+          "type": "string",
+          "required": false
         },
-        "upsert": {
-          "type": "boolean",
-          "description": "Update if exists",
-          "default": true
+        "access_level": {
+          "type": "string",
+          "description": "readonly, members, everyone",
+          "default": "readonly"
         }
       },
       "output": {
-        "type": "member",
+        "type": "list",
         "fields": [
-          "member.address",
-          "member.subscribed"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "list_domains",
-      "description_for_ai": "List all Mailgun sending domains in the account.",
-      "intent": [
-        "mailgun domains",
-        "sending domains",
-        "домены mailgun"
-      ],
-      "endpoint": "GET https://api.mailgun.net/v3/domains",
-      "input": {},
-      "output": {
-        "type": "list<domain>",
-        "fields": [
-          "items[0].name",
-          "items[0].state",
-          "items[0].smtp_login",
-          "items[0].created_at"
+          "list.address",
+          "list.name",
+          "list.members_count"
         ]
       },
       "realtime": true,
