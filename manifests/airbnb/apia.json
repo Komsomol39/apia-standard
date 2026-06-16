@@ -23,12 +23,12 @@
   "capabilities": [
     {
       "id": "search_listings",
-      "description_for_ai": "Search Airbnb listings by location, dates, and guests.",
+      "description_for_ai": "Search Airbnb listings by location, dates, and guests. Note: unofficial API.",
       "intent": [
-        "airbnb search",
+        "search Airbnb",
         "find accommodation",
-        "airbnb listings",
-        "аренда airbnb"
+        "Airbnb rentals",
+        "поиск Airbnb"
       ],
       "endpoint": "GET https://api.airbnb.com/v2/search_results",
       "input": {
@@ -38,15 +38,24 @@
         },
         "checkin": {
           "type": "string",
-          "required": true
+          "description": "YYYY-MM-DD",
+          "required": false
         },
         "checkout": {
           "type": "string",
-          "required": true
+          "required": false
         },
         "guests": {
           "type": "integer",
           "default": 1
+        },
+        "price_min": {
+          "type": "integer",
+          "required": false
+        },
+        "price_max": {
+          "type": "integer",
+          "required": false
         }
       },
       "output": {
@@ -54,8 +63,8 @@
         "fields": [
           "search_results[0].listing.id",
           "search_results[0].listing.name",
-          "search_results[0].pricing_quote.rate.amount",
-          "search_results[0].listing.room_type"
+          "search_results[0].listing.picture_url",
+          "search_results[0].pricing_quote.rate.amount"
         ]
       },
       "realtime": true,
@@ -63,16 +72,16 @@
     },
     {
       "id": "get_listing",
-      "description_for_ai": "Get full Airbnb listing details: photos, amenities, host info.",
+      "description_for_ai": "Get full Airbnb listing details: description, photos, amenities, host.",
       "intent": [
-        "airbnb listing details",
-        "property details airbnb",
-        "rent details airbnb",
-        "детали объявления airbnb"
+        "listing details Airbnb",
+        "property Airbnb",
+        "accommodation details",
+        "объявление Airbnb"
       ],
-      "endpoint": "GET https://api.airbnb.com/v2/listings/{id}",
+      "endpoint": "GET https://api.airbnb.com/v2/listings/{listing_id}",
       "input": {
-        "id": {
+        "listing_id": {
           "type": "integer",
           "required": true
         },
@@ -86,60 +95,23 @@
         "fields": [
           "listing.id",
           "listing.name",
-          "listing.room_type",
-          "listing.bed_type",
+          "listing.description",
           "listing.amenities",
           "listing.person_capacity",
-          "listing.bathrooms"
+          "listing.star_rating"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_reviews",
-      "description_for_ai": "Get guest reviews for an Airbnb listing.",
+      "id": "check_availability",
+      "description_for_ai": "Check availability and pricing for an Airbnb listing.",
       "intent": [
-        "airbnb reviews",
-        "guest reviews airbnb",
-        "rating airbnb",
-        "отзывы airbnb"
-      ],
-      "endpoint": "GET https://api.airbnb.com/v2/reviews",
-      "input": {
-        "listing_id": {
-          "type": "integer",
-          "required": true
-        },
-        "role": {
-          "type": "string",
-          "default": "all"
-        },
-        "_limit": {
-          "type": "integer",
-          "default": 10
-        }
-      },
-      "output": {
-        "type": "list<review>",
-        "fields": [
-          "reviews[0].id",
-          "reviews[0].comments",
-          "reviews[0].rating",
-          "reviews[0].reviewer.first_name"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_calendar",
-      "description_for_ai": "Get Airbnb listing calendar: availability and prices per night.",
-      "intent": [
-        "airbnb calendar",
-        "availability airbnb",
-        "pricing calendar",
-        "календарь airbnb"
+        "Airbnb availability",
+        "check dates",
+        "listing price",
+        "доступность Airbnb"
       ],
       "endpoint": "GET https://api.airbnb.com/v2/calendar_days",
       "input": {
@@ -157,51 +129,83 @@
         }
       },
       "output": {
-        "type": "list<day>",
+        "type": "calendar",
         "fields": [
           "calendar_days[0].date",
           "calendar_days[0].available",
           "calendar_days[0].price.local_price",
-          "calendar_days[0].min_nights"
+          "calendar_days[0].price.local_currency"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_reservation",
-      "description_for_ai": "Create a reservation request on Airbnb.",
+      "id": "get_reviews",
+      "description_for_ai": "Get guest reviews for an Airbnb listing.",
       "intent": [
-        "book airbnb",
-        "make reservation",
-        "airbnb booking",
-        "забронировать airbnb"
+        "Airbnb reviews",
+        "guest reviews",
+        "ratings Airbnb",
+        "отзывы Airbnb"
       ],
-      "endpoint": "POST https://api.airbnb.com/v2/reservations",
+      "endpoint": "GET https://api.airbnb.com/v2/reviews",
       "input": {
         "listing_id": {
           "type": "integer",
           "required": true
         },
-        "checkin_date": {
-          "type": "string",
-          "required": true
-        },
-        "checkout_date": {
-          "type": "string",
-          "required": true
-        },
-        "num_guests": {
+        "_limit": {
           "type": "integer",
-          "required": true
+          "default": 7
+        },
+        "_offset": {
+          "type": "integer",
+          "default": 0
         }
       },
       "output": {
-        "type": "reservation",
+        "type": "list<review>",
         "fields": [
-          "reservation.confirmation_code",
-          "reservation.status",
-          "reservation.total_price"
+          "reviews[0].id",
+          "reviews[0].comments",
+          "reviews[0].reviewer_name",
+          "reviews[0].created_at",
+          "reviews[0].rating"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_host_listings",
+      "description_for_ai": "Get all listings by a specific Airbnb host.",
+      "intent": [
+        "host listings Airbnb",
+        "host properties",
+        "by host Airbnb",
+        "листинги хоста Airbnb"
+      ],
+      "endpoint": "GET https://api.airbnb.com/v2/listings",
+      "input": {
+        "user_id": {
+          "type": "integer",
+          "description": "Host user ID",
+          "required": true
+        },
+        "_limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<listing>",
+        "fields": [
+          "listings[0].id",
+          "listings[0].name",
+          "listings[0].city",
+          "listings[0].person_capacity",
+          "listings[0].star_rating"
         ]
       },
       "realtime": true,
