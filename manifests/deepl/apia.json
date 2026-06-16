@@ -23,25 +23,24 @@
   "capabilities": [
     {
       "id": "translate_text",
-      "description_for_ai": "Translate text from one language to another. Use for 'translate this to English', 'how do you say X in German', 'translate the document'. Supports 30+ languages. Auto-detects source language.",
+      "description_for_ai": "Translate text with DeepL — highest quality machine translation, especially for European languages. Preserves formatting.",
       "intent": [
         "translate",
         "translation",
-        "how do you say",
-        "translate to English",
-        "переведи",
+        "deepl translate",
+        "перевести текст",
         "перевод"
       ],
       "endpoint": "POST https://api-free.deepl.com/v2/translate",
       "input": {
         "text": {
-          "type": "array<string>",
-          "description": "Array of texts to translate. E.g. ['Hello world', 'How are you?']",
+          "type": "array",
+          "description": "Array of strings to translate (batch up to 50)",
           "required": true
         },
         "target_lang": {
           "type": "string",
-          "description": "Target language code: EN-US, EN-GB, DE, FR, ES, IT, NL, PL, RU, ZH, JA, KO etc.",
+          "description": "Target language: EN-US, EN-GB, DE, FR, ES, IT, RU, ZH, JA, PT-BR, PT-PT, NL, PL, CS, RO, HU, BG, DA, FI, EL, SK, SL, SV, LT, LV, ET",
           "required": true
         },
         "source_lang": {
@@ -53,41 +52,111 @@
           "type": "string",
           "description": "default, more (formal), less (informal), prefer_more, prefer_less",
           "required": false
+        },
+        "preserve_formatting": {
+          "type": "boolean",
+          "default": false
+        },
+        "split_sentences": {
+          "type": "string",
+          "description": "0 (none), 1 (punctuation), nonewlines",
+          "default": "1"
         }
       },
       "output": {
-        "type": "list<translation>",
+        "type": "translation",
         "fields": [
-          "detected_source_language",
-          "text"
+          "translations[0].text",
+          "translations[0].detected_source_language"
         ]
       },
       "realtime": true,
-      "requires_auth": true,
-      "rate_limit": "500K chars/month free"
+      "requires_auth": true
+    },
+    {
+      "id": "translate_document",
+      "description_for_ai": "Translate entire documents (PDF, DOCX, PPTX, XLSX, HTML, TXT) with DeepL while preserving layout.",
+      "intent": [
+        "translate document",
+        "translate PDF",
+        "translate DOCX",
+        "перевести документ",
+        "перевести файл"
+      ],
+      "endpoint": "POST https://api-free.deepl.com/v2/document",
+      "input": {
+        "file": {
+          "type": "file",
+          "description": "Document to translate. Supported: .txt, .html, .docx, .pptx, .xlsx, .pdf",
+          "required": true
+        },
+        "target_lang": {
+          "type": "string",
+          "required": true
+        },
+        "source_lang": {
+          "type": "string",
+          "required": false
+        },
+        "formality": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "document",
+        "fields": [
+          "document_id",
+          "document_key (needed to check status and download)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_usage",
+      "description_for_ai": "Check DeepL API usage: characters translated and character limit for current billing period.",
+      "intent": [
+        "deepl usage",
+        "translation quota",
+        "API limit deepl",
+        "лимит deepl"
+      ],
+      "endpoint": "GET https://api-free.deepl.com/v2/usage",
+      "input": {},
+      "output": {
+        "type": "usage",
+        "fields": [
+          "character_count",
+          "character_limit"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     },
     {
       "id": "get_languages",
-      "description_for_ai": "Get list of supported languages. Use to show available translation directions to user.",
+      "description_for_ai": "Get list of all supported source and target languages.",
       "intent": [
+        "deepl languages",
         "supported languages",
-        "what languages",
-        "available translations"
+        "translation languages",
+        "языки deepl"
       ],
       "endpoint": "GET https://api-free.deepl.com/v2/languages",
       "input": {
         "type": {
           "type": "string",
           "description": "source or target",
-          "default": "target"
+          "required": false
         }
       },
       "output": {
         "type": "list<language>",
         "fields": [
-          "language",
-          "name",
-          "supports_formality"
+          "[0].language",
+          "[0].name",
+          "[0].supports_formality"
         ]
       },
       "realtime": false,
