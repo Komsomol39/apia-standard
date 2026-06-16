@@ -130,6 +130,106 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_resumes",
+      "description_for_ai": "Search candidate resumes on SuperJob.",
+      "intent": [
+        "superjob резюме",
+        "поиск кандидатов superjob",
+        "resumes superjob"
+      ],
+      "endpoint": "GET https://api.superjob.ru/2.0/resumes/",
+      "input": {
+        "keyword": {
+          "type": "string",
+          "required": false
+        },
+        "age_from": {
+          "type": "integer",
+          "required": false
+        },
+        "age_to": {
+          "type": "integer",
+          "required": false
+        },
+        "experience": {
+          "type": "integer",
+          "description": "1=no exp, 2=1-3yr, 3=3-6yr, 4=6+yr",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<resume>",
+        "fields": [
+          "objects[0].id",
+          "objects[0].fio",
+          "objects[0].profession",
+          "objects[0].experience[0].position",
+          "objects[0].salary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_resume",
+      "description_for_ai": "Get a specific resume from SuperJob.",
+      "intent": [
+        "резюме superjob",
+        "кандидат superjob",
+        "cv superjob"
+      ],
+      "endpoint": "GET https://api.superjob.ru/2.0/resumes/{id}/",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "resume",
+        "fields": [
+          "id",
+          "fio",
+          "profession",
+          "experience[0].position",
+          "salary",
+          "skills",
+          "education[0].institution"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_contact",
+      "description_for_ai": "Get contact details of a candidate on SuperJob.",
+      "intent": [
+        "контакты кандидата superjob",
+        "телефон кандидата",
+        "email кандидата superjob"
+      ],
+      "endpoint": "GET https://api.superjob.ru/2.0/resumes/{id}/contacts/",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "contacts",
+        "fields": [
+          "phone",
+          "email"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
