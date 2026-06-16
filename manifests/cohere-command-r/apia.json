@@ -199,6 +199,48 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "summarize",
+      "description_for_ai": "Summarize long texts using Cohere Command R. Extractive or abstractive.",
+      "intent": [
+        "summarize text Cohere",
+        "text summary",
+        "abstract Cohere",
+        "краткое изложение Cohere"
+      ],
+      "endpoint": "POST https://api.cohere.com/v1/summarize",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Text to summarize (up to 100,000 chars)",
+          "required": true
+        },
+        "length": {
+          "type": "string",
+          "description": "short, medium, long",
+          "default": "medium"
+        },
+        "format": {
+          "type": "string",
+          "description": "paragraph, bullets",
+          "default": "paragraph"
+        },
+        "extractiveness": {
+          "type": "string",
+          "description": "low (paraphrase), medium, high (quote)",
+          "default": "low"
+        }
+      },
+      "output": {
+        "type": "summary",
+        "fields": [
+          "id",
+          "summary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
