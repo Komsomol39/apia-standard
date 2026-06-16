@@ -121,6 +121,107 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "search_occurrences",
+      "description_for_ai": "Search global biodiversity occurrence records from GBIF.",
+      "intent": [
+        "biodiversity occurrences",
+        "species sightings",
+        "GBIF search",
+        "наблюдения видов"
+      ],
+      "endpoint": "GET https://api.gbif.org/v1/occurrence/search",
+      "input": {
+        "scientificName": {
+          "type": "string",
+          "required": false
+        },
+        "country": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2",
+          "required": false
+        },
+        "year": {
+          "type": "integer",
+          "required": false
+        },
+        "taxonKey": {
+          "type": "integer",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<occurrence>",
+        "fields": [
+          "results[0].scientificName",
+          "results[0].decimalLatitude",
+          "results[0].decimalLongitude",
+          "results[0].year",
+          "results[0].country"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_dataset",
+      "description_for_ai": "Get details about a specific GBIF dataset.",
+      "intent": [
+        "GBIF dataset",
+        "biodiversity dataset",
+        "dataset details GBIF"
+      ],
+      "endpoint": "GET https://api.gbif.org/v1/dataset/{key}",
+      "input": {
+        "key": {
+          "type": "string",
+          "description": "GBIF dataset UUID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "dataset",
+        "fields": [
+          "key",
+          "title",
+          "description",
+          "publishingOrganizationKey",
+          "type",
+          "recordCount"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "download_occurrences",
+      "description_for_ai": "Request a download of occurrence data for bulk analysis.",
+      "intent": [
+        "download GBIF data",
+        "bulk species data",
+        "GBIF export"
+      ],
+      "endpoint": "POST https://api.gbif.org/v1/occurrence/download/request",
+      "input": {
+        "predicate": {
+          "type": "object",
+          "description": "{type: 'equals', key: 'TAXON_KEY', value: '2435098'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "download",
+        "fields": [
+          "key (download key to check status)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "meta": {
