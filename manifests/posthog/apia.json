@@ -179,6 +179,52 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "create_feature_flag",
+      "description_for_ai": "Create a feature flag in PostHog for A/B testing or gradual rollout.",
+      "intent": [
+        "feature flag posthog",
+        "A/B test create",
+        "rollout flag",
+        "создать флаг posthog"
+      ],
+      "endpoint": "POST https://app.posthog.com/api/projects/{project_id}/feature_flags/",
+      "input": {
+        "project_id": {
+          "type": "string",
+          "required": true
+        },
+        "key": {
+          "type": "string",
+          "description": "Flag key e.g. new-checkout",
+          "required": true
+        },
+        "active": {
+          "type": "boolean",
+          "default": true
+        },
+        "rollout_percentage": {
+          "type": "integer",
+          "description": "0-100",
+          "default": 100
+        },
+        "filters": {
+          "type": "object",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "feature_flag",
+        "fields": [
+          "id",
+          "key",
+          "active",
+          "rollout_percentage"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
