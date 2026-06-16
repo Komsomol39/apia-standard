@@ -23,77 +23,138 @@
   },
   "capabilities": [
     {
-      "id": "get_company_by_inn",
-      "description_for_ai": "Получить полную информацию о юридическом лице или ИП по ИНН. Используй для проверки контрагента, подтверждения существования компании, получения официального адреса и руководителей.",
-      "intent": [
-        "проверить компанию",
-        "информация по ИНН",
-        "что за организация",
-        "проверить контрагента",
-        "реквизиты компании",
-        "руководитель организации",
-        "адрес юрлица",
-        "статус компании"
-      ],
-      "endpoint": "GET https://api-fns.ru/api/egr",
-      "input": {
-        "req": {
-          "type": "string",
-          "description": "ИНН (10 или 12 цифр) или ОГРН (13 или 15 цифр)",
-          "required": true
-        },
-        "key": {
-          "type": "string",
-          "description": "Key identifier or lookup key",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "company",
-        "fields": [
-          "ЮЛ.НаимСокрЮЛ",
-          "ЮЛ.ИННЮЛ",
-          "ЮЛ.ОГРН",
-          "ЮЛ.СтатусЮЛ",
-          "ЮЛ.ДатаОГРН",
-          "ЮЛ.АдресРФ",
-          "ЮЛ.СведРук.ФИО",
-          "ЮЛ.СведОКВЭД"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true,
-      "rate_limit": "100/day бесплатно"
-    },
-    {
       "id": "search_company",
-      "description_for_ai": "Поиск организаций по названию. Используй когда пользователь знает название компании но не знает ИНН.",
+      "description_for_ai": "Search Russian companies in EGRUL (Единый государственный реестр юридических лиц) by name, INN, or OGRN.",
       "intent": [
-        "найти компанию по названию",
-        "поиск организации",
-        "найти ИНН по названию"
+        "поиск компании",
+        "ЕГРЮЛ поиск",
+        "найти ИНН компании",
+        "проверить компанию"
       ],
-      "endpoint": "GET https://api-fns.ru/api/search",
+      "endpoint": "https://egrul.nalog.ru/search-result/{query}",
       "input": {
-        "req": {
+        "query": {
           "type": "string",
-          "description": "Название организации или ИП",
+          "description": "Company name, INN (10 digits), or OGRN (13 digits)",
           "required": true
         },
-        "key": {
+        "region": {
           "type": "string",
-          "required": true,
-          "description": "Key identifier or lookup key"
+          "description": "Region code (01-99)",
+          "required": false
         }
       },
       "output": {
         "type": "list<company>",
         "fields": [
-          "НаимСокрЮЛ",
-          "ИННЮЛ",
-          "ОГРН",
-          "СтатусЮЛ",
-          "АдресРФ"
+          "rows[0].n (name)",
+          "rows[0].i (INN)",
+          "rows[0].o (OGRN)",
+          "rows[0].a (address)",
+          "rows[0].e (status)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_company_details",
+      "description_for_ai": "Get full EGRUL extract for a company: directors, founders, capital, activity codes.",
+      "intent": [
+        "выписка ЕГРЮЛ",
+        "данные компании",
+        "учредители компании",
+        "директор компании ИНН"
+      ],
+      "endpoint": "https://egrul.nalog.ru/",
+      "input": {
+        "inn": {
+          "type": "string",
+          "description": "Company INN (10 digits for LLC, 12 for IP)",
+          "required": false
+        },
+        "ogrn": {
+          "type": "string",
+          "description": "OGRN (13 digits)",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "ЮЛ.НаимЮЛПолн",
+          "ЮЛ.ИННЮЛ",
+          "ЮЛ.ОгрнДата",
+          "РуководительЮЛ.ФИОПолн",
+          "СведУчредит",
+          "КодОКВЭД"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_entrepreneur",
+      "description_for_ai": "Search individual entrepreneurs (ИП) in EGRIP by name or INN.",
+      "intent": [
+        "поиск ИП",
+        "ЕГРИП",
+        "ИП по ИНН",
+        "найти предпринимателя"
+      ],
+      "endpoint": "https://egrul.nalog.ru/search-result/{query}",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Name or INN of individual entrepreneur",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "ip for entrepreneurs",
+          "default": "ip"
+        }
+      },
+      "output": {
+        "type": "list<entrepreneur>",
+        "fields": [
+          "rows[0].n (name)",
+          "rows[0].i (INN)",
+          "rows[0].o (OGRNIP)",
+          "rows[0].a (address)",
+          "rows[0].e (status)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "check_company_status",
+      "description_for_ai": "Check if a Russian company is active, liquidated, or in bankruptcy. Quick INN-based verification.",
+      "intent": [
+        "статус компании",
+        "проверить организацию",
+        "ликвидирована компания",
+        "действующее ли ООО"
+      ],
+      "endpoint": "https://api-fns.ru/api/egr",
+      "input": {
+        "req": {
+          "type": "string",
+          "description": "INN or OGRN to check",
+          "required": true
+        },
+        "key": {
+          "type": "string",
+          "description": "API key from api-fns.ru",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "company_status",
+        "fields": [
+          "items[0].ЮЛ.НаимЮЛПолн",
+          "items[0].ЮЛ.СтатусЮЛ"
         ]
       },
       "realtime": true,
