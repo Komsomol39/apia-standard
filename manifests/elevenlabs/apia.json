@@ -23,84 +23,59 @@
   "capabilities": [
     {
       "id": "text_to_speech",
-      "description_for_ai": "Convert text to natural speech with ElevenLabs. Best quality TTS available, with 1000+ voices in 32 languages.",
+      "description_for_ai": "Convert text to ultra-realistic speech. 1000+ voices, 29 languages. Best quality TTS available.",
       "intent": [
-        "text to speech elevenlabs",
-        "TTS elevenlabs",
-        "voice synthesis",
-        "озвучить текст elevenlabs",
-        "синтез речи"
+        "text to speech",
+        "TTS ElevenLabs",
+        "voice generation",
+        "realistic voice",
+        "синтез речи ElevenLabs"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
       "input": {
         "voice_id": {
           "type": "string",
-          "description": "Voice ID from /voices list. Common: 21m00Tcm4TlvDq8ikWAM (Rachel, neutral), EXAVITQu4vr4xnSDxMaL (Bella, calm)",
+          "description": "Voice ID — get from /voices. Popular: 21m00Tcm4TlvDq8ikWAM (Rachel), EXAVITQu4vr4xnSDxMaL (Bella)",
           "required": true
         },
         "text": {
           "type": "string",
-          "description": "Text to convert, max 2500 chars per request",
+          "description": "Text to convert, max 5000 chars per request",
           "required": true
         },
         "model_id": {
           "type": "string",
-          "description": "eleven_turbo_v2 (fast, cheap), eleven_multilingual_v2 (best quality, 32 languages)",
-          "default": "eleven_turbo_v2"
+          "description": "eleven_multilingual_v2 (best), eleven_turbo_v2_5 (fast, cheap), eleven_monolingual_v1",
+          "default": "eleven_multilingual_v2"
         },
         "voice_settings": {
           "type": "object",
-          "description": "{stability: 0.5, similarity_boost: 0.75, style: 0.5, use_speaker_boost: true}. Stability 0=expressive, 1=monotone.",
+          "description": "{stability: 0.5, similarity_boost: 0.75, style: 0.0, use_speaker_boost: true}",
           "required": false
         },
         "output_format": {
           "type": "string",
-          "description": "mp3_44100_128 (default), pcm_16000, ulaw_8000 (phone)",
+          "description": "mp3_44100_128, mp3_22050_32, pcm_24000, ulaw_8000",
           "default": "mp3_44100_128"
         }
       },
       "output": {
         "type": "audio",
         "fields": [
-          "binary audio stream (MP3/PCM)"
+          "audio binary stream"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "list_voices",
-      "description_for_ai": "List all available ElevenLabs voices including premade and cloned voices.",
+      "id": "voice_clone",
+      "description_for_ai": "Clone a voice from audio samples. 1-5 minutes of clean audio creates a professional voice clone.",
       "intent": [
-        "elevenlabs voices",
-        "list voices TTS",
-        "available voices",
-        "список голосов elevenlabs"
-      ],
-      "endpoint": "GET https://api.elevenlabs.io/v1/voices",
-      "input": {},
-      "output": {
-        "type": "list<voice>",
-        "fields": [
-          "voices[0].voice_id",
-          "voices[0].name",
-          "voices[0].category",
-          "voices[0].description",
-          "voices[0].preview_url",
-          "voices[0].labels.language"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "clone_voice",
-      "description_for_ai": "Create a cloned voice from audio samples. 3-5 minutes of clean speech recommended.",
-      "intent": [
-        "clone voice elevenlabs",
-        "voice cloning",
+        "voice clone",
+        "clone voice",
         "custom voice",
-        "клонировать голос elevenlabs"
+        "клонирование голоса ElevenLabs"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/voices/add",
       "input": {
@@ -110,8 +85,8 @@
           "required": true
         },
         "files": {
-          "type": "file[]",
-          "description": "1-25 audio files (MP3/WAV/M4A), each 50MB max. 3-5 min total for good quality.",
+          "type": "array",
+          "description": "Audio files for cloning (mp3/wav/m4a, 1-25 files, min 1 min total)",
           "required": true
         },
         "description": {
@@ -119,8 +94,8 @@
           "required": false
         },
         "labels": {
-          "type": "string",
-          "description": "JSON string: {language: 'ru', accent: 'russian'}",
+          "type": "object",
+          "description": "{accent: 'American', age: 'young', gender: 'female'}",
           "required": false
         }
       },
@@ -128,46 +103,130 @@
         "type": "voice",
         "fields": [
           "voice_id",
-          "name"
+          "name",
+          "category"
         ]
       },
       "realtime": false,
       "requires_auth": true
     },
     {
+      "id": "list_voices",
+      "description_for_ai": "List all available voices including pre-made and cloned voices.",
+      "intent": [
+        "list voices",
+        "available voices ElevenLabs",
+        "voice catalog",
+        "список голосов ElevenLabs"
+      ],
+      "endpoint": "GET https://api.elevenlabs.io/v1/voices",
+      "input": {
+        "show_legacy": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "list<voice>",
+        "fields": [
+          "voices[0].voice_id",
+          "voices[0].name",
+          "voices[0].category",
+          "voices[0].labels.accent",
+          "voices[0].labels.gender"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
       "id": "speech_to_speech",
-      "description_for_ai": "Transform voice style while keeping content — change speaker, accent, or style of existing audio.",
+      "description_for_ai": "Transform voice from one style to another while preserving content. Change accent, age, gender.",
       "intent": [
         "voice conversion",
         "speech to speech",
-        "voice transformation",
-        "преобразование голоса elevenlabs"
+        "voice transform",
+        "изменение голоса ElevenLabs"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/speech-to-speech/{voice_id}",
       "input": {
         "voice_id": {
           "type": "string",
-          "description": "Target voice ID",
           "required": true
         },
         "audio": {
           "type": "file",
-          "description": "Source audio to transform",
+          "description": "Source audio file",
           "required": true
         },
         "model_id": {
           "type": "string",
           "default": "eleven_english_sts_v2"
-        },
-        "voice_settings": {
-          "type": "object",
-          "required": false
         }
       },
       "output": {
         "type": "audio",
         "fields": [
-          "binary audio stream"
+          "audio binary stream"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_sound_effects",
+      "description_for_ai": "Generate sound effects from text description.",
+      "intent": [
+        "sound effects",
+        "SFX generation",
+        "audio effects AI",
+        "звуковые эффекты AI"
+      ],
+      "endpoint": "POST https://api.elevenlabs.io/v1/sound-generation",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Description of sound: 'thunder strike', 'coffee shop ambiance', 'robot beeping'",
+          "required": true
+        },
+        "duration_seconds": {
+          "type": "float",
+          "description": "Duration 0.5-22 seconds",
+          "required": false
+        },
+        "prompt_influence": {
+          "type": "float",
+          "description": "0.0-1.0 how closely to follow prompt",
+          "default": 0.3
+        }
+      },
+      "output": {
+        "type": "audio",
+        "fields": [
+          "audio binary (mp3)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_usage",
+      "description_for_ai": "Get character usage and subscription quota for the current period.",
+      "intent": [
+        "ElevenLabs usage",
+        "quota check",
+        "characters remaining",
+        "остаток квоты ElevenLabs"
+      ],
+      "endpoint": "GET https://api.elevenlabs.io/v1/user/subscription",
+      "input": {},
+      "output": {
+        "type": "subscription",
+        "fields": [
+          "character_count",
+          "character_limit",
+          "tier",
+          "next_character_count_reset_unix"
         ]
       },
       "realtime": true,
