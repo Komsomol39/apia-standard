@@ -21,14 +21,100 @@
   },
   "capabilities": [
     {
-      "id": "get_user",
-      "description_for_ai": "Duolingo language learning platform data. User stats, streak, XP, language progress, course info. Unofficial public API — no authentication needed for public profiles. Get Duolingo user profile: streak, XP, languages learning, level, crown count.",
+      "id": "get_user_profile",
+      "description_for_ai": "Get Duolingo user profile: streak, XP, leagues, languages.",
       "intent": [
-        "duolingo stats",
-        "language learning progress",
-        "streak count",
-        "XP points",
-        "duolingo profile"
+        "duolingo profile",
+        "duolingo user stats",
+        "language learning stats",
+        "профиль duolingo"
+      ],
+      "endpoint": "GET https://www.duolingo.com/2017-06-30/users/{userId}",
+      "input": {
+        "userId": {
+          "type": "integer",
+          "description": "Duolingo user ID",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated fields: streak,courses,xpGains,leaderboardLeague,lingots,gems,totalXp",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "profile",
+        "fields": [
+          "username",
+          "streak",
+          "totalXp",
+          "courses[0].title",
+          "courses[0].xp",
+          "learningLanguage",
+          "fromLanguage"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_courses",
+      "description_for_ai": "Get all available Duolingo courses (language pairs).",
+      "intent": [
+        "duolingo courses",
+        "available languages duolingo",
+        "language courses",
+        "курсы duolingo"
+      ],
+      "endpoint": "GET https://www.duolingo.com/api/1/store/get_items?_=",
+      "input": {},
+      "output": {
+        "type": "list<course>",
+        "fields": [
+          "courses[0].title",
+          "courses[0].learning_language",
+          "courses[0].from_language",
+          "courses[0].num_learners"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_leaderboard",
+      "description_for_ai": "Get Duolingo weekly XP leaderboard for a user's league.",
+      "intent": [
+        "duolingo leaderboard",
+        "XP ranking",
+        "league standings",
+        "рейтинг duolingo"
+      ],
+      "endpoint": "GET https://duolingo-leaderboards-prod.duolingo.com/users/{userId}/leaderboards/7d7d7d7d-7d7d-7d7d-7d7d-7d7d7d7d7d7d/",
+      "input": {
+        "userId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "leaderboard",
+        "fields": [
+          "active_cohort.rankings[0].user_id",
+          "active_cohort.rankings[0].score",
+          "active_cohort.rankings[0].rank"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_users",
+      "description_for_ai": "Search for Duolingo users by username.",
+      "intent": [
+        "find duolingo user",
+        "search duolingo",
+        "duolingo username lookup",
+        "найти пользователя duolingo"
       ],
       "endpoint": "GET https://www.duolingo.com/users/{username}",
       "input": {
@@ -38,18 +124,49 @@
         }
       },
       "output": {
-        "type": "user",
+        "type": "profile",
         "fields": [
+          "id",
+          "username",
           "streak",
-          "total_xp",
-          "languages[0].language_string",
-          "languages[0].level",
-          "languages[0].points",
-          "languages[0].streak"
+          "totalXp",
+          "courses[0].title",
+          "bio"
         ]
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "get_daily_xp",
+      "description_for_ai": "Get daily XP history for a Duolingo user.",
+      "intent": [
+        "duolingo XP history",
+        "daily progress duolingo",
+        "XP per day",
+        "прогресс duolingo"
+      ],
+      "endpoint": "GET https://www.duolingo.com/2017-06-30/users/{userId}",
+      "input": {
+        "userId": {
+          "type": "integer",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "default": "xpGains"
+        }
+      },
+      "output": {
+        "type": "xp_history",
+        "fields": [
+          "xpGains[0].gainedXp",
+          "xpGains[0].time",
+          "xpGains[0].skillId"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
