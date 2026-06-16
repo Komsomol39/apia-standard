@@ -110,6 +110,65 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_profiles",
+      "description_for_ai": "Get subscriber profiles from Klaviyo with their properties and email.",
+      "intent": [
+        "klaviyo profiles",
+        "subscribers list",
+        "email profiles klaviyo",
+        "профили klaviyo"
+      ],
+      "endpoint": "GET https://a.klaviyo.com/api/profiles/",
+      "input": {
+        "filter": {
+          "type": "string",
+          "description": "filter=equals(email,'user@example.com')",
+          "required": false
+        },
+        "page[size]": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<profile>",
+        "fields": [
+          "data[0].id",
+          "data[0].attributes.email",
+          "data[0].attributes.first_name",
+          "data[0].attributes.properties"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_event",
+      "description_for_ai": "Send a custom event to Klaviyo for triggering flows (e.g., Placed Order, Viewed Product).",
+      "intent": [
+        "klaviyo event",
+        "trigger flow klaviyo",
+        "email automation event",
+        "событие klaviyo"
+      ],
+      "endpoint": "POST https://a.klaviyo.com/api/events/",
+      "input": {
+        "data": {
+          "type": "object",
+          "description": "{type: 'event', attributes: {profile: {email: 'user@example.com'}, metric: {name: 'Placed Order'}, properties: {value: 99.99}, time: '2024-01-01T00:00:00Z'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "event",
+        "fields": [
+          "202 Accepted on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
