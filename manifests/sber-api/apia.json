@@ -94,6 +94,107 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "gigachat_completion",
+      "description_for_ai": "Chat with Sber GigaChat — Russian AI assistant from Sberbank.",
+      "intent": [
+        "GigaChat",
+        "Сбер ИИ",
+        "нейросеть сбер",
+        "GigaChat API"
+      ],
+      "endpoint": "POST https://gigachat.devices.sberbank.ru/api/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "GigaChat (basic), GigaChat-Plus, GigaChat-Pro",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: 'user', content: 'Привет!'}]",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0.87
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content",
+          "usage.total_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "gigachat_embeddings",
+      "description_for_ai": "Generate Russian text embeddings with GigaChat.",
+      "intent": [
+        "GigaChat embeddings",
+        "Сбер эмбеддинги",
+        "русские векторы сбер"
+      ],
+      "endpoint": "POST https://gigachat.devices.sberbank.ru/api/v1/embeddings",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "Embeddings"
+        },
+        "input": {
+          "type": "array",
+          "description": "Array of text strings",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "embeddings",
+        "fields": [
+          "data[0].embedding",
+          "usage.total_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_token",
+      "description_for_ai": "Get GigaChat access token using client credentials.",
+      "intent": [
+        "GigaChat token",
+        "Sber auth token",
+        "авторизация GigaChat"
+      ],
+      "endpoint": "POST https://ngw.devices.sberbank.ru:9443/api/v2/oauth",
+      "input": {
+        "Authorization": {
+          "type": "string",
+          "description": "Basic base64(client_id:client_secret)",
+          "required": true
+        },
+        "scope": {
+          "type": "string",
+          "description": "GIGACHAT_API_PERS or GIGACHAT_API_CORP",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "token",
+        "fields": [
+          "access_token",
+          "expires_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "meta": {
