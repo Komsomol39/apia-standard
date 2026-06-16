@@ -23,60 +23,51 @@
   "capabilities": [
     {
       "id": "transcribe_audio",
-      "description_for_ai": "Transcribe audio files with AssemblyAI. Speaker diarization, sentiment, entity detection included.",
+      "description_for_ai": "Transcribe audio to text with AssemblyAI. Supports speaker labels, timestamps, and custom vocabulary.",
       "intent": [
-        "transcribe audio",
-        "AssemblyAI STT",
-        "speech to text AI",
-        "транскрибация AssemblyAI"
+        "transcribe AssemblyAI",
+        "speech to text",
+        "audio transcription",
+        "транскрипция AssemblyAI"
       ],
       "endpoint": "POST https://api.assemblyai.com/v2/transcript",
       "input": {
         "audio_url": {
           "type": "string",
-          "description": "Public URL of audio/video file",
+          "description": "Public URL to audio/video file (mp3, mp4, wav, m4a, etc.)",
           "required": true
-        },
-        "language_code": {
-          "type": "string",
-          "description": "en, ru, de, fr, es, it, pt, nl, hi, ja, zh. Auto-detected if omitted.",
-          "required": false
         },
         "speaker_labels": {
           "type": "boolean",
-          "description": "Enable speaker diarization",
+          "description": "Identify multiple speakers",
           "default": false
         },
-        "sentiment_analysis": {
-          "type": "boolean",
-          "description": "Sentiment per sentence",
-          "default": false
+        "language_code": {
+          "type": "string",
+          "description": "en, es, fr, de, it, pt, nl, ru, ja, ko, zh (auto-detected if omitted)",
+          "required": false
         },
-        "entity_detection": {
+        "punctuate": {
           "type": "boolean",
-          "description": "Named entity recognition",
-          "default": false
+          "default": true
         },
-        "auto_highlights": {
-          "type": "boolean",
-          "description": "Key phrases extraction",
-          "default": false
-        },
-        "summarization": {
-          "type": "boolean",
-          "description": "Automatic summary",
-          "default": false
+        "word_boost": {
+          "type": "array",
+          "description": "Custom vocabulary words to boost accuracy",
+          "required": false
         }
       },
       "output": {
         "type": "transcript",
         "fields": [
-          "id",
-          "status (polling required)",
+          "id (poll status with this)",
+          "status",
           "text",
+          "words[0].text",
+          "words[0].start",
+          "words[0].confidence",
           "utterances[0].speaker",
-          "utterances[0].text",
-          "sentiment_analysis_results[0].sentiment"
+          "utterances[0].text"
         ]
       },
       "realtime": false,
@@ -84,12 +75,12 @@
     },
     {
       "id": "get_transcript",
-      "description_for_ai": "Poll for transcript completion and get results.",
+      "description_for_ai": "Poll or get results of a submitted AssemblyAI transcription.",
       "intent": [
-        "get transcript",
-        "transcript status",
-        "poll transcription",
-        "получить транскрипт"
+        "get transcript AssemblyAI",
+        "transcription status",
+        "poll results AssemblyAI",
+        "результаты транскрипции AssemblyAI"
       ],
       "endpoint": "GET https://api.assemblyai.com/v2/transcript/{transcript_id}",
       "input": {
@@ -104,120 +95,152 @@
           "id",
           "status (queued/processing/completed/error)",
           "text",
-          "words[0].text",
-          "words[0].start",
-          "words[0].end",
-          "words[0].confidence"
+          "words",
+          "utterances",
+          "confidence"
         ]
       },
-      "realtime": true,
+      "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "lemur_qa",
-      "description_for_ai": "Ask questions about audio content using LeMUR (LLM powered by your transcript).",
+      "id": "sentiment_analysis",
+      "description_for_ai": "Transcribe audio and detect sentiment (positive/negative/neutral) per sentence.",
       "intent": [
-        "audio Q&A",
-        "LeMUR questions",
-        "ask about recording",
-        "вопросы по аудио AssemblyAI"
+        "audio sentiment",
+        "speech sentiment analysis",
+        "voice tone analysis",
+        "анализ тональности речи AssemblyAI"
       ],
-      "endpoint": "POST https://api.assemblyai.com/lemur/v3/generate/task",
+      "endpoint": "POST https://api.assemblyai.com/v2/transcript",
       "input": {
-        "prompt": {
+        "audio_url": {
           "type": "string",
-          "description": "Question or instruction about the transcript",
           "required": true
         },
-        "transcript_ids": {
-          "type": "array",
-          "description": "Transcript IDs to analyze",
-          "required": true
-        },
-        "context": {
-          "type": "string",
-          "description": "Background context for better answers",
-          "required": false
-        },
-        "final_model": {
-          "type": "string",
-          "description": "anthropic/claude-3-5-sonnet or anthropic/claude-3-haiku",
-          "default": "anthropic/claude-3-5-sonnet"
+        "sentiment_analysis": {
+          "type": "boolean",
+          "default": true
         }
       },
       "output": {
-        "type": "response",
+        "type": "sentiment",
         "fields": [
-          "response",
-          "usage.input_tokens",
-          "usage.output_tokens"
+          "sentiment_analysis_results[0].text",
+          "sentiment_analysis_results[0].sentiment (POSITIVE/NEGATIVE/NEUTRAL)",
+          "sentiment_analysis_results[0].confidence"
         ]
       },
-      "realtime": true,
+      "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "list_transcripts",
-      "description_for_ai": "List all transcripts with status and creation time.",
+      "id": "speaker_diarization",
+      "description_for_ai": "Transcribe multi-speaker audio with speaker identification.",
       "intent": [
-        "list transcripts",
-        "transcript history",
-        "список транскриптов"
+        "speaker diarization",
+        "speaker identification",
+        "who said what",
+        "идентификация говорящих AssemblyAI"
       ],
-      "endpoint": "GET https://api.assemblyai.com/v2/transcript",
+      "endpoint": "POST https://api.assemblyai.com/v2/transcript",
       "input": {
-        "limit": {
+        "audio_url": {
+          "type": "string",
+          "required": true
+        },
+        "speaker_labels": {
+          "type": "boolean",
+          "default": true
+        },
+        "speakers_expected": {
           "type": "integer",
-          "default": 10
-        },
-        "status": {
-          "type": "string",
-          "description": "queued, processing, completed, error",
+          "description": "Expected number of speakers (optional hint)",
           "required": false
         }
       },
       "output": {
-        "type": "list<transcript>",
+        "type": "transcript",
         "fields": [
-          "transcripts[0].id",
-          "transcripts[0].status",
-          "transcripts[0].created",
-          "transcripts[0].audio_url"
+          "utterances[0].speaker (A/B/C...)",
+          "utterances[0].text",
+          "utterances[0].start",
+          "utterances[0].end",
+          "utterances[0].confidence"
         ]
       },
-      "realtime": true,
+      "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "realtime_transcription",
-      "description_for_ai": "Real-time streaming speech-to-text using AssemblyAI WebSocket API.",
+      "id": "entity_detection",
+      "description_for_ai": "Extract named entities from audio transcription: people, locations, dates, organizations.",
       "intent": [
-        "real-time transcription",
-        "live STT",
-        "streaming speech",
-        "транскрибация в реальном времени"
+        "entities in audio",
+        "NER audio",
+        "audio entity extraction",
+        "извлечение сущностей AssemblyAI"
       ],
-      "endpoint": "WSS wss://api.assemblyai.com/v2/realtime/ws",
+      "endpoint": "POST https://api.assemblyai.com/v2/transcript",
       "input": {
-        "sample_rate": {
-          "type": "integer",
-          "description": "16000 Hz recommended",
+        "audio_url": {
+          "type": "string",
           "required": true
         },
-        "word_boost": {
-          "type": "array",
-          "description": "Custom vocabulary words",
-          "required": false
+        "entity_detection": {
+          "type": "boolean",
+          "default": true
         }
       },
       "output": {
-        "type": "realtime_transcript",
+        "type": "entities",
         "fields": [
-          "text (partial result on message_type=PartialTranscript)",
-          "text (final on message_type=FinalTranscript)"
+          "entities[0].entity_type (person_name/location/organization/date)",
+          "entities[0].text",
+          "entities[0].start",
+          "entities[0].end"
         ]
       },
-      "realtime": true,
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "summarize_audio",
+      "description_for_ai": "Automatically summarize audio content (meeting, podcast, call) with AI.",
+      "intent": [
+        "summarize audio",
+        "podcast summary",
+        "meeting summary AssemblyAI",
+        "резюме аудио AssemblyAI"
+      ],
+      "endpoint": "POST https://api.assemblyai.com/v2/transcript",
+      "input": {
+        "audio_url": {
+          "type": "string",
+          "required": true
+        },
+        "summarization": {
+          "type": "boolean",
+          "default": true
+        },
+        "summary_model": {
+          "type": "string",
+          "description": "informative or conversational",
+          "default": "informative"
+        },
+        "summary_type": {
+          "type": "string",
+          "description": "bullets, bullets_verbose, gist, headline, paragraph",
+          "default": "bullets"
+        }
+      },
+      "output": {
+        "type": "summary",
+        "fields": [
+          "summary (formatted summary text)"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
