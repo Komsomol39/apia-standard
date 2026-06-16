@@ -93,6 +93,103 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_country",
+      "description_for_ai": "Get detailed info about a country: capital, population, currencies, languages, flag.",
+      "intent": [
+        "country info",
+        "country details",
+        "country data",
+        "информация о стране"
+      ],
+      "endpoint": "GET https://restcountries.com/v3.1/name/{name}",
+      "input": {
+        "name": {
+          "type": "string",
+          "description": "Country name in English",
+          "required": true
+        },
+        "fullText": {
+          "type": "boolean",
+          "description": "Exact name match",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "list<country>",
+        "fields": [
+          "[0].name.common",
+          "[0].capital[0]",
+          "[0].population",
+          "[0].area",
+          "[0].currencies",
+          "[0].languages",
+          "[0].flags.svg"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_by_code",
+      "description_for_ai": "Get country by ISO 3166-1 alpha-2 or alpha-3 code.",
+      "intent": [
+        "country by code",
+        "ISO country code",
+        "страна по коду ISO"
+      ],
+      "endpoint": "GET https://restcountries.com/v3.1/alpha/{code}",
+      "input": {
+        "code": {
+          "type": "string",
+          "description": "2-letter (RU, US, DE) or 3-letter (RUS, USA) code",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "country",
+        "fields": [
+          "name.common",
+          "capital",
+          "population",
+          "currencies",
+          "languages",
+          "region",
+          "subregion"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_by_region",
+      "description_for_ai": "Get all countries in a continent/region.",
+      "intent": [
+        "countries by region",
+        "Europe countries",
+        "African countries",
+        "страны по региону"
+      ],
+      "endpoint": "GET https://restcountries.com/v3.1/region/{region}",
+      "input": {
+        "region": {
+          "type": "string",
+          "description": "Africa, Americas, Asia, Europe, Oceania, Antarctic",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<country>",
+        "fields": [
+          "[0].name.common",
+          "[0].capital[0]",
+          "[0].population",
+          "[0].flags.svg"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "meta": {
