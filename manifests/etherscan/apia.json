@@ -202,6 +202,53 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_token_transfers",
+      "description_for_ai": "Get ERC-20 token transfer events for an address.",
+      "intent": [
+        "token transfers",
+        "ERC20 history",
+        "token transactions",
+        "переводы токенов Etherscan"
+      ],
+      "endpoint": "GET https://api.etherscan.io/api?module=account&action=tokentx",
+      "input": {
+        "address": {
+          "type": "string",
+          "required": true
+        },
+        "contractaddress": {
+          "type": "string",
+          "description": "Filter by token contract",
+          "required": false
+        },
+        "startblock": {
+          "type": "integer",
+          "default": 0
+        },
+        "endblock": {
+          "type": "integer",
+          "default": 99999999
+        },
+        "sort": {
+          "type": "string",
+          "default": "desc"
+        }
+      },
+      "output": {
+        "type": "list<transfer>",
+        "fields": [
+          "result[0].hash",
+          "result[0].tokenName",
+          "result[0].tokenSymbol",
+          "result[0].value",
+          "result[0].from",
+          "result[0].to"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
