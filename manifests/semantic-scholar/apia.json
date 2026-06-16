@@ -24,50 +24,45 @@
   "capabilities": [
     {
       "id": "search_papers",
-      "description_for_ai": "Search 220M+ academic papers by keyword. Returns title, abstract, citation count, authors, and open access PDF links.",
+      "description_for_ai": "Search 220M+ academic papers. Filter by year, field of study, open access.",
       "intent": [
-        "find research paper",
-        "academic search",
-        "citations",
-        "paper lookup",
-        "research topic",
-        "study findings"
+        "semantic scholar search",
+        "find paper",
+        "academic search S2",
+        "поиск статей semantic scholar"
       ],
       "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/search",
       "input": {
         "query": {
           "type": "string",
-          "description": "Search query — supports natural language: 'transformer attention mechanism', 'COVID vaccine efficacy', 'reinforcement learning robotics'",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "Comma-separated fields: title,abstract,authors,year,citationCount,openAccessPdf,externalIds,venue,referenceCount,s2FieldsOfStudy",
-          "default": "title,abstract,year,citationCount"
+          "description": "paperId,title,abstract,year,citationCount,authors,externalIds,openAccessPdf",
+          "default": "paperId,title,year,citationCount"
         },
         "limit": {
           "type": "integer",
-          "description": "Results per page, max 100",
           "default": 10
         },
         "offset": {
           "type": "integer",
-          "description": "Pagination offset",
           "default": 0
-        },
-        "publicationTypes": {
-          "type": "string",
-          "description": "Filter by type: JournalArticle, Conference, Review, Book, Dataset",
-          "required": false
         },
         "year": {
           "type": "string",
-          "description": "Year filter: '2023', '2020-2024', '-2020' (before 2020), '2020-' (after 2020)",
+          "description": "Year range: 2020-2024 or exact year 2023",
+          "required": false
+        },
+        "fieldsOfStudy": {
+          "type": "string",
+          "description": "Computer Science, Medicine, Biology, Physics",
           "required": false
         },
         "openAccessPdf": {
-          "type": "string",
-          "description": "Pass empty string to filter only open access papers with free PDF",
+          "type": "boolean",
+          "description": "Only papers with free PDF",
           "required": false
         }
       },
@@ -76,59 +71,117 @@
         "fields": [
           "data[0].paperId",
           "data[0].title",
-          "data[0].abstract",
           "data[0].year",
           "data[0].citationCount",
-          "data[0].openAccessPdf.url",
-          "data[0].authors[0].name",
-          "total"
+          "data[0].abstract"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_paper_recommendations",
-      "description_for_ai": "Get AI-powered paper recommendations similar to given papers. Excellent for literature discovery and finding related work.",
+      "id": "get_paper",
+      "description_for_ai": "Get full paper details: abstract, authors, citations, references, PDF URL.",
       "intent": [
-        "similar papers",
-        "related research",
-        "paper recommendations",
-        "find more like this"
+        "paper details S2",
+        "semantic scholar paper",
+        "citation data",
+        "детали статьи semantic scholar"
       ],
-      "endpoint": "POST https://api.semanticscholar.org/recommendations/v1/papers",
+      "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/{paper_id}",
       "input": {
-        "positivePaperIds": {
-          "type": "array",
-          "description": "Semantic Scholar paper IDs to base recommendations on. Pass 1-5 papers you want similar papers to.",
+        "paper_id": {
+          "type": "string",
+          "description": "S2 paper ID, DOI: DOI:10.1000/xyz, arXiv: ARXIV:2001.00001",
           "required": true
-        },
-        "negativePaperIds": {
-          "type": "array",
-          "description": "Paper IDs to EXCLUDE from recommendations — papers you don't want similar to",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "description": "Number of recommendations to return, max 100",
-          "default": 10
         },
         "fields": {
           "type": "string",
-          "description": "Fields to include in results",
-          "default": "title,abstract,year,citationCount"
+          "description": "paperId,title,abstract,authors,year,citationCount,references,citations,externalIds,openAccessPdf",
+          "default": "paperId,title,abstract,year,citationCount"
         }
       },
       "output": {
-        "type": "list<paper>",
+        "type": "paper",
         "fields": [
-          "recommendedPapers[0].paperId",
-          "recommendedPapers[0].title",
-          "recommendedPapers[0].abstract",
-          "recommendedPapers[0].citationCount"
+          "paperId",
+          "title",
+          "abstract",
+          "year",
+          "citationCount",
+          "openAccessPdf.url"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_citations",
+      "description_for_ai": "Get papers that cite a given paper.",
+      "intent": [
+        "paper citations S2",
+        "who cited this",
+        "citation list",
+        "кто цитирует статью"
+      ],
+      "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/{paper_id}/citations",
+      "input": {
+        "paper_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "default": "paperId,title,year,citationCount"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "citations",
+        "fields": [
+          "data[0].citingPaper.paperId",
+          "data[0].citingPaper.title",
+          "data[0].citingPaper.year"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_author",
+      "description_for_ai": "Get researcher profile: papers, citations, h-index.",
+      "intent": [
+        "researcher profile S2",
+        "author papers",
+        "h-index lookup",
+        "профиль исследователя semantic scholar"
+      ],
+      "endpoint": "GET https://api.semanticscholar.org/graph/v1/author/{author_id}",
+      "input": {
+        "author_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "default": "authorId,name,paperCount,citationCount,hIndex,affiliations"
+        }
+      },
+      "output": {
+        "type": "author",
+        "fields": [
+          "authorId",
+          "name",
+          "paperCount",
+          "citationCount",
+          "hIndex",
+          "affiliations[0].name"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
     }
   ],
