@@ -23,55 +23,42 @@
   "capabilities": [
     {
       "id": "list_jobs",
-      "description_for_ai": "Get all job postings in Greenhouse ATS with department, location, and status. Use for job board integration and recruiting pipeline overview.",
+      "description_for_ai": "List open job positions in Greenhouse ATS.",
       "intent": [
-        "job openings",
-        "career positions",
-        "open roles",
-        "hiring",
-        "job listings",
-        "vacancy list"
+        "greenhouse jobs",
+        "open positions",
+        "job listings HR",
+        "вакансии greenhouse"
       ],
       "endpoint": "GET https://harvest.greenhouse.io/v1/jobs",
       "input": {
-        "status": {
-          "type": "string",
-          "description": "open (active), closed, or draft",
-          "default": "open"
-        },
-        "department_id": {
-          "type": "integer",
-          "description": "Filter by department ID. Get IDs from GET /departments.",
-          "required": false
-        },
-        "office_id": {
-          "type": "integer",
-          "description": "Filter by office/location ID",
-          "required": false
-        },
         "per_page": {
           "type": "integer",
-          "description": "Results per page, max 500",
           "default": 100
         },
         "page": {
           "type": "integer",
-          "description": "Page number for pagination",
           "default": 1
+        },
+        "requisition_id": {
+          "type": "string",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "description": "open, closed, draft",
+          "required": false
         }
       },
       "output": {
         "type": "list<job>",
         "fields": [
-          "id",
-          "name",
-          "status",
-          "departments[0].name",
-          "offices[0].name",
-          "job_posts[0].title",
-          "job_posts[0].external_url",
-          "created_at",
-          "opened_at"
+          "[0].id",
+          "[0].name",
+          "[0].status",
+          "[0].departments[0].name",
+          "[0].offices[0].name",
+          "[0].opened_at"
         ]
       },
       "realtime": true,
@@ -79,59 +66,130 @@
     },
     {
       "id": "get_candidates",
-      "description_for_ai": "Get job applicant profiles with application status, current stage, and contact info. Use for recruiting pipeline management.",
+      "description_for_ai": "List or search candidates in Greenhouse with their application status.",
       "intent": [
-        "candidates",
-        "applicants",
-        "job applications",
-        "hiring pipeline",
-        "recruiting funnel"
+        "candidates greenhouse",
+        "applicants list",
+        "job candidates",
+        "кандидаты greenhouse"
       ],
       "endpoint": "GET https://harvest.greenhouse.io/v1/candidates",
       "input": {
+        "per_page": {
+          "type": "integer",
+          "default": 100
+        },
         "job_id": {
           "type": "integer",
-          "description": "Filter candidates by specific job ID",
+          "description": "Filter by job",
           "required": false
         },
-        "status": {
+        "email": {
           "type": "string",
-          "description": "active (in pipeline), hired, rejected. Default returns active.",
+          "description": "Search by email",
           "required": false
         },
         "created_after": {
           "type": "string",
-          "description": "ISO 8601 date — return candidates created after this date",
+          "description": "ISO 8601",
           "required": false
-        },
-        "updated_after": {
-          "type": "string",
-          "description": "ISO 8601 date — return candidates updated after this date",
-          "required": false
-        },
-        "per_page": {
-          "type": "integer",
-          "description": "Results per page, max 500",
-          "default": 100
-        },
-        "page": {
-          "type": "integer",
-          "description": "Page number",
-          "default": 1
         }
       },
       "output": {
         "type": "list<candidate>",
         "fields": [
+          "[0].id",
+          "[0].first_name",
+          "[0].last_name",
+          "[0].email_addresses[0].value",
+          "[0].applications[0].status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_candidate",
+      "description_for_ai": "Add a new candidate to Greenhouse ATS.",
+      "intent": [
+        "add candidate greenhouse",
+        "create applicant",
+        "new candidate HR",
+        "добавить кандидата"
+      ],
+      "endpoint": "POST https://harvest.greenhouse.io/v1/candidates",
+      "input": {
+        "first_name": {
+          "type": "string",
+          "required": true
+        },
+        "last_name": {
+          "type": "string",
+          "required": true
+        },
+        "email_addresses": {
+          "type": "array",
+          "description": "[{value: 'candidate@example.com', type: 'work'}]",
+          "required": false
+        },
+        "phone_numbers": {
+          "type": "array",
+          "description": "[{value: '+1234567890', type: 'mobile'}]",
+          "required": false
+        },
+        "addresses": {
+          "type": "array",
+          "required": false
+        },
+        "linkedin_url": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "candidate",
+        "fields": [
           "id",
           "first_name",
           "last_name",
-          "email_addresses[0].value",
-          "phone_numbers[0].value",
-          "applications[0].status",
-          "applications[0].current_stage.name",
-          "applications[0].job.name",
-          "applications[0].applied_at"
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "move_application",
+      "description_for_ai": "Move a candidate application to a different stage in the hiring pipeline.",
+      "intent": [
+        "move candidate stage",
+        "advance application",
+        "pipeline stage greenhouse",
+        "перенести кандидата greenhouse"
+      ],
+      "endpoint": "POST https://harvest.greenhouse.io/v1/applications/{application_id}/move",
+      "input": {
+        "application_id": {
+          "type": "integer",
+          "required": true
+        },
+        "from_stage_id": {
+          "type": "integer",
+          "required": true
+        },
+        "to_stage_id": {
+          "type": "integer",
+          "description": "Get stage IDs from GET /v1/jobs/{job_id}/stages",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "application",
+        "fields": [
+          "id",
+          "status",
+          "current_stage.name",
+          "applied_at"
         ]
       },
       "realtime": true,
