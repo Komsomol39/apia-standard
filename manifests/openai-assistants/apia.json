@@ -22,39 +22,41 @@
   "capabilities": [
     {
       "id": "create_assistant",
-      "description_for_ai": "Create an AI assistant with instructions, tools (code_interpreter, file_search), and model.",
+      "description_for_ai": "Create an OpenAI Assistant with instructions, tools (code_interpreter, file_search, custom functions), and knowledge files.",
       "intent": [
-        "create chatbot",
-        "AI assistant",
-        "document Q&A bot",
-        "code assistant",
-        "RAG assistant"
+        "create assistant openai",
+        "build AI agent",
+        "custom GPT API",
+        "создать ассистента openai"
       ],
       "endpoint": "POST https://api.openai.com/v1/assistants",
       "input": {
+        "model": {
+          "type": "string",
+          "description": "gpt-4o, gpt-4o-mini",
+          "required": true
+        },
         "name": {
           "type": "string",
-          "required": true,
-          "description": "Name identifier"
+          "required": false
         },
         "instructions": {
           "type": "string",
-          "description": "System prompt for the assistant",
-          "required": true
-        },
-        "model": {
-          "type": "string",
-          "default": "gpt-4o-mini",
-          "description": "AI/ML model identifier to use for this request"
+          "description": "System prompt / role for the assistant",
+          "required": false
         },
         "tools": {
           "type": "array",
-          "description": "[{type: code_interpreter}, {type: file_search}]",
+          "description": "[{type: code_interpreter}, {type: file_search}, {type: function, function: {name, description, parameters}}]",
           "required": false
         },
         "tool_resources": {
           "type": "object",
-          "description": "Attach vector stores for file search",
+          "description": "{file_search: {vector_store_ids: ['vs_xxx']}} to add knowledge base",
+          "required": false
+        },
+        "temperature": {
+          "type": "float",
           "required": false
         }
       },
@@ -64,34 +66,37 @@
           "id",
           "name",
           "model",
-          "tools"
+          "instructions",
+          "tools",
+          "created_at"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "run_thread",
-      "description_for_ai": "Send a message to an assistant thread and get response. Handles multi-turn conversation with memory.",
+      "id": "create_thread_and_run",
+      "description_for_ai": "Create a thread and run an assistant in one call. The simplest way to get a response from an assistant.",
       "intent": [
-        "chat with assistant",
-        "send message",
+        "run assistant openai",
         "assistant response",
-        "conversation",
-        "Q&A"
+        "chat with assistant",
+        "запустить ассистента openai"
       ],
-      "endpoint": "POST https://api.openai.com/v1/threads/{thread_id}/runs",
+      "endpoint": "POST https://api.openai.com/v1/threads/runs",
       "input": {
-        "thread_id": {
-          "type": "string",
-          "required": true
-        },
         "assistant_id": {
           "type": "string",
           "required": true
         },
-        "additional_instructions": {
+        "thread": {
+          "type": "object",
+          "description": "{messages: [{role: user, content: 'Your question here'}]}",
+          "required": true
+        },
+        "instructions": {
           "type": "string",
+          "description": "Override assistant instructions for this run",
           "required": false
         }
       },
@@ -99,11 +104,84 @@
         "type": "run",
         "fields": [
           "id",
+          "thread_id",
           "status",
-          "thread_id"
+          "assistant_id"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_messages",
+      "description_for_ai": "Get messages from a thread after a run completes. Poll run status first.",
+      "intent": [
+        "get assistant messages",
+        "assistant reply",
+        "thread messages openai",
+        "ответ ассистента"
+      ],
+      "endpoint": "GET https://api.openai.com/v1/threads/{thread_id}/messages",
+      "input": {
+        "thread_id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        },
+        "order": {
+          "type": "string",
+          "description": "asc or desc",
+          "default": "asc"
+        }
+      },
+      "output": {
+        "type": "list<message>",
+        "fields": [
+          "data[0].role",
+          "data[0].content[0].text.value",
+          "data[0].created_at",
+          "data[0].run_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "upload_file",
+      "description_for_ai": "Upload a file to use as knowledge base for an assistant via file_search.",
+      "intent": [
+        "upload file assistant",
+        "assistant knowledge",
+        "file search openai",
+        "загрузить файл ассистенту"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/files",
+      "input": {
+        "file": {
+          "type": "file",
+          "description": "File to upload: PDF, DOCX, TXT, CSV, MD, etc.",
+          "required": true
+        },
+        "purpose": {
+          "type": "string",
+          "description": "assistants (for knowledge base) or fine-tune",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "file",
+        "fields": [
+          "id",
+          "filename",
+          "bytes",
+          "purpose",
+          "status"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
