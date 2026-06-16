@@ -22,36 +22,34 @@
   },
   "capabilities": [
     {
-      "id": "chat_completion",
-      "description_for_ai": "OpenAI-compatible chat completions. Cheapest frontier model in 2026. Grok 4.1 Mini costs $0.20/$0.50 per 1M tokens — 8x cheaper than GPT-4o. Use for high-volume, cost-sensitive applications.",
+      "id": "chat",
+      "description_for_ai": "Chat with Grok — xAI's model trained on real-time X/Twitter data. Best for current events, news, and up-to-date information.",
       "intent": [
-        "cheapest AI",
-        "grok",
-        "low cost generation",
-        "high volume LLM",
-        "xAI"
+        "ask grok",
+        "grok ai",
+        "xai model",
+        "real-time AI",
+        "спросить grok"
       ],
       "endpoint": "POST https://api.x.ai/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "grok-4-mini (cheapest), grok-4 (flagship)",
+          "description": "grok-2-latest (best), grok-2-mini (fast)",
           "required": true
         },
         "messages": {
           "type": "array",
-          "description": "OpenAI-compatible [{role, content}]",
+          "description": "[{role: system|user|assistant, content: string}]",
           "required": true
         },
         "temperature": {
           "type": "float",
-          "default": 1,
-          "description": "Randomness 0.0-1.0: lower=deterministic, higher=creative"
+          "default": 1.0
         },
         "max_tokens": {
           "type": "integer",
-          "required": false,
-          "description": "Maximum number of tokens to generate in response"
+          "required": false
         },
         "stream": {
           "type": "boolean",
@@ -62,30 +60,28 @@
         "type": "completion",
         "fields": [
           "choices[0].message.content",
-          "usage.prompt_tokens",
-          "usage.completion_tokens"
+          "choices[0].finish_reason",
+          "usage.total_tokens"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "live_search",
-      "description_for_ai": "Grok with real-time X (Twitter) and web search access. Use when user needs current information, trending topics, or recent events that happened after model training cutoff.",
+      "id": "search_web",
+      "description_for_ai": "Search the web using Grok with live internet access. Returns answers grounded in current web content.",
       "intent": [
-        "real time info",
+        "web search grok",
         "current events",
         "latest news",
-        "trending topics",
-        "X twitter search",
-        "live data"
+        "real-time search",
+        "поиск в интернете grok"
       ],
       "endpoint": "POST https://api.x.ai/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "default": "grok-4",
-          "description": "AI/ML model identifier to use for this request"
+          "default": "grok-2-latest"
         },
         "messages": {
           "type": "array",
@@ -93,7 +89,7 @@
         },
         "search_parameters": {
           "type": "object",
-          "description": "{mode: on} to enable live search",
+          "description": "{mode: 'on', sources: [{type: 'web'}], max_search_results: 5, return_citations: true}",
           "required": false
         }
       },
@@ -101,7 +97,62 @@
         "type": "completion",
         "fields": [
           "choices[0].message.content",
-          "choices[0].message.citations"
+          "citations"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "vision",
+      "description_for_ai": "Analyze images with Grok Vision. Describe, extract text, answer questions about images.",
+      "intent": [
+        "image analysis grok",
+        "grok vision",
+        "describe image",
+        "анализ фото grok"
+      ],
+      "endpoint": "POST https://api.x.ai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "grok-2-vision-latest"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: user, content: [{type: image_url, image_url: {url: 'https://...'}}, {type: text, text: 'Describe this'}]}]",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List available xAI Grok models.",
+      "intent": [
+        "grok models",
+        "available models xai",
+        "список моделей grok"
+      ],
+      "endpoint": "GET https://api.x.ai/v1/models",
+      "input": {},
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "data[0].id",
+          "data[0].created",
+          "data[0].owned_by"
         ]
       },
       "realtime": true,
