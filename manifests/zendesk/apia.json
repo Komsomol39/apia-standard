@@ -23,11 +23,11 @@
   "capabilities": [
     {
       "id": "list_tickets",
-      "description_for_ai": "List support tickets with status, priority, and assignee filters.",
+      "description_for_ai": "List support tickets with filters by status, priority, assignee, and requester.",
       "intent": [
         "zendesk tickets",
         "support tickets",
-        "customer issues",
+        "customer tickets",
         "тикеты zendesk"
       ],
       "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/tickets",
@@ -39,12 +39,17 @@
         },
         "priority": {
           "type": "string",
-          "description": "urgent, high, normal, low",
+          "description": "low, normal, high, urgent",
           "required": false
         },
-        "page": {
-          "type": "integer",
-          "default": 1
+        "sort_by": {
+          "type": "string",
+          "description": "created_at, updated_at, priority, status",
+          "default": "created_at"
+        },
+        "sort_order": {
+          "type": "string",
+          "default": "desc"
         },
         "per_page": {
           "type": "integer",
@@ -59,6 +64,7 @@
           "tickets[0].status",
           "tickets[0].priority",
           "tickets[0].requester_id",
+          "tickets[0].assignee_id",
           "tickets[0].created_at"
         ]
       },
@@ -67,18 +73,18 @@
     },
     {
       "id": "create_ticket",
-      "description_for_ai": "Create a support ticket in Zendesk.",
+      "description_for_ai": "Create a new Zendesk support ticket.",
       "intent": [
-        "create ticket zendesk",
-        "open ticket",
-        "support request",
+        "create zendesk ticket",
+        "new ticket",
+        "open support ticket",
         "создать тикет zendesk"
       ],
       "endpoint": "POST https://{subdomain}.zendesk.com/api/v2/tickets",
       "input": {
         "ticket": {
           "type": "object",
-          "description": "{subject: 'Issue title', comment: {body: 'Details'}, priority: 'normal', requester: {email: 'user@example.com'}, tags: ['bug', 'urgent']}",
+          "description": "{subject: 'Issue title', comment: {body: 'Description'}, requester: {email, name}, priority: 'normal', status: 'new', tags: ['bug', 'billing'], custom_fields: [{id: 123, value: 'value'}]}",
           "required": true
         }
       },
@@ -88,30 +94,63 @@
           "ticket.id",
           "ticket.subject",
           "ticket.status",
-          "ticket.created_at"
+          "ticket.url"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_tickets",
-      "description_for_ai": "Search Zendesk tickets using query syntax.",
+      "id": "update_ticket",
+      "description_for_ai": "Update a ticket: change status, priority, assignee, or add a comment.",
       "intent": [
-        "search zendesk",
+        "update ticket zendesk",
+        "close ticket",
+        "reply to ticket zendesk",
+        "обновить тикет zendesk"
+      ],
+      "endpoint": "PUT https://{subdomain}.zendesk.com/api/v2/tickets/{ticket_id}",
+      "input": {
+        "ticket_id": {
+          "type": "integer",
+          "required": true
+        },
+        "ticket": {
+          "type": "object",
+          "description": "{status: 'solved', priority: 'urgent', comment: {body: 'Reply text', public: true}, assignee_id: 123}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "ticket",
+        "fields": [
+          "ticket.id",
+          "ticket.status",
+          "ticket.updated_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search",
+      "description_for_ai": "Search across tickets, users, and organizations using Zendesk Search API.",
+      "intent": [
+        "zendesk search",
         "find ticket",
-        "поиск тикетов zendesk"
+        "search support",
+        "поиск zendesk"
       ],
       "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/search",
       "input": {
         "query": {
           "type": "string",
-          "description": "type:ticket status:open priority:urgent subject:billing",
+          "description": "Search query: 'type:ticket status:open priority:urgent' or 'billing error created>2024-01-01'",
           "required": true
         },
         "sort_by": {
           "type": "string",
-          "description": "created_at, updated_at, priority, status",
+          "description": "created_at, updated_at, priority, status, ticket_type",
           "required": false
         },
         "per_page": {
@@ -126,38 +165,6 @@
           "results[0].subject",
           "results[0].status",
           "count"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "add_comment",
-      "description_for_ai": "Add a public or private comment to a Zendesk ticket.",
-      "intent": [
-        "reply ticket zendesk",
-        "comment zendesk",
-        "respond to ticket",
-        "ответить на тикет zendesk"
-      ],
-      "endpoint": "PUT https://{subdomain}.zendesk.com/api/v2/tickets/{ticket_id}",
-      "input": {
-        "ticket_id": {
-          "type": "integer",
-          "required": true
-        },
-        "ticket": {
-          "type": "object",
-          "description": "{comment: {body: 'Response text', public: true}, status: 'pending'}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "ticket",
-        "fields": [
-          "ticket.id",
-          "ticket.status",
-          "ticket.updated_at"
         ]
       },
       "realtime": true,
