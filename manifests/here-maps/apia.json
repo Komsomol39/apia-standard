@@ -24,34 +24,28 @@
   "capabilities": [
     {
       "id": "geocode",
-      "description_for_ai": "Geocode an address to coordinates. Strong accuracy in Germany, Europe, and automotive use cases. Returns lat/lng, formatted address, and bounding box.",
+      "description_for_ai": "Convert address to coordinates using HERE Maps. Accurate for 200+ countries.",
       "intent": [
-        "geocode address",
-        "address to coordinates",
+        "geocode here",
+        "address coordinates here",
         "here maps geocoding",
-        "find location coordinates",
-        "convert address to GPS"
+        "координаты адреса here"
       ],
       "endpoint": "GET https://geocode.search.hereapi.com/v1/geocode",
       "input": {
         "q": {
           "type": "string",
-          "description": "Address to geocode: '1600 Amphitheatre Parkway, Mountain View, CA', 'Тверская улица 1, Москва'",
+          "description": "Free-text address",
           "required": true
         },
         "lang": {
           "type": "string",
-          "description": "Response language BCP-47 code: en-US, de-DE, ru-RU, fr-FR",
-          "default": "en-US"
-        },
-        "limit": {
-          "type": "integer",
-          "description": "Max results to return",
-          "default": 1
+          "description": "Language code: en-US, ru-RU, de-DE",
+          "required": false
         },
         "in": {
           "type": "string",
-          "description": "Geographic filter: 'countryCode:DEU' or 'circle:52.5,13.4;r=5000' (5km around Berlin)",
+          "description": "Geographic filter: countryCode:RUS to restrict to Russia",
           "required": false
         }
       },
@@ -61,61 +55,130 @@
           "items[0].position.lat",
           "items[0].position.lng",
           "items[0].address.label",
-          "items[0].address.city",
-          "items[0].address.state",
-          "items[0].address.countryName",
-          "items[0].mapView"
+          "items[0].id"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "reverse_geocode",
+      "description_for_ai": "Convert coordinates to address using HERE Maps.",
+      "intent": [
+        "reverse geocode here",
+        "coordinates to address here",
+        "what address at location"
+      ],
+      "endpoint": "GET https://revgeocode.search.hereapi.com/v1/revgeocode",
+      "input": {
+        "at": {
+          "type": "string",
+          "description": "lat,lng e.g. 55.7558,37.6173",
+          "required": true
+        },
+        "lang": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "items[0].address.label",
+          "items[0].address.street",
+          "items[0].address.city",
+          "items[0].address.countryCode"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "routing",
-      "description_for_ai": "Calculate route with real-time traffic. Returns turn-by-turn instructions, duration, distance, and route polyline.",
+      "description_for_ai": "Calculate route between points with traffic-aware travel times. Supports car, truck, pedestrian, bicycle.",
       "intent": [
-        "routing",
-        "directions with traffic",
-        "HERE navigation",
-        "drive directions",
-        "route between cities",
-        "navigation"
+        "here routing",
+        "directions here",
+        "route here maps",
+        "маршрут here"
       ],
       "endpoint": "GET https://router.hereapi.com/v8/routes",
       "input": {
-        "transportMode": {
-          "type": "string",
-          "description": "car, pedestrian, bicycle, truck, scooter",
-          "required": true
-        },
         "origin": {
           "type": "string",
-          "description": "Start point as lat,lng: '55.75,37.62'",
+          "description": "lat,lng of start",
           "required": true
         },
         "destination": {
           "type": "string",
-          "description": "End point as lat,lng: '59.93,30.32'",
+          "description": "lat,lng of end",
           "required": true
+        },
+        "transportMode": {
+          "type": "string",
+          "description": "car, truck, pedestrian, bicycle, scooter",
+          "default": "car"
         },
         "return": {
           "type": "string",
-          "description": "Comma-separated data to return: summary,polyline,actions,instructions,travelSummary",
-          "default": "summary,actions"
+          "description": "summary,actions,instructions,polyline",
+          "required": false
         },
         "departureTime": {
           "type": "string",
-          "description": "ISO 8601 departure time for traffic-aware routing: '2024-01-15T09:00:00+03:00'",
+          "description": "ISO 8601 for traffic-aware routing",
           "required": false
         }
       },
       "output": {
         "type": "route",
         "fields": [
-          "routes[0].sections[0].summary.duration (seconds)",
-          "routes[0].sections[0].summary.length (meters)",
-          "routes[0].sections[0].actions[0].instruction",
-          "routes[0].sections[0].polyline"
+          "routes[0].sections[0].summary.duration",
+          "routes[0].sections[0].summary.length",
+          "routes[0].sections[0].actions"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "places_search",
+      "description_for_ai": "Discover places (restaurants, POIs, services) near a location with HERE Places.",
+      "intent": [
+        "find places here",
+        "nearby search here",
+        "POI here maps",
+        "места here"
+      ],
+      "endpoint": "GET https://discover.search.hereapi.com/v1/discover",
+      "input": {
+        "at": {
+          "type": "string",
+          "description": "lat,lng center point",
+          "required": true
+        },
+        "q": {
+          "type": "string",
+          "description": "Search term: restaurant, hospital, ATM",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        },
+        "lang": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<place>",
+        "fields": [
+          "items[0].title",
+          "items[0].address.label",
+          "items[0].distance",
+          "items[0].categories[0].name",
+          "items[0].position"
         ]
       },
       "realtime": true,
