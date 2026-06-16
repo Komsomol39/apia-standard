@@ -24,72 +24,177 @@
   "capabilities": [
     {
       "id": "search_properties",
-      "description_for_ai": "US real estate data. Property details, home values (Zestimate), listing info, neighborhood data. 135M+ US properties. Use for property search, home value estimates, real estate market data. Search US properties by location, price, beds, baths, property type. Returns listing details with Zestimate home value.",
+      "description_for_ai": "Search home listings on Zillow by location.",
       "intent": [
-        "US property",
-        "find homes",
-        "US home search",
-        "buy house",
-        "homes for sale",
-        "real estate listings",
-        "home prices",
-        "houses for sale",
-        "property search",
-        "Zillow search",
-        "Zestimate",
-        "property search US"
+        "zillow search",
+        "homes for sale zillow",
+        "real estate zillow",
+        "поиск недвижимости zillow"
       ],
-      "endpoint": "GET https://api.bridgedataoutput.com/api/v2/zora/core/listings",
+      "endpoint": "GET https://zillow-com1.p.rapidapi.com/propertyExtendedSearch",
       "input": {
-        "near": {
+        "location": {
           "type": "string",
-          "description": "Address or coordinates",
-          "required": false
+          "description": "City/state: 'Austin, TX' or ZIP: '78701'",
+          "required": true
         },
-        "limit": {
-          "type": "integer",
-          "default": 10,
-          "description": "Maximum number of results to return"
-        },
-        "ListPrice_gte": {
-          "type": "integer",
-          "description": "Minimum price",
-          "required": false
-        },
-        "ListPrice_lte": {
-          "type": "integer",
-          "description": "Maximum price",
-          "required": false
-        },
-        "BedsTotal_gte": {
-          "type": "integer",
-          "description": "Minimum bedrooms",
-          "required": false
-        },
-        "BathsTotal_gte": {
-          "type": "integer",
-          "description": "Minimum bathrooms",
-          "required": false
-        },
-        "PropertyType": {
+        "status_type": {
           "type": "string",
-          "description": "Residential, Commercial, Land",
+          "description": "ForSale, RecentlySold, ForRent",
+          "default": "ForSale"
+        },
+        "home_type": {
+          "type": "string",
+          "description": "Houses, Apartments, Condos, Townhomes",
+          "required": false
+        },
+        "minPrice": {
+          "type": "integer",
+          "required": false
+        },
+        "maxPrice": {
+          "type": "integer",
+          "required": false
+        },
+        "beds_min": {
+          "type": "integer",
           "required": false
         }
       },
       "output": {
         "type": "list<property>",
         "fields": [
-          "ListingId",
-          "ListPrice",
-          "BedsTotal",
-          "BathsTotal",
-          "BuildingAreaTotal",
-          "UnparsedAddress",
-          "Latitude",
-          "Longitude",
-          "StandardStatus",
-          "PublicRemarks"
+          "props[0].zpid",
+          "props[0].address",
+          "props[0].price",
+          "props[0].beds",
+          "props[0].baths",
+          "props[0].livingArea",
+          "props[0].imgSrc"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_property_details",
+      "description_for_ai": "Get full Zillow property details: price history, Zestimate, tax history.",
+      "intent": [
+        "zillow property details",
+        "home info zillow",
+        "zestimate",
+        "детали дома zillow"
+      ],
+      "endpoint": "GET https://zillow-com1.p.rapidapi.com/property",
+      "input": {
+        "zpid": {
+          "type": "string",
+          "description": "Zillow Property ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "property",
+        "fields": [
+          "zpid",
+          "address.streetAddress",
+          "zestimate",
+          "rentZestimate",
+          "bedrooms",
+          "bathrooms",
+          "livingArea",
+          "yearBuilt",
+          "description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_price_history",
+      "description_for_ai": "Get sale and price history for a Zillow property.",
+      "intent": [
+        "zillow price history",
+        "home sale history",
+        "property prices",
+        "история цен zillow"
+      ],
+      "endpoint": "GET https://zillow-com1.p.rapidapi.com/priceHistory",
+      "input": {
+        "zpid": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<sale>",
+        "fields": [
+          "priceHistory[0].date",
+          "priceHistory[0].price",
+          "priceHistory[0].event",
+          "priceHistory[0].source"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_similar_homes",
+      "description_for_ai": "Get similar home listings to a Zillow property.",
+      "intent": [
+        "similar homes zillow",
+        "comparable sales",
+        "homes like this",
+        "похожие дома zillow"
+      ],
+      "endpoint": "GET https://zillow-com1.p.rapidapi.com/similarProperties",
+      "input": {
+        "zpid": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<property>",
+        "fields": [
+          "results[0].zpid",
+          "results[0].address",
+          "results[0].price",
+          "results[0].beds",
+          "results[0].baths"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_market_trends",
+      "description_for_ai": "Get local housing market trends for a ZIP code or city.",
+      "intent": [
+        "housing market zillow",
+        "real estate trends",
+        "market data zillow",
+        "рынок недвижимости zillow"
+      ],
+      "endpoint": "GET https://zillow-com1.p.rapidapi.com/marketTrends",
+      "input": {
+        "regionId": {
+          "type": "string",
+          "required": false
+        },
+        "zip": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "trends",
+        "fields": [
+          "medianSalePrice",
+          "medianListPrice",
+          "medianPricePerSqft",
+          "daysToClose",
+          "inventoryCount"
         ]
       },
       "realtime": true,
