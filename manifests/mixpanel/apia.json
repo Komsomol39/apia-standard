@@ -145,6 +145,42 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "create_annotation",
+      "description_for_ai": "Create an annotation on a Mixpanel chart to mark important events (deploys, campaigns).",
+      "intent": [
+        "annotation mixpanel",
+        "mark event analytics",
+        "milestone mixpanel",
+        "аннотация mixpanel"
+      ],
+      "endpoint": "POST https://mixpanel.com/api/2.0/annotations/create",
+      "input": {
+        "project_id": {
+          "type": "integer",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DDTHH:MM:SS",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "annotation",
+        "fields": [
+          "annotation.id",
+          "annotation.description",
+          "annotation.date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
