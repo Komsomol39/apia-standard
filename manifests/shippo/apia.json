@@ -22,28 +22,29 @@
   },
   "capabilities": [
     {
-      "id": "get_rates",
-      "description_for_ai": "Get shipping rates across all carriers for a package.",
+      "id": "create_shipment",
+      "description_for_ai": "Create a shipment with Shippo and get rates from multiple carriers.",
       "intent": [
         "shipping rates",
-        "compare carriers",
-        "shippo rates",
-        "тарифы доставки shippo"
+        "Shippo shipment",
+        "compare shipping",
+        "стоимость доставки Shippo"
       ],
       "endpoint": "POST https://api.goshippo.com/shipments/",
       "input": {
         "address_from": {
           "type": "object",
-          "description": "{name, street1, city, state, zip, country, phone}",
+          "description": "{name, company, street1, city, state, zip, country, phone, email}",
           "required": true
         },
         "address_to": {
           "type": "object",
+          "description": "Same format",
           "required": true
         },
         "parcels": {
           "type": "array",
-          "description": "[{length: 10, width: 8, height: 4, distance_unit: in, weight: 2, mass_unit: lb}]",
+          "description": "[{length, width, height, distance_unit: 'in', weight, mass_unit: 'lb'}]",
           "required": true
         },
         "async": {
@@ -52,8 +53,9 @@
         }
       },
       "output": {
-        "type": "list<rate>",
+        "type": "shipment",
         "fields": [
+          "object_id",
           "rates[0].provider",
           "rates[0].servicelevel.name",
           "rates[0].amount",
@@ -65,24 +67,24 @@
       "requires_auth": true
     },
     {
-      "id": "buy_label",
-      "description_for_ai": "Purchase a shipping label from Shippo at a chosen rate.",
+      "id": "create_label",
+      "description_for_ai": "Purchase a shipping label for a specific rate.",
       "intent": [
-        "buy label shippo",
-        "purchase shipping",
-        "print label shippo",
-        "купить этикетку shippo"
+        "buy shipping label",
+        "print label Shippo",
+        "purchase postage",
+        "купить ярлык доставки Shippo"
       ],
       "endpoint": "POST https://api.goshippo.com/transactions/",
       "input": {
         "rate": {
           "type": "string",
-          "description": "Rate object ID from get_rates",
+          "description": "Rate object ID from create_shipment",
           "required": true
         },
         "label_file_type": {
           "type": "string",
-          "description": "PDF, ZPLII, PNG, PDF_4X6",
+          "description": "PDF, PDF_4X6, PNG, ZPLII",
           "default": "PDF"
         },
         "async": {
@@ -91,12 +93,13 @@
         }
       },
       "output": {
-        "type": "label",
+        "type": "transaction",
         "fields": [
-          "tracking_number",
-          "tracking_url",
+          "object_id",
+          "status (SUCCESS/ERROR)",
           "label_url",
-          "status"
+          "tracking_number",
+          "tracking_url_provider"
         ]
       },
       "realtime": true,
@@ -104,18 +107,18 @@
     },
     {
       "id": "track_shipment",
-      "description_for_ai": "Track a shipment by tracking number.",
+      "description_for_ai": "Track a shipment by tracking number and carrier.",
       "intent": [
-        "track shipment shippo",
-        "package tracking",
+        "track package Shippo",
+        "shipment tracking",
         "delivery status",
-        "отслеживание посылки shippo"
+        "отслеживание посылки Shippo"
       ],
       "endpoint": "GET https://api.goshippo.com/tracks/{carrier}/{tracking_number}",
       "input": {
         "carrier": {
           "type": "string",
-          "description": "ups, fedex, usps, dhl_express, canada_post",
+          "description": "usps, fedex, ups, dhl_express, canada_post",
           "required": true
         },
         "tracking_number": {
@@ -128,6 +131,7 @@
         "fields": [
           "tracking_status.status",
           "tracking_status.status_details",
+          "tracking_status.location.city",
           "tracking_history[0].status",
           "tracking_history[0].status_date",
           "eta"
@@ -137,13 +141,13 @@
       "requires_auth": true
     },
     {
-      "id": "create_address",
-      "description_for_ai": "Create and validate a shipping address with Shippo.",
+      "id": "validate_address",
+      "description_for_ai": "Validate and standardize a shipping address with Shippo.",
       "intent": [
-        "create address shippo",
         "validate address",
-        "shipping address",
-        "адрес для доставки shippo"
+        "address verification",
+        "check address Shippo",
+        "проверка адреса Shippo"
       ],
       "endpoint": "POST https://api.goshippo.com/addresses/",
       "input": {
@@ -169,7 +173,6 @@
         },
         "country": {
           "type": "string",
-          "description": "ISO 2-letter code",
           "required": true
         },
         "validate": {
@@ -182,40 +185,42 @@
         "fields": [
           "object_id",
           "validation_results.is_valid",
-          "validation_results.messages[0].text"
+          "validation_results.messages[0].text",
+          "street1",
+          "city",
+          "state",
+          "zip"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "list_shipments",
-      "description_for_ai": "List recent Shippo shipments.",
+      "id": "list_parcels",
+      "description_for_ai": "Get parcel templates (standard box sizes) for easy shipment creation.",
       "intent": [
-        "shippo shipments",
-        "my shipments",
-        "order history shippo",
-        "история отправлений shippo"
+        "parcel templates",
+        "box sizes Shippo",
+        "package types",
+        "шаблоны посылок Shippo"
       ],
-      "endpoint": "GET https://api.goshippo.com/shipments/",
+      "endpoint": "GET https://api.goshippo.com/parcel-templates/",
       "input": {
-        "page": {
-          "type": "integer",
-          "default": 1
-        },
-        "results": {
-          "type": "integer",
-          "default": 25
+        "carrier": {
+          "type": "string",
+          "description": "Filter by carrier: usps, fedex, ups",
+          "required": false
         }
       },
       "output": {
-        "type": "list<shipment>",
+        "type": "list<template>",
         "fields": [
-          "results[0].object_id",
-          "results[0].status",
-          "results[0].address_to.city",
-          "results[0].parcels[0].weight",
-          "results[0].rates"
+          "results[0].name",
+          "results[0].carrier",
+          "results[0].length",
+          "results[0].width",
+          "results[0].height",
+          "results[0].distance_unit"
         ]
       },
       "realtime": true,
