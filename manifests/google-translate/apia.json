@@ -24,31 +24,35 @@
   "capabilities": [
     {
       "id": "translate",
-      "description_for_ai": "Google Translate API. 135+ languages. Detect language, translate text, translate documents. Free: 500K chars/month. More languages than DeepL but lower quality for European languages. Translate text between 135+ languages. Auto-detects source language. Use when DeepL does not support the language pair.",
+      "description_for_ai": "Translate text between 133 languages using Google Translate. Fast and supports many languages including rare ones.",
       "intent": [
-        "translate",
-        "translation",
-        "перевести",
-        "перевод",
-        "language translation",
-        "detect language"
+        "translate google",
+        "google translate",
+        "translate text",
+        "перевести google",
+        "гугл переводчик"
       ],
       "endpoint": "POST https://translation.googleapis.com/language/translate/v2",
       "input": {
         "q": {
-          "type": "string",
-          "description": "Text to translate",
+          "type": "string or array",
+          "description": "Text(s) to translate",
           "required": true
         },
         "target": {
           "type": "string",
-          "description": "Target language BCP-47: en, ru, zh, ar, hi, ja, ko, th",
+          "description": "Target language code: en, ru, de, fr, zh, ar, ja, es, pt, ko, hi, it",
           "required": true
         },
         "source": {
           "type": "string",
-          "description": "Source language, auto-detected if omitted",
+          "description": "Source language (auto-detected if omitted)",
           "required": false
+        },
+        "format": {
+          "type": "string",
+          "description": "text or html",
+          "default": "html"
         }
       },
       "output": {
@@ -59,6 +63,102 @@
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "detect_language",
+      "description_for_ai": "Detect the language of text. Returns language code and confidence score.",
+      "intent": [
+        "detect language",
+        "what language",
+        "language detection",
+        "определить язык",
+        "какой язык"
+      ],
+      "endpoint": "POST https://translation.googleapis.com/language/translate/v2/detect",
+      "input": {
+        "q": {
+          "type": "string or array",
+          "description": "Text(s) to detect",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "detection",
+        "fields": [
+          "data.detections[0][0].language",
+          "data.detections[0][0].confidence",
+          "data.detections[0][0].isReliable"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_languages",
+      "description_for_ai": "Get all 133 supported languages with codes and names.",
+      "intent": [
+        "google translate languages",
+        "supported languages",
+        "language list",
+        "языки google translate"
+      ],
+      "endpoint": "GET https://translation.googleapis.com/language/translate/v2/languages",
+      "input": {
+        "target": {
+          "type": "string",
+          "description": "Return language names in this language e.g. ru",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<language>",
+        "fields": [
+          "data.languages[0].language",
+          "data.languages[0].name"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "translate_document",
+      "description_for_ai": "Translate a document (DOCX, PDF, PPTX) while preserving formatting via Google Cloud Translation v3.",
+      "intent": [
+        "translate document google",
+        "translate PDF google",
+        "document translation",
+        "перевести документ google"
+      ],
+      "endpoint": "POST https://translation.googleapis.com/v3/projects/{project}/translateDocument",
+      "input": {
+        "parent": {
+          "type": "string",
+          "description": "projects/{project_id}/locations/global",
+          "required": true
+        },
+        "sourceLanguageCode": {
+          "type": "string",
+          "required": false
+        },
+        "targetLanguageCode": {
+          "type": "string",
+          "required": true
+        },
+        "documentInputConfig": {
+          "type": "object",
+          "description": "{content: 'base64_encoded', mimeType: 'application/pdf'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "document_translation",
+        "fields": [
+          "documentTranslation.byteStreamOutputs[0] (base64)",
+          "documentTranslation.mimeType"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
