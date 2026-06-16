@@ -22,19 +22,18 @@
   "capabilities": [
     {
       "id": "detect_labels",
-      "description_for_ai": "Detect objects, scenes, and concepts in images with confidence scores and bounding boxes.",
+      "description_for_ai": "Detect objects, scenes, and activities in images using AWS Rekognition.",
       "intent": [
-        "detect objects AWS",
-        "image labels rekognition",
+        "detect objects image",
+        "image labels",
         "what is in image",
-        "object detection AWS",
-        "распознавание объектов AWS"
+        "что на изображении AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "Image": {
           "type": "object",
-          "description": "{S3Object: {Bucket, Name, Version}} or {Bytes: BASE64}",
+          "description": "{Bytes: 'base64'} or {S3Object: {Bucket, Name}}",
           "required": true
         },
         "MaxLabels": {
@@ -43,8 +42,8 @@
         },
         "MinConfidence": {
           "type": "float",
-          "description": "Minimum confidence threshold 0-100",
-          "default": 55.0
+          "description": "Minimum confidence 0-100",
+          "default": 55
         }
       },
       "output": {
@@ -52,8 +51,45 @@
         "fields": [
           "Labels[0].Name",
           "Labels[0].Confidence",
-          "Labels[0].Instances[0].BoundingBox",
-          "Labels[0].Parents"
+          "Labels[0].Parents[0].Name",
+          "Labels[0].Instances (bounding boxes)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "detect_faces",
+      "description_for_ai": "Detect faces and analyze emotions, age range, facial features in images.",
+      "intent": [
+        "face detection",
+        "detect emotions",
+        "facial analysis",
+        "распознавание лиц AWS"
+      ],
+      "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
+      "input": {
+        "Image": {
+          "type": "object",
+          "description": "{Bytes: 'base64'} or {S3Object: {Bucket, Name}}",
+          "required": true
+        },
+        "Attributes": {
+          "type": "array",
+          "description": "['ALL'] for full analysis or ['DEFAULT'] for basic",
+          "default": [
+            "DEFAULT"
+          ]
+        }
+      },
+      "output": {
+        "type": "faces",
+        "fields": [
+          "FaceDetails[0].BoundingBox",
+          "FaceDetails[0].AgeRange.Low",
+          "FaceDetails[0].Emotions[0].Type",
+          "FaceDetails[0].Emotions[0].Confidence",
+          "FaceDetails[0].Gender.Value"
         ]
       },
       "realtime": true,
@@ -61,32 +97,26 @@
     },
     {
       "id": "detect_text",
-      "description_for_ai": "Extract text from images — signs, license plates, documents. Returns text with location.",
+      "description_for_ai": "Extract text from images and photos using Rekognition OCR.",
       "intent": [
-        "OCR AWS",
-        "extract text rekognition",
-        "read sign",
-        "license plate",
-        "распознать текст AWS"
+        "OCR image",
+        "read text from photo",
+        "image text extraction",
+        "распознавание текста на фото AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "Image": {
           "type": "object",
           "required": true
-        },
-        "Filters": {
-          "type": "object",
-          "description": "{WordFilter: {MinConfidence: 80}, RegionsOfInterest: [{BoundingBox: {...}}]}",
-          "required": false
         }
       },
       "output": {
         "type": "text",
         "fields": [
           "TextDetections[0].DetectedText",
-          "TextDetections[0].Type (LINE|WORD)",
           "TextDetections[0].Confidence",
+          "TextDetections[0].Type (LINE|WORD)",
           "TextDetections[0].Geometry.BoundingBox"
         ]
       },
@@ -95,19 +125,18 @@
     },
     {
       "id": "compare_faces",
-      "description_for_ai": "Compare two face images to determine if same person. Returns similarity score. Use for identity verification.",
+      "description_for_ai": "Compare faces in two images to check if they're the same person.",
       "intent": [
-        "face comparison AWS",
+        "face comparison",
+        "face matching",
         "same person check",
-        "face verification",
-        "identity check",
         "сравнение лиц AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "SourceImage": {
           "type": "object",
-          "description": "Reference face image",
+          "description": "Image with the reference face",
           "required": true
         },
         "TargetImage": {
@@ -117,15 +146,14 @@
         },
         "SimilarityThreshold": {
           "type": "float",
-          "description": "Minimum similarity to return 0-100",
-          "default": 80.0
+          "description": "Minimum similarity 0-100",
+          "default": 80
         }
       },
       "output": {
-        "type": "face_match",
+        "type": "comparison",
         "fields": [
           "FaceMatches[0].Similarity",
-          "FaceMatches[0].Face.Confidence",
           "FaceMatches[0].Face.BoundingBox",
           "UnmatchedFaces"
         ]
@@ -134,14 +162,13 @@
       "requires_auth": true
     },
     {
-      "id": "detect_faces",
-      "description_for_ai": "Detect faces in an image with attributes: age range, emotions, gender, glasses, beard, smile, pose.",
+      "id": "detect_moderation",
+      "description_for_ai": "Detect unsafe or inappropriate content in images for content moderation.",
       "intent": [
-        "detect faces",
-        "face analysis",
-        "emotion detection",
-        "face attributes",
-        "определение лиц AWS"
+        "image moderation",
+        "NSFW detection",
+        "unsafe content",
+        "модерация изображений AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
@@ -149,22 +176,17 @@
           "type": "object",
           "required": true
         },
-        "Attributes": {
-          "type": "array",
-          "description": "['ALL'] for all attributes, ['DEFAULT'] for basic. Includes age, gender, emotions, facial hair.",
-          "default": [
-            "DEFAULT"
-          ]
+        "MinConfidence": {
+          "type": "float",
+          "default": 50
         }
       },
       "output": {
-        "type": "faces",
+        "type": "moderation",
         "fields": [
-          "FaceDetails[0].AgeRange",
-          "FaceDetails[0].Gender.Value",
-          "FaceDetails[0].Emotions[0].Type",
-          "FaceDetails[0].Emotions[0].Confidence",
-          "FaceDetails[0].Smile.Value"
+          "ModerationLabels[0].Name",
+          "ModerationLabels[0].Confidence",
+          "ModerationLabels[0].ParentName"
         ]
       },
       "realtime": true,
