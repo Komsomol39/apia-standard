@@ -23,27 +23,27 @@
   "capabilities": [
     {
       "id": "list_sites",
-      "description_for_ai": "List all Netlify sites with deployment status and URLs.",
+      "description_for_ai": "List all Netlify sites in your account.",
       "intent": [
-        "netlify sites",
-        "list sites netlify",
-        "deployed sites",
-        "сайты netlify"
+        "Netlify sites",
+        "list deployments",
+        "my sites Netlify",
+        "список сайтов Netlify"
       ],
       "endpoint": "GET https://api.netlify.com/api/v1/sites",
       "input": {
-        "filter": {
-          "type": "string",
-          "description": "all, owner, guest",
-          "default": "all"
-        },
         "per_page": {
           "type": "integer",
-          "default": 20
+          "default": 25
         },
         "page": {
           "type": "integer",
           "default": 1
+        },
+        "filter": {
+          "type": "string",
+          "description": "all, owner, collaborator, contributor",
+          "default": "all"
         }
       },
       "output": {
@@ -51,9 +51,9 @@
         "fields": [
           "[0].id",
           "[0].name",
+          "[0].custom_domain",
           "[0].url",
-          "[0].ssl_url",
-          "[0].published_deploy.state",
+          "[0].deploy_url",
           "[0].published_deploy.published_at"
         ]
       },
@@ -61,13 +61,13 @@
       "requires_auth": true
     },
     {
-      "id": "deploy_site",
-      "description_for_ai": "Trigger a new deployment for an existing Netlify site.",
+      "id": "create_deploy",
+      "description_for_ai": "Trigger a new deployment for a Netlify site.",
       "intent": [
-        "deploy netlify",
+        "deploy Netlify",
+        "trigger build",
         "redeploy site",
-        "trigger build netlify",
-        "задеплоить netlify"
+        "деплой Netlify"
       ],
       "endpoint": "POST https://api.netlify.com/api/v1/sites/{site_id}/deploys",
       "input": {
@@ -75,15 +75,14 @@
           "type": "string",
           "required": true
         },
-        "clear_cache": {
-          "type": "boolean",
-          "description": "Clear build cache before deploying",
-          "default": false
-        },
         "title": {
           "type": "string",
           "description": "Deploy title/message",
           "required": false
+        },
+        "clear_cache": {
+          "type": "boolean",
+          "default": false
         }
       },
       "output": {
@@ -92,74 +91,103 @@
           "id",
           "state",
           "url",
-          "deploy_url",
-          "created_at"
+          "created_at",
+          "deploy_url"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_deploys",
-      "description_for_ai": "Get deploy history for a site with status and timestamps.",
+      "id": "get_deploy",
+      "description_for_ai": "Get status and details of a specific Netlify deployment.",
       "intent": [
-        "netlify deploy history",
-        "deployment log netlify",
-        "netlify builds",
-        "история деплоев netlify"
+        "deploy status Netlify",
+        "build status",
+        "deployment info",
+        "статус деплоя Netlify"
       ],
-      "endpoint": "GET https://api.netlify.com/api/v1/sites/{site_id}/deploys",
+      "endpoint": "GET https://api.netlify.com/api/v1/deploys/{deploy_id}",
       "input": {
-        "site_id": {
+        "deploy_id": {
           "type": "string",
-          "required": true
-        },
-        "per_page": {
-          "type": "integer",
-          "default": 10
-        }
-      },
-      "output": {
-        "type": "list<deploy>",
-        "fields": [
-          "[0].id",
-          "[0].state",
-          "[0].created_at",
-          "[0].published_at",
-          "[0].error_message",
-          "[0].commit_ref"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "update_env_vars",
-      "description_for_ai": "Set or update environment variables for a Netlify site.",
-      "intent": [
-        "netlify env vars",
-        "environment variables netlify",
-        "set secrets netlify",
-        "переменные окружения netlify"
-      ],
-      "endpoint": "PATCH https://api.netlify.com/api/v1/sites/{site_id}",
-      "input": {
-        "site_id": {
-          "type": "string",
-          "required": true
-        },
-        "build_settings": {
-          "type": "object",
-          "description": "{env: {MY_VAR: 'value', API_KEY: 'secret'}}",
           "required": true
         }
       },
       "output": {
-        "type": "site",
+        "type": "deploy",
         "fields": [
           "id",
-          "name",
-          "build_settings.env"
+          "state",
+          "error_message",
+          "created_at",
+          "published_at",
+          "deploy_time",
+          "url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "set_env_var",
+      "description_for_ai": "Set environment variables for a Netlify site.",
+      "intent": [
+        "set env var Netlify",
+        "environment variables",
+        "site config Netlify",
+        "переменные окружения Netlify"
+      ],
+      "endpoint": "PATCH https://api.netlify.com/api/v1/accounts/{account_id}/env",
+      "input": {
+        "account_id": {
+          "type": "string",
+          "required": true
+        },
+        "site_id": {
+          "type": "string",
+          "description": "Target site (omit for account-level)",
+          "required": false
+        },
+        "env_vars": {
+          "type": "array",
+          "description": "[{key: 'API_KEY', values: [{value: 'abc123', context: 'production'}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<env_var>",
+        "fields": [
+          "[0].key",
+          "[0].values[0].context",
+          "[0].values[0].value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "lock_deploy",
+      "description_for_ai": "Lock a deploy to production so future builds don't auto-publish, or unlock it.",
+      "intent": [
+        "lock deploy Netlify",
+        "freeze production",
+        "publish control Netlify",
+        "заморозить деплой Netlify"
+      ],
+      "endpoint": "POST https://api.netlify.com/api/v1/deploys/{deploy_id}/lock",
+      "input": {
+        "deploy_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "deploy",
+        "fields": [
+          "id",
+          "locked",
+          "state"
         ]
       },
       "realtime": true,
