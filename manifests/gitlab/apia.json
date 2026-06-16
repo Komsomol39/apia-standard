@@ -24,47 +24,53 @@
   "capabilities": [
     {
       "id": "list_projects",
-      "description_for_ai": "List GitLab projects/repositories. Filter by membership, visibility, search.",
+      "description_for_ai": "List GitLab projects (repos) you have access to. Filter by search, visibility, owned.",
       "intent": [
-        "gitlab repos",
-        "list projects",
-        "find repository",
-        "gitlab search"
+        "gitlab projects",
+        "list repos GitLab",
+        "my projects GitLab",
+        "список проектов GitLab"
       ],
       "endpoint": "GET https://gitlab.com/api/v4/projects",
       "input": {
-        "membership": {
-          "type": "boolean",
-          "description": "Only show projects user is member of",
-          "default": false
-        },
         "search": {
           "type": "string",
-          "required": false,
-          "description": "Search keywords or query string"
+          "required": false
+        },
+        "owned": {
+          "type": "boolean",
+          "description": "Only your own projects",
+          "required": false
+        },
+        "membership": {
+          "type": "boolean",
+          "description": "Projects you are member of",
+          "required": false
+        },
+        "visibility": {
+          "type": "string",
+          "description": "public, internal, private",
+          "required": false
         },
         "order_by": {
           "type": "string",
-          "description": "id, name, created_at, updated_at, last_activity_at, stars_count",
+          "description": "id, name, path, created_at, updated_at, last_activity_at, star_count",
           "default": "created_at"
         },
         "per_page": {
           "type": "integer",
-          "default": 20,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "default": 20
         }
       },
       "output": {
         "type": "list<project>",
         "fields": [
-          "id",
-          "name",
-          "description",
-          "web_url",
-          "star_count",
-          "forks_count",
-          "last_activity_at",
-          "visibility"
+          "[0].id",
+          "[0].name",
+          "[0].path_with_namespace",
+          "[0].http_url_to_repo",
+          "[0].star_count",
+          "[0].last_activity_at"
         ]
       },
       "realtime": true,
@@ -72,127 +78,260 @@
     },
     {
       "id": "create_issue",
-      "description_for_ai": "Create a new issue in a GitLab project with title, description, labels, assignees, milestone, and due date.",
+      "description_for_ai": "Create an issue in a GitLab project.",
       "intent": [
-        "create gitlab issue",
-        "new bug",
-        "add task",
-        "gitlab ticket"
+        "create issue GitLab",
+        "report bug GitLab",
+        "new ticket GitLab",
+        "задача GitLab"
       ],
       "endpoint": "POST https://gitlab.com/api/v4/projects/{id}/issues",
       "input": {
         "id": {
           "type": "string",
-          "description": "Project ID (integer) or URL-encoded path e.g. 'username%2Fproject'",
+          "description": "Project ID or URL-encoded path e.g. group%2Fproject",
           "required": true
         },
         "title": {
           "type": "string",
-          "description": "Title or name string",
           "required": true
         },
         "description": {
           "type": "string",
-          "description": "Issue description (supports GitLab Flavored Markdown)",
           "required": false
         },
         "labels": {
           "type": "string",
-          "description": "Comma-separated label names e.g. 'bug,high-priority,backend'",
+          "description": "Comma-separated labels",
           "required": false
         },
         "assignee_ids": {
           "type": "array",
-          "description": "Array of user IDs to assign the issue to",
           "required": false
         },
         "milestone_id": {
           "type": "integer",
-          "description": "Milestone ID to associate with",
           "required": false
         },
         "due_date": {
           "type": "string",
-          "description": "Due date in YYYY-MM-DD format",
+          "description": "YYYY-MM-DD",
           "required": false
-        },
-        "issue_type": {
-          "type": "string",
-          "description": "issue, incident, or task",
-          "default": "issue"
         }
       },
       "output": {
         "type": "issue",
         "fields": [
-          "id",
           "iid",
           "title",
           "web_url",
-          "state"
+          "state",
+          "created_at"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_pipelines",
-      "description_for_ai": "Get CI/CD pipeline runs for a project. Filter by status, branch, or trigger source. Use for build monitoring and deployment tracking.",
+      "id": "list_merge_requests",
+      "description_for_ai": "List merge requests (pull requests) in a project.",
       "intent": [
-        "CI status",
-        "pipeline status",
-        "build status",
-        "deployment status",
-        "gitlab CI"
+        "merge requests GitLab",
+        "MR list",
+        "code review GitLab",
+        "мёрж реквесты GitLab"
       ],
-      "endpoint": "GET https://gitlab.com/api/v4/projects/{id}/pipelines",
+      "endpoint": "GET https://gitlab.com/api/v4/projects/{id}/merge_requests",
       "input": {
         "id": {
           "type": "string",
-          "description": "Project ID or path",
           "required": true
         },
-        "status": {
+        "state": {
           "type": "string",
-          "description": "Pipeline status: created, waiting_for_resource, preparing, pending, running, success, failed, canceled, skipped, manual, scheduled",
+          "description": "opened, closed, locked, merged",
+          "default": "opened"
+        },
+        "author_id": {
+          "type": "integer",
           "required": false
         },
-        "ref": {
+        "labels": {
           "type": "string",
-          "description": "Branch or tag name to filter by",
-          "required": false
-        },
-        "sha": {
-          "type": "string",
-          "description": "Git commit SHA",
           "required": false
         },
         "per_page": {
           "type": "integer",
-          "default": 20,
-          "description": "Results per page. Check API docs for maximum allowed."
-        },
-        "order_by": {
-          "type": "string",
-          "description": "id, status, ref, updated_at, user_id",
-          "default": "id"
-        },
-        "sort": {
-          "type": "string",
-          "description": "Sort field and direction e.g. 'created_at:desc' or 'name'",
-          "default": "desc"
+          "default": 20
         }
       },
       "output": {
-        "type": "list<pipeline>",
+        "type": "list<mr>",
+        "fields": [
+          "[0].iid",
+          "[0].title",
+          "[0].state",
+          "[0].author.name",
+          "[0].web_url",
+          "[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_file",
+      "description_for_ai": "Get content of a file from a GitLab repository.",
+      "intent": [
+        "read file GitLab",
+        "get source code GitLab",
+        "repository file",
+        "файл из репозитория GitLab"
+      ],
+      "endpoint": "GET https://gitlab.com/api/v4/projects/{id}/repository/files/{file_path}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "file_path": {
+          "type": "string",
+          "description": "URL-encoded path e.g. src%2Fmain.py",
+          "required": true
+        },
+        "ref": {
+          "type": "string",
+          "description": "Branch, tag, or commit",
+          "default": "main"
+        }
+      },
+      "output": {
+        "type": "file",
+        "fields": [
+          "file_name",
+          "file_path",
+          "content (base64)",
+          "encoding",
+          "last_commit_id",
+          "size"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_commit",
+      "description_for_ai": "Create a commit with multiple file changes in one request. Create, update, or delete files.",
+      "intent": [
+        "commit GitLab",
+        "push files GitLab",
+        "create files repo",
+        "коммит GitLab"
+      ],
+      "endpoint": "POST https://gitlab.com/api/v4/projects/{id}/repository/commits",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "branch": {
+          "type": "string",
+          "required": true
+        },
+        "commit_message": {
+          "type": "string",
+          "required": true
+        },
+        "actions": {
+          "type": "array",
+          "description": "[{action: 'create'|'update'|'delete'|'move', file_path: 'path', content: 'file content'}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "commit",
+        "fields": [
+          "id",
+          "short_id",
+          "title",
+          "web_url",
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "run_pipeline",
+      "description_for_ai": "Trigger a CI/CD pipeline in a GitLab project.",
+      "intent": [
+        "run pipeline GitLab",
+        "trigger CI",
+        "run tests GitLab",
+        "запустить пайплайн GitLab"
+      ],
+      "endpoint": "POST https://gitlab.com/api/v4/projects/{id}/pipeline",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "ref": {
+          "type": "string",
+          "description": "Branch or tag to run pipeline on",
+          "required": true
+        },
+        "variables": {
+          "type": "array",
+          "description": "[{key: 'ENV', value: 'production', variable_type: 'env_var'}]",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "pipeline",
         "fields": [
           "id",
           "status",
+          "web_url",
           "ref",
-          "sha",
-          "created_at",
-          "updated_at",
-          "web_url"
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_code",
+      "description_for_ai": "Search code across all accessible GitLab projects.",
+      "intent": [
+        "search code GitLab",
+        "find code",
+        "code search",
+        "поиск кода GitLab"
+      ],
+      "endpoint": "GET https://gitlab.com/api/v4/search",
+      "input": {
+        "scope": {
+          "type": "string",
+          "description": "projects, issues, merge_requests, blobs (code), commits, users",
+          "required": true
+        },
+        "search": {
+          "type": "string",
+          "required": true
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<result>",
+        "fields": [
+          "[0].id",
+          "[0].data (code snippet)",
+          "[0].path",
+          "[0].project_id"
         ]
       },
       "realtime": true,
