@@ -22,39 +22,163 @@
   "capabilities": [
     {
       "id": "search_scenes",
-      "description_for_ai": "Daily satellite imagery of the entire Earth. 3-5m resolution, updated daily. Used for agriculture monitoring, deforestation tracking, disaster response. Commercial service with free education tier. Search for satellite scenes by location, date, and cloud cover. Returns available imagery for an area.",
+      "description_for_ai": "Search Planet Labs satellite imagery by location and date.",
       "intent": [
-        "satellite image",
-        "aerial photo",
-        "satellite view",
+        "satellite imagery Planet",
         "earth observation",
-        "land use",
-        "crop monitoring",
-        "деградация земли"
+        "satellite photos",
+        "спутниковые снимки Planet Labs"
       ],
       "endpoint": "POST https://api.planet.com/data/v1/quick-search",
       "input": {
         "item_types": {
           "type": "array",
-          "description": "[PSScene] for PlanetScope daily imagery",
+          "description": "['PSScene', 'SkySatScene', 'Landsat8L1G', 'Sentinel2L1C']",
           "required": true
         },
         "filter": {
           "type": "object",
-          "description": "{type: AndFilter, config: [DateRangeFilter, GeometryFilter, RangeFilter for cloud_cover]}",
-          "required": true,
-          "note": "See description for full object structure"
+          "description": "{type: 'AndFilter', config: [{type: 'GeometryFilter', field_name: 'geometry', config: {type: 'Point', coordinates: [-122.4, 37.7]}}, {type: 'DateRangeFilter', field_name: 'acquired', config: {gte: '2024-01-01T00:00:00Z', lte: '2024-12-31T00:00:00Z'}}, {type: 'RangeFilter', field_name: 'cloud_cover', config: {lte: 0.1}}]}",
+          "required": true
         }
       },
       "output": {
         "type": "list<scene>",
         "fields": [
+          "features[0].id",
+          "features[0].properties.acquired",
+          "features[0].properties.cloud_cover",
+          "features[0].properties.item_type",
+          "features[0].geometry.coordinates"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_item_types",
+      "description_for_ai": "Get list of available Planet Labs satellite image product types.",
+      "intent": [
+        "planet item types",
+        "satellite types",
+        "imagery products Planet",
+        "типы снимков Planet Labs"
+      ],
+      "endpoint": "GET https://api.planet.com/data/v1/item-types/",
+      "input": {},
+      "output": {
+        "type": "list<item_type>",
+        "fields": [
+          "item_types[0].id",
+          "item_types[0].display_name",
+          "item_types[0].description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "activate_asset",
+      "description_for_ai": "Activate a Planet Labs image asset for download.",
+      "intent": [
+        "activate planet asset",
+        "download satellite image",
+        "order imagery",
+        "активировать снимок Planet Labs"
+      ],
+      "endpoint": "POST https://api.planet.com/data/v1/item-types/{item_type}/items/{item_id}/assets/{asset_type}/activate",
+      "input": {
+        "item_type": {
+          "type": "string",
+          "required": true
+        },
+        "item_id": {
+          "type": "string",
+          "required": true
+        },
+        "asset_type": {
+          "type": "string",
+          "description": "analytic, visual, analytic_dn, analytic_sr",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "status",
+        "fields": [
+          "202 Accepted — poll asset endpoint to check status"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_asset_url",
+      "description_for_ai": "Get download URL for an activated Planet Labs satellite image.",
+      "intent": [
+        "download planet image",
+        "satellite image URL",
+        "get scene download",
+        "ссылка для скачивания Planet Labs"
+      ],
+      "endpoint": "GET https://api.planet.com/data/v1/item-types/{item_type}/items/{item_id}/assets/{asset_type}",
+      "input": {
+        "item_type": {
+          "type": "string",
+          "required": true
+        },
+        "item_id": {
+          "type": "string",
+          "required": true
+        },
+        "asset_type": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "asset",
+        "fields": [
+          "status (activating/active)",
+          "location (download URL when active)",
+          "expires_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_order",
+      "description_for_ai": "Create a Planet Labs order for bulk imagery delivery.",
+      "intent": [
+        "planet order",
+        "bulk satellite imagery",
+        "image order Planet Labs",
+        "заказ снимков Planet Labs"
+      ],
+      "endpoint": "POST https://api.planet.com/compute/ops/orders/v2",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "products": {
+          "type": "array",
+          "description": "[{item_ids: ['item_id'], item_type: 'PSScene', product_bundle: 'analytic_sr_udm2'}]",
+          "required": true
+        },
+        "delivery": {
+          "type": "object",
+          "description": "{google_cloud_storage: {bucket: 'bucket', credentials: 'key'}} or archive",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
           "id",
-          "properties.item_type",
-          "properties.acquired",
-          "properties.cloud_cover",
-          "properties.pixel_resolution",
-          "_links.thumbnail"
+          "state",
+          "created_on",
+          "_links.results"
         ]
       },
       "realtime": false,
