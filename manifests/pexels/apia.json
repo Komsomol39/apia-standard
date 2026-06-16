@@ -23,12 +23,12 @@
   "capabilities": [
     {
       "id": "search_photos",
-      "description_for_ai": "Search Pexels for free stock photos. Returns high-res images with photographer credits.",
+      "description_for_ai": "Search free stock photos on Pexels by keyword.",
       "intent": [
-        "pexels photos",
-        "stock photos pexels",
-        "free images pexels",
-        "фото pexels"
+        "search photos Pexels",
+        "free stock photos",
+        "image search Pexels",
+        "поиск фото Pexels"
       ],
       "endpoint": "GET https://api.pexels.com/v1/search",
       "input": {
@@ -51,12 +51,12 @@
         },
         "size": {
           "type": "string",
-          "description": "large (>24MP), medium, small",
+          "description": "large (24MP+), medium (12MP+), small",
           "required": false
         },
-        "color": {
+        "locale": {
           "type": "string",
-          "description": "Hex (#ffffff) or color name: red, orange, yellow, green, turquoise, blue, violet, pink, brown, black, gray, white",
+          "description": "en-US, ru-RU, de-DE, fr-FR, etc.",
           "required": false
         }
       },
@@ -65,10 +65,46 @@
         "fields": [
           "photos[0].id",
           "photos[0].url",
-          "photos[0].src.original",
-          "photos[0].src.medium",
           "photos[0].photographer",
-          "total_results"
+          "photos[0].src.original",
+          "photos[0].src.large2x",
+          "photos[0].src.medium",
+          "photos[0].alt"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_photo",
+      "description_for_ai": "Get details and download URLs for a specific Pexels photo by ID.",
+      "intent": [
+        "photo details Pexels",
+        "download photo",
+        "Pexels image URL",
+        "фото Pexels по ID"
+      ],
+      "endpoint": "GET https://api.pexels.com/v1/photos/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "description": "Pexels photo ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "photo",
+        "fields": [
+          "id",
+          "photographer",
+          "url",
+          "src.original",
+          "src.large",
+          "src.medium",
+          "src.small",
+          "alt",
+          "width",
+          "height"
         ]
       },
       "realtime": true,
@@ -76,12 +112,12 @@
     },
     {
       "id": "search_videos",
-      "description_for_ai": "Search Pexels for free stock videos. Returns MP4 with multiple quality levels.",
+      "description_for_ai": "Search free stock videos on Pexels.",
       "intent": [
-        "pexels video",
-        "stock video pexels",
-        "free video footage",
-        "видео pexels"
+        "search videos Pexels",
+        "free stock video",
+        "video footage Pexels",
+        "поиск видео Pexels"
       ],
       "endpoint": "GET https://api.pexels.com/videos/search",
       "input": {
@@ -93,14 +129,18 @@
           "type": "integer",
           "default": 15
         },
+        "min_duration": {
+          "type": "integer",
+          "description": "Minimum duration in seconds",
+          "required": false
+        },
+        "max_duration": {
+          "type": "integer",
+          "required": false
+        },
         "orientation": {
           "type": "string",
           "description": "landscape, portrait, square",
-          "required": false
-        },
-        "size": {
-          "type": "string",
-          "description": "large, medium, small",
           "required": false
         }
       },
@@ -111,7 +151,7 @@
           "videos[0].url",
           "videos[0].video_files[0].link",
           "videos[0].video_files[0].quality",
-          "videos[0].user.name"
+          "videos[0].duration"
         ]
       },
       "realtime": true,
@@ -119,12 +159,12 @@
     },
     {
       "id": "get_curated_photos",
-      "description_for_ai": "Get Pexels curated collection of top photos updated daily. Good for default imagery.",
+      "description_for_ai": "Get Pexels' curated collection of high-quality photos.",
       "intent": [
         "curated photos",
-        "popular pexels",
-        "trending photos",
-        "популярные фото pexels"
+        "featured photos Pexels",
+        "best photos Pexels",
+        "лучшие фото Pexels"
       ],
       "endpoint": "GET https://api.pexels.com/v1/curated",
       "input": {
@@ -140,8 +180,9 @@
       "output": {
         "type": "list<photo>",
         "fields": [
-          "photos[0].src.medium",
+          "photos[0].id",
           "photos[0].photographer",
+          "photos[0].src.large2x",
           "photos[0].alt"
         ]
       },
@@ -149,62 +190,26 @@
       "requires_auth": true
     },
     {
-      "id": "get_photo",
-      "description_for_ai": "Get a specific Pexels photo by ID with all resolution sizes.",
+      "id": "get_popular_videos",
+      "description_for_ai": "Get the most popular videos on Pexels.",
       "intent": [
-        "get pexels photo",
-        "photo by id pexels",
-        "конкретное фото pexels"
+        "popular videos Pexels",
+        "trending videos",
+        "video library",
+        "популярные видео Pexels"
       ],
-      "endpoint": "GET https://api.pexels.com/v1/photos/{id}",
+      "endpoint": "GET https://api.pexels.com/videos/popular",
       "input": {
-        "id": {
-          "type": "integer",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "photo",
-        "fields": [
-          "id",
-          "url",
-          "src.original",
-          "src.large2x",
-          "src.medium",
-          "src.small",
-          "photographer"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "search_videos",
-      "description_for_ai": "Search free stock videos on Pexels by keyword.",
-      "intent": [
-        "pexels video",
-        "free stock video",
-        "video search pexels",
-        "бесплатное видео pexels"
-      ],
-      "endpoint": "GET https://api.pexels.com/videos/search",
-      "input": {
-        "query": {
-          "type": "string",
-          "required": true
-        },
         "per_page": {
           "type": "integer",
           "default": 15
         },
-        "orientation": {
-          "type": "string",
-          "description": "landscape, portrait, square",
+        "min_width": {
+          "type": "integer",
           "required": false
         },
-        "size": {
-          "type": "string",
-          "description": "large, medium, small",
+        "min_height": {
+          "type": "integer",
           "required": false
         }
       },
@@ -214,8 +219,8 @@
           "videos[0].id",
           "videos[0].url",
           "videos[0].duration",
-          "videos[0].video_files[0].link",
-          "videos[0].user.name"
+          "videos[0].user.name",
+          "videos[0].video_files[0].link"
         ]
       },
       "realtime": true,
