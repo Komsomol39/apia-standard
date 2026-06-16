@@ -175,6 +175,35 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "delete_responses",
+      "description_for_ai": "Delete specific response submissions from a Typeform form.",
+      "intent": [
+        "delete response typeform",
+        "remove submission",
+        "удалить ответ typeform"
+      ],
+      "endpoint": "DELETE https://api.typeform.com/forms/{form_id}/responses",
+      "input": {
+        "form_id": {
+          "type": "string",
+          "required": true
+        },
+        "included_response_ids": {
+          "type": "string",
+          "description": "Comma-separated response IDs to delete",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
