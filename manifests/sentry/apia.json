@@ -23,31 +23,31 @@
   "capabilities": [
     {
       "id": "list_issues",
-      "description_for_ai": "List Sentry error issues for a project with filters.",
+      "description_for_ai": "List error issues in a Sentry project. Filter by status, priority, assignee, and tags.",
       "intent": [
-        "sentry errors",
-        "sentry issues",
-        "application errors",
-        "ошибки sentry"
+        "Sentry issues",
+        "error list",
+        "bug tracking Sentry",
+        "ошибки Sentry"
       ],
-      "endpoint": "GET https://sentry.io/api/0/projects/{organization}/{project}/issues/",
+      "endpoint": "GET https://sentry.io/api/0/projects/{organization_slug}/{project_slug}/issues/",
       "input": {
-        "organization": {
+        "organization_slug": {
           "type": "string",
           "required": true
         },
-        "project": {
+        "project_slug": {
           "type": "string",
           "required": true
         },
         "query": {
           "type": "string",
-          "description": "Search: is:unresolved, level:error, browser:Chrome, user.email:user@example.com",
-          "required": false
+          "description": "Filter query: is:unresolved, level:error, assigned:me, !has:release",
+          "default": "is:unresolved"
         },
         "sort": {
           "type": "string",
-          "description": "date, freq, new, priority",
+          "description": "date, new, priority, freq, trends",
           "default": "date"
         },
         "limit": {
@@ -61,11 +61,12 @@
           "[0].id",
           "[0].title",
           "[0].culprit",
+          "[0].level",
           "[0].count",
           "[0].userCount",
           "[0].firstSeen",
           "[0].lastSeen",
-          "[0].level"
+          "[0].status"
         ]
       },
       "realtime": true,
@@ -73,12 +74,12 @@
     },
     {
       "id": "get_issue",
-      "description_for_ai": "Get details of a specific Sentry issue with stack trace and event data.",
+      "description_for_ai": "Get full details of a Sentry issue including stack trace, tags, and affected users.",
       "intent": [
-        "sentry issue details",
-        "error details sentry",
-        "stack trace sentry",
-        "детали ошибки sentry"
+        "issue details Sentry",
+        "error details",
+        "stack trace",
+        "детали ошибки Sentry"
       ],
       "endpoint": "GET https://sentry.io/api/0/issues/{issue_id}/",
       "input": {
@@ -93,25 +94,25 @@
           "id",
           "title",
           "culprit",
-          "metadata.filename",
+          "level",
           "count",
           "userCount",
-          "firstSeen",
           "lastSeen",
-          "tags"
+          "tags",
+          "assignedTo"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "resolve_issue",
-      "description_for_ai": "Resolve or ignore a Sentry issue.",
+      "id": "update_issue",
+      "description_for_ai": "Resolve, ignore, or assign a Sentry issue.",
       "intent": [
-        "resolve sentry issue",
-        "close error sentry",
+        "resolve Sentry issue",
+        "assign error",
         "ignore error",
-        "исправить ошибку sentry"
+        "обновить ошибку Sentry"
       ],
       "endpoint": "PUT https://sentry.io/api/0/issues/{issue_id}/",
       "input": {
@@ -121,12 +122,16 @@
         },
         "status": {
           "type": "string",
-          "description": "resolved, resolvedInNextRelease, ignored, unresolved",
-          "required": true
+          "description": "resolved, unresolved, ignored",
+          "required": false
         },
         "assignedTo": {
           "type": "string",
-          "description": "Username or email to assign",
+          "description": "Username or email to assign to",
+          "required": false
+        },
+        "hasSeen": {
+          "type": "boolean",
           "required": false
         }
       },
@@ -142,48 +147,115 @@
       "requires_auth": true
     },
     {
-      "id": "create_release",
-      "description_for_ai": "Create a Sentry release to track deployments and associate errors with versions.",
+      "id": "list_events",
+      "description_for_ai": "List recent error events for a specific issue with full stack traces.",
       "intent": [
-        "sentry release",
-        "deployment sentry",
-        "track version sentry",
-        "релиз sentry"
+        "Sentry events",
+        "error events",
+        "error occurrences",
+        "события ошибки Sentry"
       ],
-      "endpoint": "POST https://sentry.io/api/0/organizations/{organization}/releases/",
+      "endpoint": "GET https://sentry.io/api/0/issues/{issue_id}/events/",
       "input": {
-        "organization": {
+        "issue_id": {
           "type": "string",
           "required": true
         },
-        "version": {
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<event>",
+        "fields": [
+          "[0].id",
+          "[0].dateCreated",
+          "[0].message",
+          "[0].entries[0].data.values[0].stacktrace"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_project",
+      "description_for_ai": "Create a new Sentry project for a platform/language.",
+      "intent": [
+        "create Sentry project",
+        "new project monitoring",
+        "add project Sentry",
+        "новый проект Sentry"
+      ],
+      "endpoint": "POST https://sentry.io/api/0/teams/{organization_slug}/{team_slug}/projects/",
+      "input": {
+        "organization_slug": {
           "type": "string",
-          "description": "Release version e.g. 1.0.0 or git SHA",
           "required": true
         },
-        "projects": {
-          "type": "array",
-          "description": "Project slugs",
+        "team_slug": {
+          "type": "string",
           "required": true
         },
-        "ref": {
+        "name": {
           "type": "string",
-          "description": "Git commit reference",
-          "required": false
+          "required": true
         },
-        "url": {
+        "platform": {
           "type": "string",
-          "description": "Release URL",
+          "description": "python, node, javascript, react, vue, django, flask, nextjs, etc.",
           "required": false
         }
       },
       "output": {
-        "type": "release",
+        "type": "project",
         "fields": [
-          "version",
-          "projects",
-          "dateCreated",
-          "url"
+          "id",
+          "slug",
+          "name",
+          "platform",
+          "dsn.public (SDK key)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "query_discover",
+      "description_for_ai": "Run Discover queries to analyze errors and performance across projects.",
+      "intent": [
+        "Sentry analytics",
+        "discover query",
+        "performance analysis",
+        "аналитика Sentry"
+      ],
+      "endpoint": "GET https://sentry.io/api/0/organizations/{organization_slug}/events/",
+      "input": {
+        "organization_slug": {
+          "type": "string",
+          "required": true
+        },
+        "field": {
+          "type": "array",
+          "description": "['transaction', 'count()', 'p95(transaction.duration)', 'error_rate()']",
+          "required": true
+        },
+        "query": {
+          "type": "string",
+          "description": "Filter: event.type:error, has:user.email",
+          "required": false
+        },
+        "sort": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "discover",
+        "fields": [
+          "data[0].transaction",
+          "data[0].count()",
+          "meta.fields"
         ]
       },
       "realtime": true,
