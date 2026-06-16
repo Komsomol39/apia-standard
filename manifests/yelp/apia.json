@@ -27,69 +27,202 @@
   "capabilities": [
     {
       "id": "search_businesses",
-      "description_for_ai": "Business reviews and local search API. 265M+ reviews, 8M+ businesses. Search restaurants, services, shops with ratings and hours. Best for US/Canada business discovery. Use for finding local businesses with reviews. Search businesses by keyword and location. Returns name, rating, price, hours, address, phone.",
+      "description_for_ai": "Search businesses on Yelp by keyword and location.",
       "intent": [
-        "find restaurant",
-        "local business",
         "yelp search",
-        "best coffee shop",
-        "reviews nearby"
+        "find restaurant yelp",
+        "business search",
+        "поиск заведений yelp"
       ],
       "endpoint": "GET https://api.yelp.com/v3/businesses/search",
       "input": {
         "term": {
           "type": "string",
-          "description": "Search term e.g. pizza, coffee, plumber",
+          "description": "Search term: pizza, plumber, coffee",
           "required": false
         },
         "location": {
           "type": "string",
-          "description": "Address or city e.g. San Francisco CA",
+          "description": "City or address: 'San Francisco, CA'",
           "required": false
         },
         "latitude": {
           "type": "float",
-          "required": false,
-          "description": "Latitude in decimal degrees (-90 to 90)"
+          "required": false
         },
         "longitude": {
           "type": "float",
-          "required": false,
-          "description": "Longitude in decimal degrees (-180 to 180)"
+          "required": false
         },
         "radius": {
           "type": "integer",
           "description": "Meters, max 40000",
-          "default": 1000
+          "default": 3000
         },
-        "open_now": {
-          "type": "boolean",
+        "categories": {
+          "type": "string",
+          "description": "Category: restaurants, bars, coffee, auto",
           "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 20,
-          "max": 50,
-          "description": "Maximum number of results to return"
         },
         "sort_by": {
           "type": "string",
           "description": "best_match, rating, review_count, distance",
           "default": "best_match"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
         "type": "list<business>",
         "fields": [
+          "businesses[0].id",
+          "businesses[0].name",
+          "businesses[0].rating",
+          "businesses[0].review_count",
+          "businesses[0].location.address1",
+          "businesses[0].phone",
+          "businesses[0].distance"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_business",
+      "description_for_ai": "Get full Yelp business details: hours, photos, categories.",
+      "intent": [
+        "yelp business details",
+        "restaurant info yelp",
+        "business hours yelp",
+        "детали заведения yelp"
+      ],
+      "endpoint": "GET https://api.yelp.com/v3/businesses/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Yelp business ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "business",
+        "fields": [
           "id",
           "name",
           "rating",
           "review_count",
-          "price",
           "location.display_address",
-          "display_phone",
-          "hours",
-          "categories"
+          "hours[0].open[0].start",
+          "photos",
+          "categories[0].title",
+          "price"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_reviews",
+      "description_for_ai": "Get Yelp reviews for a business.",
+      "intent": [
+        "yelp reviews",
+        "business reviews",
+        "customer feedback yelp",
+        "отзывы yelp"
+      ],
+      "endpoint": "GET https://api.yelp.com/v3/businesses/{id}/reviews",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        },
+        "sort_by": {
+          "type": "string",
+          "description": "yelp_sort (default), newest, oldest, highest_rated, lowest_rated",
+          "default": "yelp_sort"
+        }
+      },
+      "output": {
+        "type": "list<review>",
+        "fields": [
+          "reviews[0].id",
+          "reviews[0].rating",
+          "reviews[0].text",
+          "reviews[0].user.name",
+          "reviews[0].time_created"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_categories",
+      "description_for_ai": "Get all Yelp business categories.",
+      "intent": [
+        "yelp categories",
+        "business types yelp",
+        "category list yelp",
+        "категории yelp"
+      ],
+      "endpoint": "GET https://api.yelp.com/v3/categories",
+      "input": {
+        "locale": {
+          "type": "string",
+          "description": "en_US, ru_RU, de_DE",
+          "default": "en_US"
+        }
+      },
+      "output": {
+        "type": "list<category>",
+        "fields": [
+          "categories[0].alias",
+          "categories[0].title",
+          "categories[0].parent_aliases"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "autocomplete",
+      "description_for_ai": "Get autocomplete suggestions for Yelp search.",
+      "intent": [
+        "yelp autocomplete",
+        "search suggestions yelp",
+        "business suggestions",
+        "автодополнение yelp"
+      ],
+      "endpoint": "GET https://api.yelp.com/v3/autocomplete",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": true
+        },
+        "latitude": {
+          "type": "float",
+          "required": false
+        },
+        "longitude": {
+          "type": "float",
+          "required": false
+        },
+        "locale": {
+          "type": "string",
+          "default": "en_US"
+        }
+      },
+      "output": {
+        "type": "suggestions",
+        "fields": [
+          "terms[0].text",
+          "businesses[0].name",
+          "categories[0].title"
         ]
       },
       "realtime": true,
