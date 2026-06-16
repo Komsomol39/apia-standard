@@ -21,135 +21,104 @@
   "capabilities": [
     {
       "id": "generate_qr",
-      "description_for_ai": "Generate a QR code image for any text, URL, or data.",
+      "description_for_ai": "Generate a QR code image from any URL or text.",
       "intent": [
         "generate QR code",
-        "QR code maker",
         "create QR",
+        "QR code image",
         "создать QR код"
+      ],
+      "endpoint": "GET https://api.qr-code-generator.com/v1/create",
+      "input": {
+        "qr_code_text": {
+          "type": "string",
+          "description": "URL or text to encode",
+          "required": true
+        },
+        "image_format": {
+          "type": "string",
+          "description": "PNG, JPEG, SVG",
+          "default": "PNG"
+        },
+        "image_width_x": {
+          "type": "integer",
+          "description": "Width in pixels",
+          "default": 300
+        },
+        "qr_code_margin": {
+          "type": "integer",
+          "description": "White border size",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "Binary image data (PNG/SVG)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_qr_url",
+      "description_for_ai": "Generate a QR code via URL parameters (no auth required for basic).",
+      "intent": [
+        "QR code URL",
+        "free QR code",
+        "quick QR",
+        "QR по URL"
       ],
       "endpoint": "GET https://api.qrserver.com/v1/create-qr-code/",
       "input": {
         "data": {
           "type": "string",
-          "description": "Content to encode: URL, text, phone number, vCard",
+          "description": "Text to encode (URL-encoded)",
           "required": true
         },
         "size": {
           "type": "string",
-          "description": "WxH pixels: 300x300, 500x500, 1000x1000",
+          "description": "WxH in pixels: 300x300",
           "default": "300x300"
         },
         "format": {
           "type": "string",
-          "description": "png, jpg, gif, svg",
+          "description": "png, svg, gif, eps",
           "default": "png"
         },
         "ecc": {
           "type": "string",
-          "description": "Error correction: L, M, Q, H",
+          "description": "Error correction: L M Q H",
           "default": "L"
         },
         "color": {
           "type": "string",
-          "description": "Hex foreground: 000000 (black)",
-          "default": "000000"
+          "description": "Foreground color hex without #: 000000",
+          "required": false
         },
         "bgcolor": {
           "type": "string",
-          "description": "Hex background: ffffff (white)",
-          "default": "ffffff"
+          "description": "Background color hex: ffffff",
+          "required": false
         }
       },
       "output": {
         "type": "image",
         "fields": [
-          "QR code image binary"
+          "Binary QR image"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "generate_qr_with_logo",
-      "description_for_ai": "Generate a QR code with a logo/image in the center.",
-      "intent": [
-        "QR code with logo",
-        "branded QR code",
-        "custom QR",
-        "QR код с логотипом"
-      ],
-      "endpoint": "GET https://api.qrserver.com/v1/create-qr-code/",
-      "input": {
-        "data": {
-          "type": "string",
-          "required": true
-        },
-        "size": {
-          "type": "string",
-          "default": "500x500"
-        },
-        "ecc": {
-          "type": "string",
-          "description": "Use H for logo (30% data recovery)",
-          "default": "H"
-        },
-        "margin": {
-          "type": "integer",
-          "description": "Quiet zone in pixels",
-          "default": 10
-        }
-      },
-      "output": {
-        "type": "image",
-        "fields": [
-          "QR code PNG/SVG"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "generate_svg_qr",
-      "description_for_ai": "Generate a scalable SVG QR code.",
-      "intent": [
-        "SVG QR code",
-        "vector QR",
-        "scalable QR code",
-        "SVG QR код"
-      ],
-      "endpoint": "GET https://api.qrserver.com/v1/create-qr-code/",
-      "input": {
-        "data": {
-          "type": "string",
-          "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "svg"
-        },
-        "size": {
-          "type": "string",
-          "default": "300x300"
-        }
-      },
-      "output": {
-        "type": "svg",
-        "fields": [
-          "SVG XML content"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "read_qr",
+      "id": "decode_qr",
       "description_for_ai": "Decode/read a QR code from an image URL.",
       "intent": [
-        "read QR code",
-        "decode QR",
-        "scan QR code",
-        "считать QR код"
+        "decode QR code",
+        "read QR",
+        "scan QR",
+        "расшифровать QR код"
       ],
       "endpoint": "GET https://api.qrserver.com/v1/read-qr-code/",
       "input": {
@@ -162,27 +131,66 @@
       "output": {
         "type": "decoded",
         "fields": [
-          "[0].symbol[0].data",
-          "[0].symbol[0].type"
+          "[0].symbol[0].data (decoded text)",
+          "[0].symbol[0].type",
+          "[0].symbol[0].error"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "bulk_qr_codes",
-      "description_for_ai": "Generate multiple QR codes in a batch.",
+      "id": "generate_with_logo",
+      "description_for_ai": "Generate a QR code with a custom logo in the center.",
       "intent": [
-        "batch QR codes",
-        "multiple QR generate",
-        "bulk QR creation",
-        "генерация QR пакетом"
+        "QR code with logo",
+        "branded QR",
+        "QR with image",
+        "QR с логотипом"
+      ],
+      "endpoint": "POST https://api.qr-code-generator.com/v1/create",
+      "input": {
+        "qr_code_text": {
+          "type": "string",
+          "required": true
+        },
+        "qr_code_logo": {
+          "type": "string",
+          "description": "Logo image URL",
+          "required": true
+        },
+        "image_format": {
+          "type": "string",
+          "default": "PNG"
+        },
+        "image_width_x": {
+          "type": "integer",
+          "default": 500
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "PNG binary with centered logo"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_vcard_qr",
+      "description_for_ai": "Generate a QR code containing contact information (vCard).",
+      "intent": [
+        "vCard QR code",
+        "contact QR",
+        "business card QR",
+        "QR для контакта"
       ],
       "endpoint": "GET https://api.qrserver.com/v1/create-qr-code/",
       "input": {
         "data": {
           "type": "string",
-          "description": "Data to encode (one at a time — call repeatedly for bulk)",
+          "description": "vCard data: BEGIN:VCARD\\nVERSION:3.0\\nFN:John Doe\\nTEL:+1234567890\\nEMAIL:john@example.com\\nEND:VCARD",
           "required": true
         },
         "size": {
@@ -191,18 +199,13 @@
         },
         "format": {
           "type": "string",
-          "description": "png, svg",
           "default": "png"
-        },
-        "color": {
-          "type": "string",
-          "required": false
         }
       },
       "output": {
         "type": "image",
         "fields": [
-          "QR code image"
+          "QR code image with vCard data"
         ]
       },
       "realtime": true,
