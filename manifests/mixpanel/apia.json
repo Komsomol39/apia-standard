@@ -23,18 +23,18 @@
   "capabilities": [
     {
       "id": "track_event",
-      "description_for_ai": "Track a user event in Mixpanel with properties. Use for product analytics, funnel tracking.",
+      "description_for_ai": "Track a user event in Mixpanel for analytics and funnel analysis.",
       "intent": [
-        "track event mixpanel",
+        "track event",
         "analytics event",
-        "user event tracking",
-        "отслеживание события mixpanel"
+        "mixpanel track",
+        "трекинг события mixpanel"
       ],
       "endpoint": "POST https://api.mixpanel.com/track",
       "input": {
         "data": {
           "type": "string",
-          "description": "Base64-encoded JSON array of events: [{event: 'Purchase', properties: {distinct_id: 'user123', token: 'TOKEN', amount: 99.99, plan: 'pro', time: 1234567890}}]",
+          "description": "Base64-encoded JSON: [{event: 'Button Click', properties: {token: 'TOKEN', distinct_id: 'user123', time: 1609459200, page: '/home', $browser: 'Chrome'}}]",
           "required": true
         }
       },
@@ -45,92 +45,106 @@
         ]
       },
       "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "import_events",
-      "description_for_ai": "Import historical events in bulk. Use for data migration or batch ingestion.",
-      "intent": [
-        "bulk import mixpanel",
-        "historical data",
-        "batch events",
-        "массовый импорт mixpanel"
-      ],
-      "endpoint": "POST https://api.mixpanel.com/import",
-      "input": {
-        "data": {
-          "type": "array",
-          "description": "[{event: 'Sign Up', properties: {distinct_id, token, time}}] — up to 2000 events per request",
-          "required": true
-        },
-        "strict": {
-          "type": "integer",
-          "description": "1 to reject invalid events, 0 to skip them",
-          "default": 0
-        }
-      },
-      "output": {
-        "type": "result",
-        "fields": [
-          "num_records_imported",
-          "failed_imported (if strict=0)"
-        ]
-      },
-      "realtime": false,
       "requires_auth": true
     },
     {
       "id": "query_jql",
-      "description_for_ai": "Query event data using JQL (JavaScript Query Language). Powerful custom analytics queries.",
+      "description_for_ai": "Run JQL (JavaScript Query Language) queries on Mixpanel data for custom reports.",
       "intent": [
         "mixpanel query",
-        "JQL analytics",
-        "custom report mixpanel",
-        "запрос mixpanel JQL"
+        "event analytics",
+        "funnel analysis mixpanel",
+        "аналитика mixpanel"
       ],
       "endpoint": "POST https://mixpanel.com/api/2.0/jql",
       "input": {
         "script": {
           "type": "string",
-          "description": "JQL script: 'function main() { return Events({from_date: \"2024-01-01\", to_date: \"2024-01-31\", event_selectors: [{event: \"Purchase\"}]}).groupBy([\"properties.plan\"], mixpanel.reducer.count()); }'",
+          "description": "JQL script e.g. function main() { return Events({from_date: '2024-01-01', to_date: '2024-01-31', event_selectors: [{event: 'Purchase'}]}).groupBy(['properties.plan'], mixpanel.reducer.count()); }",
           "required": true
         }
       },
       "output": {
-        "type": "query_result",
+        "type": "list<result>",
         "fields": [
-          "[0].key[0] (dimension value)",
-          "[0].value (aggregate value)"
+          "results (array of {key, value})"
         ]
       },
       "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "update_profile",
-      "description_for_ai": "Create or update a user profile with properties for segmentation.",
+      "id": "set_user_profile",
+      "description_for_ai": "Create or update a Mixpanel user profile with properties.",
       "intent": [
-        "mixpanel profile",
-        "user profile update",
-        "set user property",
+        "set user mixpanel",
+        "user profile analytics",
+        "identify user",
         "профиль пользователя mixpanel"
       ],
       "endpoint": "POST https://api.mixpanel.com/engage",
       "input": {
         "data": {
           "type": "string",
-          "description": "Base64-encoded: {$token: 'TOKEN', $distinct_id: 'user123', $set: {name: 'John Doe', email: 'john@example.com', plan: 'pro', $created: '2024-01-15T10:00:00'}}",
+          "description": "Base64-encoded JSON: [{$token: 'TOKEN', $distinct_id: 'user123', $set: {$name: 'John Doe', $email: 'john@example.com', plan: 'pro', created_at: '2024-01-15'}}]",
           "required": true
         }
       },
       "output": {
         "type": "result",
         "fields": [
-          "1 (success)"
+          "1 (success) or 0 (failure)"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
+    },
+    {
+      "id": "get_event_stats",
+      "description_for_ai": "Get aggregated event statistics over a time range using Mixpanel Insights API.",
+      "intent": [
+        "event stats mixpanel",
+        "event count",
+        "daily events",
+        "статистика событий mixpanel"
+      ],
+      "endpoint": "GET https://mixpanel.com/api/2.0/events",
+      "input": {
+        "event": {
+          "type": "array",
+          "description": "Event names e.g. ['Purchase', 'Sign Up']",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "general or unique",
+          "default": "general"
+        },
+        "unit": {
+          "type": "string",
+          "description": "minute, hour, day, week, month",
+          "default": "day"
+        },
+        "interval": {
+          "type": "integer",
+          "description": "Number of units back from now",
+          "default": 30
+        },
+        "from_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "stats",
+        "fields": [
+          "data.series (dates)",
+          "data.values.EventName (date→count map)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "meta": {
