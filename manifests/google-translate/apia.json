@@ -23,36 +23,35 @@
   },
   "capabilities": [
     {
-      "id": "translate",
-      "description_for_ai": "Translate text between 133 languages using Google Translate. Fast and supports many languages including rare ones.",
+      "id": "translate_text",
+      "description_for_ai": "Translate text between 133+ languages with Google Translate.",
       "intent": [
-        "translate google",
-        "google translate",
         "translate text",
-        "перевести google",
-        "гугл переводчик"
+        "Google Translate API",
+        "language translation",
+        "перевести текст Google"
       ],
       "endpoint": "POST https://translation.googleapis.com/language/translate/v2",
       "input": {
         "q": {
           "type": "string or array",
-          "description": "Text(s) to translate",
+          "description": "Text to translate. Can be array for batch.",
           "required": true
         },
         "target": {
           "type": "string",
-          "description": "Target language code: en, ru, de, fr, zh, ar, ja, es, pt, ko, hi, it",
+          "description": "Target language ISO 639-1: en, ru, de, fr, es, zh, ja, ar",
           "required": true
         },
         "source": {
           "type": "string",
-          "description": "Source language (auto-detected if omitted)",
+          "description": "Source language. Auto-detected if omitted.",
           "required": false
         },
         "format": {
           "type": "string",
           "description": "text or html",
-          "default": "html"
+          "default": "text"
         }
       },
       "output": {
@@ -67,19 +66,18 @@
     },
     {
       "id": "detect_language",
-      "description_for_ai": "Detect the language of text. Returns language code and confidence score.",
+      "description_for_ai": "Detect the language of a text.",
       "intent": [
         "detect language",
-        "what language",
         "language detection",
-        "определить язык",
-        "какой язык"
+        "what language is this",
+        "определить язык текста"
       ],
       "endpoint": "POST https://translation.googleapis.com/language/translate/v2/detect",
       "input": {
         "q": {
           "type": "string or array",
-          "description": "Text(s) to detect",
+          "description": "Text(s) to detect language of",
           "required": true
         }
       },
@@ -87,7 +85,7 @@
         "type": "detection",
         "fields": [
           "data.detections[0][0].language",
-          "data.detections[0][0].confidence",
+          "data.detections[0][0].confidence (0-1)",
           "data.detections[0][0].isReliable"
         ]
       },
@@ -96,18 +94,23 @@
     },
     {
       "id": "list_languages",
-      "description_for_ai": "Get all 133 supported languages with codes and names.",
+      "description_for_ai": "List all supported language codes with names.",
       "intent": [
-        "google translate languages",
         "supported languages",
         "language list",
-        "языки google translate"
+        "Google Translate languages",
+        "список языков перевода"
       ],
       "endpoint": "GET https://translation.googleapis.com/language/translate/v2/languages",
       "input": {
         "target": {
           "type": "string",
-          "description": "Return language names in this language e.g. ru",
+          "description": "Get language names in this language: en, ru",
+          "required": false
+        },
+        "model": {
+          "type": "string",
+          "description": "nmt (neural) or base",
           "required": false
         }
       },
@@ -118,81 +121,98 @@
           "data.languages[0].name"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "translate_document",
-      "description_for_ai": "Translate a document (DOCX, PDF, PPTX) while preserving formatting via Google Cloud Translation v3.",
+      "id": "translate_with_glossary",
+      "description_for_ai": "Translate using a custom glossary for domain-specific terminology.",
       "intent": [
-        "translate document google",
-        "translate PDF google",
-        "document translation",
-        "перевести документ google"
+        "glossary translation",
+        "custom terms translation",
+        "domain translation",
+        "перевод с глоссарием"
       ],
-      "endpoint": "POST https://translation.googleapis.com/v3/projects/{project}/translateDocument",
+      "endpoint": "POST https://translation.googleapis.com/v3/projects/{project}:translateText",
       "input": {
-        "parent": {
+        "project": {
           "type": "string",
-          "description": "projects/{project_id}/locations/global",
+          "required": true
+        },
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "targetLanguageCode": {
+          "type": "string",
           "required": true
         },
         "sourceLanguageCode": {
           "type": "string",
           "required": false
         },
-        "targetLanguageCode": {
-          "type": "string",
-          "required": true
-        },
-        "documentInputConfig": {
+        "glossaryConfig": {
           "type": "object",
-          "description": "{content: 'base64_encoded', mimeType: 'application/pdf'}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "document_translation",
-        "fields": [
-          "documentTranslation.byteStreamOutputs[0] (base64)",
-          "documentTranslation.mimeType"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "html_translation",
-      "description_for_ai": "Translate HTML content preserving tags and structure.",
-      "intent": [
-        "translate HTML",
-        "website translation",
-        "html translate google",
-        "перевести HTML"
-      ],
-      "endpoint": "POST https://translation.googleapis.com/language/translate/v2",
-      "input": {
-        "q": {
-          "type": "string",
-          "description": "HTML string to translate",
-          "required": true
-        },
-        "target": {
-          "type": "string",
-          "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "html"
+          "description": "{glossary: 'projects/PROJECT/locations/us-central1/glossaries/GLOSSARY_ID', ignoreCase: false}",
+          "required": false
         }
       },
       "output": {
         "type": "translation",
         "fields": [
-          "data.translations[0].translatedText (HTML preserved)"
+          "translations[0].translatedText",
+          "translations[0].glossaryTranslations[0].translatedText"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "batch_translate",
+      "description_for_ai": "Translate large volumes of text asynchronously from Cloud Storage.",
+      "intent": [
+        "batch translate",
+        "bulk translation",
+        "large file translation",
+        "массовый перевод"
+      ],
+      "endpoint": "POST https://translation.googleapis.com/v3/projects/{project}/locations/{location}:batchTranslateText",
+      "input": {
+        "project": {
+          "type": "string",
+          "required": true
+        },
+        "location": {
+          "type": "string",
+          "default": "us-central1"
+        },
+        "sourceLanguageCode": {
+          "type": "string",
+          "required": true
+        },
+        "targetLanguageCodes": {
+          "type": "array",
+          "required": true
+        },
+        "inputConfigs": {
+          "type": "array",
+          "description": "[{gcsSource: {inputUri: 'gs://bucket/input'}, mimeType: 'text/html'}]",
+          "required": true
+        },
+        "outputConfig": {
+          "type": "object",
+          "description": "{gcsDestination: {outputUriPrefix: 'gs://bucket/output/'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "operation",
+        "fields": [
+          "name (long-running operation ID)",
+          "metadata.state"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
