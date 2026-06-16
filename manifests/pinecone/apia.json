@@ -173,6 +173,30 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_indexes",
+      "description_for_ai": "List all Pinecone indexes in the project.",
+      "intent": [
+        "pinecone indexes",
+        "vector databases",
+        "list indexes",
+        "список индексов pinecone"
+      ],
+      "endpoint": "GET https://api.pinecone.io/indexes",
+      "input": {},
+      "output": {
+        "type": "list<index>",
+        "fields": [
+          "indexes[0].name",
+          "indexes[0].dimension",
+          "indexes[0].metric",
+          "indexes[0].status.state",
+          "indexes[0].host"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
