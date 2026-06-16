@@ -101,6 +101,116 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_lights",
+      "description_for_ai": "List all Philips Hue lights with their current state.",
+      "intent": [
+        "Hue lights list",
+        "smart lights status",
+        "Philips Hue state",
+        "список умных ламп"
+      ],
+      "endpoint": "GET https://{bridge_ip}/api/{username}/lights",
+      "input": {},
+      "output": {
+        "type": "dict<light>",
+        "fields": [
+          "lights.1.name",
+          "lights.1.state.on",
+          "lights.1.state.bri",
+          "lights.1.state.hue",
+          "lights.1.state.sat",
+          "lights.1.state.ct"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "set_light_state",
+      "description_for_ai": "Control a Philips Hue light: on/off, brightness, color.",
+      "intent": [
+        "control Hue light",
+        "turn on smart light",
+        "set brightness Hue",
+        "управление лампой Hue"
+      ],
+      "endpoint": "PUT https://{bridge_ip}/api/{username}/lights/{id}/state",
+      "input": {
+        "id": {
+          "type": "integer",
+          "description": "Light ID",
+          "required": true
+        },
+        "on": {
+          "type": "boolean",
+          "required": false
+        },
+        "bri": {
+          "type": "integer",
+          "description": "Brightness 0-254",
+          "required": false
+        },
+        "hue": {
+          "type": "integer",
+          "description": "Color hue 0-65535",
+          "required": false
+        },
+        "sat": {
+          "type": "integer",
+          "description": "Saturation 0-254",
+          "required": false
+        },
+        "ct": {
+          "type": "integer",
+          "description": "Color temperature mireds 153-500",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<result>",
+        "fields": [
+          "[0].success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_scene",
+      "description_for_ai": "Create a lighting scene for a room.",
+      "intent": [
+        "Hue scene",
+        "create scene Philips Hue",
+        "lighting scene",
+        "сцена освещения Hue"
+      ],
+      "endpoint": "POST https://{bridge_ip}/api/{username}/scenes",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "lights": {
+          "type": "array",
+          "description": "Light IDs in scene",
+          "required": true
+        },
+        "lightstates": {
+          "type": "object",
+          "description": "{1: {on: true, bri: 200, hue: 10000}}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "scene",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
