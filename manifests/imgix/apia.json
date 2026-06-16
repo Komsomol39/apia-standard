@@ -21,19 +21,24 @@
   },
   "capabilities": [
     {
-      "id": "resize_image",
-      "description_for_ai": "Resize and crop an image on-the-fly using imgix URL parameters.",
+      "id": "transform_image",
+      "description_for_ai": "Transform images on the fly via imgix URL parameters: resize, crop, format, quality.",
       "intent": [
-        "imgix resize",
-        "image resize cdn",
-        "transform image url",
-        "изменить размер imgix"
+        "image resize imgix",
+        "image transform",
+        "CDN image optimization",
+        "оптимизация изображений imgix"
       ],
       "endpoint": "GET https://{source}.imgix.net/{path}",
       "input": {
+        "source": {
+          "type": "string",
+          "description": "Your imgix source subdomain",
+          "required": true
+        },
         "path": {
           "type": "string",
-          "description": "Image path in source",
+          "description": "Image path in your bucket",
           "required": true
         },
         "w": {
@@ -48,115 +53,78 @@
         },
         "fit": {
           "type": "string",
-          "description": "crop, clip, fill, max, min, scale",
-          "default": "clip"
-        },
-        "auto": {
-          "type": "string",
-          "description": "format,compress for automatic optimization",
-          "default": "format,compress"
-        }
-      },
-      "output": {
-        "type": "image_url",
-        "fields": [
-          "URL with transformation parameters applied"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "apply_filters",
-      "description_for_ai": "Apply color filters and adjustments to an image via imgix.",
-      "intent": [
-        "imgix filters",
-        "image filters",
-        "color adjustment",
-        "фильтры imgix"
-      ],
-      "endpoint": "GET https://{source}.imgix.net/{path}",
-      "input": {
-        "path": {
-          "type": "string",
-          "required": true
-        },
-        "sat": {
-          "type": "integer",
-          "description": "Saturation -100 to 100",
+          "description": "clip, crop, fill, fillmax, max, min, scale",
           "required": false
-        },
-        "con": {
-          "type": "integer",
-          "description": "Contrast -100 to 100",
-          "required": false
-        },
-        "bri": {
-          "type": "integer",
-          "description": "Brightness -100 to 100",
-          "required": false
-        },
-        "blur": {
-          "type": "integer",
-          "description": "Blur 0-2000",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "image_url",
-        "fields": [
-          "URL with filter parameters"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "convert_format",
-      "description_for_ai": "Convert image format (JPEG, PNG, WebP, AVIF) via imgix.",
-      "intent": [
-        "image format convert",
-        "webp imgix",
-        "avif conversion",
-        "конвертация формата imgix"
-      ],
-      "endpoint": "GET https://{source}.imgix.net/{path}",
-      "input": {
-        "path": {
-          "type": "string",
-          "required": true
         },
         "fm": {
           "type": "string",
           "description": "Output format: jpg, png, webp, avif, gif, mp4",
-          "required": true
+          "required": false
         },
         "q": {
           "type": "integer",
           "description": "Quality 0-100",
-          "default": 80
+          "default": 75
         }
       },
       "output": {
-        "type": "image_url",
+        "type": "image",
         "fields": [
-          "URL with format conversion"
+          "Binary image stream with transformed image"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "face_detection_crop",
-      "description_for_ai": "Smart crop using face detection to keep faces centered.",
+      "id": "auto_optimize",
+      "description_for_ai": "Auto-optimize image format, compression, and enhancements with imgix.",
       "intent": [
-        "face crop imgix",
-        "smart crop",
-        "portrait crop",
-        "обрезка по лицу imgix"
+        "auto optimize image",
+        "compress image",
+        "best format image",
+        "автооптимизация imgix"
       ],
       "endpoint": "GET https://{source}.imgix.net/{path}",
       "input": {
+        "source": {
+          "type": "string",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "auto": {
+          "type": "string",
+          "description": "format (auto WebP/AVIF), compress, enhance, redeye",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "Optimized image binary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "smart_crop",
+      "description_for_ai": "Smart crop images to focus on faces or key content.",
+      "intent": [
+        "smart crop",
+        "face crop",
+        "content-aware crop",
+        "умная обрезка imgix"
+      ],
+      "endpoint": "GET https://{source}.imgix.net/{path}",
+      "input": {
+        "source": {
+          "type": "string",
+          "required": true
+        },
         "path": {
           "type": "string",
           "required": true
@@ -175,59 +143,107 @@
         },
         "crop": {
           "type": "string",
-          "description": "faces, entropy, focalpoint, center, top, bottom",
-          "default": "faces"
+          "description": "faces, entropy, edges, focalpoint",
+          "required": true
         }
       },
       "output": {
-        "type": "image_url",
+        "type": "image",
         "fields": [
-          "URL with face-aware crop"
+          "Cropped image binary"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "watermark_overlay",
-      "description_for_ai": "Add watermark or overlay image via imgix blend parameters.",
+      "id": "add_watermark",
+      "description_for_ai": "Add a watermark or overlay to an image with imgix.",
       "intent": [
-        "watermark imgix",
+        "watermark image",
         "overlay image",
-        "logo overlay",
+        "brand image",
         "водяной знак imgix"
       ],
       "endpoint": "GET https://{source}.imgix.net/{path}",
       "input": {
+        "source": {
+          "type": "string",
+          "required": true
+        },
         "path": {
           "type": "string",
           "required": true
         },
-        "blend": {
+        "mark": {
           "type": "string",
-          "description": "URL of overlay image",
+          "description": "URL of watermark image",
           "required": true
         },
-        "blend-mode": {
-          "type": "string",
-          "description": "normal, multiply, screen, overlay, darken, lighten",
-          "default": "normal"
-        },
-        "blend-alpha": {
+        "mark-pad": {
           "type": "integer",
-          "description": "Opacity 0-100",
-          "default": 75
+          "description": "Padding around mark",
+          "default": 10
         },
-        "blend-fit": {
+        "mark-alpha": {
+          "type": "integer",
+          "description": "Watermark opacity 0-100",
+          "default": 80
+        },
+        "mark-align": {
           "type": "string",
-          "description": "clamp, clip, crop, fill, max, min, scale",
-          "default": "clamp"
+          "description": "bottom,right",
+          "default": "bottom,right"
         }
       },
       "output": {
-        "type": "image_url",
+        "type": "image",
         "fields": [
-          "URL with watermark applied"
+          "Image with watermark"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "generate_srcset",
+      "description_for_ai": "Generate responsive image srcset URLs for multiple screen sizes.",
+      "intent": [
+        "responsive images",
+        "srcset imgix",
+        "retina images",
+        "адаптивные изображения imgix"
+      ],
+      "endpoint": "GET https://{source}.imgix.net/{path}?w=320 2x srcset",
+      "input": {
+        "source": {
+          "type": "string",
+          "required": true
+        },
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "w": {
+          "type": "integer",
+          "description": "Base width",
+          "required": true
+        },
+        "widths": {
+          "type": "string",
+          "description": "Comma-separated widths: 320,640,1024,1920",
+          "required": false
+        },
+        "dpr": {
+          "type": "number",
+          "description": "Device pixel ratio: 1, 2, 3",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "url",
+        "fields": [
+          "Responsive image URL string with DPR or width params"
         ]
       },
       "realtime": true,
