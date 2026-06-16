@@ -21,67 +21,51 @@
   },
   "capabilities": [
     {
-      "id": "chat_free",
-      "description_for_ai": "Free tier chat with Claude Haiku. Rate-limited. Great for testing.",
+      "id": "chat",
+      "description_for_ai": "Chat with Claude Haiku on the free tier via claude.ai.",
       "intent": [
-        "free claude",
-        "claude haiku free",
-        "test claude",
-        "бесплатный Claude Haiku"
+        "free Claude chat",
+        "Claude free tier",
+        "Claude Haiku free",
+        "бесплатный Claude"
       ],
-      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "endpoint": "https://claude.ai (web interface only)",
       "input": {
-        "model": {
-          "type": "string",
-          "default": "claude-haiku-4-5"
-        },
         "messages": {
           "type": "array",
+          "description": "Conversational messages",
           "required": true
-        },
-        "max_tokens": {
-          "type": "integer",
-          "default": 1024
         }
       },
       "output": {
-        "type": "completion",
+        "type": "message",
         "fields": [
-          "content[0].text",
-          "usage.input_tokens"
+          "text response"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "question_answer",
-      "description_for_ai": "Ask factual questions to free Claude Haiku.",
+      "id": "summarize",
+      "description_for_ai": "Summarize documents and text for free using Claude Haiku.",
       "intent": [
-        "question claude free",
-        "ask AI free",
-        "free QA claude",
-        "вопрос бесплатный Claude"
+        "free summarization",
+        "document summary free",
+        "summarize free AI",
+        "бесплатное резюме"
       ],
-      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "endpoint": "https://claude.ai (web interface)",
       "input": {
-        "model": {
+        "text": {
           "type": "string",
-          "default": "claude-haiku-4-5"
-        },
-        "messages": {
-          "type": "array",
           "required": true
-        },
-        "max_tokens": {
-          "type": "integer",
-          "default": 512
         }
       },
       "output": {
-        "type": "answer",
+        "type": "summary",
         "fields": [
-          "content[0].text"
+          "text"
         ]
       },
       "realtime": true,
@@ -89,97 +73,84 @@
     },
     {
       "id": "code_help",
-      "description_for_ai": "Get code help from free Claude Haiku.",
+      "description_for_ai": "Get free coding assistance: debug, explain, generate code with Claude Haiku.",
       "intent": [
-        "code help free claude",
-        "fix code AI free",
-        "debug AI",
-        "помощь с кодом бесплатно Claude"
+        "free code help",
+        "debug AI free",
+        "Claude free coding",
+        "помощь с кодом бесплатно"
       ],
-      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "endpoint": "https://claude.ai (web interface)",
       "input": {
-        "model": {
+        "code": {
           "type": "string",
-          "default": "claude-haiku-4-5"
-        },
-        "messages": {
-          "type": "array",
           "required": true
         },
-        "max_tokens": {
-          "type": "integer",
-          "default": 1024
+        "task": {
+          "type": "string",
+          "description": "debug, explain, refactor, generate",
+          "required": true
         }
       },
       "output": {
-        "type": "code",
+        "type": "code_help",
         "fields": [
-          "content[0].text"
+          "explanation",
+          "fixed_code"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "summarize_free",
-      "description_for_ai": "Summarize text with free Claude Haiku (rate-limited).",
+      "id": "ask_question",
+      "description_for_ai": "Ask factual or analytical questions to Claude Haiku for free.",
       "intent": [
-        "summarize free claude",
-        "free text summary",
-        "краткое изложение Claude бесплатно"
+        "ask AI free",
+        "question answering",
+        "free AI assistant",
+        "вопрос Claude бесплатно"
       ],
-      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "endpoint": "https://claude.ai (web interface)",
       "input": {
-        "model": {
+        "question": {
           "type": "string",
-          "default": "claude-haiku-4-5"
-        },
-        "messages": {
-          "type": "array",
           "required": true
-        },
-        "max_tokens": {
-          "type": "integer",
-          "default": 300
         }
       },
       "output": {
-        "type": "summary",
+        "type": "answer",
         "fields": [
-          "content[0].text"
+          "text"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "creative_writing",
-      "description_for_ai": "Creative writing tasks with free Claude Haiku.",
+      "id": "translate",
+      "description_for_ai": "Translate text between languages for free using Claude.",
       "intent": [
-        "creative writing AI free",
-        "story free claude",
-        "poem generator free",
-        "творческое письмо Claude бесплатно"
+        "free translation AI",
+        "translate Claude",
+        "AI translation free",
+        "перевод Claude бесплатно"
       ],
-      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "endpoint": "https://claude.ai (web interface)",
       "input": {
-        "model": {
+        "text": {
           "type": "string",
-          "default": "claude-haiku-4-5"
-        },
-        "messages": {
-          "type": "array",
           "required": true
         },
-        "max_tokens": {
-          "type": "integer",
-          "default": 1024
+        "target_language": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
-        "type": "content",
+        "type": "translation",
         "fields": [
-          "content[0].text"
+          "translated_text"
         ]
       },
       "realtime": true,
