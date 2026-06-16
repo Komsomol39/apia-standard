@@ -123,6 +123,122 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "html_to_pdf",
+      "description_for_ai": "Convert HTML string or URL to PDF.",
+      "intent": [
+        "html to pdf",
+        "webpage to PDF",
+        "convert HTML PDF",
+        "конвертировать HTML в PDF"
+      ],
+      "endpoint": "POST https://api.html2pdf.app/v1/generate",
+      "input": {
+        "html": {
+          "type": "string",
+          "description": "HTML content to convert",
+          "required": false
+        },
+        "url": {
+          "type": "string",
+          "description": "URL to convert to PDF",
+          "required": false
+        },
+        "marginTop": {
+          "type": "number",
+          "default": 0
+        },
+        "marginBottom": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "pdf",
+        "fields": [
+          "PDF binary content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "url_to_pdf",
+      "description_for_ai": "Convert any web URL to PDF document.",
+      "intent": [
+        "url to PDF",
+        "webpage PDF",
+        "website to PDF",
+        "сайт в PDF"
+      ],
+      "endpoint": "POST https://api.html2pdf.app/v1/generate",
+      "input": {
+        "url": {
+          "type": "string",
+          "description": "Full URL to convert e.g. https://example.com",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "description": "A4, A3, Letter, Legal",
+          "default": "A4"
+        },
+        "landscape": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "pdf",
+        "fields": [
+          "PDF binary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "set_options",
+      "description_for_ai": "Convert HTML to PDF with advanced options: page size, margins, headers/footers.",
+      "intent": [
+        "PDF settings",
+        "custom PDF",
+        "PDF options html2pdf",
+        "настройки PDF"
+      ],
+      "endpoint": "POST https://api.html2pdf.app/v1/generate",
+      "input": {
+        "html": {
+          "type": "string",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "description": "A4, Letter",
+          "default": "A4"
+        },
+        "headerTemplate": {
+          "type": "string",
+          "required": false
+        },
+        "footerTemplate": {
+          "type": "string",
+          "required": false
+        },
+        "printBackground": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "pdf",
+        "fields": [
+          "PDF binary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
