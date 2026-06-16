@@ -23,43 +23,42 @@
   },
   "capabilities": [
     {
-      "id": "get_eth_balance",
-      "description_for_ai": "Get current ETH balance for any Ethereum wallet address. Returns balance in Wei — divide by 1e18 to get ETH.",
+      "id": "get_balance",
+      "description_for_ai": "Get ETH balance of any Ethereum address.",
       "intent": [
-        "ETH balance",
+        "eth balance",
+        "ethereum balance",
         "wallet balance",
-        "Ethereum balance",
-        "crypto wallet check"
+        "баланс ethereum"
       ],
       "endpoint": "GET https://api.etherscan.io/api",
       "input": {
         "module": {
           "type": "string",
-          "description": "API module name. Use 'account' for balance queries.",
           "default": "account"
         },
         "action": {
           "type": "string",
-          "description": "API action. Use 'balance' for single address, 'balancemulti' for up to 20 addresses.",
           "default": "balance"
         },
         "address": {
           "type": "string",
-          "description": "Ethereum address (0x-prefixed, 42 chars) to check balance for",
+          "description": "Ethereum address 0x...",
           "required": true
         },
         "tag": {
           "type": "string",
-          "description": "Block parameter: 'latest' for current, 'earliest' for genesis, or block number in hex",
           "default": "latest"
+        },
+        "apikey": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
         "type": "balance",
         "fields": [
-          "status ('1'=success)",
-          "message",
-          "result (balance in Wei as string)"
+          "result (in Wei, divide by 1e18 for ETH)"
         ]
       },
       "realtime": true,
@@ -67,13 +66,12 @@
     },
     {
       "id": "get_transactions",
-      "description_for_ai": "Get full transaction history for an Ethereum address. Returns ETH transfers with amounts, timestamps, gas fees, and confirmation status.",
+      "description_for_ai": "Get list of normal ETH transactions for an address.",
       "intent": [
-        "ETH transactions",
-        "wallet history",
-        "blockchain transactions",
-        "crypto transfers",
-        "token transfers"
+        "ethereum transactions",
+        "eth tx history",
+        "wallet transactions",
+        "транзакции ethereum"
       ],
       "endpoint": "GET https://api.etherscan.io/api",
       "input": {
@@ -83,38 +81,27 @@
         },
         "action": {
           "type": "string",
-          "description": "txlist (normal ETH txs), txlistinternal (internal txs), tokentx (ERC-20 transfers), tokennfttx (NFT transfers)",
           "default": "txlist"
         },
         "address": {
           "type": "string",
-          "description": "Ethereum wallet address",
           "required": true
         },
         "startblock": {
           "type": "integer",
-          "description": "Start block number (0 = genesis)",
           "default": 0
         },
         "endblock": {
           "type": "integer",
-          "description": "End block number (99999999 = latest)",
           "default": 99999999
-        },
-        "page": {
-          "type": "integer",
-          "description": "Page number for pagination",
-          "default": 1
-        },
-        "offset": {
-          "type": "integer",
-          "description": "Results per page, max 10000",
-          "default": 100
         },
         "sort": {
           "type": "string",
-          "description": "asc (oldest first) or desc (newest first)",
           "default": "desc"
+        },
+        "apikey": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
@@ -123,13 +110,97 @@
           "result[0].hash",
           "result[0].from",
           "result[0].to",
-          "result[0].value (Wei)",
-          "result[0].timeStamp",
-          "result[0].gasUsed",
-          "result[0].isError ('0'=success, '1'=failed)"
+          "result[0].value",
+          "result[0].timeStamp"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_token_transfers",
+      "description_for_ai": "Get ERC-20 token transfer events for an address or contract.",
+      "intent": [
+        "token transfers",
+        "ERC20 transfers",
+        "token history",
+        "переводы токенов"
+      ],
+      "endpoint": "GET https://api.etherscan.io/api",
+      "input": {
+        "module": {
+          "type": "string",
+          "default": "account"
+        },
+        "action": {
+          "type": "string",
+          "default": "tokentx"
+        },
+        "address": {
+          "type": "string",
+          "required": false
+        },
+        "contractaddress": {
+          "type": "string",
+          "description": "ERC-20 contract address",
+          "required": false
+        },
+        "sort": {
+          "type": "string",
+          "default": "desc"
+        },
+        "apikey": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<transfer>",
+        "fields": [
+          "result[0].tokenName",
+          "result[0].tokenSymbol",
+          "result[0].value",
+          "result[0].from",
+          "result[0].to"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_gas_price",
+      "description_for_ai": "Get current Ethereum gas price in Wei and safe/fast estimates.",
+      "intent": [
+        "gas price",
+        "ethereum gas",
+        "transaction fee ETH",
+        "цена газа ethereum"
+      ],
+      "endpoint": "GET https://api.etherscan.io/api",
+      "input": {
+        "module": {
+          "type": "string",
+          "default": "gastracker"
+        },
+        "action": {
+          "type": "string",
+          "default": "gasoracle"
+        },
+        "apikey": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "gas",
+        "fields": [
+          "result.SafeGasPrice",
+          "result.ProposeGasPrice",
+          "result.FastGasPrice",
+          "result.suggestBaseFee"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
