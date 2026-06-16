@@ -101,6 +101,120 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_channels",
+      "description_for_ai": "List group channels in Sendbird.",
+      "intent": [
+        "Sendbird channels",
+        "group channels",
+        "chat rooms Sendbird",
+        "каналы Sendbird"
+      ],
+      "endpoint": "GET https://api-{application_id}.sendbird.com/v3/group_channels",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 20
+        },
+        "members_exactly_in": {
+          "type": "string",
+          "description": "Filter by user ID",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<channel>",
+        "fields": [
+          "channels[0].channel_url",
+          "channels[0].name",
+          "channels[0].member_count",
+          "channels[0].last_message.message"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_message",
+      "description_for_ai": "Send a message to a Sendbird channel.",
+      "intent": [
+        "send message Sendbird",
+        "chat message",
+        "Sendbird message",
+        "отправить сообщение Sendbird"
+      ],
+      "endpoint": "POST https://api-{application_id}.sendbird.com/v3/group_channels/{channel_url}/messages",
+      "input": {
+        "channel_url": {
+          "type": "string",
+          "required": true
+        },
+        "message_type": {
+          "type": "string",
+          "description": "MESG or FILE",
+          "default": "MESG"
+        },
+        "user_id": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "message_id",
+          "message",
+          "created_at",
+          "user.user_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_user",
+      "description_for_ai": "Create a Sendbird user for chat.",
+      "intent": [
+        "Sendbird user",
+        "create user chat",
+        "new user Sendbird",
+        "пользователь Sendbird"
+      ],
+      "endpoint": "POST https://api-{application_id}.sendbird.com/v3/users",
+      "input": {
+        "user_id": {
+          "type": "string",
+          "required": true
+        },
+        "nickname": {
+          "type": "string",
+          "required": true
+        },
+        "profile_url": {
+          "type": "string",
+          "required": false
+        },
+        "issue_access_token": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "user",
+        "fields": [
+          "user_id",
+          "nickname",
+          "access_token",
+          "is_active"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
