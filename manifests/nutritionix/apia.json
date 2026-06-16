@@ -91,6 +91,117 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "natural_language_nutrition",
+      "description_for_ai": "Get nutrition info from natural language food description.",
+      "intent": [
+        "nutrition query",
+        "calories query",
+        "food nutrition NL",
+        "калории еда текст"
+      ],
+      "endpoint": "POST https://trackapi.nutritionix.com/v2/natural/nutrients",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Free text: '1 cup of oatmeal with honey and 2 eggs'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<food>",
+        "fields": [
+          "foods[0].food_name",
+          "foods[0].nf_calories",
+          "foods[0].nf_protein",
+          "foods[0].nf_total_fat",
+          "foods[0].nf_total_carbohydrate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_foods",
+      "description_for_ai": "Search the Nutritionix food database.",
+      "intent": [
+        "search food nutritionix",
+        "food database search",
+        "nutrition database"
+      ],
+      "endpoint": "GET https://trackapi.nutritionix.com/v2/search/instant",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "branded": {
+          "type": "boolean",
+          "default": true
+        },
+        "common": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "results",
+        "fields": [
+          "branded[0].food_name",
+          "branded[0].brand_name",
+          "branded[0].nf_calories",
+          "common[0].food_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "exercise_calories",
+      "description_for_ai": "Calculate calories burned from exercise using natural language.",
+      "intent": [
+        "calories burned",
+        "exercise calories",
+        "workout calories",
+        "калории упражнения"
+      ],
+      "endpoint": "POST https://trackapi.nutritionix.com/v2/natural/exercise",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Natural language: 'run 5 miles in 45 minutes'",
+          "required": true
+        },
+        "gender": {
+          "type": "string",
+          "description": "male or female",
+          "required": false
+        },
+        "weight_kg": {
+          "type": "float",
+          "required": false
+        },
+        "height_cm": {
+          "type": "float",
+          "required": false
+        },
+        "age": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<exercise>",
+        "fields": [
+          "exercises[0].name",
+          "exercises[0].duration_min",
+          "exercises[0].nf_calories",
+          "exercises[0].met"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
