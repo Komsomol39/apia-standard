@@ -24,41 +24,42 @@
   "capabilities": [
     {
       "id": "current_weather",
-      "description_for_ai": "Get current weather conditions for any city or coordinates: temperature, humidity, wind speed, cloud cover, visibility, weather description and icon.",
+      "description_for_ai": "Get current weather conditions for any city or coordinates: temperature, humidity, wind, description.",
       "intent": [
         "current weather",
-        "what's the weather",
-        "temperature now",
-        "is it raining",
-        "weather today",
-        "погода сейчас"
+        "weather now",
+        "temperature today",
+        "погода сейчас",
+        "какая погода"
       ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/weather",
       "input": {
         "q": {
           "type": "string",
-          "description": "City name e.g. 'Moscow', 'London,GB', 'New York,US'. Use country code for disambiguation.",
+          "description": "City name e.g. Moscow,ru or London,uk",
           "required": false
         },
         "lat": {
           "type": "float",
-          "description": "Latitude (-90 to 90). Use with lon for coordinate-based lookup.",
           "required": false
         },
         "lon": {
           "type": "float",
-          "description": "Longitude (-180 to 180)",
           "required": false
         },
         "units": {
           "type": "string",
-          "description": "metric (Celsius, m/s), imperial (Fahrenheit, mph), standard (Kelvin)",
+          "description": "standard (Kelvin), metric (Celsius), imperial (Fahrenheit)",
           "default": "metric"
         },
         "lang": {
           "type": "string",
-          "description": "Language for description: en, ru, de, fr, es, zh_cn, ja, etc.",
+          "description": "Language: en, ru, de, fr, etc.",
           "default": "en"
+        },
+        "appid": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
@@ -67,63 +68,51 @@
           "main.temp",
           "main.feels_like",
           "main.humidity",
-          "main.pressure",
           "weather[0].description",
-          "weather[0].icon",
           "wind.speed",
-          "wind.deg",
-          "clouds.all",
-          "visibility",
           "name",
-          "sys.country"
+          "dt"
         ]
       },
       "realtime": true,
-      "requires_auth": true,
-      "rate_limit": "1000/day free"
+      "requires_auth": true
     },
     {
       "id": "forecast_5day",
-      "description_for_ai": "Get 5-day weather forecast in 3-hour intervals (40 data points). Returns temperature, precipitation probability, wind, and conditions.",
+      "description_for_ai": "Get 5-day weather forecast in 3-hour intervals for any city.",
       "intent": [
         "weather forecast",
-        "will it rain",
-        "weekend weather",
-        "weather tomorrow",
         "5 day forecast",
-        "прогноз погоды"
+        "weather next week",
+        "прогноз погоды",
+        "погода на неделю"
       ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/forecast",
       "input": {
         "q": {
           "type": "string",
-          "description": "City name e.g. 'Moscow' or 'Paris,FR'",
           "required": false
         },
         "lat": {
           "type": "float",
-          "required": false,
-          "description": "Latitude coordinate (decimal degrees, -90 to 90)"
+          "required": false
         },
         "lon": {
           "type": "float",
-          "required": false,
-          "description": "Longitude coordinate (decimal degrees, -180 to 180)"
+          "required": false
         },
         "units": {
           "type": "string",
-          "description": "metric, imperial, or standard",
           "default": "metric"
-        },
-        "lang": {
-          "type": "string",
-          "default": "en",
-          "description": "Language code e.g. en, ru, de, fr, es"
         },
         "cnt": {
           "type": "integer",
-          "description": "Number of timestamps (max 40 = 5 days × 8 per day)",
+          "description": "Number of 3-hour periods, max 40",
           "required": false
+        },
+        "appid": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
@@ -131,51 +120,89 @@
         "fields": [
           "list[0].dt_txt",
           "list[0].main.temp",
-          "list[0].main.humidity",
           "list[0].weather[0].description",
-          "list[0].wind.speed",
-          "list[0].pop (precipitation probability 0-1)",
-          "city.name",
-          "city.country"
+          "list[0].pop (precipitation probability)",
+          "city.name"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "air_quality",
-      "description_for_ai": "Air quality index (AQI) and pollutant data for any coordinates. Use for 'air quality in Beijing', 'is it safe to jog outside', 'pollution level'.",
+      "id": "air_pollution",
+      "description_for_ai": "Get current or forecast air quality index (AQI) and pollutant concentrations: CO, NO2, PM2.5, PM10, O3.",
       "intent": [
         "air quality",
+        "air pollution",
         "AQI",
-        "pollution",
-        "smog",
-        "safe to exercise outside"
+        "качество воздуха",
+        "загрязнение воздуха"
       ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/air_pollution",
       "input": {
         "lat": {
           "type": "float",
-          "required": true,
-          "description": "Latitude coordinate (decimal degrees, -90 to 90)"
+          "required": true
         },
         "lon": {
           "type": "float",
-          "required": true,
-          "description": "Longitude coordinate (decimal degrees, -180 to 180)"
+          "required": true
+        },
+        "appid": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
         "type": "air_quality",
         "fields": [
-          "list[0].main.aqi",
+          "list[0].main.aqi (1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor)",
           "list[0].components.pm2_5",
           "list[0].components.pm10",
           "list[0].components.no2",
-          "list[0].components.o3"
+          "list[0].components.co"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "geocoding",
+      "description_for_ai": "Convert city name to coordinates or reverse geocode coordinates to city name.",
+      "intent": [
+        "geocode weather",
+        "city coordinates",
+        "city to lat lon",
+        "координаты города"
+      ],
+      "endpoint": "GET https://api.openweathermap.org/geo/1.0/direct",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "City name, state, country e.g. London,GB or Moscow,RU",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Max results 1-5",
+          "default": 5
+        },
+        "appid": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<location>",
+        "fields": [
+          "[0].name",
+          "[0].lat",
+          "[0].lon",
+          "[0].country",
+          "[0].state"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
