@@ -21,70 +21,91 @@
   },
   "capabilities": [
     {
+      "id": "track_shipment",
+      "description_for_ai": "Track DHL shipment status and location history by tracking number.",
+      "intent": [
+        "track DHL",
+        "DHL tracking",
+        "shipment status",
+        "отследить DHL",
+        "трекинг DHL"
+      ],
+      "endpoint": "GET https://api-eu.dhl.com/track/shipments",
+      "input": {
+        "trackingNumber": {
+          "type": "string",
+          "description": "DHL tracking number(s), comma-separated up to 10",
+          "required": true
+        },
+        "service": {
+          "type": "string",
+          "description": "DHL Express: express, DHL eCommerce: eCommerce, DHL Parcel: parcel-de",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "description": "en, de, fr, es, ru etc.",
+          "default": "en"
+        }
+      },
+      "output": {
+        "type": "tracking",
+        "fields": [
+          "shipments[0].status.status",
+          "shipments[0].status.description",
+          "shipments[0].status.location.address.addressLocality",
+          "shipments[0].events[0].timestamp",
+          "shipments[0].estimatedTimeOfDelivery"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
       "id": "get_rates",
-      "description_for_ai": "Get DHL Express shipping rates between two cities. Returns available products with price, delivery date, and transit time.",
+      "description_for_ai": "Get shipping rates and estimated delivery times from DHL Express.",
       "intent": [
         "DHL rates",
-        "international shipping",
-        "express delivery",
-        "DHL price",
-        "overseas shipping"
+        "shipping cost DHL",
+        "DHL quote",
+        "стоимость доставки DHL"
       ],
-      "endpoint": "GET https://express.api.dhl.com/mydhlapi/rates",
+      "endpoint": "GET https://api-eu.dhl.com/rates/v1/rates",
       "input": {
-        "accountNumber": {
-          "type": "string",
-          "description": "Your DHL account number",
-          "required": true
-        },
         "originCountryCode": {
           "type": "string",
-          "description": "Origin ISO 2-letter country code e.g. RU, DE, US",
+          "description": "ISO 3166-1 alpha-2 e.g. DE, RU, US",
           "required": true
         },
-        "originCityName": {
+        "originPostalCode": {
           "type": "string",
-          "description": "Origin city name e.g. Moscow, Berlin",
-          "required": true
+          "required": false
         },
         "destinationCountryCode": {
           "type": "string",
-          "description": "Destination country code",
           "required": true
         },
-        "destinationCityName": {
+        "destinationPostalCode": {
           "type": "string",
-          "required": true
+          "required": false
         },
         "weight": {
-          "type": "number",
-          "description": "Shipment weight in kg",
+          "type": "float",
+          "description": "Weight in kg",
           "required": true
         },
         "length": {
-          "type": "number",
-          "description": "Package length in cm",
-          "required": true
+          "type": "float",
+          "description": "cm",
+          "required": false
         },
         "width": {
-          "type": "number",
-          "description": "Package width in cm",
-          "required": true
+          "type": "float",
+          "required": false
         },
         "height": {
-          "type": "number",
-          "description": "Package height in cm",
-          "required": true
-        },
-        "plannedShippingDateAndTime": {
-          "type": "string",
-          "description": "Pickup date ISO 8601 e.g. 2024-01-15T10:00:00GMT+03:00",
-          "required": true
-        },
-        "isCustomsDeclarable": {
-          "type": "boolean",
-          "description": "true for international shipments",
-          "default": true
+          "type": "float",
+          "required": false
         }
       },
       "output": {
@@ -92,46 +113,111 @@
         "fields": [
           "products[0].productName",
           "products[0].totalPrice[0].price",
-          "products[0].deliveryCapabilities.estimatedDeliveryDateAndTime"
+          "products[0].totalPrice[0].currency",
+          "products[0].pickupCapabilities.nextBusinessDay"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "track_shipment",
-      "description_for_ai": "Track a DHL Express shipment by waybill number. Returns current status, location, and full event history.",
+      "id": "create_shipment",
+      "description_for_ai": "Create a DHL Express shipment and get shipping label.",
       "intent": [
-        "track DHL",
-        "DHL tracking",
-        "where is my DHL package",
-        "DHL status"
+        "create DHL shipment",
+        "DHL label",
+        "book DHL",
+        "создать отправление DHL"
       ],
-      "endpoint": "GET https://express.api.dhl.com/mydhlapi/shipments/{shipmentTrackingNumber}/tracking",
+      "endpoint": "POST https://api-eu.dhl.com/ship/v1/shipments",
       "input": {
-        "shipmentTrackingNumber": {
+        "plannedShippingDateAndTime": {
           "type": "string",
-          "description": "DHL waybill/tracking number (10 digits)",
+          "description": "ISO 8601 pickup date/time",
           "required": true
         },
-        "trackingView": {
-          "type": "string",
-          "description": "all-checkpoints for full history or last-checkpoint for latest only",
-          "default": "all-checkpoints"
+        "pickup": {
+          "type": "object",
+          "description": "{isRequested: true}",
+          "required": true
         },
-        "levelOfDetail": {
+        "productCode": {
           "type": "string",
-          "description": "shipment for basic or all-checkpoints for detailed",
-          "default": "all-checkpoints"
+          "description": "DHL product code e.g. N (domestic), P (express worldwide)",
+          "required": true
+        },
+        "accounts": {
+          "type": "array",
+          "description": "[{typeCode: shipper, number: 'DHL_ACCOUNT'}]",
+          "required": true
+        },
+        "shipper": {
+          "type": "object",
+          "description": "{name1, addressLine1, cityName, countryCode, postalCode, phone, email}",
+          "required": true
+        },
+        "consignee": {
+          "type": "object",
+          "description": "Same fields as shipper",
+          "required": true
+        },
+        "packages": {
+          "type": "array",
+          "description": "[{weight: 1.5, dimensions: {length: 30, width: 20, height: 10}}]",
+          "required": true
         }
       },
       "output": {
-        "type": "tracking",
+        "type": "shipment",
         "fields": [
-          "shipments[0].status",
-          "shipments[0].events[0].description",
-          "shipments[0].events[0].timestamp",
-          "shipments[0].estimatedDeliveryDate"
+          "shipmentTrackingNumber",
+          "documents[0].content (base64 PDF label)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "find_service_points",
+      "description_for_ai": "Find DHL service points (parcel shops, lockers, drop-off points) near a location.",
+      "intent": [
+        "DHL service point",
+        "DHL drop off",
+        "parcel locker DHL",
+        "пункт выдачи DHL"
+      ],
+      "endpoint": "GET https://api.dhl.com/location-finder/v1/find-by-geo",
+      "input": {
+        "latitude": {
+          "type": "float",
+          "required": true
+        },
+        "longitude": {
+          "type": "float",
+          "required": true
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Search radius in meters, max 3000",
+          "default": 1000
+        },
+        "limit": {
+          "type": "integer",
+          "default": 15
+        },
+        "serviceType": {
+          "type": "string",
+          "description": "parcel-drop-off, express-drop-off, parcel-pickup",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<location>",
+        "fields": [
+          "locations[0].place.address.streetAddress",
+          "locations[0].place.address.postalCode",
+          "locations[0].openingHours",
+          "locations[0].location.ids[0].value"
         ]
       },
       "realtime": true,
