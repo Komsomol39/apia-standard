@@ -203,6 +203,55 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "get_video_reports",
+      "description_for_ai": "Get YouTube Analytics reports for specific videos.",
+      "intent": [
+        "youtube video analytics",
+        "video stats API",
+        "video performance report",
+        "статистика видео youtube"
+      ],
+      "endpoint": "GET https://youtubeanalytics.googleapis.com/v2/reports",
+      "input": {
+        "ids": {
+          "type": "string",
+          "default": "channel==MINE"
+        },
+        "startDate": {
+          "type": "string",
+          "required": true
+        },
+        "endDate": {
+          "type": "string",
+          "required": true
+        },
+        "metrics": {
+          "type": "string",
+          "description": "views,estimatedMinutesWatched,averageViewDuration,subscribersGained",
+          "required": true
+        },
+        "dimensions": {
+          "type": "string",
+          "description": "video,day,country",
+          "required": false
+        },
+        "filters": {
+          "type": "string",
+          "description": "video==VIDEO_ID",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "report",
+        "fields": [
+          "columnHeaders[0].name",
+          "rows[0]"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "meta": {
