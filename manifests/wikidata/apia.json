@@ -21,13 +21,12 @@
   "capabilities": [
     {
       "id": "search_entities",
-      "description_for_ai": "Search Wikidata entities by label. Find items representing people, places, organizations, concepts.",
+      "description_for_ai": "Search Wikidata entities (people, places, concepts) by name.",
       "intent": [
         "wikidata search",
-        "knowledge graph",
         "entity search",
-        "structured data",
-        "find entity"
+        "linked data",
+        "поиск wikidata"
       ],
       "endpoint": "GET https://www.wikidata.org/w/api.php",
       "input": {
@@ -37,73 +36,122 @@
         },
         "search": {
           "type": "string",
-          "description": "Search keywords or query string",
           "required": true
         },
         "language": {
           "type": "string",
-          "description": "Language code: en, ru, de, fr, zh",
           "default": "en"
-        },
-        "type": {
-          "type": "string",
-          "description": "Filter or specify item type",
-          "default": "item"
         },
         "limit": {
           "type": "integer",
-          "default": 10,
-          "description": "Maximum number of results to return"
+          "default": 10
+        },
+        "type": {
+          "type": "string",
+          "description": "item or property",
+          "default": "item"
         },
         "format": {
           "type": "string",
-          "default": "json",
-          "description": "Response format: json, xml, or csv"
+          "default": "json"
         }
       },
       "output": {
-        "type": "list<entity>",
+        "type": "entities",
         "fields": [
-          "search[0].id",
+          "search[0].id (Q-number)",
           "search[0].label",
           "search[0].description",
           "search[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_entity",
+      "description_for_ai": "Get full entity data: labels, descriptions, claims (properties) in all languages.",
+      "intent": [
+        "wikidata entity",
+        "Q-number lookup",
+        "structured data",
+        "данные wikidata"
+      ],
+      "endpoint": "GET https://www.wikidata.org/wiki/Special:EntityData/{id}.json",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Wikidata entity ID e.g. Q42 (Douglas Adams), Q64 (Berlin)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "entity",
+        "fields": [
+          "entities.{id}.labels.en.value",
+          "entities.{id}.descriptions.en.value",
+          "entities.{id}.claims (property-value pairs)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "sparql_query",
+      "description_for_ai": "Run SPARQL query on Wikidata knowledge graph. Get structured data about any topic.",
+      "intent": [
+        "wikidata sparql",
+        "knowledge graph query",
+        "structured knowledge",
+        "SPARQL запрос wikidata"
+      ],
+      "endpoint": "GET https://query.wikidata.org/sparql",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "SPARQL query. Example: SELECT ?item ?itemLabel WHERE { ?item wdt:P31 wd:Q515. ?item wdt:P17 wd:Q159. SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. } } LIMIT 10 — cities in Russia",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "description": "json, csv, tsv, xml",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "results",
+        "fields": [
+          "results.bindings[0].{var}.value"
         ]
       },
       "realtime": false,
       "requires_auth": false
     },
     {
-      "id": "sparql_query",
-      "description_for_ai": "Run SPARQL query against Wikidata knowledge graph. Powerful for complex linked data queries.",
+      "id": "get_sitelinks",
+      "description_for_ai": "Get links from a Wikidata entity to Wikipedia articles in all languages.",
       "intent": [
-        "SPARQL query",
-        "knowledge graph query",
-        "linked data",
-        "complex entity query",
-        "wikidata SPARQL"
+        "wikidata sitelinks",
+        "wikipedia links",
+        "entity in languages",
+        "ссылки wikidata"
       ],
-      "endpoint": "GET https://query.wikidata.org/sparql",
+      "endpoint": "GET https://www.wikidata.org/wiki/Special:EntityData/{id}.json",
       "input": {
-        "query": {
+        "id": {
           "type": "string",
-          "description": "SPARQL query e.g. SELECT ?item ?itemLabel WHERE {?item wdt:P31 wd:Q6256. SERVICE wikibase:label {bd:serviceParam wikibase:language en}} LIMIT 10",
           "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "json",
-          "description": "Response format: json, xml, or csv"
         }
       },
       "output": {
-        "type": "sparql_results",
+        "type": "sitelinks",
         "fields": [
-          "results.bindings[0].item.value",
-          "results.bindings[0].itemLabel.value"
+          "entities.{id}.sitelinks.enwiki.title",
+          "entities.{id}.sitelinks.ruwiki.title",
+          "entities.{id}.sitelinks.dewiki.title"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": false
     }
   ],
