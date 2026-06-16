@@ -172,6 +172,46 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_analytics",
+      "description_for_ai": "Get sales analytics: revenue, orders, returns per product on Ozon.",
+      "intent": [
+        "ozon analytics",
+        "ozon продажи статистика",
+        "ozon выручка"
+      ],
+      "endpoint": "POST https://api-seller.ozon.ru/v1/analytics/data",
+      "input": {
+        "date_from": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "date_to": {
+          "type": "string",
+          "required": true
+        },
+        "metrics": {
+          "type": "array",
+          "description": "['revenue', 'ordered_units', 'returns', 'cancellations', 'hits_view_item']",
+          "required": true
+        },
+        "dimension": {
+          "type": "array",
+          "description": "['sku', 'day', 'month']",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "analytics",
+        "fields": [
+          "result.data[0].dimensions",
+          "result.data[0].metrics"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "meta": {
