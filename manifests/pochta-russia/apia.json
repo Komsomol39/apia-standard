@@ -22,78 +22,152 @@
   },
   "capabilities": [
     {
-      "id": "calculate_rate",
-      "description_for_ai": "Рассчитать стоимость и сроки доставки Почтой России по индексам.",
-      "intent": [
-        "почта России стоимость",
-        "стоимость посылки",
-        "рассчитать почту",
-        "индекс отправления",
-        "тариф почта"
-      ],
-      "endpoint": "POST https://otpravka-api.pochta.ru/1.0/tariff",
-      "input": {
-        "index-from": {
-          "type": "string",
-          "description": "Почтовый индекс отправителя",
-          "required": true
-        },
-        "index-to": {
-          "type": "string",
-          "description": "Почтовый индекс получателя",
-          "required": true
-        },
-        "mail-category": {
-          "type": "string",
-          "description": "ORDINARY=обычная, ORDERED=заказная, WITH_DECLARED_VALUE=с объявленной ценностью",
-          "required": true
-        },
-        "mail-type": {
-          "type": "string",
-          "description": "POSTAL_PARCEL=посылка, ONLINE_PARCEL=онлайн-посылка, LETTER=письмо",
-          "required": true
-        },
-        "mass": {
-          "type": "integer",
-          "description": "Масса в граммах",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "tariff",
-        "fields": [
-          "total-rate",
-          "delivery-time.min-days",
-          "delivery-time.max-days"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "track_shipment",
-      "description_for_ai": "Отследить отправление Почты России по трек-номеру.",
+      "description_for_ai": "Track Russian Post (Почта России) shipment by tracking number.",
       "intent": [
-        "трек почта России",
-        "отследить посылку почта",
-        "где посылка",
-        "трекинг Почта",
-        "РПО трекинг"
+        "отследить почта россия",
+        "трекинг почты",
+        "где посылка почта",
+        "track russian post"
       ],
-      "endpoint": "GET https://otpravka-api.pochta.ru/1.0/tracking/single/{barcode}",
+      "endpoint": "https://otpravka-api.pochta.ru/1.0/tracking/single",
       "input": {
         "barcode": {
           "type": "string",
-          "description": "Штриховой идентификатор (трек-номер) отправления",
+          "description": "Russian Post tracking number (14-char barcode) e.g. RA123456789RU",
           "required": true
         }
       },
       "output": {
         "type": "tracking",
         "fields": [
-          "operationParameters.operDate",
-          "operationParameters.operType.name",
-          "address.index"
+          "operationHistoryData.historyRecord[0].OperationParameters.OperType.Name",
+          "historyRecord[0].AddressParameters.DestinationAddress.Description",
+          "historyRecord[0].FinanceParameters.Payment"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "calculate_delivery",
+      "description_for_ai": "Calculate Russian Post delivery cost and terms between postal codes.",
+      "intent": [
+        "тариф почта россия",
+        "расчёт доставки почта",
+        "стоимость отправки почта",
+        "почта тариф"
+      ],
+      "endpoint": "https://tariff.pochta.ru/v2/calculate/tariff/multitype",
+      "input": {
+        "object": {
+          "type": "integer",
+          "description": "Mail type: 2010=Посылка, 2900=ЕМС, 3000=1й класс",
+          "required": true
+        },
+        "from": {
+          "type": "integer",
+          "description": "Sender postal code (индекс отправителя)",
+          "required": true
+        },
+        "to": {
+          "type": "integer",
+          "description": "Recipient postal code",
+          "required": true
+        },
+        "weight": {
+          "type": "integer",
+          "description": "Weight in grams",
+          "required": true
+        },
+        "sumoc": {
+          "type": "integer",
+          "description": "Declared value in kopecks (0 if no declared value)",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "tariff",
+        "fields": [
+          "paynds (cost in kopecks)",
+          "delivery.min",
+          "delivery.max",
+          "name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "normalize_address",
+      "description_for_ai": "Normalize and validate Russian postal address, get postal code.",
+      "intent": [
+        "нормализация адреса",
+        "индекс по адресу",
+        "почтовый индекс",
+        "адрес ФИАС"
+      ],
+      "endpoint": "https://otpravka-api.pochta.ru/1.0/clean/address",
+      "input": {
+        "original-address": {
+          "type": "string",
+          "description": "Free-form Russian address",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "index",
+          "region",
+          "area",
+          "place",
+          "street",
+          "house",
+          "room",
+          "quality-code"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_shipment",
+      "description_for_ai": "Create a Russian Post shipment (форма ф7-п, ф7-в) and get print form.",
+      "intent": [
+        "создать отправление почта",
+        "оформить посылку почта",
+        "форма почта России"
+      ],
+      "endpoint": "POST https://otpravka-api.pochta.ru/1.0/shipment",
+      "input": {
+        "mail-type": {
+          "type": "string",
+          "description": "POSTAL_PARCEL, EMS, EMS_OPTIMAL, ONLINE_PARCEL",
+          "required": true
+        },
+        "address-type-to": {
+          "type": "string",
+          "description": "DEFAULT, PO_BOX, DEMAND",
+          "required": true
+        },
+        "mass": {
+          "type": "integer",
+          "description": "Weight in grams",
+          "required": true
+        },
+        "recipient": {
+          "type": "object",
+          "description": "{name, address: {index, region, place, street, house, room}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "shipment",
+        "fields": [
+          "id",
+          "barcode",
+          "errors"
         ]
       },
       "realtime": true,
