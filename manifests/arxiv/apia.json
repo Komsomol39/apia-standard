@@ -20,33 +20,30 @@
   },
   "capabilities": [
     {
-      "id": "search",
-      "description_for_ai": "Free access to 2M+ preprint research papers in physics, mathematics, computer science, AI, biology, economics. No API key needed. Real-time preprints before peer review. Best source for latest AI research. Search arXiv preprints by keyword, author, title, abstract. Best for latest AI/ML/CS research papers.",
+      "id": "search_papers",
+      "description_for_ai": "Search arXiv preprints by keyword, author, title, or abstract. 2M+ papers in physics, math, CS, biology.",
       "intent": [
-        "research papers",
-        "preprints",
-        "latest AI research",
-        "scientific papers",
-        "arXiv",
-        "computer science papers",
-        "machine learning papers"
+        "search papers",
+        "find research arXiv",
+        "academic papers",
+        "поиск статей arXiv"
       ],
       "endpoint": "GET https://export.arxiv.org/api/query",
       "input": {
         "search_query": {
           "type": "string",
-          "description": "Search query with field prefixes: all:keyword, ti:title, au:author, abs:abstract, cat:cs.AI",
+          "description": "Query with field prefixes: ti:transformer, au:LeCun, abs:attention, cat:cs.AI, all:BERT",
           "required": true
-        },
-        "max_results": {
-          "type": "integer",
-          "default": 10,
-          "max": 100
         },
         "start": {
           "type": "integer",
           "description": "Pagination offset",
           "default": 0
+        },
+        "max_results": {
+          "type": "integer",
+          "description": "Max papers to return 1-2000",
+          "default": 10
         },
         "sortBy": {
           "type": "string",
@@ -55,19 +52,150 @@
         },
         "sortOrder": {
           "type": "string",
-          "description": "ascending, descending",
+          "description": "ascending or descending",
           "default": "descending"
         }
       },
       "output": {
-        "type": "feed",
+        "type": "list<paper>",
+        "fields": [
+          "entry.id",
+          "entry.title",
+          "entry.summary",
+          "entry.author[0].name",
+          "entry.published",
+          "entry.link[@rel='alternate'].@href"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_paper",
+      "description_for_ai": "Get detailed information about a specific arXiv paper by ID.",
+      "intent": [
+        "arXiv paper",
+        "paper details",
+        "preprint info",
+        "статья arXiv"
+      ],
+      "endpoint": "GET https://export.arxiv.org/api/query?id_list={arxiv_id}",
+      "input": {
+        "arxiv_id": {
+          "type": "string",
+          "description": "ArXiv paper ID e.g. 1706.03762 or 2303.08774v2",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "paper",
         "fields": [
           "entry.title",
           "entry.summary",
-          "entry.author.name",
+          "entry.author[0].name",
           "entry.published",
+          "entry.arxiv:primary_category.@term"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_by_category",
+      "description_for_ai": "Get latest papers from a specific arXiv category.",
+      "intent": [
+        "arXiv category",
+        "latest papers CS",
+        "new ML papers",
+        "новые статьи AI arXiv"
+      ],
+      "endpoint": "GET https://export.arxiv.org/api/query",
+      "input": {
+        "search_query": {
+          "type": "string",
+          "description": "Category query: cat:cs.AI, cat:cs.LG, cat:cs.CL, cat:physics.quant-ph, cat:math.ST",
+          "required": true
+        },
+        "sortBy": {
+          "type": "string",
+          "default": "submittedDate"
+        },
+        "sortOrder": {
+          "type": "string",
+          "default": "descending"
+        },
+        "max_results": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<paper>",
+        "fields": [
           "entry.id",
-          "entry.link.href"
+          "entry.title",
+          "entry.summary",
+          "entry.published"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_by_author",
+      "description_for_ai": "Find all papers by a specific author on arXiv.",
+      "intent": [
+        "papers by author",
+        "researcher papers",
+        "author publications arXiv",
+        "статьи автора arXiv"
+      ],
+      "endpoint": "GET https://export.arxiv.org/api/query",
+      "input": {
+        "search_query": {
+          "type": "string",
+          "description": "Author search: au:Hinton_G or au:LeCun",
+          "required": true
+        },
+        "max_results": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<paper>",
+        "fields": [
+          "entry.id",
+          "entry.title",
+          "entry.published",
+          "entry.arxiv:primary_category.@term"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_pdf_url",
+      "description_for_ai": "Get the direct PDF download URL for an arXiv paper.",
+      "intent": [
+        "arXiv PDF",
+        "download paper",
+        "paper PDF link",
+        "скачать статью arXiv"
+      ],
+      "endpoint": "reference",
+      "input": {
+        "arxiv_id": {
+          "type": "string",
+          "description": "ArXiv paper ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "url",
+        "fields": [
+          "https://arxiv.org/pdf/{arxiv_id}.pdf — direct PDF link",
+          "https://arxiv.org/abs/{arxiv_id} — abstract page"
         ]
       },
       "realtime": false,
