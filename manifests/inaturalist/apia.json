@@ -146,6 +146,117 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "search_observations",
+      "description_for_ai": "Search wildlife observations on iNaturalist. Filter by species, location, date.",
+      "intent": [
+        "wildlife observations",
+        "species sightings",
+        "bird sightings",
+        "наблюдения природа iNaturalist"
+      ],
+      "endpoint": "GET https://api.inaturalist.org/v1/observations",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Species name search",
+          "required": false
+        },
+        "taxon_name": {
+          "type": "string",
+          "required": false
+        },
+        "place_id": {
+          "type": "integer",
+          "required": false
+        },
+        "quality_grade": {
+          "type": "string",
+          "description": "research, needs_id, casual",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 30
+        }
+      },
+      "output": {
+        "type": "list<observation>",
+        "fields": [
+          "results[0].species_guess",
+          "results[0].taxon.name",
+          "results[0].location",
+          "results[0].observed_on",
+          "results[0].photos[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_species",
+      "description_for_ai": "Get species (taxon) info from iNaturalist: name, photos, rank.",
+      "intent": [
+        "species iNaturalist",
+        "taxon info",
+        "animal info iNaturalist"
+      ],
+      "endpoint": "GET https://api.inaturalist.org/v1/taxa/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "species",
+        "fields": [
+          "results[0].name",
+          "results[0].preferred_common_name",
+          "results[0].rank",
+          "results[0].iconic_taxon_name",
+          "results[0].default_photo.medium_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_species",
+      "description_for_ai": "Search iNaturalist species by name for autocomplete or identification.",
+      "intent": [
+        "search species iNaturalist",
+        "identify animal",
+        "species autocomplete"
+      ],
+      "endpoint": "GET https://api.inaturalist.org/v1/taxa",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "rank": {
+          "type": "string",
+          "description": "species, genus, family, order",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<taxon>",
+        "fields": [
+          "results[0].id",
+          "results[0].name",
+          "results[0].preferred_common_name",
+          "results[0].rank"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "meta": {
