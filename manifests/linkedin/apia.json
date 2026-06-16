@@ -23,24 +23,50 @@
   },
   "capabilities": [
     {
-      "id": "share_post",
-      "description_for_ai": "Publish a post to LinkedIn on behalf of a user or organization page.",
+      "id": "get_profile",
+      "description_for_ai": "Get authenticated user's LinkedIn profile: name, headline, location, summary.",
       "intent": [
-        "post to linkedin",
-        "linkedin publish",
-        "share on linkedin",
+        "linkedin profile",
+        "my linkedin",
+        "linkedin user",
+        "профиль linkedin"
+      ],
+      "endpoint": "GET https://api.linkedin.com/v2/userinfo",
+      "input": {},
+      "output": {
+        "type": "profile",
+        "fields": [
+          "sub",
+          "name",
+          "given_name",
+          "family_name",
+          "email",
+          "picture",
+          "locale"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_post",
+      "description_for_ai": "Publish a text post or article to LinkedIn as a person or organization.",
+      "intent": [
+        "post linkedin",
+        "share linkedin",
+        "linkedin update",
         "опубликовать linkedin"
       ],
       "endpoint": "POST https://api.linkedin.com/v2/ugcPosts",
       "input": {
         "author": {
           "type": "string",
-          "description": "urn:li:person:{person_id} or urn:li:organization:{org_id}",
+          "description": "urn:li:person:{personId} or urn:li:organization:{orgId}",
           "required": true
         },
-        "text": {
+        "commentary": {
           "type": "string",
-          "description": "Post text content",
+          "description": "Post text, max 3000 chars",
           "required": true
         },
         "visibility": {
@@ -48,137 +74,95 @@
           "description": "PUBLIC or CONNECTIONS",
           "default": "PUBLIC"
         },
-        "article_url": {
+        "media_category": {
           "type": "string",
-          "description": "URL to share as article with preview",
-          "required": false
-        },
-        "article_title": {
-          "type": "string",
-          "description": "Title for shared article",
-          "required": false
+          "description": "NONE, ARTICLE, IMAGE, VIDEO",
+          "default": "NONE"
         }
       },
       "output": {
         "type": "post",
         "fields": [
           "id",
-          "ugcPost.id"
+          "created.time"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_profile",
-      "description_for_ai": "Get LinkedIn user profile: name, headline, current positions, education, location.",
+      "id": "search_people",
+      "description_for_ai": "Search LinkedIn for people by keywords, company, title (requires Marketing API access).",
       "intent": [
-        "linkedin profile",
-        "user profile linkedin",
-        "professional info",
-        "профиль linkedin"
+        "linkedin search",
+        "find person linkedin",
+        "company employees",
+        "поиск linkedin"
       ],
-      "endpoint": "GET https://api.linkedin.com/v2/people/(id:{personId})",
+      "endpoint": "GET https://api.linkedin.com/v2/search",
       "input": {
-        "personId": {
+        "q": {
           "type": "string",
-          "description": "LinkedIn person ID (or ~me for current user)",
-          "required": true
+          "default": "people"
         },
-        "projection": {
+        "keywords": {
           "type": "string",
-          "description": "(id,firstName,lastName,headline,profilePicture,positions,educations,location)",
           "required": false
-        }
-      },
-      "output": {
-        "type": "profile",
-        "fields": [
-          "firstName.localized",
-          "lastName.localized",
-          "headline.localized",
-          "profilePicture.displayImage"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_company",
-      "description_for_ai": "Get LinkedIn company/organization profile: description, employee count, website, industry, locations.",
-      "intent": [
-        "company linkedin",
-        "organization profile linkedin",
-        "company info linkedin",
-        "компания linkedin"
-      ],
-      "endpoint": "GET https://api.linkedin.com/v2/organizations/{organizationId}",
-      "input": {
-        "organizationId": {
-          "type": "string",
-          "required": true
         },
-        "fields": {
+        "facetCurrentCompany": {
           "type": "string",
-          "description": "Requested fields projection",
+          "description": "Company URN",
           "required": false
+        },
+        "count": {
+          "type": "integer",
+          "default": 10
         }
       },
       "output": {
-        "type": "company",
+        "type": "list<person>",
         "fields": [
-          "name.localized",
-          "description.localized",
-          "staffCount",
-          "websiteUrl",
-          "specialties",
-          "foundedOn.year"
+          "elements[0].id",
+          "elements[0].firstName",
+          "elements[0].lastName"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_analytics",
-      "description_for_ai": "Get analytics for LinkedIn company page posts: impressions, clicks, engagement, followers gained.",
+      "id": "send_message",
+      "description_for_ai": "Send a direct message to a LinkedIn connection.",
       "intent": [
-        "linkedin analytics",
-        "company page analytics",
-        "post performance linkedin",
-        "аналитика linkedin"
+        "linkedin message",
+        "DM linkedin",
+        "message connection",
+        "сообщение linkedin"
       ],
-      "endpoint": "GET https://api.linkedin.com/v2/organizationalEntityShareStatistics",
+      "endpoint": "POST https://api.linkedin.com/v2/messages",
       "input": {
-        "organizationalEntity": {
+        "recipients": {
+          "type": "array",
+          "description": "[{person: {urn: 'urn:li:person:id'}}]",
+          "required": true
+        },
+        "subject": {
           "type": "string",
-          "description": "urn:li:organization:{org_id}",
-          "required": true
+          "required": false
         },
-        "timeIntervals.timeGranularityType": {
+        "body": {
           "type": "string",
-          "description": "DAY, MONTH",
-          "required": true
-        },
-        "timeIntervals.timeRange.start": {
-          "type": "integer",
-          "description": "Unix timestamp ms",
-          "required": true
-        },
-        "timeIntervals.timeRange.end": {
-          "type": "integer",
           "required": true
         }
       },
       "output": {
-        "type": "analytics",
+        "type": "message",
         "fields": [
-          "elements[0].totalShareStatistics.impressionCount",
-          "elements[0].totalShareStatistics.clickCount",
-          "elements[0].totalShareStatistics.likeCount",
-          "elements[0].totalShareStatistics.shareCount"
+          "id",
+          "createdAt"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     }
   ],
