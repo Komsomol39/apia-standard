@@ -141,6 +141,84 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "call_service",
+      "description_for_ai": "Call a Home Assistant service: turn on/off lights, set thermostat, play media.",
+      "intent": [
+        "control device home assistant",
+        "turn on light",
+        "home automation",
+        "управление устройством home assistant"
+      ],
+      "endpoint": "POST https://{ha_url}/api/services/{domain}/{service}",
+      "input": {
+        "domain": {
+          "type": "string",
+          "description": "light, switch, climate, media_player, script, automation",
+          "required": true
+        },
+        "service": {
+          "type": "string",
+          "description": "turn_on, turn_off, toggle, set_temperature, play_media",
+          "required": true
+        },
+        "entity_id": {
+          "type": "string",
+          "description": "Entity to control: light.living_room",
+          "required": false
+        },
+        "extra_data": {
+          "type": "object",
+          "description": "Service-specific params: {brightness: 200} or {temperature: 22}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<state>",
+        "fields": [
+          "[0].entity_id",
+          "[0].state",
+          "[0].attributes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_history",
+      "description_for_ai": "Get state history for Home Assistant entities over a time range.",
+      "intent": [
+        "home assistant history",
+        "sensor history",
+        "state log HA",
+        "история состояний home assistant"
+      ],
+      "endpoint": "GET https://{ha_url}/api/history/period/{start_time}",
+      "input": {
+        "start_time": {
+          "type": "string",
+          "description": "ISO 8601 start",
+          "required": true
+        },
+        "entity_id": {
+          "type": "string",
+          "description": "Filter by entity",
+          "required": false
+        },
+        "end_time": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "history",
+        "fields": [
+          "[[{entity_id, state, last_changed}]]"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
