@@ -204,6 +204,45 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "create_contact",
+      "description_for_ai": "Create a new contact in Freshdesk.",
+      "intent": [
+        "new contact freshdesk",
+        "add customer",
+        "создать контакт freshdesk"
+      ],
+      "endpoint": "POST https://{domain}.freshdesk.com/api/v2/contacts",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": false
+        },
+        "phone": {
+          "type": "string",
+          "required": false
+        },
+        "company_id": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "contact",
+        "fields": [
+          "id",
+          "name",
+          "email",
+          "phone"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
