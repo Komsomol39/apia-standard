@@ -24,54 +24,38 @@
   "capabilities": [
     {
       "id": "search_deals",
-      "description_for_ai": "Search Pipedrive CRM deals by title, value, status, stage, and owner.",
+      "description_for_ai": "Search Pipedrive deals by keyword, owner, stage, or status.",
       "intent": [
-        "pipedrive deals",
-        "CRM deals",
-        "sales pipeline search",
-        "сделки pipedrive"
+        "Pipedrive deals",
+        "sales pipeline",
+        "search deals",
+        "сделки Pipedrive"
       ],
-      "endpoint": "GET https://{company}.pipedrive.com/api/v1/deals",
+      "endpoint": "GET https://api.pipedrive.com/v1/deals/search",
       "input": {
+        "term": {
+          "type": "string",
+          "description": "Search term",
+          "required": true
+        },
         "status": {
           "type": "string",
           "description": "open, won, lost, deleted, all_not_deleted",
-          "default": "open"
-        },
-        "filter_id": {
-          "type": "integer",
-          "description": "Saved filter ID",
           "required": false
-        },
-        "stage_id": {
-          "type": "integer",
-          "description": "Filter by pipeline stage",
-          "required": false
-        },
-        "user_id": {
-          "type": "integer",
-          "description": "Filter by owner",
-          "required": false
-        },
-        "start": {
-          "type": "integer",
-          "default": 0
         },
         "limit": {
           "type": "integer",
-          "default": 20
+          "default": 25
         }
       },
       "output": {
         "type": "list<deal>",
         "fields": [
-          "data[0].id",
-          "data[0].title",
-          "data[0].value",
-          "data[0].currency",
-          "data[0].status",
-          "data[0].stage_id",
-          "data[0].person_name"
+          "data.items[0].item.id",
+          "data.items[0].item.title",
+          "data.items[0].item.value",
+          "data.items[0].item.status",
+          "data.items[0].item.owner_name"
         ]
       },
       "realtime": true,
@@ -79,14 +63,14 @@
     },
     {
       "id": "create_deal",
-      "description_for_ai": "Create a new deal in Pipedrive with value, stage, expected close date, and linked contact.",
+      "description_for_ai": "Create a new deal in Pipedrive CRM pipeline.",
       "intent": [
-        "create deal pipedrive",
-        "new opportunity",
-        "add deal CRM",
-        "создать сделку pipedrive"
+        "create deal Pipedrive",
+        "new sale",
+        "add opportunity",
+        "новая сделка Pipedrive"
       ],
-      "endpoint": "POST https://{company}.pipedrive.com/api/v1/deals",
+      "endpoint": "POST https://api.pipedrive.com/v1/deals",
       "input": {
         "title": {
           "type": "string",
@@ -94,30 +78,27 @@
         },
         "value": {
           "type": "number",
+          "description": "Deal value in default currency",
           "required": false
         },
         "currency": {
           "type": "string",
-          "default": "USD"
-        },
-        "status": {
-          "type": "string",
-          "description": "open, won, lost",
-          "default": "open"
-        },
-        "stage_id": {
-          "type": "integer",
-          "description": "Pipeline stage ID",
+          "description": "Currency code: USD, EUR, GBP",
           "required": false
         },
         "person_id": {
           "type": "integer",
-          "description": "Contact ID to link",
+          "description": "Associated contact",
           "required": false
         },
         "org_id": {
           "type": "integer",
-          "description": "Organization ID",
+          "description": "Associated organization",
+          "required": false
+        },
+        "stage_id": {
+          "type": "integer",
+          "description": "Pipeline stage ID",
           "required": false
         },
         "expected_close_date": {
@@ -131,9 +112,93 @@
         "fields": [
           "data.id",
           "data.title",
-          "data.value",
           "data.status",
-          "data.stage_id"
+          "data.stage_id",
+          "data.add_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_activity",
+      "description_for_ai": "Log an activity (call, email, meeting, task) to a deal or contact.",
+      "intent": [
+        "log activity Pipedrive",
+        "add call note",
+        "schedule meeting CRM",
+        "активность Pipedrive"
+      ],
+      "endpoint": "POST https://api.pipedrive.com/v1/activities",
+      "input": {
+        "subject": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "call, meeting, task, deadline, email, lunch",
+          "required": true
+        },
+        "deal_id": {
+          "type": "integer",
+          "required": false
+        },
+        "person_id": {
+          "type": "integer",
+          "required": false
+        },
+        "due_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        },
+        "due_time": {
+          "type": "string",
+          "description": "HH:MM",
+          "required": false
+        },
+        "note": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "activity",
+        "fields": [
+          "data.id",
+          "data.subject",
+          "data.type",
+          "data.due_date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_pipeline_stages",
+      "description_for_ai": "Get all pipeline stages with their order and conversion rates.",
+      "intent": [
+        "pipeline stages",
+        "sales stages Pipedrive",
+        "CRM pipeline",
+        "этапы продаж Pipedrive"
+      ],
+      "endpoint": "GET https://api.pipedrive.com/v1/stages",
+      "input": {
+        "pipeline_id": {
+          "type": "integer",
+          "description": "Filter by pipeline",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<stage>",
+        "fields": [
+          "data[0].id",
+          "data[0].name",
+          "data[0].pipeline_id",
+          "data[0].deal_probability"
         ]
       },
       "realtime": true,
@@ -143,12 +208,12 @@
       "id": "create_person",
       "description_for_ai": "Create a new contact person in Pipedrive.",
       "intent": [
-        "create contact pipedrive",
+        "add contact Pipedrive",
         "new person CRM",
-        "add contact",
-        "добавить контакт pipedrive"
+        "create contact Pipedrive",
+        "новый контакт Pipedrive"
       ],
-      "endpoint": "POST https://{company}.pipedrive.com/api/v1/persons",
+      "endpoint": "POST https://api.pipedrive.com/v1/persons",
       "input": {
         "name": {
           "type": "string",
@@ -161,11 +226,12 @@
         },
         "phone": {
           "type": "array",
-          "description": "[{value: '+1234567890', primary: true}]",
+          "description": "[{value: '+1...', primary: true}]",
           "required": false
         },
         "org_id": {
           "type": "integer",
+          "description": "Organization ID",
           "required": false
         }
       },
@@ -175,47 +241,38 @@
           "data.id",
           "data.name",
           "data.email[0].value",
-          "data.phone[0].value"
+          "data.org_id"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "add_note",
-      "description_for_ai": "Add a note to a deal, person, or organization in Pipedrive.",
+      "id": "get_deal_details",
+      "description_for_ai": "Get full details of a deal including activities, notes, and contacts.",
       "intent": [
-        "note pipedrive",
-        "add note CRM",
-        "deal note",
-        "заметка pipedrive"
+        "deal details Pipedrive",
+        "sale information",
+        "детали сделки Pipedrive"
       ],
-      "endpoint": "POST https://{company}.pipedrive.com/api/v1/notes",
+      "endpoint": "GET https://api.pipedrive.com/v1/deals/{id}",
       "input": {
-        "content": {
-          "type": "string",
-          "description": "Note text (HTML supported)",
+        "id": {
+          "type": "integer",
           "required": true
-        },
-        "deal_id": {
-          "type": "integer",
-          "required": false
-        },
-        "person_id": {
-          "type": "integer",
-          "required": false
-        },
-        "org_id": {
-          "type": "integer",
-          "required": false
         }
       },
       "output": {
-        "type": "note",
+        "type": "deal",
         "fields": [
           "data.id",
-          "data.content",
-          "data.add_time"
+          "data.title",
+          "data.value",
+          "data.status",
+          "data.person_name",
+          "data.org_name",
+          "data.stage_id",
+          "data.expected_close_date"
         ]
       },
       "realtime": true,
