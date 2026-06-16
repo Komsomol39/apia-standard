@@ -160,6 +160,40 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "html_translation",
+      "description_for_ai": "Translate HTML content preserving tags and structure.",
+      "intent": [
+        "translate HTML",
+        "website translation",
+        "html translate google",
+        "перевести HTML"
+      ],
+      "endpoint": "POST https://translation.googleapis.com/language/translate/v2",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "HTML string to translate",
+          "required": true
+        },
+        "target": {
+          "type": "string",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "html"
+        }
+      },
+      "output": {
+        "type": "translation",
+        "fields": [
+          "data.translations[0].translatedText (HTML preserved)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
