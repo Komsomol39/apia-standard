@@ -22,31 +22,32 @@
   "capabilities": [
     {
       "id": "moderate_text",
-      "description_for_ai": "Check text for violations using OpenAI Moderation API (free).",
+      "description_for_ai": "Check text for policy violations: hate, harassment, self-harm, violence, sexual content.",
       "intent": [
-        "content moderation openai",
-        "text safety check",
-        "harmful content detection",
-        "модерация контента openai"
+        "content moderation OpenAI",
+        "text moderation",
+        "check policy violations",
+        "модерация контента OpenAI"
       ],
       "endpoint": "POST https://api.openai.com/v1/moderations",
       "input": {
         "input": {
           "type": "string or array",
-          "description": "Text or list of texts to moderate",
+          "description": "Text(s) to moderate",
           "required": true
         },
         "model": {
           "type": "string",
-          "description": "omni-moderation-latest (multilingual+images), text-moderation-latest",
+          "description": "omni-moderation-latest (default), text-moderation-latest",
           "default": "omni-moderation-latest"
         }
       },
       "output": {
         "type": "moderation",
         "fields": [
-          "results[0].flagged (boolean)",
+          "results[0].flagged (bool)",
           "results[0].categories.hate",
+          "results[0].categories.harassment",
           "results[0].categories.sexual",
           "results[0].categories.violence",
           "results[0].categories.self-harm",
@@ -57,57 +58,20 @@
       "requires_auth": true
     },
     {
-      "id": "moderate_image",
-      "description_for_ai": "Moderate image content using OpenAI omni-moderation model.",
-      "intent": [
-        "image moderation openai",
-        "safe image check",
-        "NSFW detection openai",
-        "модерация изображений openai"
-      ],
-      "endpoint": "POST https://api.openai.com/v1/moderations",
-      "input": {
-        "input": {
-          "type": "array",
-          "description": "[{type: 'image_url', image_url: {url: 'https://...' or 'data:image/jpeg;base64,...'}}]",
-          "required": true
-        },
-        "model": {
-          "type": "string",
-          "default": "omni-moderation-latest"
-        }
-      },
-      "output": {
-        "type": "moderation",
-        "fields": [
-          "results[0].flagged",
-          "results[0].categories.sexual/minors",
-          "results[0].categories.violence/graphic",
-          "results[0].category_scores"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "batch_moderate",
-      "description_for_ai": "Moderate multiple texts at once with OpenAI Moderation.",
+      "description_for_ai": "Moderate multiple texts in one request with OpenAI Moderation API.",
       "intent": [
-        "batch moderation",
-        "bulk text check",
-        "moderate many texts",
-        "массовая модерация openai"
+        "bulk moderation",
+        "batch content check",
+        "multiple texts moderate",
+        "массовая модерация OpenAI"
       ],
       "endpoint": "POST https://api.openai.com/v1/moderations",
       "input": {
         "input": {
           "type": "array",
-          "description": "Array of strings to moderate",
+          "description": "Array of strings to moderate (up to 100 at once)",
           "required": true
-        },
-        "model": {
-          "type": "string",
-          "default": "omni-moderation-latest"
         }
       },
       "output": {
@@ -122,13 +86,13 @@
       "requires_auth": true
     },
     {
-      "id": "check_hate_speech",
-      "description_for_ai": "Check specifically for hate speech in text.",
+      "id": "check_sexual_content",
+      "description_for_ai": "Specifically check for sexual or adult content.",
       "intent": [
-        "hate speech detection",
-        "hate content check",
-        "offensive text detection",
-        "обнаружение ненависти openai"
+        "sexual content check",
+        "adult content moderation",
+        "NSFW detection",
+        "проверка на взрослый контент"
       ],
       "endpoint": "POST https://api.openai.com/v1/moderations",
       "input": {
@@ -144,10 +108,37 @@
       "output": {
         "type": "moderation",
         "fields": [
-          "results[0].categories.hate",
-          "results[0].categories.hate/threatening",
-          "results[0].category_scores.hate",
-          "results[0].flagged"
+          "results[0].categories.sexual (bool)",
+          "results[0].categories.sexual/minors (bool)",
+          "results[0].category_scores.sexual"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "check_violence",
+      "description_for_ai": "Specifically check for violent or threatening content.",
+      "intent": [
+        "violence detection",
+        "threat detection",
+        "violent content check",
+        "обнаружение насилия OpenAI"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/moderations",
+      "input": {
+        "input": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "moderation",
+        "fields": [
+          "results[0].categories.violence (bool)",
+          "results[0].categories.violence/graphic (bool)",
+          "results[0].categories.harassment/threatening (bool)",
+          "results[0].category_scores.violence"
         ]
       },
       "realtime": true,
@@ -155,31 +146,27 @@
     },
     {
       "id": "check_self_harm",
-      "description_for_ai": "Detect self-harm or suicide-related content using OpenAI Moderation.",
+      "description_for_ai": "Check text for self-harm or suicide-related content.",
       "intent": [
-        "self harm detection",
+        "self-harm detection",
         "suicide content check",
-        "mental health safety",
-        "обнаружение самоповреждений openai"
+        "crisis content",
+        "обнаружение суицидального контента"
       ],
       "endpoint": "POST https://api.openai.com/v1/moderations",
       "input": {
         "input": {
           "type": "string",
           "required": true
-        },
-        "model": {
-          "type": "string",
-          "default": "omni-moderation-latest"
         }
       },
       "output": {
         "type": "moderation",
         "fields": [
-          "results[0].categories.self-harm",
+          "results[0].categories.self-harm (bool)",
           "results[0].categories.self-harm/intent",
           "results[0].categories.self-harm/instructions",
-          "results[0].flagged"
+          "results[0].category_scores.self-harm"
         ]
       },
       "realtime": true,
