@@ -23,12 +23,12 @@
   "capabilities": [
     {
       "id": "deploy_worker",
-      "description_for_ai": "Deploy or update a Worker script to Cloudflare edge (300+ locations worldwide). Instant global deployment.",
+      "description_for_ai": "Deploy or update a Cloudflare Worker script. Workers run globally at the edge in 300+ cities.",
       "intent": [
-        "deploy worker cloudflare",
-        "edge function cloudflare",
-        "upload worker",
-        "задеплоить cloudflare worker"
+        "deploy Cloudflare Worker",
+        "update Worker",
+        "deploy edge function",
+        "деплой Cloudflare Worker"
       ],
       "endpoint": "PUT https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/scripts/{script_name}",
       "input": {
@@ -38,17 +38,16 @@
         },
         "script_name": {
           "type": "string",
-          "description": "Worker name (letters, numbers, hyphens)",
           "required": true
         },
         "script": {
           "type": "string",
-          "description": "Worker JavaScript/TypeScript code as string",
+          "description": "Worker JavaScript/TypeScript code",
           "required": true
         },
         "bindings": {
           "type": "array",
-          "description": "[{type: 'kv_namespace', name: 'MY_KV', namespace_id: '...'}, {type: 'secret_text', name: 'API_KEY'}]",
+          "description": "[{type: 'kv_namespace', name: 'MY_KV', namespace_id: 'xxx'}]",
           "required": false
         }
       },
@@ -56,38 +55,37 @@
         "type": "worker",
         "fields": [
           "id",
+          "etag",
           "created_on",
-          "modified_on",
-          "script"
+          "modified_on"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_worker",
-      "description_for_ai": "Get source code of an existing Worker script.",
+      "id": "list_workers",
+      "description_for_ai": "List all Cloudflare Workers in an account.",
       "intent": [
-        "get worker code",
-        "read worker",
-        "worker source",
-        "код worker cloudflare"
+        "list Workers",
+        "Cloudflare scripts",
+        "my Workers",
+        "список Workers Cloudflare"
       ],
-      "endpoint": "GET https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/scripts/{script_name}",
+      "endpoint": "GET https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/scripts",
       "input": {
         "account_id": {
-          "type": "string",
-          "required": true
-        },
-        "script_name": {
           "type": "string",
           "required": true
         }
       },
       "output": {
-        "type": "script",
+        "type": "list<worker>",
         "fields": [
-          "JavaScript source code as text"
+          "result[0].id",
+          "result[0].created_on",
+          "result[0].modified_on",
+          "result[0].usage_model"
         ]
       },
       "realtime": true,
@@ -95,12 +93,12 @@
     },
     {
       "id": "kv_put",
-      "description_for_ai": "Write a key-value pair to Cloudflare KV Storage. Available globally at edge.",
+      "description_for_ai": "Store a key-value pair in Cloudflare KV storage. Global edge storage with low latency reads.",
       "intent": [
-        "KV store cloudflare",
-        "store data edge",
-        "cloudflare KV write",
-        "запись KV cloudflare"
+        "KV store Cloudflare",
+        "edge storage",
+        "store value KV",
+        "хранилище KV Cloudflare"
       ],
       "endpoint": "PUT https://api.cloudflare.com/client/v4/accounts/{account_id}/storage/kv/namespaces/{namespace_id}/values/{key}",
       "input": {
@@ -118,68 +116,128 @@
         },
         "value": {
           "type": "string",
-          "description": "Value to store (max 25MB)",
           "required": true
         },
         "expiration_ttl": {
           "type": "integer",
-          "description": "TTL in seconds. After expiry, key is deleted.",
-          "required": false
-        },
-        "metadata": {
-          "type": "object",
-          "description": "JSON metadata to attach to key",
+          "description": "TTL in seconds",
           "required": false
         }
       },
       "output": {
         "type": "result",
         "fields": [
-          "success",
-          "result"
+          "success"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "r2_upload",
-      "description_for_ai": "Upload object to Cloudflare R2 (S3-compatible object storage with zero egress fees).",
+      "id": "kv_get",
+      "description_for_ai": "Get a value from Cloudflare KV storage by key.",
       "intent": [
-        "R2 upload",
-        "cloudflare storage",
-        "R2 object store",
-        "хранилище cloudflare R2"
+        "KV get Cloudflare",
+        "read from KV",
+        "get stored value",
+        "прочитать KV Cloudflare"
       ],
-      "endpoint": "PUT https://{account_id}.r2.cloudflarestorage.com/{bucket}/{key}",
+      "endpoint": "GET https://api.cloudflare.com/client/v4/accounts/{account_id}/storage/kv/namespaces/{namespace_id}/values/{key}",
       "input": {
         "account_id": {
           "type": "string",
           "required": true
         },
-        "bucket": {
+        "namespace_id": {
           "type": "string",
           "required": true
         },
         "key": {
           "type": "string",
-          "description": "Object key/path",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "value",
+        "fields": [
+          "value (string)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_route",
+      "description_for_ai": "Add a route pattern to trigger a Worker for specific URL paths.",
+      "intent": [
+        "Worker route",
+        "URL pattern Worker",
+        "route Worker",
+        "роут Cloudflare Worker"
+      ],
+      "endpoint": "POST https://api.cloudflare.com/client/v4/zones/{zone_id}/workers/routes",
+      "input": {
+        "zone_id": {
+          "type": "string",
           "required": true
         },
-        "body": {
-          "type": "binary",
-          "description": "File content",
+        "pattern": {
+          "type": "string",
+          "description": "URL pattern e.g. example.com/api/* or *.example.com/*",
           "required": true
         },
-        "ContentType": {
+        "script": {
+          "type": "string",
+          "description": "Worker script name",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "route",
+        "fields": [
+          "result.id",
+          "result.pattern",
+          "result.script"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_worker_metrics",
+      "description_for_ai": "Get usage metrics for a Cloudflare Worker: requests, errors, CPU time.",
+      "intent": [
+        "Worker metrics",
+        "Cloudflare analytics",
+        "Worker usage",
+        "метрики Worker Cloudflare"
+      ],
+      "endpoint": "GET https://api.cloudflare.com/client/v4/accounts/{account_id}/workers/scripts/{script_name}/analytics/requests",
+      "input": {
+        "account_id": {
+          "type": "string",
+          "required": true
+        },
+        "script_name": {
+          "type": "string",
+          "required": true
+        },
+        "since": {
+          "type": "string",
+          "description": "ISO 8601 date",
+          "required": false
+        },
+        "until": {
           "type": "string",
           "required": false
         }
       },
       "output": {
-        "type": "upload",
+        "type": "metrics",
         "fields": [
-          "ETag"
+          "totals.requests.all",
+          "totals.errors.all",
+          "totals.subrequests.all"
         ]
       },
       "realtime": true,
