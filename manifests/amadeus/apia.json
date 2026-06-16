@@ -180,6 +180,89 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "flight_offers",
+      "description_for_ai": "Search for available flight offers between cities.",
+      "intent": [
+        "flight search",
+        "find flights",
+        "авиабилеты amadeus"
+      ],
+      "endpoint": "GET https://test.api.amadeus.com/v2/shopping/flight-offers",
+      "input": {
+        "originLocationCode": {
+          "type": "string",
+          "required": true
+        },
+        "destinationLocationCode": {
+          "type": "string",
+          "required": true
+        },
+        "departureDate": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "adults": {
+          "type": "integer",
+          "default": 1
+        },
+        "max": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<offer>",
+        "fields": [
+          "data[0].price.total",
+          "data[0].price.currency",
+          "data[0].itineraries[0].duration",
+          "data[0].validatingAirlineCodes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "hotel_search",
+      "description_for_ai": "Search for hotels in a city with availability and prices.",
+      "intent": [
+        "hotel search amadeus",
+        "find hotels",
+        "поиск отелей amadeus"
+      ],
+      "endpoint": "GET https://test.api.amadeus.com/v2/shopping/hotel-offers",
+      "input": {
+        "cityCode": {
+          "type": "string",
+          "description": "IATA city code e.g. PAR, LON, MOW",
+          "required": true
+        },
+        "checkInDate": {
+          "type": "string",
+          "required": true
+        },
+        "checkOutDate": {
+          "type": "string",
+          "required": true
+        },
+        "adults": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<offer>",
+        "fields": [
+          "data[0].hotel.name",
+          "data[0].offers[0].price.total",
+          "data[0].offers[0].room.type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
