@@ -128,6 +128,100 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "search_books",
+      "description_for_ai": "Search books with Google Books API.",
+      "intent": [
+        "search books",
+        "find book",
+        "google books search",
+        "поиск книг"
+      ],
+      "endpoint": "GET https://www.googleapis.com/books/v1/volumes",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Search query: title, author, ISBN. e.g. 'intitle:Python+inauthor:Lutz'",
+          "required": true
+        },
+        "maxResults": {
+          "type": "integer",
+          "default": 10
+        },
+        "langRestrict": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<book>",
+        "fields": [
+          "items[0].id",
+          "items[0].volumeInfo.title",
+          "items[0].volumeInfo.authors",
+          "items[0].volumeInfo.publishedDate",
+          "items[0].volumeInfo.previewLink"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_book",
+      "description_for_ai": "Get full details of a book by Google Books volume ID.",
+      "intent": [
+        "book details google",
+        "book info",
+        "детали книги google"
+      ],
+      "endpoint": "GET https://www.googleapis.com/books/v1/volumes/{volumeId}",
+      "input": {
+        "volumeId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "book",
+        "fields": [
+          "volumeInfo.title",
+          "volumeInfo.authors",
+          "volumeInfo.description",
+          "volumeInfo.pageCount",
+          "volumeInfo.categories",
+          "saleInfo.listPrice.amount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_by_isbn",
+      "description_for_ai": "Get book by ISBN.",
+      "intent": [
+        "book by ISBN",
+        "ISBN lookup",
+        "найти книгу по ISBN"
+      ],
+      "endpoint": "GET https://www.googleapis.com/books/v1/volumes",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "isbn:9780134494166",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "book",
+        "fields": [
+          "items[0].volumeInfo.title",
+          "items[0].volumeInfo.authors",
+          "items[0].volumeInfo.industryIdentifiers"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
