@@ -23,26 +23,25 @@
   },
   "capabilities": [
     {
-      "id": "generate_text",
-      "description_for_ai": "Генерация текста через YandexGPT. Нативная поддержка русского языка. Данные обрабатываются в России. Используй для задач где важна локализация в РФ.",
+      "id": "completion",
+      "description_for_ai": "Generate text with YandexGPT. Ideal for Russian-language tasks. Supports system prompts and multi-turn conversations.",
       "intent": [
-        "российский ИИ",
-        "YandexGPT",
-        "Яндекс GPT",
-        "генерация текста Яндекс",
-        "отечественный AI",
-        "Алиса"
+        "yandex gpt",
+        "ИИ яндекс",
+        "нейросеть яндекс",
+        "генерация текста яндекс",
+        "yagpt"
       ],
       "endpoint": "POST https://llm.api.cloud.yandex.net/foundationModels/v1/completion",
       "input": {
         "modelUri": {
           "type": "string",
-          "description": "gpt://YOUR_FOLDER_ID/yandexgpt or yandexgpt-lite",
+          "description": "gpt://{folder_id}/yandexgpt/latest or yandexgpt-lite/latest",
           "required": true
         },
         "completionOptions": {
           "type": "object",
-          "description": "{stream: false, temperature: 0.3, maxTokens: 2000}",
+          "description": "{stream: false, temperature: 0.6, maxTokens: 2000}",
           "required": false
         },
         "messages": {
@@ -55,6 +54,7 @@
         "type": "completion",
         "fields": [
           "result.alternatives[0].message.text",
+          "result.alternatives[0].status",
           "result.usage.totalTokens"
         ]
       },
@@ -62,18 +62,53 @@
       "requires_auth": true
     },
     {
-      "id": "text_embeddings",
-      "description_for_ai": "Создание векторных представлений текста (embeddings) для семантического поиска на русском языке.",
+      "id": "async_completion",
+      "description_for_ai": "Async text generation for long tasks. Returns operation ID, poll for result.",
       "intent": [
-        "embeddings русский",
-        "векторный поиск",
-        "семантический поиск Яндекс"
+        "async yandex gpt",
+        "long generation",
+        "асинхронная генерация яндекс"
+      ],
+      "endpoint": "POST https://llm.api.cloud.yandex.net/foundationModels/v1/completionAsync",
+      "input": {
+        "modelUri": {
+          "type": "string",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "completionOptions": {
+          "type": "object",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "operation",
+        "fields": [
+          "id",
+          "done",
+          "response.alternatives[0].message.text"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "embeddings",
+      "description_for_ai": "Get text embeddings with YandexGPT for semantic search and RAG in Russian.",
+      "intent": [
+        "yandex embeddings",
+        "векторы яндекс",
+        "семантический поиск яндекс",
+        "RAG яндекс"
       ],
       "endpoint": "POST https://llm.api.cloud.yandex.net/foundationModels/v1/textEmbedding",
       "input": {
         "modelUri": {
           "type": "string",
-          "description": "emb://YOUR_FOLDER_ID/text-search-doc or text-search-query",
+          "description": "emb://{folder_id}/text-search-doc/latest or text-search-query/latest",
           "required": true
         },
         "text": {
@@ -84,7 +119,36 @@
       "output": {
         "type": "embedding",
         "fields": [
-          "embedding",
+          "embedding (float array)",
+          "numTokens",
+          "modelVersion"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "tokenize",
+      "description_for_ai": "Count tokens before sending to estimate cost.",
+      "intent": [
+        "count tokens yandex",
+        "токены яндекс gpt"
+      ],
+      "endpoint": "POST https://llm.api.cloud.yandex.net/foundationModels/v1/tokenize",
+      "input": {
+        "modelUri": {
+          "type": "string",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "token_count",
+        "fields": [
+          "tokens",
           "modelVersion"
         ]
       },
