@@ -23,50 +23,45 @@
   "capabilities": [
     {
       "id": "track",
-      "description_for_ai": "Track a user action/event. Segment forwards to 300+ destinations (analytics, CRM, email, etc.).",
+      "description_for_ai": "Track user events in Segment. Data is forwarded to all connected destinations (Mixpanel, BigQuery, etc.).",
       "intent": [
-        "segment track",
-        "analytics event segment",
-        "CDP event",
-        "событие segment"
+        "track event Segment",
+        "analytics event",
+        "user event tracking",
+        "аналитика Segment"
       ],
       "endpoint": "POST https://api.segment.io/v1/track",
       "input": {
         "userId": {
           "type": "string",
-          "description": "User ID for logged-in users",
+          "description": "User identifier",
           "required": false
         },
         "anonymousId": {
           "type": "string",
-          "description": "Anonymous ID for non-logged in users",
+          "description": "Anonymous ID if user not identified",
           "required": false
         },
         "event": {
           "type": "string",
-          "description": "Event name: 'Signed Up', 'Order Completed', 'Product Viewed'",
+          "description": "Event name: 'Order Completed', 'Video Watched'",
           "required": true
         },
         "properties": {
           "type": "object",
-          "description": "Event properties: {revenue: 99.99, currency: 'USD', product: 'Pro Plan'}",
-          "required": false
-        },
-        "timestamp": {
-          "type": "string",
-          "description": "ISO 8601 timestamp",
+          "description": "{revenue: 29.99, product_id: 'sku123', category: 'Electronics'}",
           "required": false
         },
         "context": {
           "type": "object",
-          "description": "{ip, userAgent, campaign: {source, medium, name}}",
+          "description": "{campaign: {source: 'google', medium: 'cpc'}}",
           "required": false
         }
       },
       "output": {
-        "type": "empty",
+        "type": "status",
         "fields": [
-          "200 OK on success"
+          "success: true"
         ]
       },
       "realtime": true,
@@ -74,12 +69,12 @@
     },
     {
       "id": "identify",
-      "description_for_ai": "Associate a user ID with traits (properties). Syncs user data to all connected tools.",
+      "description_for_ai": "Identify a user and set their traits in Segment.",
       "intent": [
-        "segment identify",
+        "identify user Segment",
         "user traits",
-        "profile segment",
-        "профиль segment"
+        "customer data",
+        "идентификация Segment"
       ],
       "endpoint": "POST https://api.segment.io/v1/identify",
       "input": {
@@ -89,23 +84,18 @@
         },
         "traits": {
           "type": "object",
-          "description": "User attributes: {email, name, plan, company, createdAt, phone}",
-          "required": false
+          "description": "{email, name, company, plan, created_at}",
+          "required": true
         },
         "anonymousId": {
-          "type": "string",
-          "description": "Alias previously anonymous activity to this user",
-          "required": false
-        },
-        "timestamp": {
           "type": "string",
           "required": false
         }
       },
       "output": {
-        "type": "empty",
+        "type": "status",
         "fields": [
-          "200 OK"
+          "success: true"
         ]
       },
       "realtime": true,
@@ -113,12 +103,12 @@
     },
     {
       "id": "page",
-      "description_for_ai": "Track a page view with URL, referrer, and properties.",
+      "description_for_ai": "Record a page view in Segment with page name and URL.",
       "intent": [
-        "track pageview segment",
-        "page event segment",
-        "website analytics segment",
-        "просмотр страницы segment"
+        "page view Segment",
+        "track page",
+        "page analytics",
+        "просмотр страницы Segment"
       ],
       "endpoint": "POST https://api.segment.io/v1/page",
       "input": {
@@ -132,19 +122,19 @@
         },
         "name": {
           "type": "string",
-          "description": "Page name e.g. 'Home', 'Product', 'Checkout'",
+          "description": "Page name: 'Home', 'Pricing', 'Checkout'",
           "required": false
         },
         "properties": {
           "type": "object",
-          "description": "{url, path, referrer, search, title}",
+          "description": "{url, referrer, title, path}",
           "required": false
         }
       },
       "output": {
-        "type": "empty",
+        "type": "status",
         "fields": [
-          "200 OK"
+          "success: true"
         ]
       },
       "realtime": true,
@@ -152,12 +142,12 @@
     },
     {
       "id": "group",
-      "description_for_ai": "Associate a user with an account/company for B2B analytics.",
+      "description_for_ai": "Associate a user with a group/company/account in Segment.",
       "intent": [
-        "group segment",
-        "B2B analytics",
-        "company tracking segment",
-        "компания segment"
+        "group user Segment",
+        "company association",
+        "account grouping",
+        "группировка Segment"
       ],
       "endpoint": "POST https://api.segment.io/v1/group",
       "input": {
@@ -167,63 +157,78 @@
         },
         "groupId": {
           "type": "string",
-          "description": "Company/organization ID",
+          "description": "Company or account ID",
           "required": true
         },
         "traits": {
           "type": "object",
-          "description": "Company traits: {name, plan, employees, industry, website}",
+          "description": "{name: 'Acme Inc', plan: 'enterprise', employees: 500}",
           "required": false
         }
       },
       "output": {
-        "type": "empty",
+        "type": "status",
         "fields": [
-          "200 OK"
+          "success: true"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "track_event",
-      "description_for_ai": "Track an analytics event with Segment. Routes to all connected destinations (Mixpanel, GA, etc).",
+      "id": "alias",
+      "description_for_ai": "Merge anonymous user ID with authenticated user ID in Segment.",
       "intent": [
-        "segment track",
-        "analytics event segment",
-        "send event segment",
-        "трекинг segment"
+        "alias user Segment",
+        "merge user IDs",
+        "link anonymous to user",
+        "объединение ID Segment"
       ],
-      "endpoint": "POST https://api.segment.io/v1/track",
+      "endpoint": "POST https://api.segment.io/v1/alias",
       "input": {
-        "userId": {
+        "previousId": {
           "type": "string",
-          "required": false
-        },
-        "anonymousId": {
-          "type": "string",
-          "required": false
-        },
-        "event": {
-          "type": "string",
-          "description": "Event name",
+          "description": "Anonymous ID from before login",
           "required": true
         },
-        "properties": {
-          "type": "object",
-          "description": "Custom event properties",
-          "required": false
-        },
-        "timestamp": {
+        "userId": {
           "type": "string",
-          "description": "ISO 8601. Omit for now.",
-          "required": false
+          "description": "Authenticated user ID",
+          "required": true
         }
       },
       "output": {
-        "type": "result",
+        "type": "status",
         "fields": [
-          "success"
+          "success: true"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_sources",
+      "description_for_ai": "List all Segment sources in your workspace via Config API.",
+      "intent": [
+        "Segment sources",
+        "data sources list",
+        "Segment workspace",
+        "источники данных Segment"
+      ],
+      "endpoint": "GET https://platform.segmentapis.com/v1beta/workspaces/{workspace}/sources",
+      "input": {
+        "workspace": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<source>",
+        "fields": [
+          "sources[0].name",
+          "sources[0].catalog_name",
+          "sources[0].enabled",
+          "sources[0].write_key"
         ]
       },
       "realtime": true,
