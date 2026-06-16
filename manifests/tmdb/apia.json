@@ -22,47 +22,36 @@
   },
   "capabilities": [
     {
-      "id": "search_movie",
-      "description_for_ai": "Search for movies by title. Returns matching movies with ratings, release dates, overview, and poster images.",
+      "id": "search_movies",
+      "description_for_ai": "Search movies by title with release year, language, and region filters.",
       "intent": [
         "find movie",
-        "movie info",
         "search film",
-        "movie details",
-        "фильм информация",
-        "что за фильм"
+        "TMDB search",
+        "поиск фильма"
       ],
       "endpoint": "GET https://api.themoviedb.org/3/search/movie",
       "input": {
         "query": {
           "type": "string",
-          "description": "Movie title or keywords to search",
           "required": true
-        },
-        "language": {
-          "type": "string",
-          "description": "Language for results: en-US, ru-RU, de-DE, fr-FR, etc.",
-          "default": "en-US"
         },
         "year": {
           "type": "integer",
-          "description": "Filter by release year e.g. 2024",
           "required": false
         },
-        "page": {
-          "type": "integer",
-          "description": "Page number, max 500 pages",
-          "default": 1
+        "language": {
+          "type": "string",
+          "description": "ISO 639-1 code: en-US, ru-RU",
+          "default": "en-US"
         },
         "include_adult": {
           "type": "boolean",
-          "description": "Include adult content results",
           "default": false
         },
-        "region": {
-          "type": "string",
-          "description": "ISO 3166-1 country code to prioritize results for that region",
-          "required": false
+        "page": {
+          "type": "integer",
+          "default": 1
         }
       },
       "output": {
@@ -73,102 +62,213 @@
           "results[0].overview",
           "results[0].release_date",
           "results[0].vote_average",
-          "results[0].poster_path",
-          "results[0].genre_ids",
-          "total_results",
-          "total_pages"
+          "results[0].poster_path"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "get_movie",
-      "description_for_ai": "Get comprehensive details for a movie by TMDB ID: cast, crew, trailers, budget, revenue, similar movies, keywords, and streaming providers.",
+      "description_for_ai": "Get full movie details: cast, crew, budget, genres, runtime, trailers.",
       "intent": [
-        "movie details",
-        "cast",
-        "director",
-        "trailer",
-        "movie budget",
-        "movie rating"
+        "movie details TMDB",
+        "film info",
+        "movie cast",
+        "подробности фильма TMDB"
       ],
       "endpoint": "GET https://api.themoviedb.org/3/movie/{movie_id}",
       "input": {
         "movie_id": {
           "type": "integer",
-          "description": "TMDB movie ID from search results or TMDB URL",
           "required": true
         },
         "append_to_response": {
           "type": "string",
-          "description": "Comma-separated extras: videos,credits,similar,images,keywords,release_dates,watch/providers. E.g. 'videos,credits,similar'",
+          "description": "Extra data: credits,videos,images,similar,recommendations",
           "required": false
         },
         "language": {
           "type": "string",
-          "description": "Response language e.g. en-US, ru-RU",
           "default": "en-US"
         }
       },
       "output": {
         "type": "movie",
         "fields": [
+          "id",
           "title",
           "overview",
           "release_date",
-          "runtime",
           "vote_average",
-          "vote_count",
           "budget",
           "revenue",
+          "runtime",
           "genres",
-          "credits.cast[0].name",
-          "videos.results[0].key",
-          "similar.results[0].title"
+          "credits.cast[0].name"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "now_playing",
-      "description_for_ai": "Get movies currently playing in theaters. Updated daily. Use for 'what's in cinema', movie recommendations, current releases.",
+      "id": "get_trending",
+      "description_for_ai": "Get trending movies, TV shows, or people on TMDB.",
       "intent": [
-        "movies in theaters",
-        "now playing",
-        "cinema today",
-        "new movies",
-        "что идёт в кино"
+        "trending movies",
+        "popular films now",
+        "trending TMDB",
+        "популярные фильмы сейчас"
       ],
-      "endpoint": "GET https://api.themoviedb.org/3/movie/now_playing",
+      "endpoint": "GET https://api.themoviedb.org/3/trending/{media_type}/{time_window}",
       "input": {
+        "media_type": {
+          "type": "string",
+          "description": "movie, tv, person, all",
+          "required": true
+        },
+        "time_window": {
+          "type": "string",
+          "description": "day or week",
+          "required": true
+        },
         "language": {
           "type": "string",
-          "description": "Response language",
+          "default": "en-US"
+        }
+      },
+      "output": {
+        "type": "list<item>",
+        "fields": [
+          "results[0].id",
+          "results[0].title",
+          "results[0].vote_average",
+          "results[0].release_date",
+          "results[0].poster_path"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_tv",
+      "description_for_ai": "Search TV shows on TMDB.",
+      "intent": [
+        "search TV show",
+        "find series",
+        "TV search TMDB",
+        "поиск сериала TMDB"
+      ],
+      "endpoint": "GET https://api.themoviedb.org/3/search/tv",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "language": {
+          "type": "string",
           "default": "en-US"
         },
         "page": {
           "type": "integer",
-          "default": 1,
-          "description": "Page number for pagination (1-indexed)"
-        },
-        "region": {
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<tv>",
+        "fields": [
+          "results[0].id",
+          "results[0].name",
+          "results[0].overview",
+          "results[0].first_air_date",
+          "results[0].vote_average",
+          "results[0].poster_path"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_recommendations",
+      "description_for_ai": "Get movie or TV show recommendations based on a specific title.",
+      "intent": [
+        "movie recommendations",
+        "similar movies",
+        "what to watch next",
+        "похожие фильмы TMDB"
+      ],
+      "endpoint": "GET https://api.themoviedb.org/3/{media_type}/{id}/recommendations",
+      "input": {
+        "media_type": {
           "type": "string",
-          "description": "ISO 3166-1 country code to get local theater releases",
+          "description": "movie or tv",
+          "required": true
+        },
+        "id": {
+          "type": "integer",
+          "description": "Movie or TV show ID",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "default": "en-US"
+        }
+      },
+      "output": {
+        "type": "list<item>",
+        "fields": [
+          "results[0].id",
+          "results[0].title",
+          "results[0].vote_average",
+          "results[0].overview"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "discover",
+      "description_for_ai": "Discover movies/TV filtered by genre, release year, rating, and more.",
+      "intent": [
+        "discover movies",
+        "filter movies",
+        "movies by genre TMDB",
+        "фильмы по жанру TMDB"
+      ],
+      "endpoint": "GET https://api.themoviedb.org/3/discover/{media_type}",
+      "input": {
+        "media_type": {
+          "type": "string",
+          "description": "movie or tv",
+          "required": true
+        },
+        "with_genres": {
+          "type": "string",
+          "description": "Genre IDs comma-separated: 28 (Action), 35 (Comedy), 18 (Drama), 27 (Horror), 878 (Sci-Fi)",
+          "required": false
+        },
+        "sort_by": {
+          "type": "string",
+          "description": "popularity.desc, vote_average.desc, release_date.desc",
+          "default": "popularity.desc"
+        },
+        "vote_average.gte": {
+          "type": "float",
+          "required": false
+        },
+        "primary_release_year": {
+          "type": "integer",
           "required": false
         }
       },
       "output": {
         "type": "list<movie>",
         "fields": [
+          "results[0].id",
           "results[0].title",
-          "results[0].release_date",
           "results[0].vote_average",
-          "results[0].overview",
-          "results[0].poster_path",
-          "dates.minimum",
-          "dates.maximum"
+          "results[0].release_date",
+          "results[0].genre_ids"
         ]
       },
       "realtime": true,
