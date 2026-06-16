@@ -21,42 +21,67 @@
   },
   "capabilities": [
     {
-      "id": "create_fine_tuning_job",
-      "description_for_ai": "Train custom versions of GPT models on your data. Better accuracy for specific tasks, consistent output format, fewer prompt tokens needed. Fine-tune gpt-4o-mini for $0.008/1K training tokens. Start fine-tuning a GPT model on custom training data. Training file must be uploaded first via Files API.",
+      "id": "create_fine_tune",
+      "description_for_ai": "Start a fine-tuning job to train a custom OpenAI model on your data.",
       "intent": [
-        "fine-tune model",
-        "custom AI",
-        "train model",
-        "specialized LLM",
-        "custom chatbot training"
+        "fine tune openai",
+        "train custom model",
+        "custom GPT",
+        "обучение модели openai"
       ],
       "endpoint": "POST https://api.openai.com/v1/fine_tuning/jobs",
       "input": {
         "training_file": {
           "type": "string",
-          "description": "File ID from Files API containing JSONL training data",
+          "description": "JSONL training file ID (uploaded with purpose=fine-tune)",
           "required": true
         },
         "model": {
           "type": "string",
-          "description": "gpt-4o-mini-2024-07-18, gpt-3.5-turbo",
-          "required": true
+          "description": "gpt-4o-mini (recommended), gpt-3.5-turbo, babbage-002, davinci-002",
+          "default": "gpt-4o-mini"
         },
         "validation_file": {
           "type": "string",
-          "description": "Optional validation file ID",
           "required": false
         },
         "hyperparameters": {
           "type": "object",
-          "description": "{n_epochs: auto, batch_size: auto, learning_rate_multiplier: auto}",
-          "required": false,
-          "note": "See description for full object structure"
+          "description": "{n_epochs: 'auto', batch_size: 'auto', learning_rate_multiplier: 'auto'}",
+          "required": false
         },
         "suffix": {
           "type": "string",
-          "description": "Custom name suffix for fine-tuned model",
+          "description": "Custom model name suffix: 'my-classifier'",
           "required": false
+        }
+      },
+      "output": {
+        "type": "job",
+        "fields": [
+          "id",
+          "status (validating_files/queued/running/succeeded/failed)",
+          "model",
+          "created_at"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_fine_tune_job",
+      "description_for_ai": "Get status of a fine-tuning job.",
+      "intent": [
+        "fine tune status",
+        "training status",
+        "model training progress",
+        "статус обучения openai"
+      ],
+      "endpoint": "GET https://api.openai.com/v1/fine_tuning/jobs/{job_id}",
+      "input": {
+        "job_id": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
@@ -65,11 +90,106 @@
           "id",
           "status",
           "model",
-          "created_at",
-          "fine_tuned_model"
+          "fine_tuned_model (ID when done)",
+          "trained_tokens",
+          "finished_at"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_fine_tune_jobs",
+      "description_for_ai": "List all fine-tuning jobs.",
+      "intent": [
+        "list fine tuning jobs",
+        "my models openai",
+        "training history openai",
+        "список дообученных моделей"
+      ],
+      "endpoint": "GET https://api.openai.com/v1/fine_tuning/jobs",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<job>",
+        "fields": [
+          "data[0].id",
+          "data[0].status",
+          "data[0].model",
+          "data[0].fine_tuned_model",
+          "data[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_training_events",
+      "description_for_ai": "Get training events/metrics for a fine-tuning job (loss over time).",
+      "intent": [
+        "fine tune metrics",
+        "training loss",
+        "training events",
+        "метрики обучения openai"
+      ],
+      "endpoint": "GET https://api.openai.com/v1/fine_tuning/jobs/{job_id}/events",
+      "input": {
+        "job_id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<event>",
+        "fields": [
+          "data[0].message",
+          "data[0].data.train_loss",
+          "data[0].data.valid_loss",
+          "data[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "upload_training_file",
+      "description_for_ai": "Upload a JSONL training file for OpenAI fine-tuning.",
+      "intent": [
+        "upload training data",
+        "fine tune file",
+        "JSONL training openai",
+        "загрузить данные обучения openai"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/files",
+      "input": {
+        "file": {
+          "type": "file",
+          "description": "JSONL file. Each line: {messages: [{role: 'system', content: '...'}, {role: 'user', content: '...'}, {role: 'assistant', content: '...'}]}",
+          "required": true
+        },
+        "purpose": {
+          "type": "string",
+          "default": "fine-tune"
+        }
+      },
+      "output": {
+        "type": "file",
+        "fields": [
+          "id",
+          "filename",
+          "bytes",
+          "created_at"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
