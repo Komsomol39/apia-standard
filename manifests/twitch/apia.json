@@ -21,40 +21,73 @@
   },
   "capabilities": [
     {
-      "id": "get_streams",
-      "description_for_ai": "Get live streams with viewer counts, game, title. Filter by game, language, or user.",
+      "id": "search_channels",
+      "description_for_ai": "Search Twitch channels/streamers by name.",
       "intent": [
-        "twitch streams",
-        "live streams",
-        "popular streams twitch",
+        "twitch stream",
+        "find streamer",
+        "search twitch",
+        "стримеры twitch"
+      ],
+      "endpoint": "GET https://api.twitch.tv/helix/search/channels",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "live_only": {
+          "type": "boolean",
+          "description": "Only return live channels",
+          "default": false
+        },
+        "first": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<channel>",
+        "fields": [
+          "data[0].id",
+          "data[0].display_name",
+          "data[0].game_name",
+          "data[0].is_live",
+          "data[0].title",
+          "data[0].thumbnail_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_live_streams",
+      "description_for_ai": "Get currently live streams filtered by game, language, or users.",
+      "intent": [
+        "live streams twitch",
+        "who is live",
+        "top streams",
         "прямые трансляции twitch"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/streams",
       "input": {
         "game_id": {
           "type": "string",
-          "description": "Game ID to filter by",
-          "required": false
-        },
-        "user_login": {
-          "type": "string",
-          "description": "Comma-separated streamer logins",
+          "description": "Filter by game ID",
           "required": false
         },
         "language": {
           "type": "string",
-          "description": "ISO 639-1 language code",
+          "description": "Stream language code e.g. en, ru",
+          "required": false
+        },
+        "user_login": {
+          "type": "string",
+          "description": "Comma-separated usernames",
           "required": false
         },
         "first": {
           "type": "integer",
-          "description": "Number of results 1-100",
           "default": 20
-        },
-        "after": {
-          "type": "string",
-          "description": "Pagination cursor",
-          "required": false
         }
       },
       "output": {
@@ -64,8 +97,8 @@
           "data[0].game_name",
           "data[0].title",
           "data[0].viewer_count",
-          "data[0].language",
-          "data[0].thumbnail_url"
+          "data[0].thumbnail_url",
+          "data[0].started_at"
         ]
       },
       "realtime": true,
@@ -73,28 +106,28 @@
     },
     {
       "id": "get_user",
-      "description_for_ai": "Get Twitch user profile by login name or ID.",
+      "description_for_ai": "Get Twitch user profile by username or ID.",
       "intent": [
         "twitch user",
-        "streamer profile",
-        "twitch channel info",
+        "streamer info",
+        "twitch profile",
         "профиль twitch"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/users",
       "input": {
         "login": {
           "type": "string",
-          "description": "Comma-separated usernames (max 100)",
+          "description": "Username (up to 100 comma-separated)",
           "required": false
         },
         "id": {
           "type": "string",
-          "description": "Comma-separated user IDs",
+          "description": "User ID",
           "required": false
         }
       },
       "output": {
-        "type": "list<user>",
+        "type": "user",
         "fields": [
           "data[0].id",
           "data[0].login",
@@ -102,57 +135,7 @@
           "data[0].description",
           "data[0].view_count",
           "data[0].profile_image_url",
-          "data[0].broadcaster_type"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_clips",
-      "description_for_ai": "Get clips from a broadcaster or game. Filter by date range.",
-      "intent": [
-        "twitch clips",
-        "stream highlights",
-        "viral twitch",
-        "клипы twitch"
-      ],
-      "endpoint": "GET https://api.twitch.tv/helix/clips",
-      "input": {
-        "broadcaster_id": {
-          "type": "string",
-          "description": "Broadcaster's user ID",
-          "required": false
-        },
-        "game_id": {
-          "type": "string",
-          "description": "Game ID to filter clips",
-          "required": false
-        },
-        "first": {
-          "type": "integer",
-          "default": 20
-        },
-        "started_at": {
-          "type": "string",
-          "description": "ISO 8601 start date",
-          "required": false
-        },
-        "ended_at": {
-          "type": "string",
-          "description": "ISO 8601 end date",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "list<clip>",
-        "fields": [
-          "data[0].id",
-          "data[0].title",
-          "data[0].view_count",
-          "data[0].url",
-          "data[0].broadcaster_name",
-          "data[0].thumbnail_url"
+          "data[0].created_at"
         ]
       },
       "realtime": true,
@@ -160,24 +143,18 @@
     },
     {
       "id": "get_top_games",
-      "description_for_ai": "Get most popular games/categories on Twitch right now by viewer count.",
+      "description_for_ai": "Get most watched games/categories on Twitch right now.",
       "intent": [
         "top games twitch",
-        "popular games streaming",
-        "trending games",
-        "популярные игры twitch"
+        "popular games",
+        "trending twitch",
+        "топ игры twitch"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/games/top",
       "input": {
         "first": {
           "type": "integer",
-          "description": "Number of games 1-100",
           "default": 20
-        },
-        "after": {
-          "type": "string",
-          "description": "Pagination cursor",
-          "required": false
         }
       },
       "output": {
