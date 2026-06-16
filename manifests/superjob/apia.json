@@ -218,6 +218,47 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_vacancies",
+      "description_for_ai": "Search job vacancies on SuperJob by keyword, city, salary.",
+      "intent": [
+        "superjob vacancies",
+        "job search",
+        "вакансии superjob"
+      ],
+      "endpoint": "GET https://api.superjob.ru/2.0/vacancies/",
+      "input": {
+        "keyword": {
+          "type": "string",
+          "required": false
+        },
+        "town": {
+          "type": "integer",
+          "description": "City ID: 1=Moscow, 2=SPb",
+          "required": false
+        },
+        "payment_from": {
+          "type": "integer",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": [
+          "objects[0].profession",
+          "objects[0].payment_from",
+          "objects[0].payment_to",
+          "objects[0].firm_name",
+          "objects[0].link"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
