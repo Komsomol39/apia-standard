@@ -22,18 +22,18 @@
   "capabilities": [
     {
       "id": "detect_sentiment",
-      "description_for_ai": "Detect sentiment in text: POSITIVE, NEGATIVE, NEUTRAL, MIXED with confidence scores. 12 languages.",
+      "description_for_ai": "Detect sentiment (positive, negative, neutral, mixed) in text.",
       "intent": [
-        "sentiment AWS",
-        "text sentiment comprehend",
-        "positive negative analysis",
-        "тональность AWS"
+        "sentiment analysis",
+        "text sentiment",
+        "opinion mining",
+        "анализ тональности текста"
       ],
       "endpoint": "POST https://comprehend.{region}.amazonaws.com/",
       "input": {
         "Text": {
           "type": "string",
-          "description": "Text up to 5000 bytes",
+          "description": "Text up to 5KB",
           "required": true
         },
         "LanguageCode": {
@@ -48,8 +48,7 @@
           "Sentiment (POSITIVE|NEGATIVE|NEUTRAL|MIXED)",
           "SentimentScore.Positive",
           "SentimentScore.Negative",
-          "SentimentScore.Neutral",
-          "SentimentScore.Mixed"
+          "SentimentScore.Neutral"
         ]
       },
       "realtime": true,
@@ -57,12 +56,12 @@
     },
     {
       "id": "detect_entities",
-      "description_for_ai": "Extract named entities: PERSON, ORGANIZATION, LOCATION, DATE, QUANTITY, COMMERCIAL_ITEM, EVENT, TITLE, OTHER.",
+      "description_for_ai": "Extract named entities from text: persons, locations, organizations, dates.",
       "intent": [
-        "entity detection AWS",
-        "NER comprehend",
-        "extract names",
-        "организации AWS comprehend"
+        "named entity recognition",
+        "extract entities",
+        "NER text",
+        "распознавание сущностей текста"
       ],
       "endpoint": "POST https://comprehend.{region}.amazonaws.com/",
       "input": {
@@ -79,10 +78,9 @@
         "type": "entities",
         "fields": [
           "Entities[0].Text",
-          "Entities[0].Type",
+          "Entities[0].Type (PERSON|LOCATION|ORGANIZATION|DATE|QUANTITY)",
           "Entities[0].Score",
-          "Entities[0].BeginOffset",
-          "Entities[0].EndOffset"
+          "Entities[0].BeginOffset"
         ]
       },
       "realtime": true,
@@ -90,12 +88,12 @@
     },
     {
       "id": "detect_key_phrases",
-      "description_for_ai": "Extract key phrases (noun phrases) from text. Good for summarizing main topics in documents.",
+      "description_for_ai": "Extract key phrases and topics from text.",
       "intent": [
-        "key phrases AWS",
-        "extract keywords",
+        "key phrases",
         "topic extraction",
-        "ключевые фразы AWS"
+        "text keywords",
+        "ключевые фразы текста"
       ],
       "endpoint": "POST https://comprehend.{region}.amazonaws.com/",
       "input": {
@@ -120,26 +118,56 @@
       "requires_auth": true
     },
     {
-      "id": "detect_language",
-      "description_for_ai": "Detect the language of text. Returns top language with confidence score. 100+ languages supported.",
+      "id": "classify_document",
+      "description_for_ai": "Classify text using custom or pre-trained classifiers.",
       "intent": [
-        "detect language",
-        "what language is this",
-        "language detection",
-        "определить язык AWS"
+        "text classification",
+        "document classifier",
+        "classify text AWS",
+        "классификация текста AWS"
       ],
       "endpoint": "POST https://comprehend.{region}.amazonaws.com/",
       "input": {
         "Text": {
           "type": "string",
-          "description": "Text to detect language of. At least 20 chars for accuracy.",
+          "required": true
+        },
+        "EndpointArn": {
+          "type": "string",
+          "description": "Custom classifier endpoint ARN",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "classification",
+        "fields": [
+          "Classes[0].Name",
+          "Classes[0].Score"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "detect_language",
+      "description_for_ai": "Detect the language of text from 100 languages.",
+      "intent": [
+        "detect language AWS",
+        "identify language",
+        "language detection",
+        "определить язык текста"
+      ],
+      "endpoint": "POST https://comprehend.{region}.amazonaws.com/",
+      "input": {
+        "Text": {
+          "type": "string",
           "required": true
         }
       },
       "output": {
         "type": "languages",
         "fields": [
-          "Languages[0].LanguageCode (ISO 639-1)",
+          "Languages[0].LanguageCode",
           "Languages[0].Score"
         ]
       },
