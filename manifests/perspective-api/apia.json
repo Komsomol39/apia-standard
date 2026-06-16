@@ -24,28 +24,28 @@
   "capabilities": [
     {
       "id": "analyze_comment",
-      "description_for_ai": "Analyze text for toxicity, insults, threats, and hate speech using Google Perspective API.",
+      "description_for_ai": "Analyze text toxicity with Perspective API. Detects hate speech, threats, insults, profanity.",
       "intent": [
-        "toxicity check",
-        "content moderation",
-        "hate speech detection",
-        "проверка токсичности"
+        "toxicity detection",
+        "hate speech check",
+        "content moderation text",
+        "обнаружение токсичности Perspective"
       ],
       "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
       "input": {
         "comment": {
           "type": "object",
-          "description": "{text: 'comment to analyze'}",
+          "description": "{text: 'Text to analyze'}",
           "required": true
         },
         "requestedAttributes": {
           "type": "object",
-          "description": "{TOXICITY: {}, SEVERE_TOXICITY: {}, INSULT: {}, THREAT: {}, SEXUALLY_EXPLICIT: {}, IDENTITY_ATTACK: {}, PROFANITY: {}}",
+          "description": "{TOXICITY: {}, SEVERE_TOXICITY: {}, IDENTITY_ATTACK: {}, INSULT: {}, PROFANITY: {}, THREAT: {}, SEXUALLY_EXPLICIT: {}}",
           "required": true
         },
         "languages": {
           "type": "array",
-          "description": "ISO codes: en, fr, de, es, it, pt, ru, ja, ko, zh, ar",
+          "description": "['en', 'ru', 'de', 'fr', 'es', 'it', 'pt', 'nl', 'ja', 'ko']",
           "required": false
         }
       },
@@ -53,6 +53,7 @@
         "type": "scores",
         "fields": [
           "attributeScores.TOXICITY.summaryScore.value (0-1)",
+          "attributeScores.SEVERE_TOXICITY.summaryScore.value",
           "attributeScores.INSULT.summaryScore.value",
           "attributeScores.THREAT.summaryScore.value"
         ]
@@ -62,137 +63,135 @@
     },
     {
       "id": "batch_analyze",
-      "description_for_ai": "Analyze multiple comments in a single request for content moderation pipeline.",
+      "description_for_ai": "Analyze multiple texts for toxicity in a single API call.",
       "intent": [
-        "batch moderation",
-        "bulk toxicity check",
-        "content filter batch",
-        "пакетная модерация"
+        "batch toxicity",
+        "bulk moderation",
+        "multiple texts analysis",
+        "массовая проверка токсичности"
       ],
       "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
       "input": {
         "comment": {
           "type": "object",
-          "description": "{text: 'text to moderate'}",
+          "description": "{text: 'Analyze this text'}",
           "required": true
         },
         "requestedAttributes": {
           "type": "object",
-          "description": "Multiple attributes: {TOXICITY: {}, SPAM: {}}",
+          "description": "Attributes to score",
           "required": true
         },
-        "spanAnnotations": {
-          "type": "boolean",
-          "description": "Return per-span scores for sentence-level analysis",
-          "default": false
-        },
-        "doNotStore": {
-          "type": "boolean",
-          "description": "Don't store comment for training",
-          "default": true
+        "context": {
+          "type": "object",
+          "description": "{entries: [{text: 'previous comment'}]} for conversation context",
+          "required": false
         }
       },
       "output": {
-        "type": "analysis",
+        "type": "scores",
         "fields": [
           "attributeScores.TOXICITY.summaryScore.value",
-          "spanScores[0].begin",
-          "spanScores[0].score.value"
+          "attributeScores.TOXICITY.spanScores[0].score.value"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "suggest_score",
-      "description_for_ai": "Submit a correction if Perspective scored a comment incorrectly (for model improvement).",
+      "id": "check_threat",
+      "description_for_ai": "Check if text contains threats of violence against a person.",
       "intent": [
-        "correct moderation",
-        "report false positive",
-        "improve Perspective",
-        "коррекция оценки модерации"
-      ],
-      "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:suggestscore",
-      "input": {
-        "comment": {
-          "type": "object",
-          "description": "{text: 'comment text'}",
-          "required": true
-        },
-        "attributeScores": {
-          "type": "object",
-          "description": "{TOXICITY: {summaryScore: {value: 0.9, type: 'PROBABILITY'}}}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "result",
-        "fields": [
-          "clientToken"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "model_reference",
-      "description_for_ai": "Reference list of all Perspective API attributes and their descriptions.",
-      "intent": [
-        "Perspective attributes",
-        "moderation categories",
-        "available models Perspective",
-        "категории модерации Perspective"
-      ],
-      "endpoint": "reference",
-      "input": {},
-      "output": {
-        "type": "reference",
-        "fields": [
-          "TOXICITY: general harmful content",
-          "SEVERE_TOXICITY: extreme harm",
-          "IDENTITY_ATTACK: hate speech",
-          "INSULT: disrespectful",
-          "PROFANITY: obscene language",
-          "THREAT: violent threats",
-          "SEXUALLY_EXPLICIT: adult content",
-          "FLIRTATION: unwanted flirtation",
-          "SPAM: commercial spam"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": false
-    },
-    {
-      "id": "multilingual_moderation",
-      "description_for_ai": "Moderate content in 30+ languages. Specify language for better accuracy.",
-      "intent": [
-        "multilingual moderation",
-        "non-English toxicity",
-        "Russian moderation",
-        "модерация на русском"
+        "threat detection",
+        "violence threat check",
+        "threatening message",
+        "обнаружение угроз Perspective"
       ],
       "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
       "input": {
         "comment": {
           "type": "object",
-          "description": "{text: 'текст для модерации'}",
           "required": true
         },
         "requestedAttributes": {
           "type": "object",
-          "description": "{TOXICITY: {}}",
+          "default": {
+            "THREAT": {}
+          }
+        }
+      },
+      "output": {
+        "type": "scores",
+        "fields": [
+          "attributeScores.THREAT.summaryScore.value (threshold: 0.8+)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "check_identity_attack",
+      "description_for_ai": "Detect identity attacks: slurs or attacks targeting race, religion, gender, nationality, sexual orientation.",
+      "intent": [
+        "identity attack detection",
+        "slur detection",
+        "discrimination detection",
+        "обнаружение нападок на идентичность"
+      ],
+      "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
+      "input": {
+        "comment": {
+          "type": "object",
           "required": true
+        },
+        "requestedAttributes": {
+          "type": "object",
+          "default": {
+            "IDENTITY_ATTACK": {}
+          }
+        }
+      },
+      "output": {
+        "type": "scores",
+        "fields": [
+          "attributeScores.IDENTITY_ATTACK.summaryScore.value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "multilingual_toxicity",
+      "description_for_ai": "Detect toxicity in non-English languages. Supports 10+ languages.",
+      "intent": [
+        "Russian toxicity",
+        "multilingual moderation",
+        "toxic text other language",
+        "токсичность на русском"
+      ],
+      "endpoint": "POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze",
+      "input": {
+        "comment": {
+          "type": "object",
+          "required": true
+        },
+        "requestedAttributes": {
+          "type": "object",
+          "default": {
+            "TOXICITY": {}
+          }
         },
         "languages": {
           "type": "array",
-          "description": "['ru'] — specify language for better accuracy",
+          "description": "Specify language: ['ru'] for Russian, ['de'] for German",
           "required": true
         }
       },
       "output": {
         "type": "scores",
         "fields": [
-          "attributeScores.TOXICITY.summaryScore.value"
+          "attributeScores.TOXICITY.summaryScore.value",
+          "detectedLanguages[0]"
         ]
       },
       "realtime": true,
