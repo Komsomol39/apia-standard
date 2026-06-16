@@ -21,26 +21,56 @@
   },
   "capabilities": [
     {
-      "id": "get_document",
-      "description_for_ai": "Read a Firestore document by path. Returns all fields.",
+      "id": "firestore_query",
+      "description_for_ai": "Query Firestore NoSQL database. Filter, order, limit collections.",
       "intent": [
-        "firebase read",
-        "firestore document",
-        "get data firebase",
-        "прочитать firebase"
+        "Firestore query",
+        "Firebase database",
+        "get documents",
+        "Firebase запрос",
+        "база данных Firebase"
       ],
-      "endpoint": "GET https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents/{collection}/{docId}",
+      "endpoint": "POST https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents:runQuery",
       "input": {
-        "project": {
-          "type": "string",
+        "structuredQuery": {
+          "type": "object",
+          "description": "{from: [{collectionId: 'users'}], where: {fieldFilter: {field: {fieldPath: 'status'}, op: 'EQUAL', value: {stringValue: 'active'}}}, orderBy: [{field: {fieldPath: 'created'}, direction: 'DESCENDING'}], limit: 20}",
           "required": true
-        },
+        }
+      },
+      "output": {
+        "type": "list<document>",
+        "fields": [
+          "[0].document.name",
+          "[0].document.fields"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "firestore_write",
+      "description_for_ai": "Create or update a Firestore document.",
+      "intent": [
+        "write Firebase",
+        "create document Firestore",
+        "save data Firebase",
+        "записать Firebase"
+      ],
+      "endpoint": "PATCH https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents/{collection}/{docId}",
+      "input": {
         "collection": {
           "type": "string",
           "required": true
         },
         "docId": {
           "type": "string",
+          "description": "Document ID. Auto-generated if omitted (use POST)",
+          "required": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "{fieldName: {stringValue: 'text'} or {integerValue: 42} or {booleanValue: true}}",
           "required": true
         }
       },
@@ -57,95 +87,48 @@
       "requires_auth": true
     },
     {
-      "id": "create_document",
-      "description_for_ai": "Create a new Firestore document with auto-generated or custom ID.",
+      "id": "auth_verify_token",
+      "description_for_ai": "Verify a Firebase ID token from a client. Use on your backend to authenticate Firebase users.",
       "intent": [
-        "firebase create",
-        "firestore write",
-        "save document firebase",
-        "записать в firebase"
+        "verify Firebase token",
+        "authenticate Firebase user",
+        "Firebase auth backend",
+        "верификация Firebase токена"
       ],
-      "endpoint": "POST https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents/{collection}",
+      "endpoint": "GET https://oauth2.googleapis.com/tokeninfo?id_token={token}",
       "input": {
-        "project": {
+        "id_token": {
           "type": "string",
-          "required": true
-        },
-        "collection": {
-          "type": "string",
-          "required": true
-        },
-        "documentId": {
-          "type": "string",
-          "description": "Custom ID. Omit for auto-generated.",
-          "required": false
-        },
-        "fields": {
-          "type": "object",
-          "description": "{fieldName: {stringValue: 'text'}} or {fieldName: {integerValue: '42'}} — Firestore type wrappers",
+          "description": "Firebase ID token from client",
           "required": true
         }
       },
       "output": {
-        "type": "document",
+        "type": "token_info",
         "fields": [
-          "name",
-          "fields",
-          "createTime"
+          "sub (user ID)",
+          "email",
+          "email_verified",
+          "exp"
         ]
       },
       "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "query_collection",
-      "description_for_ai": "Query Firestore collection with filters and ordering.",
-      "intent": [
-        "firebase query",
-        "firestore query",
-        "filter firebase",
-        "запрос firebase"
-      ],
-      "endpoint": "POST https://firestore.googleapis.com/v1/projects/{project}/databases/(default)/documents:runQuery",
-      "input": {
-        "project": {
-          "type": "string",
-          "required": true
-        },
-        "structuredQuery": {
-          "type": "object",
-          "description": "{from: [{collectionId: 'users'}], where: {fieldFilter: {field: {fieldPath: 'status'}, op: 'EQUAL', value: {stringValue: 'active'}}}, orderBy: [{field: {fieldPath: 'createdAt'}, direction: 'DESCENDING'}], limit: 20}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "list<document>",
-        "fields": [
-          "[0].document.name",
-          "[0].document.fields"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
+      "requires_auth": false
     },
     {
       "id": "send_fcm_notification",
-      "description_for_ai": "Send Firebase Cloud Messaging push notification to device or topic.",
+      "description_for_ai": "Send push notifications to mobile/web apps via Firebase Cloud Messaging.",
       "intent": [
         "push notification",
         "FCM notification",
-        "firebase notify",
-        "уведомление firebase"
+        "Firebase push",
+        "пуш уведомление Firebase"
       ],
       "endpoint": "POST https://fcm.googleapis.com/v1/projects/{project}/messages:send",
       "input": {
-        "project": {
-          "type": "string",
-          "required": true
-        },
         "message": {
           "type": "object",
-          "description": "{token: 'device_fcm_token', notification: {title: 'Title', body: 'Message'}, data: {key: 'value'}} or {topic: 'news'} for topic message",
+          "description": "{token: 'device_token', notification: {title: 'Hello', body: 'Message'}, data: {key: 'value'}} or {topic: 'all_users'} or {condition: \"'sports' in topics\"}",
           "required": true
         }
       },
@@ -153,6 +136,68 @@
         "type": "message",
         "fields": [
           "name (message ID)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "remote_config",
+      "description_for_ai": "Get Remote Config parameters to control app behavior without releasing a new version.",
+      "intent": [
+        "Firebase remote config",
+        "feature flags",
+        "app configuration",
+        "удалённая конфигурация Firebase"
+      ],
+      "endpoint": "GET https://firebaseremoteconfig.googleapis.com/v1/projects/{project}/remoteConfig",
+      "input": {},
+      "output": {
+        "type": "config",
+        "fields": [
+          "parameters.parameterName.defaultValue.value",
+          "conditions"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "realtime_database",
+      "description_for_ai": "Read or write to Firebase Realtime Database. Data syncs in real-time across all clients.",
+      "intent": [
+        "Firebase realtime database",
+        "sync data",
+        "real-time data Firebase",
+        "реалтайм база Firebase"
+      ],
+      "endpoint": "GET https://{project}.firebaseio.com/{path}.json",
+      "input": {
+        "path": {
+          "type": "string",
+          "description": "Database path e.g. /users/uid123",
+          "required": true
+        },
+        "auth": {
+          "type": "string",
+          "description": "Auth token or API key as query param",
+          "required": false
+        },
+        "orderBy": {
+          "type": "string",
+          "description": "Sort by '$key', '$value', or child key",
+          "required": false
+        },
+        "limitToLast": {
+          "type": "integer",
+          "description": "Get last N items",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "data",
+        "fields": [
+          "JSON object at path"
         ]
       },
       "realtime": true,
