@@ -169,6 +169,37 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "get_work",
+      "description_for_ai": "Get detailed info about a scientific publication by DOI or OpenAlex ID.",
+      "intent": [
+        "paper details",
+        "publication info",
+        "academic paper",
+        "научная статья openalex"
+      ],
+      "endpoint": "GET https://api.openalex.org/works/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "OpenAlex ID (W1234) or DOI (https://doi.org/...)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "work",
+        "fields": [
+          "id",
+          "title",
+          "authorships[0].author.display_name",
+          "cited_by_count",
+          "open_access.oa_url",
+          "abstract_inverted_index"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
