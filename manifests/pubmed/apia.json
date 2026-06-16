@@ -25,20 +25,13 @@
   "capabilities": [
     {
       "id": "search",
-      "description_for_ai": "Search PubMed for research papers by keyword, author, or MeSH terms. Returns article IDs.",
+      "description_for_ai": "Search PubMed for biomedical literature by keyword, author, journal, date, or MeSH term.",
       "intent": [
-        "find studies",
-        "literature search",
-        "scientific papers",
-        "clinical study",
-        "systematic review",
-        "biomedical research",
-        "medical journal",
-        "PubMed search",
-        "medical research",
+        "pubmed search",
+        "research papers",
         "medical literature",
-        "research articles",
-        "research literature"
+        "scientific articles",
+        "поиск pubmed"
       ],
       "endpoint": "GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
       "input": {
@@ -48,26 +41,27 @@
         },
         "term": {
           "type": "string",
-          "description": "Search query e.g. COVID-19 vaccine efficacy, breast cancer immunotherapy",
+          "description": "Query. Operators: AND, OR, NOT. Fields: [Author], [Journal], [MeSH Terms], [ti] for title. Example: 'diabetes AND insulin[MeSH Terms] AND 2024[dp]'",
           "required": true
         },
         "retmax": {
           "type": "integer",
-          "description": "Number of results",
+          "description": "Max results",
           "default": 20
+        },
+        "retstart": {
+          "type": "integer",
+          "description": "Offset for pagination",
+          "default": 0
         },
         "sort": {
           "type": "string",
-          "description": "pub+date, relevance, author",
+          "description": "relevance or pub+date",
           "default": "relevance"
-        },
-        "retmode": {
-          "type": "string",
-          "default": "json"
         },
         "datetype": {
           "type": "string",
-          "description": "pdat for publication date",
+          "description": "pdat (publication date)",
           "required": false
         },
         "mindate": {
@@ -77,30 +71,28 @@
         },
         "maxdate": {
           "type": "string",
-          "description": "YYYY/MM/DD",
           "required": false
         }
       },
       "output": {
         "type": "search",
         "fields": [
-          "esearchresult.idlist",
+          "esearchresult.idlist (array of PMIDs)",
           "esearchresult.count",
-          "esearchresult.querytranslation"
+          "esearchresult.translationset"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": false
     },
     {
       "id": "fetch_abstracts",
-      "description_for_ai": "Retrieve full abstracts and metadata (authors, journal, publication date, DOI) for PubMed articles by their PMID numbers.",
+      "description_for_ai": "Fetch article abstracts and metadata by PubMed IDs.",
       "intent": [
+        "pubmed abstract",
         "article abstract",
-        "paper details",
-        "study findings",
-        "research abstract",
-        "paper summary"
+        "paper details pubmed",
+        "аннотация статьи pubmed"
       ],
       "endpoint": "GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi",
       "input": {
@@ -110,28 +102,106 @@
         },
         "id": {
           "type": "string",
-          "description": "Comma-separated PubMed IDs",
+          "description": "Comma-separated PMIDs",
           "required": true
         },
         "rettype": {
           "type": "string",
-          "description": "abstract, medline",
+          "description": "abstract, medline, xml",
           "default": "abstract"
         },
         "retmode": {
           "type": "string",
+          "description": "text or xml",
           "default": "text"
         }
       },
       "output": {
-        "type": "abstracts",
+        "type": "articles",
         "fields": [
-          "ArticleTitle",
-          "AbstractText",
-          "AuthorList",
+          "PMID",
+          "Title",
+          "Abstract",
+          "Authors",
           "Journal",
-          "PubDate",
-          "DOI"
+          "PublicationDate"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_article_details",
+      "description_for_ai": "Fetch full metadata for PubMed articles: title, authors, DOI, citations, MeSH terms.",
+      "intent": [
+        "pubmed article",
+        "citation details",
+        "DOI pubmed",
+        "детали статьи pubmed"
+      ],
+      "endpoint": "GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi",
+      "input": {
+        "db": {
+          "type": "string",
+          "default": "pubmed"
+        },
+        "id": {
+          "type": "string",
+          "description": "Comma-separated PMIDs",
+          "required": true
+        },
+        "retmode": {
+          "type": "string",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "summaries",
+        "fields": [
+          "result.{pmid}.title",
+          "result.{pmid}.authors[0].name",
+          "result.{pmid}.source (journal)",
+          "result.{pmid}.pubdate",
+          "result.{pmid}.doi"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_citations",
+      "description_for_ai": "Get articles that cite or are cited by a given PubMed article (citation links).",
+      "intent": [
+        "citations pubmed",
+        "cited by",
+        "references pubmed",
+        "цитирования статьи"
+      ],
+      "endpoint": "GET https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi",
+      "input": {
+        "dbfrom": {
+          "type": "string",
+          "default": "pubmed"
+        },
+        "db": {
+          "type": "string",
+          "default": "pubmed"
+        },
+        "id": {
+          "type": "string",
+          "description": "Source PMID",
+          "required": true
+        },
+        "linkname": {
+          "type": "string",
+          "description": "pubmed_pubmed_citedin (cited by) or pubmed_pubmed_refs (references)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "links",
+        "fields": [
+          "linksets[0].linksetdbs[0].links (array of related PMIDs)"
         ]
       },
       "realtime": false,
