@@ -165,6 +165,40 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "get_sales",
+      "description_for_ai": "Get sales report from Wildberries seller statistics.",
+      "intent": [
+        "wildberries sales",
+        "wb продажи",
+        "отчёт о продажах wb"
+      ],
+      "endpoint": "GET https://statistics-api.wildberries.ru/api/v1/supplier/sales",
+      "input": {
+        "dateFrom": {
+          "type": "string",
+          "description": "ISO 8601 date",
+          "required": true
+        },
+        "flag": {
+          "type": "integer",
+          "description": "0=all, 1=only new since dateFrom",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "list<sale>",
+        "fields": [
+          "[0].srid",
+          "[0].article",
+          "[0].totalPrice",
+          "[0].subject",
+          "[0].date"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "meta": {
