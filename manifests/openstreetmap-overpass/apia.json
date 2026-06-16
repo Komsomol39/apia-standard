@@ -20,23 +20,19 @@
   },
   "capabilities": [
     {
-      "id": "query",
-      "description_for_ai": "Query OSM data for geographic features near coordinates or in bounding box. Find any type of place: restaurants, hospitals, schools, ATMs, parks.",
+      "id": "query_overpass",
+      "description_for_ai": "Run an Overpass QL query to extract OpenStreetMap data: POIs, roads, buildings.",
       "intent": [
-        "find places OSM",
-        "nearby amenities",
+        "overpass query",
+        "OSM data",
         "map data query",
-        "geographic features",
-        "open data map",
-        "hospitals near",
-        "school nearby",
-        "park location"
+        "запрос overpass OSM"
       ],
       "endpoint": "POST https://overpass-api.de/api/interpreter",
       "input": {
         "data": {
           "type": "string",
-          "description": "Overpass QL query e.g. [out:json];node[amenity=restaurant](around:500,55.75,37.62);out;",
+          "description": "Overpass QL query. Example: [out:json];node[amenity=cafe](51.5,−0.2,51.6,−0.1);out body;",
           "required": true
         }
       },
@@ -51,7 +47,140 @@
           "elements[0].tags.amenity"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "find_pois",
+      "description_for_ai": "Find Points of Interest around coordinates: cafes, restaurants, ATMs, hospitals.",
+      "intent": [
+        "find POI",
+        "nearby places OSM",
+        "points of interest",
+        "достопримечательности OSM"
+      ],
+      "endpoint": "POST https://overpass-api.de/api/interpreter",
+      "input": {
+        "lat": {
+          "type": "float",
+          "required": true
+        },
+        "lon": {
+          "type": "float",
+          "required": true
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Search radius in meters",
+          "default": 500
+        },
+        "amenity": {
+          "type": "string",
+          "description": "OSM amenity: cafe, restaurant, atm, hospital, pharmacy, school, parking",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<node>",
+        "fields": [
+          "elements[0].lat",
+          "elements[0].lon",
+          "elements[0].tags.name",
+          "elements[0].tags.opening_hours",
+          "elements[0].tags.phone"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_building",
+      "description_for_ai": "Get OSM building footprints and information for an area.",
+      "intent": [
+        "building OSM",
+        "building footprints",
+        "architecture data",
+        "здания OSM"
+      ],
+      "endpoint": "POST https://overpass-api.de/api/interpreter",
+      "input": {
+        "bbox": {
+          "type": "string",
+          "description": "south,west,north,east bounding box",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<way>",
+        "fields": [
+          "elements[0].tags.building",
+          "elements[0].tags.name",
+          "elements[0].tags.addr:street",
+          "elements[0].tags.addr:housenumber",
+          "elements[0].nodes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_roads",
+      "description_for_ai": "Get road/path network data from OpenStreetMap Overpass.",
+      "intent": [
+        "roads OSM",
+        "street data",
+        "highway network",
+        "дороги OSM Overpass"
+      ],
+      "endpoint": "POST https://overpass-api.de/api/interpreter",
+      "input": {
+        "bbox": {
+          "type": "string",
+          "required": true
+        },
+        "highway": {
+          "type": "string",
+          "description": "motorway, trunk, primary, secondary, residential, footway, cycleway",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<way>",
+        "fields": [
+          "elements[0].tags.highway",
+          "elements[0].tags.name",
+          "elements[0].tags.maxspeed",
+          "elements[0].tags.lanes",
+          "elements[0].nodes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "count_features",
+      "description_for_ai": "Count OSM features in an area (e.g., how many cafes in a city).",
+      "intent": [
+        "count features OSM",
+        "feature statistics",
+        "how many OSM",
+        "подсчёт объектов OSM"
+      ],
+      "endpoint": "POST https://overpass-api.de/api/interpreter",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "[out:json];area[name='Berlin']->.a;node[amenity=cafe](area.a);out count;",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "count",
+        "fields": [
+          "elements[0].tags.total"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
     }
   ],
