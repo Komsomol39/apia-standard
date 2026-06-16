@@ -23,60 +23,59 @@
   "capabilities": [
     {
       "id": "get_latest_rates",
-      "description_for_ai": "Get current exchange rates for a base currency against all other currencies. Use for 'what is USD to RUB rate', 'convert euros to dollars', 'currency exchange rates today'.",
+      "description_for_ai": "Get current exchange rates from a base currency to all 161 supported currencies.",
       "intent": [
-        "exchange rate",
+        "exchange rates",
         "currency conversion",
-        "convert dollars to rubles",
-        "USD to RUB",
-        "курс валют",
-        "конвертировать валюту",
-        "forex rate"
+        "forex rates",
+        "курсы валют",
+        "конвертация валют"
       ],
       "endpoint": "GET https://v6.exchangerate-api.com/v6/{api_key}/latest/{base_currency}",
       "input": {
         "base_currency": {
           "type": "string",
-          "description": "Base currency code: USD, EUR, RUB, GBP, JPY, CNY, KZT, BYN etc.",
+          "description": "ISO 4217 code e.g. USD, EUR, RUB, CNY",
           "required": true
         }
       },
       "output": {
-        "type": "exchange_rates",
+        "type": "rates",
         "fields": [
           "base_code",
-          "time_last_update_utc",
-          "conversion_rates"
+          "conversion_rates.EUR",
+          "conversion_rates.RUB",
+          "conversion_rates.USD",
+          "time_last_update_utc"
         ]
       },
       "realtime": true,
-      "requires_auth": true,
-      "rate_limit": "1500/month free"
+      "requires_auth": true
     },
     {
-      "id": "convert_amount",
-      "description_for_ai": "Convert a specific amount from one currency to another. Use for 'how much is 100 dollars in rubles', 'convert 500 EUR to GBP'.",
+      "id": "convert",
+      "description_for_ai": "Convert a specific amount from one currency to another.",
       "intent": [
-        "convert amount",
-        "how much is X in Y",
-        "currency calculator",
-        "сколько рублей в долларе",
-        "конвертировать сумму"
+        "convert currency",
+        "currency convert",
+        "USD to EUR",
+        "конвертировать валюту",
+        "перевести рубли в доллары"
       ],
       "endpoint": "GET https://v6.exchangerate-api.com/v6/{api_key}/pair/{from}/{to}/{amount}",
       "input": {
         "from": {
           "type": "string",
-          "description": "Source currency code. E.g. USD",
+          "description": "Source currency code e.g. USD",
           "required": true
         },
         "to": {
           "type": "string",
-          "description": "Target currency code. E.g. RUB",
+          "description": "Target currency code e.g. EUR",
           "required": true
         },
         "amount": {
-          "type": "float",
+          "type": "number",
           "description": "Amount to convert",
           "required": true
         }
@@ -92,6 +91,67 @@
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_historical",
+      "description_for_ai": "Get historical exchange rates for a specific date going back to 1990.",
+      "intent": [
+        "historical rates",
+        "past exchange rates",
+        "historical forex",
+        "исторические курсы валют"
+      ],
+      "endpoint": "GET https://v6.exchangerate-api.com/v6/{api_key}/history/{base}/{year}/{month}/{day}",
+      "input": {
+        "base": {
+          "type": "string",
+          "required": true
+        },
+        "year": {
+          "type": "integer",
+          "required": true
+        },
+        "month": {
+          "type": "integer",
+          "required": true
+        },
+        "day": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "historical_rates",
+        "fields": [
+          "base_code",
+          "year",
+          "month",
+          "day",
+          "conversion_rates"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "list_currencies",
+      "description_for_ai": "Get list of all 161 supported currency codes and their full names.",
+      "intent": [
+        "list currencies",
+        "supported currencies",
+        "currency codes",
+        "список валют"
+      ],
+      "endpoint": "GET https://v6.exchangerate-api.com/v6/{api_key}/codes",
+      "input": {},
+      "output": {
+        "type": "list<currency>",
+        "fields": [
+          "supported_codes [[code, name]]"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
