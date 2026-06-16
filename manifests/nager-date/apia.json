@@ -120,6 +120,66 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "get_public_holidays",
+      "description_for_ai": "Get public holidays for any country and year.",
+      "intent": [
+        "public holidays",
+        "national holidays",
+        "праздники страны",
+        "выходные дни"
+      ],
+      "endpoint": "GET https://date.nager.at/api/v3/PublicHolidays/{year}/{countryCode}",
+      "input": {
+        "year": {
+          "type": "integer",
+          "description": "4-digit year",
+          "required": true
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2: US, DE, RU, FR",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<holiday>",
+        "fields": [
+          "[0].date",
+          "[0].localName",
+          "[0].name",
+          "[0].countryCode",
+          "[0].fixed",
+          "[0].types"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "is_today_holiday",
+      "description_for_ai": "Check if today is a public holiday in a given country.",
+      "intent": [
+        "is today holiday",
+        "holiday check today",
+        "выходной сегодня"
+      ],
+      "endpoint": "GET https://date.nager.at/api/v3/IsTodayPublicHoliday/{countryCode}",
+      "input": {
+        "countryCode": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "boolean",
+        "fields": [
+          "200=yes, 204=no"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "meta": {
