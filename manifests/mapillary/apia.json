@@ -24,50 +24,60 @@
   "capabilities": [
     {
       "id": "search_images",
-      "description_for_ai": "Search street-level photos near a location on Mapillary.",
+      "description_for_ai": "Search Mapillary street-level images by location, date, or sequence.",
       "intent": [
-        "mapillary images",
-        "street photos",
-        "geolocated photos",
-        "уличные фото mapillary"
+        "street photos Mapillary",
+        "street view Mapillary",
+        "location images",
+        "уличные фото Mapillary"
       ],
       "endpoint": "GET https://graph.mapillary.com/images",
       "input": {
         "bbox": {
           "type": "string",
-          "description": "Bounding box: west,south,east,north e.g. -122.45,37.77,-122.43,37.79",
+          "description": "West,South,East,North: -73.96,40.74,-73.95,40.75",
           "required": true
         },
         "limit": {
           "type": "integer",
           "default": 10
         },
+        "start_captured_at": {
+          "type": "string",
+          "description": "ISO 8601 datetime",
+          "required": false
+        },
+        "end_captured_at": {
+          "type": "string",
+          "required": false
+        },
         "fields": {
           "type": "string",
-          "description": "id,geometry,captured_at,compass_angle,sequence",
-          "default": "id,geometry,captured_at"
+          "description": "id,captured_at,geometry,computed_geometry,thumb_256_url",
+          "required": false
         }
       },
       "output": {
         "type": "list<image>",
         "fields": [
           "data[0].id",
-          "data[0].geometry.coordinates",
           "data[0].captured_at",
-          "data[0].compass_angle"
+          "data[0].geometry.coordinates",
+          "data[0].thumb_256_url",
+          "data[0].thumb_1024_url"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_image",
-      "description_for_ai": "Get a specific Mapillary image by ID with download URL.",
+      "id": "get_image_details",
+      "description_for_ai": "Get full metadata for a Mapillary image: location, camera, sequence.",
       "intent": [
-        "mapillary image details",
-        "street view photo",
-        "image URL mapillary",
-        "фото mapillary"
+        "image details Mapillary",
+        "street photo metadata",
+        "photo location data",
+        "метаданные фото Mapillary"
       ],
       "endpoint": "GET https://graph.mapillary.com/{image_id}",
       "input": {
@@ -77,18 +87,57 @@
         },
         "fields": {
           "type": "string",
-          "description": "id,geometry,thumb_2048_url,creator,captured_at,is_pano",
-          "default": "id,geometry,thumb_2048_url"
+          "description": "id,captured_at,geometry,altitude,thumb_original_url,sequence,compass_angle",
+          "required": false
         }
       },
       "output": {
         "type": "image",
         "fields": [
           "id",
-          "geometry.coordinates",
-          "thumb_2048_url",
           "captured_at",
-          "is_pano"
+          "geometry.coordinates",
+          "altitude",
+          "compass_angle",
+          "thumb_original_url",
+          "sequence"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_map_features",
+      "description_for_ai": "Get detected map features (traffic signs, fire hydrants, etc.) in an area.",
+      "intent": [
+        "map features Mapillary",
+        "detected objects",
+        "traffic signs",
+        "объекты на карте Mapillary"
+      ],
+      "endpoint": "GET https://graph.mapillary.com/map_features",
+      "input": {
+        "bbox": {
+          "type": "string",
+          "required": true
+        },
+        "values": {
+          "type": "string",
+          "description": "Object types: trafficsign, object--fire-hydrant, etc.",
+          "required": false
+        },
+        "fields": {
+          "type": "string",
+          "default": "id,object_value,geometry,images"
+        }
+      },
+      "output": {
+        "type": "list<feature>",
+        "fields": [
+          "data[0].id",
+          "data[0].object_value",
+          "data[0].geometry.coordinates",
+          "data[0].images.data[0].id"
         ]
       },
       "realtime": true,
@@ -96,14 +145,14 @@
     },
     {
       "id": "get_sequence",
-      "description_for_ai": "Get a Mapillary sequence (collection of images along a path).",
+      "description_for_ai": "Get all images in a Mapillary sequence (driving route).",
       "intent": [
-        "mapillary sequence",
-        "photo sequence",
-        "street photo path",
-        "последовательность mapillary"
+        "image sequence Mapillary",
+        "route photos",
+        "driving sequence",
+        "последовательность Mapillary"
       ],
-      "endpoint": "GET https://graph.mapillary.com/image_ids",
+      "endpoint": "GET https://graph.mapillary.com/sequences/{sequence_id}",
       "input": {
         "sequence_id": {
           "type": "string",
@@ -113,80 +162,43 @@
       "output": {
         "type": "sequence",
         "fields": [
-          "data (list of image IDs in sequence)"
+          "id",
+          "captured_at",
+          "creator_username",
+          "geometry.type",
+          "image_count"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_map_features",
-      "description_for_ai": "Get map features (signs, traffic lights, etc.) detected in Mapillary images.",
+      "id": "get_organization_stats",
+      "description_for_ai": "Get image contribution statistics for a Mapillary organization.",
       "intent": [
-        "map features mapillary",
-        "street signs detected",
-        "traffic signs AI",
-        "дорожные знаки mapillary"
+        "Mapillary organization",
+        "contribution stats",
+        "image count",
+        "статистика Mapillary"
       ],
-      "endpoint": "GET https://graph.mapillary.com/map_features",
-      "input": {
-        "bbox": {
-          "type": "string",
-          "description": "Bounding box",
-          "required": true
-        },
-        "value": {
-          "type": "string",
-          "description": "Feature type filter: regulatory--stop_sign, information--tourist_attraction, object--fire_hydrant",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 50
-        }
-      },
-      "output": {
-        "type": "list<feature>",
-        "fields": [
-          "data[0].id",
-          "data[0].value",
-          "data[0].geometry.coordinates",
-          "data[0].first_seen_at"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "search_by_creator",
-      "description_for_ai": "Get Mapillary images uploaded by a specific user.",
-      "intent": [
-        "mapillary user photos",
-        "creator images mapillary",
-        "user photos street",
-        "фото пользователя mapillary"
-      ],
-      "endpoint": "GET https://graph.mapillary.com/images",
+      "endpoint": "GET https://graph.mapillary.com/organizations/{organization_id}",
       "input": {
         "organization_id": {
           "type": "string",
-          "required": false
+          "required": true
         },
-        "creator_id": {
+        "fields": {
           "type": "string",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 20
+          "default": "id,name,description,image_count"
         }
       },
       "output": {
-        "type": "list<image>",
+        "type": "organization",
         "fields": [
-          "data[0].id",
-          "data[0].geometry.coordinates",
-          "data[0].captured_at"
+          "id",
+          "name",
+          "description",
+          "image_count"
         ]
       },
       "realtime": true,
