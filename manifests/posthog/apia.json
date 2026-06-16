@@ -23,23 +23,22 @@
   "capabilities": [
     {
       "id": "capture_event",
-      "description_for_ai": "Capture a product analytics event with user properties. Free up to 1M events/month.",
+      "description_for_ai": "Capture a user event in PostHog for product analytics.",
       "intent": [
         "posthog event",
-        "track event posthog",
-        "product analytics",
-        "отслеживание posthog"
+        "capture analytics",
+        "track posthog",
+        "аналитика posthog"
       ],
       "endpoint": "POST https://app.posthog.com/capture/",
       "input": {
         "api_key": {
           "type": "string",
-          "description": "PostHog project API key (public, not secret)",
           "required": true
         },
         "event": {
           "type": "string",
-          "description": "Event name",
+          "description": "Event name e.g. 'button_clicked', 'page_viewed'",
           "required": true
         },
         "distinct_id": {
@@ -49,32 +48,31 @@
         },
         "properties": {
           "type": "object",
-          "description": "Event properties. Special: $current_url, $referrer, $os, $browser",
+          "description": "Event properties: {$current_url, $browser, plan, amount}",
           "required": false
         },
         "timestamp": {
           "type": "string",
-          "description": "ISO 8601 for historical import. Default: now",
+          "description": "ISO 8601 timestamp. Default: now",
           "required": false
         }
       },
       "output": {
         "type": "result",
         "fields": [
-          "status"
+          "status (1=success)"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
     },
     {
       "id": "identify_user",
-      "description_for_ai": "Identify a user with properties for segmentation and cohort analysis.",
+      "description_for_ai": "Identify a user in PostHog and set their profile properties.",
       "intent": [
-        "posthog identify",
-        "user identification",
-        "set user properties posthog",
-        "идентификация пользователя posthog"
+        "identify user posthog",
+        "set user properties",
+        "user profile posthog"
       ],
       "endpoint": "POST https://app.posthog.com/capture/",
       "input": {
@@ -84,7 +82,6 @@
         },
         "event": {
           "type": "string",
-          "description": "Always '$identify' for user identification",
           "default": "$identify"
         },
         "distinct_id": {
@@ -93,7 +90,7 @@
         },
         "$set": {
           "type": "object",
-          "description": "User properties: {email, name, plan, company, created_at}",
+          "description": "{email: 'user@example.com', name: 'John', plan: 'pro', company: 'Acme'}",
           "required": false
         }
       },
@@ -104,16 +101,58 @@
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
     },
     {
-      "id": "check_feature_flag",
-      "description_for_ai": "Check if a feature flag is enabled for a user. Use for A/B testing and gradual rollouts.",
+      "id": "query_insights",
+      "description_for_ai": "Query PostHog insights: event trends, funnels, retention, and user paths.",
       "intent": [
-        "feature flag posthog",
-        "A/B test",
-        "rollout feature",
-        "фичефлаг posthog"
+        "posthog insights",
+        "event trends",
+        "funnel posthog",
+        "аналитика воронки posthog"
+      ],
+      "endpoint": "POST https://app.posthog.com/api/projects/{project_id}/insights/trend/",
+      "input": {
+        "project_id": {
+          "type": "string",
+          "required": true
+        },
+        "events": {
+          "type": "array",
+          "description": "[{id: 'button_clicked', type: 'events', math: 'dau'}]",
+          "required": true
+        },
+        "date_from": {
+          "type": "string",
+          "description": "-7d, -30d, -90d, or YYYY-MM-DD",
+          "default": "-7d"
+        },
+        "interval": {
+          "type": "string",
+          "description": "day, week, month",
+          "default": "day"
+        }
+      },
+      "output": {
+        "type": "insights",
+        "fields": [
+          "result[0].data (array of values)",
+          "result[0].labels (date labels)",
+          "result[0].count"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_feature_flags",
+      "description_for_ai": "Get all feature flags and decide which are enabled for a user.",
+      "intent": [
+        "feature flags posthog",
+        "A/B test posthog",
+        "feature toggle",
+        "флаги фич posthog"
       ],
       "endpoint": "POST https://app.posthog.com/decide/",
       "input": {
@@ -125,67 +164,20 @@
           "type": "string",
           "required": true
         },
-        "groups": {
+        "person_properties": {
           "type": "object",
-          "description": "Group keys for group-based flags: {organization: 'org_id'}",
+          "description": "User properties for flag evaluation",
           "required": false
         }
       },
       "output": {
         "type": "flags",
         "fields": [
-          "featureFlags (object key-value)",
-          "featureFlagPayloads (JSON payloads per flag)"
+          "featureFlags (dict of flag_name: true/false/variant)",
+          "featureFlagPayloads"
         ]
       },
       "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "query_insights",
-      "description_for_ai": "Run analytics queries: trends, funnels, retention, paths using PostHog API.",
-      "intent": [
-        "posthog analytics",
-        "query insights",
-        "trend analysis posthog",
-        "аналитика posthog"
-      ],
-      "endpoint": "POST https://app.posthog.com/api/projects/{project_id}/insights/trend/",
-      "input": {
-        "project_id": {
-          "type": "string",
-          "description": "PostHog project ID",
-          "required": true
-        },
-        "events": {
-          "type": "array",
-          "description": "[{id: 'pageview', name: 'Pageview', type: 'events'}]",
-          "required": true
-        },
-        "date_from": {
-          "type": "string",
-          "description": "-30d, -7d, or YYYY-MM-DD",
-          "required": false
-        },
-        "date_to": {
-          "type": "string",
-          "required": false
-        },
-        "breakdown": {
-          "type": "string",
-          "description": "Property to break down by e.g. $browser",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "insights",
-        "fields": [
-          "result[0].label",
-          "result[0].data (array of values)",
-          "result[0].labels (array of dates)"
-        ]
-      },
-      "realtime": false,
       "requires_auth": true
     }
   ],
