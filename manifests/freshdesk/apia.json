@@ -23,11 +23,12 @@
   "capabilities": [
     {
       "id": "list_tickets",
-      "description_for_ai": "List Freshdesk tickets with filters by status, priority, and agent.",
+      "description_for_ai": "List Freshdesk support tickets with filters.",
       "intent": [
-        "freshdesk tickets",
-        "support tickets freshdesk",
-        "тикеты freshdesk"
+        "Freshdesk tickets",
+        "support tickets",
+        "customer issues Freshdesk",
+        "заявки Freshdesk"
       ],
       "endpoint": "GET https://{domain}.freshdesk.com/api/v2/tickets",
       "input": {
@@ -36,22 +37,23 @@
           "description": "new_and_my_open, watching, spam, deleted",
           "required": false
         },
-        "order_by": {
-          "type": "string",
-          "description": "created_at, due_by, updated_at, status",
-          "default": "created_at"
+        "requester_id": {
+          "type": "integer",
+          "required": false
         },
-        "order_type": {
-          "type": "string",
-          "default": "desc"
+        "priority": {
+          "type": "integer",
+          "description": "1=low 2=medium 3=high 4=urgent",
+          "required": false
+        },
+        "status": {
+          "type": "integer",
+          "description": "2=open 3=pending 4=resolved 5=closed",
+          "required": false
         },
         "per_page": {
           "type": "integer",
           "default": 30
-        },
-        "page": {
-          "type": "integer",
-          "default": 1
         }
       },
       "output": {
@@ -62,8 +64,7 @@
           "[0].status",
           "[0].priority",
           "[0].requester_id",
-          "[0].created_at",
-          "[0].updated_at"
+          "[0].created_at"
         ]
       },
       "realtime": true,
@@ -71,42 +72,36 @@
     },
     {
       "id": "create_ticket",
-      "description_for_ai": "Create a new Freshdesk support ticket with custom fields.",
+      "description_for_ai": "Create a new support ticket in Freshdesk.",
       "intent": [
-        "create freshdesk ticket",
-        "open ticket freshdesk",
-        "new support ticket",
-        "создать тикет freshdesk"
+        "create ticket Freshdesk",
+        "new support request",
+        "support issue Freshdesk",
+        "создать заявку Freshdesk"
       ],
       "endpoint": "POST https://{domain}.freshdesk.com/api/v2/tickets",
       "input": {
-        "name": {
-          "type": "string",
-          "description": "Requester name",
-          "required": false
-        },
-        "email": {
-          "type": "string",
-          "description": "Requester email",
-          "required": true
-        },
         "subject": {
           "type": "string",
           "required": true
         },
         "description": {
           "type": "string",
-          "description": "HTML or plain text",
           "required": true
         },
-        "status": {
-          "type": "integer",
-          "description": "2=Open, 3=Pending, 4=Resolved, 5=Closed",
-          "default": 2
+        "email": {
+          "type": "string",
+          "description": "Requester email",
+          "required": true
         },
         "priority": {
           "type": "integer",
-          "description": "1=Low, 2=Medium, 3=High, 4=Urgent",
+          "description": "1-4",
+          "default": 2
+        },
+        "status": {
+          "type": "integer",
+          "description": "2=open 3=pending",
           "default": 2
         },
         "tags": {
@@ -121,7 +116,7 @@
           "subject",
           "status",
           "priority",
-          "created_at"
+          "requester_id"
         ]
       },
       "realtime": true,
@@ -129,12 +124,12 @@
     },
     {
       "id": "reply_ticket",
-      "description_for_ai": "Reply to a Freshdesk ticket as an agent.",
+      "description_for_ai": "Add a reply or note to a Freshdesk ticket.",
       "intent": [
-        "reply freshdesk",
-        "add comment ticket",
-        "answer ticket",
-        "ответить на тикет freshdesk"
+        "reply Freshdesk",
+        "ticket reply",
+        "add note Freshdesk",
+        "ответить на заявку Freshdesk"
       ],
       "endpoint": "POST https://{domain}.freshdesk.com/api/v2/tickets/{ticket_id}/reply",
       "input": {
@@ -160,9 +155,8 @@
         "type": "reply",
         "fields": [
           "id",
-          "body",
-          "created_at",
-          "from_email"
+          "body_text",
+          "created_at"
         ]
       },
       "realtime": true,
@@ -170,22 +164,18 @@
     },
     {
       "id": "list_contacts",
-      "description_for_ai": "List Freshdesk contacts (customers) with search.",
+      "description_for_ai": "List customer contacts in Freshdesk.",
       "intent": [
-        "freshdesk contacts",
-        "customers freshdesk",
-        "search contact",
-        "контакты freshdesk"
+        "Freshdesk contacts",
+        "customers list",
+        "contact database",
+        "клиенты Freshdesk"
       ],
       "endpoint": "GET https://{domain}.freshdesk.com/api/v2/contacts",
       "input": {
-        "email": {
-          "type": "string",
-          "required": false
-        },
-        "phone": {
-          "type": "string",
-          "required": false
+        "page": {
+          "type": "integer",
+          "default": 1
         },
         "per_page": {
           "type": "integer",
@@ -207,11 +197,12 @@
     },
     {
       "id": "create_contact",
-      "description_for_ai": "Create a new contact in Freshdesk.",
+      "description_for_ai": "Create a new customer contact in Freshdesk.",
       "intent": [
-        "new contact freshdesk",
-        "add customer",
-        "создать контакт freshdesk"
+        "add contact Freshdesk",
+        "new customer Freshdesk",
+        "create contact",
+        "добавить клиента Freshdesk"
       ],
       "endpoint": "POST https://{domain}.freshdesk.com/api/v2/contacts",
       "input": {
@@ -238,7 +229,31 @@
           "id",
           "name",
           "email",
-          "phone"
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_ticket_stats",
+      "description_for_ai": "Get ticket volume and resolution stats for a Freshdesk account.",
+      "intent": [
+        "Freshdesk analytics",
+        "ticket stats",
+        "support metrics",
+        "статистика Freshdesk"
+      ],
+      "endpoint": "GET https://{domain}.freshdesk.com/api/v2/reports/overview",
+      "input": {},
+      "output": {
+        "type": "stats",
+        "fields": [
+          "new_tickets",
+          "open_tickets",
+          "pending_tickets",
+          "resolved_tickets",
+          "closed_tickets"
         ]
       },
       "realtime": true,
