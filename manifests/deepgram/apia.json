@@ -22,103 +22,91 @@
   },
   "capabilities": [
     {
-      "id": "transcribe_audio",
-      "description_for_ai": "Fast, accurate audio transcription with Deepgram Nova-3. Best speed/accuracy ratio. $0.0043/min.",
+      "id": "transcribe_prerecorded",
+      "description_for_ai": "Transcribe pre-recorded audio with Deepgram. Extremely fast and accurate.",
       "intent": [
-        "transcribe audio Deepgram",
-        "speech to text fast",
+        "transcribe Deepgram",
+        "speech to text Deepgram",
         "audio transcription",
-        "транскрибация Deepgram"
+        "транскрипция Deepgram"
       ],
       "endpoint": "POST https://api.deepgram.com/v1/listen",
       "input": {
         "url": {
           "type": "string",
-          "description": "Public audio URL (use body for file upload)",
-          "required": false
+          "description": "Audio URL (or send binary in body)",
+          "required": true
         },
         "model": {
           "type": "string",
-          "description": "nova-3 (best), nova-2, enhanced, base",
-          "default": "nova-3"
+          "description": "nova-2 (best), nova-2-meeting, nova-2-phone, base, enhanced",
+          "default": "nova-2"
         },
         "language": {
           "type": "string",
-          "description": "en, ru, de, fr, es, etc. or multi for multilingual",
-          "default": "en"
+          "description": "en, es, fr, de, ja, ko, ru, zh, ar (auto-detected if omitted)",
+          "required": false
         },
         "smart_format": {
           "type": "boolean",
-          "description": "Intelligent punctuation, numbers, dates",
+          "description": "Automatic punctuation, capitalization, numbers",
           "default": true
         },
         "diarize": {
           "type": "boolean",
-          "description": "Speaker identification",
+          "description": "Speaker diarization",
           "default": false
         },
         "punctuate": {
           "type": "boolean",
           "default": true
-        },
-        "paragraphs": {
-          "type": "boolean",
-          "description": "Add paragraphs to output",
-          "default": false
-        },
-        "summarize": {
-          "type": "boolean",
-          "description": "Auto summary",
-          "default": false
         }
       },
       "output": {
         "type": "transcript",
         "fields": [
           "results.channels[0].alternatives[0].transcript",
+          "results.channels[0].alternatives[0].confidence",
           "results.channels[0].alternatives[0].words[0].word",
-          "results.channels[0].alternatives[0].words[0].start",
-          "metadata.duration"
+          "results.channels[0].alternatives[0].words[0].start"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "realtime_transcription",
-      "description_for_ai": "Real-time streaming transcription over WebSocket. Ultra-low latency <300ms.",
+      "id": "real_time_transcription",
+      "description_for_ai": "Stream real-time audio for live transcription via WebSocket.",
       "intent": [
-        "live transcription",
-        "real-time STT",
+        "live transcription Deepgram",
+        "real time STT",
         "streaming transcription",
         "потоковая транскрипция Deepgram"
       ],
-      "endpoint": "WSS wss://api.deepgram.com/v1/listen",
+      "endpoint": "WebSocket wss://api.deepgram.com/v1/listen",
       "input": {
-        "model": {
-          "type": "string",
-          "default": "nova-3"
-        },
         "encoding": {
           "type": "string",
-          "description": "linear16, flac, mulaw, amr-nb, amr-wb, opus, speex, g729",
+          "description": "linear16, flac, mulaw, amr-nb, amr-wb, opus, speex, alaw, g729",
           "required": true
         },
         "sample_rate": {
           "type": "integer",
+          "description": "Audio sample rate in Hz",
           "required": true
         },
         "channels": {
           "type": "integer",
+          "description": "Number of channels",
           "default": 1
         }
       },
       "output": {
-        "type": "realtime_transcript",
+        "type": "stream<transcript>",
         "fields": [
           "channel.alternatives[0].transcript",
-          "is_final",
-          "speech_final"
+          "channel.alternatives[0].confidence",
+          "is_final"
         ]
       },
       "realtime": true,
@@ -126,32 +114,28 @@
     },
     {
       "id": "text_to_speech",
-      "description_for_ai": "Convert text to speech with Deepgram Aura. Low-latency streaming TTS.",
+      "description_for_ai": "Generate natural speech from text with Deepgram Aura TTS.",
       "intent": [
-        "TTS Deepgram",
-        "text to speech fast",
-        "voice synthesis Deepgram",
+        "text to speech Deepgram",
+        "Deepgram TTS",
+        "voice synthesis",
         "синтез речи Deepgram"
       ],
       "endpoint": "POST https://api.deepgram.com/v1/speak",
       "input": {
         "text": {
           "type": "string",
+          "description": "Text to synthesize",
           "required": true
         },
         "model": {
           "type": "string",
-          "description": "aura-2-en-v1 (recommended), aura-asteria-en, aura-orion-en, aura-helios-en",
-          "default": "aura-2-en-v1"
+          "description": "aura-asteria-en (female), aura-orion-en (male), aura-luna-en, aura-zeus-en, aura-arcas-en",
+          "default": "aura-asteria-en"
         },
         "encoding": {
           "type": "string",
-          "description": "mp3, opus, linear16, mulaw, alaw, flac",
-          "default": "mp3"
-        },
-        "container": {
-          "type": "string",
-          "description": "mp3, wav, ogg, none",
+          "description": "linear16, mulaw, alaw, mp3, opus, flac",
           "default": "mp3"
         }
       },
@@ -165,72 +149,86 @@
       "requires_auth": true
     },
     {
-      "id": "audio_intelligence",
-      "description_for_ai": "Analyze audio for topics, sentiment, summaries, and entities.",
+      "id": "summarize_audio",
+      "description_for_ai": "Transcribe and summarize audio content in one request with Deepgram.",
       "intent": [
-        "audio analysis",
-        "topic detection audio",
-        "sentiment analysis audio",
-        "анализ аудио Deepgram"
+        "summarize audio Deepgram",
+        "audio summary",
+        "meeting notes AI",
+        "резюме аудио Deepgram"
       ],
-      "endpoint": "POST https://api.deepgram.com/v1/listen",
+      "endpoint": "POST https://api.deepgram.com/v1/listen?summarize=v2",
       "input": {
         "url": {
           "type": "string",
           "required": true
         },
-        "topics": {
-          "type": "boolean",
-          "description": "Topic detection",
-          "default": true
-        },
-        "sentiment": {
-          "type": "boolean",
-          "description": "Sentiment analysis",
-          "default": true
-        },
-        "summarize": {
-          "type": "boolean",
-          "default": true
-        },
-        "detect_entities": {
-          "type": "boolean",
-          "default": true
+        "model": {
+          "type": "string",
+          "default": "nova-2"
         }
       },
       "output": {
-        "type": "analysis",
+        "type": "summary",
         "fields": [
-          "results.topics.segments[0].topics[0].topic",
-          "results.sentiments.average.sentiment",
-          "results.summary.result"
+          "results.summary.short (text summary)",
+          "results.channels[0].alternatives[0].transcript"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "manage_models",
-      "description_for_ai": "List available Deepgram models and check usage/balance.",
+      "id": "detect_intent",
+      "description_for_ai": "Detect topics and classify intent in transcribed audio.",
       "intent": [
-        "Deepgram models",
-        "available models STT",
-        "API usage Deepgram",
-        "модели Deepgram"
+        "intent detection audio",
+        "topic detection",
+        "call intent",
+        "намерение в аудио Deepgram"
       ],
-      "endpoint": "GET https://api.deepgram.com/v1/projects/{project_id}/balances",
+      "endpoint": "POST https://api.deepgram.com/v1/listen?detect_topics=true",
       "input": {
-        "project_id": {
+        "url": {
+          "type": "string",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "nova-2"
+        }
+      },
+      "output": {
+        "type": "topics",
+        "fields": [
+          "results.topics.segments[0].topics[0].topic",
+          "results.topics.segments[0].topics[0].confidence_score"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "detect_language",
+      "description_for_ai": "Auto-detect the language of audio content.",
+      "intent": [
+        "detect language Deepgram",
+        "audio language detection",
+        "what language is spoken",
+        "определить язык в аудио Deepgram"
+      ],
+      "endpoint": "POST https://api.deepgram.com/v1/listen?detect_language=true",
+      "input": {
+        "url": {
           "type": "string",
           "required": true
         }
       },
       "output": {
-        "type": "balance",
+        "type": "language",
         "fields": [
-          "balances[0].balance",
-          "balances[0].units",
-          "balances[0].purchase_order_id"
+          "results.channels[0].detected_language",
+          "results.channels[0].language_probability"
         ]
       },
       "realtime": true,
