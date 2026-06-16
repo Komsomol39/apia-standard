@@ -187,6 +187,45 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_stats",
+      "description_for_ai": "Get SendGrid email sending statistics: delivered, opened, clicked, bounced.",
+      "intent": [
+        "sendgrid stats",
+        "email statistics",
+        "email performance",
+        "статистика sendgrid"
+      ],
+      "endpoint": "GET https://api.sendgrid.com/v3/stats",
+      "input": {
+        "start_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "end_date": {
+          "type": "string",
+          "required": false
+        },
+        "aggregated_by": {
+          "type": "string",
+          "description": "day, week, month",
+          "default": "day"
+        }
+      },
+      "output": {
+        "type": "stats",
+        "fields": [
+          "[0].date",
+          "[0].stats[0].metrics.delivered",
+          "[0].stats[0].metrics.open_rate",
+          "[0].stats[0].metrics.click_rate",
+          "[0].stats[0].metrics.bounce_rate"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
