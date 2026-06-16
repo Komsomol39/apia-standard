@@ -86,6 +86,89 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "search_company",
+      "description_for_ai": "Search Russian companies in Kontur.Focus database.",
+      "intent": [
+        "kontur focus поиск",
+        "проверить компанию kontur",
+        "найти ИНН kontur"
+      ],
+      "endpoint": "GET https://focus-api.kontur.ru/api3/search",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Company name, INN, or OGRN",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<company>",
+        "fields": [
+          "items[0].focus.inn",
+          "items[0].focus.ogrn",
+          "items[0].focus.shortName",
+          "items[0].focus.registrationDate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_requisites",
+      "description_for_ai": "Get full company requisites (bank, legal address, management) from Kontur.Focus.",
+      "intent": [
+        "реквизиты компании",
+        "kontur focus реквизиты",
+        "данные об организации"
+      ],
+      "endpoint": "GET https://focus-api.kontur.ru/api3/req",
+      "input": {
+        "innList": {
+          "type": "string",
+          "description": "INN(s) comma-separated",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<company>",
+        "fields": [
+          "items[0].focus.shortName",
+          "items[0].focus.addresses[0].value",
+          "items[0].focus.heads[0].fio",
+          "items[0].focus.status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "check_counterparty",
+      "description_for_ai": "Check counterparty risk score and financial health in Kontur.Focus.",
+      "intent": [
+        "проверить контрагента",
+        "kontur focus риски",
+        "надёжность контрагента"
+      ],
+      "endpoint": "GET https://focus-api.kontur.ru/api3/analytics",
+      "input": {
+        "inn": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "analytics",
+        "fields": [
+          "risks.level",
+          "financials.revenue",
+          "financials.netProfit",
+          "employees.count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
