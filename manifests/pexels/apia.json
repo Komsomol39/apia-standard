@@ -177,6 +177,49 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_videos",
+      "description_for_ai": "Search free stock videos on Pexels by keyword.",
+      "intent": [
+        "pexels video",
+        "free stock video",
+        "video search pexels",
+        "бесплатное видео pexels"
+      ],
+      "endpoint": "GET https://api.pexels.com/videos/search",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 15
+        },
+        "orientation": {
+          "type": "string",
+          "description": "landscape, portrait, square",
+          "required": false
+        },
+        "size": {
+          "type": "string",
+          "description": "large, medium, small",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<video>",
+        "fields": [
+          "videos[0].id",
+          "videos[0].url",
+          "videos[0].duration",
+          "videos[0].video_files[0].link",
+          "videos[0].user.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
