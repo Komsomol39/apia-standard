@@ -22,37 +22,159 @@
   "capabilities": [
     {
       "id": "get_workers",
-      "description_for_ai": "Enterprise HR platform. Employee records, payroll, recruiting, time tracking, benefits, learning. Used by 10K+ organizations. Use for HR automation, employee data integration, talent management. Get employee records from Workday HCM. Returns employee profiles with job info, department, location.",
+      "description_for_ai": "Get list of workers from Workday HCM (Human Capital Management).",
       "intent": [
-        "employee list",
-        "HR data",
-        "worker profiles",
-        "employee database",
-        "headcount",
-        "staff list"
+        "workday employees",
+        "HR data workday",
+        "worker list",
+        "сотрудники workday"
       ],
-      "endpoint": "GET https://{tenant}.workday.com/api/v1/workers",
+      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/workers",
       "input": {
         "limit": {
           "type": "integer",
-          "default": 100,
-          "description": "Maximum number of results to return"
+          "default": 100
         },
         "offset": {
           "type": "integer",
-          "default": 0,
-          "description": "Number of records to skip for pagination"
+          "default": 0
+        },
+        "search": {
+          "type": "string",
+          "required": false
         }
       },
       "output": {
         "type": "list<worker>",
         "fields": [
-          "id",
+          "data[0].id",
+          "data[0].descriptor (name)",
+          "data[0].workerType",
+          "data[0].primaryJob.location.descriptor"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_worker_profile",
+      "description_for_ai": "Get detailed worker profile from Workday HCM.",
+      "intent": [
+        "workday profile",
+        "employee details",
+        "HR profile workday",
+        "профиль сотрудника workday"
+      ],
+      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/workers/{workerId}",
+      "input": {
+        "workerId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "worker",
+        "fields": [
           "descriptor",
-          "businessTitle",
-          "department.descriptor",
-          "location.descriptor",
-          "email"
+          "workerType",
+          "primaryJob.jobTitle",
+          "primaryJob.businessSite.descriptor",
+          "primaryJob.manager.descriptor",
+          "contactInfo.email"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_job_postings",
+      "description_for_ai": "Get open job requisitions from Workday Recruiting.",
+      "intent": [
+        "workday jobs",
+        "job openings workday",
+        "recruiting workday",
+        "вакансии workday"
+      ],
+      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/jobRequisitions",
+      "input": {
+        "status": {
+          "type": "string",
+          "description": "Open, Closed, Canceled",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<job>",
+        "fields": [
+          "data[0].id",
+          "data[0].descriptor",
+          "data[0].status.descriptor",
+          "data[0].workerType.descriptor",
+          "data[0].hiringManager.descriptor"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_org_structure",
+      "description_for_ai": "Get organization structure and reporting hierarchy from Workday.",
+      "intent": [
+        "org chart workday",
+        "team structure",
+        "reporting hierarchy",
+        "оргструктура workday"
+      ],
+      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/organizationDefinitions",
+      "input": {
+        "type": {
+          "type": "string",
+          "description": "Supervisory, Company, Cost_Center, Pay_Group",
+          "default": "Supervisory"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<org>",
+        "fields": [
+          "data[0].id",
+          "data[0].descriptor",
+          "data[0].superOrg.descriptor",
+          "data[0].memberCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_time_off",
+      "description_for_ai": "Get employee time-off balance and requests from Workday.",
+      "intent": [
+        "time off workday",
+        "vacation balance",
+        "leave requests workday",
+        "отпуска workday"
+      ],
+      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/workers/{workerId}/timeOffBalance",
+      "input": {
+        "workerId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "balance",
+        "fields": [
+          "timeOffPlan.descriptor",
+          "balance",
+          "units.descriptor"
         ]
       },
       "realtime": true,
