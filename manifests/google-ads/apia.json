@@ -83,6 +83,107 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_campaigns",
+      "description_for_ai": "List Google Ads campaigns with performance metrics.",
+      "intent": [
+        "google ads campaigns",
+        "ad campaigns list",
+        "google campaigns",
+        "кампании google ads"
+      ],
+      "endpoint": "POST https://googleads.googleapis.com/v17/customers/{customer_id}/googleAds:searchStream",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "GAQL query: SELECT campaign.id, campaign.name, campaign.status, metrics.impressions, metrics.clicks, metrics.cost_micros FROM campaign WHERE segments.date DURING LAST_30_DAYS",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<campaign>",
+        "fields": [
+          "results[0].campaign.id",
+          "results[0].campaign.name",
+          "results[0].campaign.status",
+          "results[0].metrics.impressions",
+          "results[0].metrics.clicks"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_campaign",
+      "description_for_ai": "Create a new Google Ads campaign.",
+      "intent": [
+        "create google ads campaign",
+        "new ad campaign",
+        "создать кампанию google ads"
+      ],
+      "endpoint": "POST https://googleads.googleapis.com/v17/customers/{customer_id}/campaigns:mutate",
+      "input": {
+        "customer_id": {
+          "type": "string",
+          "required": true
+        },
+        "operations": {
+          "type": "array",
+          "description": "[{create: {name: 'Campaign Name', status: 'PAUSED', advertisingChannelType: 'SEARCH', campaignBudget: 'customers/CID/campaignBudgets/BID', biddingStrategyType: 'TARGET_CPA'}}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<campaign>",
+        "fields": [
+          "results[0].resourceName"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "keyword_planner",
+      "description_for_ai": "Get keyword ideas and search volume estimates with Google Keyword Planner.",
+      "intent": [
+        "keyword research",
+        "keyword planner google",
+        "search volume",
+        "ключевые слова google ads"
+      ],
+      "endpoint": "POST https://googleads.googleapis.com/v17/customers/{customer_id}:generateKeywordIdeas",
+      "input": {
+        "customer_id": {
+          "type": "string",
+          "required": true
+        },
+        "keyword_seed": {
+          "type": "object",
+          "description": "{keywords: ['seo tools', 'keyword research']}",
+          "required": false
+        },
+        "url_seed": {
+          "type": "object",
+          "description": "{url: 'https://example.com'}",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "description": "languageConstants/1000 (English)",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<keyword_idea>",
+        "fields": [
+          "results[0].text",
+          "results[0].keywordIdeaMetrics.avgMonthlySearches",
+          "results[0].keywordIdeaMetrics.competition"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
