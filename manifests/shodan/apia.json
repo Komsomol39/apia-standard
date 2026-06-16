@@ -24,62 +24,60 @@
   "capabilities": [
     {
       "id": "search",
-      "description_for_ai": "Search internet for devices matching query. Find exposed databases, servers, IoT, cameras by technology, port, location.",
+      "description_for_ai": "Search Shodan for internet-exposed devices by port, service, country, or vulnerability.",
       "intent": [
-        "exposed servers",
+        "shodan search",
+        "exposed devices",
         "internet scan",
-        "find devices",
-        "security research",
-        "port scan",
-        "exposed databases",
-        "shodan search"
+        "IoT security",
+        "поиск shodan"
       ],
       "endpoint": "GET https://api.shodan.io/shodan/host/search",
       "input": {
         "query": {
           "type": "string",
-          "description": "Search query e.g. product:nginx country:RU, port:27017, server:apache",
+          "description": "Shodan query: port:22 country:RU, product:nginx vuln:CVE-2021-44228, org:'Google'",
           "required": true
-        },
-        "page": {
-          "type": "integer",
-          "default": 1,
-          "description": "Page number for pagination (1-indexed)"
         },
         "facets": {
           "type": "string",
+          "description": "Comma-separated facets: country, port, org",
           "required": false
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         }
       },
       "output": {
-        "type": "search_results",
+        "type": "results",
         "fields": [
           "matches[0].ip_str",
           "matches[0].port",
-          "matches[0].product",
-          "matches[0].country_name",
           "matches[0].org",
-          "matches[0].data",
+          "matches[0].country_code",
+          "matches[0].product",
+          "matches[0].version",
           "total"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "get_host",
-      "description_for_ai": "Get all info about a specific IP: open ports, services, vulnerabilities, location, organization.",
+      "description_for_ai": "Get all open ports and services for a specific IP address.",
       "intent": [
-        "IP info",
-        "server info",
-        "what is running on IP",
-        "port scan result",
-        "vulnerability check"
+        "ip lookup shodan",
+        "host info shodan",
+        "open ports IP",
+        "порты IP shodan"
       ],
       "endpoint": "GET https://api.shodan.io/shodan/host/{ip}",
       "input": {
         "ip": {
           "type": "string",
+          "description": "IP address to look up",
           "required": true
         },
         "history": {
@@ -92,16 +90,69 @@
         "type": "host",
         "fields": [
           "ip_str",
+          "ports",
           "org",
           "country_name",
-          "ports",
-          "vulns",
+          "data[0].port",
           "data[0].product",
           "data[0].version",
-          "hostnames"
+          "vulns"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_myip",
+      "description_for_ai": "Get your own public IP address and info as seen from Shodan.",
+      "intent": [
+        "my IP address",
+        "public IP",
+        "what is my IP",
+        "мой IP адрес shodan"
+      ],
+      "endpoint": "GET https://api.shodan.io/tools/myip",
+      "input": {},
+      "output": {
+        "type": "ip",
+        "fields": [
+          "IP address string"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_facets",
+      "description_for_ai": "Get aggregated stats for a search: top countries, ports, organizations, products.",
+      "intent": [
+        "shodan stats",
+        "search facets",
+        "internet stats",
+        "статистика shodan"
+      ],
+      "endpoint": "GET https://api.shodan.io/shodan/host/count",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "facets": {
+          "type": "string",
+          "description": "country:10, port:10, org:10, product:10",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "facets",
+        "fields": [
+          "total",
+          "facets.country[0].value",
+          "facets.country[0].count",
+          "facets.port[0].value"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
