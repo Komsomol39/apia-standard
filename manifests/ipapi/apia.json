@@ -22,50 +22,151 @@
   },
   "capabilities": [
     {
-      "id": "get_location",
-      "description_for_ai": "Free IP geolocation API. City, country, ISP, timezone, coordinates from IP address. No API key for non-commercial. 45 req/min free. Fastest free IP geolocation available. Get location from IP address. Returns country, city, ISP, timezone, coordinates. Free, no key needed.",
+      "id": "lookup_ip",
+      "description_for_ai": "Get geolocation data for an IP address: country, city, ISP, timezone.",
       "intent": [
-        "IP location",
-        "where is this IP",
+        "IP lookup",
         "IP geolocation",
-        "detect country",
-        "user location from IP",
-        "IP address info"
+        "where is IP",
+        "геолокация IP"
       ],
-      "endpoint": "GET http://ip-api.com/json/{ip}",
+      "endpoint": "GET https://ipapi.co/{ip}/{format}/",
       "input": {
         "ip": {
           "type": "string",
-          "description": "IP address. Omit for caller IP.",
-          "required": false
+          "description": "IPv4 or IPv6 address",
+          "required": true
         },
-        "fields": {
+        "format": {
           "type": "string",
-          "description": "Comma-separated fields or numeric field mask",
-          "required": false
-        },
-        "lang": {
-          "type": "string",
-          "description": "Response language: en, ru, de, fr, zh-CN, ja",
-          "default": "en"
+          "description": "json, jsonp, xml, csv, yaml",
+          "default": "json"
         }
       },
       "output": {
-        "type": "location",
+        "type": "geolocation",
         "fields": [
-          "status",
-          "country",
-          "countryCode",
-          "region",
-          "regionName",
+          "ip",
           "city",
-          "zip",
-          "lat",
-          "lon",
+          "region",
+          "country_name",
+          "country_code",
+          "latitude",
+          "longitude",
           "timezone",
-          "isp",
           "org",
-          "query"
+          "asn"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_my_ip_info",
+      "description_for_ai": "Get geolocation info for the current request's IP address.",
+      "intent": [
+        "my IP",
+        "current location IP",
+        "мой IP геолокация"
+      ],
+      "endpoint": "GET https://ipapi.co/json/",
+      "input": {},
+      "output": {
+        "type": "geolocation",
+        "fields": [
+          "ip",
+          "city",
+          "region",
+          "country_name",
+          "latitude",
+          "longitude",
+          "timezone",
+          "org"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "lookup_specific_field",
+      "description_for_ai": "Get a single field for an IP (faster than full JSON).",
+      "intent": [
+        "IP country",
+        "IP city",
+        "IP timezone only",
+        "страна по IP"
+      ],
+      "endpoint": "GET https://ipapi.co/{ip}/{field}/",
+      "input": {
+        "ip": {
+          "type": "string",
+          "required": true
+        },
+        "field": {
+          "type": "string",
+          "description": "city, country, country_code, region, latitude, longitude, timezone, org, asn, currency",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "string",
+        "fields": [
+          "Plain text field value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "bulk_lookup",
+      "description_for_ai": "Look up multiple IP addresses in a single request.",
+      "intent": [
+        "bulk IP lookup",
+        "multiple IPs",
+        "batch IP geolocation",
+        "пакетная геолокация IP"
+      ],
+      "endpoint": "POST https://ipapi.co/json/",
+      "input": {
+        "ips": {
+          "type": "array",
+          "description": "Array of IP addresses to look up",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<geolocation>",
+        "fields": [
+          "[0].ip",
+          "[0].city",
+          "[0].country_name",
+          "[0].latitude",
+          "[0].longitude"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_currency",
+      "description_for_ai": "Get the local currency for an IP address.",
+      "intent": [
+        "IP currency",
+        "local currency by IP",
+        "currency from IP",
+        "валюта по IP"
+      ],
+      "endpoint": "GET https://ipapi.co/{ip}/currency/",
+      "input": {
+        "ip": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "string",
+        "fields": [
+          "currency code (e.g., USD, EUR, RUB)"
         ]
       },
       "realtime": true,
