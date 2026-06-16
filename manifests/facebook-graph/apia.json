@@ -21,66 +21,53 @@
   },
   "capabilities": [
     {
-      "id": "get_page_posts",
-      "description_for_ai": "Get posts from a Facebook Page with engagement metrics (likes, comments, shares). Requires Page access token and pages_read_engagement permission.",
+      "id": "get_page_info",
+      "description_for_ai": "Get Facebook Page details: name, fans, category, description.",
       "intent": [
-        "facebook posts",
-        "page content",
-        "facebook feed",
-        "social media posts",
-        "facebook page"
+        "facebook page",
+        "fb page info",
+        "page details facebook",
+        "страница facebook"
       ],
-      "endpoint": "GET https://graph.facebook.com/v20.0/{page_id}/posts",
+      "endpoint": "GET https://graph.facebook.com/v19.0/{page_id}",
       "input": {
         "page_id": {
           "type": "string",
-          "description": "Facebook Page ID or username",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "Comma-separated: message,story,created_time,full_picture,permalink_url,likes.summary(true),comments.summary(true),shares,reactions.summary(true)",
-          "default": "message,created_time,likes.summary(true)"
-        },
-        "limit": {
-          "type": "integer",
-          "description": "Posts per page, default 10, max 100",
-          "default": 10
-        },
-        "since": {
-          "type": "string",
-          "description": "Unix timestamp or date string to filter posts from",
+          "description": "id,name,fan_count,category,description,link,phone,email,website",
           "required": false
         },
-        "until": {
+        "access_token": {
           "type": "string",
-          "description": "Unix timestamp or date string to filter posts until",
-          "required": false
+          "required": true
         }
       },
       "output": {
-        "type": "list<post>",
+        "type": "page",
         "fields": [
           "id",
-          "message",
-          "created_time",
-          "likes.summary.total_count",
-          "comments.summary.total_count"
+          "name",
+          "fan_count",
+          "category",
+          "description"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "publish_post",
-      "description_for_ai": "Publish a text or link post to a Facebook Page. Requires Page publish_actions permission and Page access token.",
+      "id": "create_post",
+      "description_for_ai": "Create a post on a Facebook Page with text, link, or photo.",
       "intent": [
-        "post to facebook",
-        "publish on facebook",
-        "facebook page post",
-        "share on facebook"
+        "post facebook",
+        "facebook post",
+        "publish facebook",
+        "пост facebook"
       ],
-      "endpoint": "POST https://graph.facebook.com/v20.0/{page_id}/feed",
+      "endpoint": "POST https://graph.facebook.com/v19.0/{page_id}/feed",
       "input": {
         "page_id": {
           "type": "string",
@@ -88,29 +75,108 @@
         },
         "message": {
           "type": "string",
-          "description": "Post text content",
+          "description": "Post text",
           "required": false
         },
         "link": {
           "type": "string",
-          "description": "URL to share as link post with preview card",
+          "description": "URL to share",
           "required": false
         },
         "published": {
           "type": "boolean",
-          "description": "true to publish immediately, false to create draft",
           "default": true
         },
-        "scheduled_publish_time": {
-          "type": "integer",
-          "description": "Unix timestamp for scheduled publishing (requires published=false)",
-          "required": false
+        "access_token": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
         "type": "post",
         "fields": [
           "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_page_insights",
+      "description_for_ai": "Get Facebook Page analytics: reach, impressions, page views, engagement.",
+      "intent": [
+        "facebook analytics",
+        "page insights",
+        "facebook stats",
+        "аналитика facebook"
+      ],
+      "endpoint": "GET https://graph.facebook.com/v19.0/{page_id}/insights",
+      "input": {
+        "page_id": {
+          "type": "string",
+          "required": true
+        },
+        "metric": {
+          "type": "string",
+          "description": "page_impressions,page_reach,page_views_total,page_fans,page_engaged_users",
+          "required": true
+        },
+        "period": {
+          "type": "string",
+          "description": "day, week, days_28, month",
+          "required": true
+        },
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "insights",
+        "fields": [
+          "data[0].name",
+          "data[0].values[0].value",
+          "data[0].period"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "search_pages",
+      "description_for_ai": "Search for Facebook Pages by name or keyword.",
+      "intent": [
+        "search facebook page",
+        "find facebook page",
+        "поиск страницы facebook"
+      ],
+      "endpoint": "GET https://graph.facebook.com/v19.0/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "default": "page"
+        },
+        "fields": {
+          "type": "string",
+          "description": "id,name,fan_count,category",
+          "required": false
+        },
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<page>",
+        "fields": [
+          "data[0].id",
+          "data[0].name",
+          "data[0].fan_count",
+          "data[0].category"
         ]
       },
       "realtime": true,
