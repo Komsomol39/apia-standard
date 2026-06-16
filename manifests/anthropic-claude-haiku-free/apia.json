@@ -21,22 +21,19 @@
   },
   "capabilities": [
     {
-      "id": "messages",
-      "description_for_ai": "Send messages to Claude AI. Free tier available without credit card. Best for: analysis, writing, coding, Q&A in Russian, English, and 100+ languages.",
+      "id": "chat_free",
+      "description_for_ai": "Free tier chat with Claude Haiku. Rate-limited. Great for testing.",
       "intent": [
-        "free AI",
-        "Claude free",
-        "AI without credit card",
-        "free LLM",
-        "test AI",
-        "попробовать ИИ бесплатно"
+        "free claude",
+        "claude haiku free",
+        "test claude",
+        "бесплатный Claude Haiku"
       ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
         "model": {
           "type": "string",
-          "description": "claude-haiku-4-5 for cheapest/fastest",
-          "required": true
+          "default": "claude-haiku-4-5"
         },
         "messages": {
           "type": "array",
@@ -44,15 +41,145 @@
         },
         "max_tokens": {
           "type": "integer",
-          "required": true,
-          "description": "Maximum number of tokens to generate in response"
+          "default": 1024
         }
       },
       "output": {
         "type": "completion",
         "fields": [
           "content[0].text",
-          "usage"
+          "usage.input_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "question_answer",
+      "description_for_ai": "Ask factual questions to free Claude Haiku.",
+      "intent": [
+        "question claude free",
+        "ask AI free",
+        "free QA claude",
+        "вопрос бесплатный Claude"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "claude-haiku-4-5"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 512
+        }
+      },
+      "output": {
+        "type": "answer",
+        "fields": [
+          "content[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "code_help",
+      "description_for_ai": "Get code help from free Claude Haiku.",
+      "intent": [
+        "code help free claude",
+        "fix code AI free",
+        "debug AI",
+        "помощь с кодом бесплатно Claude"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "claude-haiku-4-5"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 1024
+        }
+      },
+      "output": {
+        "type": "code",
+        "fields": [
+          "content[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "summarize_free",
+      "description_for_ai": "Summarize text with free Claude Haiku (rate-limited).",
+      "intent": [
+        "summarize free claude",
+        "free text summary",
+        "краткое изложение Claude бесплатно"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "claude-haiku-4-5"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 300
+        }
+      },
+      "output": {
+        "type": "summary",
+        "fields": [
+          "content[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "creative_writing",
+      "description_for_ai": "Creative writing tasks with free Claude Haiku.",
+      "intent": [
+        "creative writing AI free",
+        "story free claude",
+        "poem generator free",
+        "творческое письмо Claude бесплатно"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "claude-haiku-4-5"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 1024
+        }
+      },
+      "output": {
+        "type": "content",
+        "fields": [
+          "content[0].text"
         ]
       },
       "realtime": true,
