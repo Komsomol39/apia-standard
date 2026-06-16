@@ -142,6 +142,68 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "clean_address",
+      "description_for_ai": "Standardize and validate a Russian address using DaData.ru. Returns FIAS code.",
+      "intent": [
+        "стандартизировать адрес dadata",
+        "нормализация адреса",
+        "clean address dadata"
+      ],
+      "endpoint": "POST https://cleaner.dadata.ru/api/v1/clean/address",
+      "input": {
+        "value": {
+          "type": "string",
+          "description": "Raw address string e.g. 'Москва, пречистенка д3'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<address>",
+        "fields": [
+          "[0].result",
+          "[0].fias_id",
+          "[0].postal_code",
+          "[0].city",
+          "[0].street",
+          "[0].house",
+          "[0].qc"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "suggest_party",
+      "description_for_ai": "Suggest Russian companies (legal entities) as user types. Returns INN, OGRN, address.",
+      "intent": [
+        "поиск компании dadata",
+        "автодополнение ИНН",
+        "suggest company"
+      ],
+      "endpoint": "POST https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 5
+        }
+      },
+      "output": {
+        "type": "list<party>",
+        "fields": [
+          "suggestions[0].value",
+          "suggestions[0].data.inn",
+          "suggestions[0].data.ogrn",
+          "suggestions[0].data.address.value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
