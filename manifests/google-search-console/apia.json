@@ -22,26 +22,18 @@
   "capabilities": [
     {
       "id": "get_search_analytics",
-      "description_for_ai": "SEO data from Google. Search queries, impressions, clicks, CTR, average position for your website in Google Search. Crawl errors, indexing status, sitemaps. Use for SEO monitoring, keyword research, indexing management. Get search performance data: clicks, impressions, CTR, position for queries and pages.",
+      "description_for_ai": "Get Google Search Console analytics: clicks, impressions, CTR, average position.",
       "intent": [
-        "google rankings",
-        "SEO rankings",
-        "CTR data",
-        "SEO data",
-        "Google impressions",
-        "search analytics",
-        "search performance",
-        "keyword positions",
-        "organic traffic",
-        "позиции в Google",
-        "search queries",
-        "keyword position"
+        "search console analytics",
+        "GSC data",
+        "SEO clicks",
+        "данные search console"
       ],
-      "endpoint": "POST https://searchconsole.googleapis.com/v1/sites/{siteUrl}/searchAnalytics/query",
+      "endpoint": "POST https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/searchAnalytics/query",
       "input": {
         "siteUrl": {
           "type": "string",
-          "description": "Your site URL e.g. sc-domain:example.com",
+          "description": "URL-encoded site: https%3A%2F%2Fexample.com",
           "required": true
         },
         "startDate": {
@@ -51,12 +43,16 @@
         },
         "endDate": {
           "type": "string",
-          "description": "YYYY-MM-DD",
           "required": true
         },
         "dimensions": {
           "type": "array",
-          "description": "[query, page, country, device, date]",
+          "description": "['query', 'page', 'country', 'device', 'date', 'searchAppearance']",
+          "required": false
+        },
+        "dimensionFilterGroups": {
+          "type": "array",
+          "description": "Filter: [{filters: [{dimension: 'country', expression: 'usa'}]}]",
           "required": false
         },
         "rowLimit": {
@@ -65,9 +61,9 @@
         }
       },
       "output": {
-        "type": "analytics",
+        "type": "list<row>",
         "fields": [
-          "rows[0].keys",
+          "rows[0].keys (dimension values)",
           "rows[0].clicks",
           "rows[0].impressions",
           "rows[0].ctr",
@@ -75,6 +71,123 @@
         ]
       },
       "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "list_sites",
+      "description_for_ai": "List all verified sites in a Google Search Console account.",
+      "intent": [
+        "list sites GSC",
+        "search console properties",
+        "verified sites",
+        "сайты search console"
+      ],
+      "endpoint": "GET https://www.googleapis.com/webmasters/v3/sites",
+      "input": {},
+      "output": {
+        "type": "list<site>",
+        "fields": [
+          "siteEntry[0].siteUrl",
+          "siteEntry[0].permissionLevel"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_sitemaps",
+      "description_for_ai": "Get list of sitemaps submitted to Google Search Console.",
+      "intent": [
+        "sitemaps GSC",
+        "submitted sitemaps",
+        "sitemap status",
+        "карты сайта search console"
+      ],
+      "endpoint": "GET https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/sitemaps",
+      "input": {
+        "siteUrl": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<sitemap>",
+        "fields": [
+          "sitemap[0].path",
+          "sitemap[0].lastSubmitted",
+          "sitemap[0].contents[0].indexed",
+          "sitemap[0].contents[0].submitted",
+          "sitemap[0].errors"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "submit_sitemap",
+      "description_for_ai": "Submit or resubmit a sitemap to Google Search Console.",
+      "intent": [
+        "submit sitemap",
+        "sitemap GSC submit",
+        "add sitemap",
+        "добавить sitemap search console"
+      ],
+      "endpoint": "PUT https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "input": {
+        "siteUrl": {
+          "type": "string",
+          "required": true
+        },
+        "feedpath": {
+          "type": "string",
+          "description": "URL-encoded sitemap URL",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "status",
+        "fields": [
+          "204 No Content on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_crawl_errors",
+      "description_for_ai": "Get crawl errors (404s, server errors) for a site.",
+      "intent": [
+        "crawl errors GSC",
+        "404 errors",
+        "server errors search console",
+        "ошибки обхода search console"
+      ],
+      "endpoint": "GET https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/urlCrawlErrorsSamples",
+      "input": {
+        "siteUrl": {
+          "type": "string",
+          "required": true
+        },
+        "category": {
+          "type": "string",
+          "description": "notFound, authPermissions, manyToOneRedirect, notFollowed, other, roboted, serverError, soft404",
+          "required": true
+        },
+        "platform": {
+          "type": "string",
+          "description": "mobile, smartphoneOnly, web",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<error>",
+        "fields": [
+          "urlCrawlErrorSample[0].pageUrl",
+          "urlCrawlErrorSample[0].last_crawled",
+          "urlCrawlErrorSample[0].responseCode"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
