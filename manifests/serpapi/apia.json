@@ -24,97 +24,55 @@
   "capabilities": [
     {
       "id": "google_search",
-      "description_for_ai": "Search Google and get structured results: organic, featured snippets, ads, knowledge graph.",
+      "description_for_ai": "Scrape Google search results. Organic, knowledge panel, featured snippets, related searches.",
       "intent": [
-        "google search api",
+        "Google search API",
+        "SERP data",
         "search results",
-        "google scraping",
-        "serpapi search",
-        "результаты google"
+        "результаты поиска Google SerpAPI"
       ],
       "endpoint": "GET https://serpapi.com/search",
       "input": {
-        "engine": {
-          "type": "string",
-          "default": "google"
-        },
         "q": {
           "type": "string",
+          "description": "Search query",
           "required": true
+        },
+        "engine": {
+          "type": "string",
+          "description": "google, bing, duckduckgo, yahoo, youtube, google_news, google_images",
+          "default": "google"
         },
         "location": {
           "type": "string",
-          "description": "Austin, Texas, United States",
+          "description": "Location: 'Austin, Texas, United States', 'Moscow, Russia'",
+          "required": false
+        },
+        "gl": {
+          "type": "string",
+          "description": "Country code: us, ru, gb, de",
           "required": false
         },
         "hl": {
           "type": "string",
           "description": "Language: en, ru, de",
-          "default": "en"
-        },
-        "gl": {
-          "type": "string",
-          "description": "Country: us, ru, de",
-          "default": "us"
+          "required": false
         },
         "num": {
           "type": "integer",
-          "description": "Results count 1-100",
+          "description": "Number of results 10-100",
           "default": 10
         }
       },
       "output": {
-        "type": "search_results",
+        "type": "serp",
         "fields": [
+          "organic_results[0].position",
           "organic_results[0].title",
           "organic_results[0].link",
           "organic_results[0].snippet",
           "knowledge_graph.title",
-          "answer_box.answer",
-          "shopping_results"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "google_maps_search",
-      "description_for_ai": "Search Google Maps for local businesses and places via SerpAPI.",
-      "intent": [
-        "google maps search",
-        "local business search",
-        "places google",
-        "поиск места google maps"
-      ],
-      "endpoint": "GET https://serpapi.com/search",
-      "input": {
-        "engine": {
-          "type": "string",
-          "default": "google_maps"
-        },
-        "q": {
-          "type": "string",
-          "required": true
-        },
-        "ll": {
-          "type": "string",
-          "description": "@latitude,longitude,zoom e.g. @40.7455096,-74.0083012,14z",
-          "required": false
-        },
-        "type": {
-          "type": "string",
-          "description": "search or place",
-          "default": "search"
-        }
-      },
-      "output": {
-        "type": "list<place>",
-        "fields": [
-          "local_results[0].title",
-          "local_results[0].rating",
-          "local_results[0].reviews",
-          "local_results[0].address",
-          "local_results[0].phone"
+          "answer_box.answer"
         ]
       },
       "realtime": true,
@@ -122,43 +80,115 @@
     },
     {
       "id": "google_news",
-      "description_for_ai": "Get Google News results for a topic or query.",
+      "description_for_ai": "Get Google News search results for a topic.",
       "intent": [
-        "google news api",
-        "news search",
-        "latest news serpapi",
-        "новости google"
+        "Google news search",
+        "news results",
+        "news API",
+        "новости Google"
       ],
       "endpoint": "GET https://serpapi.com/search",
       "input": {
-        "engine": {
-          "type": "string",
-          "default": "google_news"
-        },
         "q": {
           "type": "string",
           "required": true
         },
-        "hl": {
+        "engine": {
           "type": "string",
-          "default": "en"
+          "default": "google_news"
         },
         "gl": {
           "type": "string",
-          "default": "us"
+          "required": false
         },
-        "num": {
-          "type": "integer",
-          "default": 10
+        "hl": {
+          "type": "string",
+          "required": false
         }
       },
       "output": {
-        "type": "list<news>",
+        "type": "news",
         "fields": [
           "news_results[0].title",
           "news_results[0].link",
-          "news_results[0].source.name",
-          "news_results[0].date"
+          "news_results[0].source",
+          "news_results[0].date",
+          "news_results[0].snippet"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "google_images",
+      "description_for_ai": "Get Google Images search results with thumbnail URLs.",
+      "intent": [
+        "image search API",
+        "Google images",
+        "search images",
+        "поиск изображений Google"
+      ],
+      "endpoint": "GET https://serpapi.com/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "engine": {
+          "type": "string",
+          "default": "google_images"
+        },
+        "ijn": {
+          "type": "integer",
+          "description": "Page number (0=first)",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "images",
+        "fields": [
+          "images_results[0].title",
+          "images_results[0].original",
+          "images_results[0].thumbnail",
+          "images_results[0].source"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "youtube_search",
+      "description_for_ai": "Search YouTube videos via SerpApi.",
+      "intent": [
+        "YouTube search API",
+        "YouTube results",
+        "video search",
+        "поиск YouTube SerpAPI"
+      ],
+      "endpoint": "GET https://serpapi.com/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "engine": {
+          "type": "string",
+          "default": "youtube"
+        },
+        "sp": {
+          "type": "string",
+          "description": "YouTube filter parameter",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<video>",
+        "fields": [
+          "video_results[0].title",
+          "video_results[0].link",
+          "video_results[0].snippet",
+          "video_results[0].views",
+          "video_results[0].length"
         ]
       },
       "realtime": true,
@@ -166,34 +196,26 @@
     },
     {
       "id": "google_shopping",
-      "description_for_ai": "Search Google Shopping for products with prices and merchants.",
+      "description_for_ai": "Search Google Shopping for product listings with prices.",
       "intent": [
-        "google shopping",
+        "Google shopping",
         "product search",
         "price comparison",
-        "цены google shopping"
+        "цены на товары Google"
       ],
       "endpoint": "GET https://serpapi.com/search",
       "input": {
-        "engine": {
-          "type": "string",
-          "default": "google_shopping"
-        },
         "q": {
           "type": "string",
           "required": true
         },
+        "engine": {
+          "type": "string",
+          "default": "google_shopping"
+        },
         "gl": {
           "type": "string",
-          "default": "us"
-        },
-        "hl": {
-          "type": "string",
-          "default": "en"
-        },
-        "num": {
-          "type": "integer",
-          "default": 20
+          "required": false
         }
       },
       "output": {
@@ -204,47 +226,6 @@
           "shopping_results[0].source",
           "shopping_results[0].link",
           "shopping_results[0].rating"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "youtube_search",
-      "description_for_ai": "Search YouTube videos via SerpAPI and get structured results.",
-      "intent": [
-        "youtube search serpapi",
-        "video search",
-        "find youtube videos",
-        "поиск youtube через api"
-      ],
-      "endpoint": "GET https://serpapi.com/search",
-      "input": {
-        "engine": {
-          "type": "string",
-          "default": "youtube"
-        },
-        "search_query": {
-          "type": "string",
-          "required": true
-        },
-        "gl": {
-          "type": "string",
-          "default": "us"
-        },
-        "hl": {
-          "type": "string",
-          "default": "en"
-        }
-      },
-      "output": {
-        "type": "list<video>",
-        "fields": [
-          "video_results[0].title",
-          "video_results[0].link",
-          "video_results[0].views",
-          "video_results[0].channel.name",
-          "video_results[0].published_date"
         ]
       },
       "realtime": true,
