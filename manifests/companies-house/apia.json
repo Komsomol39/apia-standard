@@ -88,6 +88,102 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "get_company",
+      "description_for_ai": "Get full UK company details: registered address, officers, accounts filing.",
+      "intent": [
+        "UK company details",
+        "companies house info",
+        "company registration UK",
+        "данные компании Великобритания"
+      ],
+      "endpoint": "GET https://api.company-information.service.gov.uk/company/{company_number}",
+      "input": {
+        "company_number": {
+          "type": "string",
+          "description": "8-digit UK company number e.g. 00445790",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "company_name",
+          "company_number",
+          "registered_office_address.address_line_1",
+          "date_of_creation",
+          "company_status",
+          "sic_codes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_officers",
+      "description_for_ai": "Get list of company officers (directors, secretaries) from Companies House.",
+      "intent": [
+        "company directors UK",
+        "officers companies house",
+        "directors list UK",
+        "директора компании UK"
+      ],
+      "endpoint": "GET https://api.company-information.service.gov.uk/company/{company_number}/officers",
+      "input": {
+        "company_number": {
+          "type": "string",
+          "required": true
+        },
+        "register_type": {
+          "type": "string",
+          "description": "directors, secretaries, llp-members",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<officer>",
+        "fields": [
+          "items[0].name",
+          "items[0].officer_role",
+          "items[0].appointed_on",
+          "items[0].nationality"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_filings",
+      "description_for_ai": "Get filing history of a UK company: annual returns, accounts, changes.",
+      "intent": [
+        "UK company filings",
+        "companies house filings",
+        "annual accounts UK"
+      ],
+      "endpoint": "GET https://api.company-information.service.gov.uk/company/{company_number}/filing-history",
+      "input": {
+        "company_number": {
+          "type": "string",
+          "required": true
+        },
+        "category": {
+          "type": "string",
+          "description": "accounts, annual-return, officers, mortgage, persons-with-significant-control",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<filing>",
+        "fields": [
+          "items[0].type",
+          "items[0].date",
+          "items[0].description",
+          "items[0].links.document_metadata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
