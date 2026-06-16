@@ -23,31 +23,31 @@
   "capabilities": [
     {
       "id": "list_jobs",
-      "description_for_ai": "List open job positions in Greenhouse ATS.",
+      "description_for_ai": "List open jobs in Greenhouse ATS with department and office filters.",
       "intent": [
-        "greenhouse jobs",
+        "Greenhouse jobs",
         "open positions",
-        "job listings HR",
-        "вакансии greenhouse"
+        "job listings ATS",
+        "вакансии Greenhouse"
       ],
       "endpoint": "GET https://harvest.greenhouse.io/v1/jobs",
       "input": {
-        "per_page": {
-          "type": "integer",
-          "default": 100
-        },
-        "page": {
-          "type": "integer",
-          "default": 1
-        },
-        "requisition_id": {
-          "type": "string",
-          "required": false
-        },
         "status": {
           "type": "string",
           "description": "open, closed, draft",
+          "default": "open"
+        },
+        "department_id": {
+          "type": "integer",
           "required": false
+        },
+        "office_id": {
+          "type": "integer",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 50
         }
       },
       "output": {
@@ -58,7 +58,7 @@
           "[0].status",
           "[0].departments[0].name",
           "[0].offices[0].name",
-          "[0].opened_at"
+          "[0].opens_at"
         ]
       },
       "realtime": true,
@@ -66,32 +66,27 @@
     },
     {
       "id": "get_candidates",
-      "description_for_ai": "List or search candidates in Greenhouse with their application status.",
+      "description_for_ai": "List or search candidates in Greenhouse.",
       "intent": [
-        "candidates greenhouse",
-        "applicants list",
-        "job candidates",
-        "кандидаты greenhouse"
+        "Greenhouse candidates",
+        "applicants",
+        "search candidates",
+        "кандидаты Greenhouse"
       ],
       "endpoint": "GET https://harvest.greenhouse.io/v1/candidates",
       "input": {
-        "per_page": {
-          "type": "integer",
-          "default": 100
-        },
-        "job_id": {
-          "type": "integer",
-          "description": "Filter by job",
-          "required": false
-        },
         "email": {
           "type": "string",
-          "description": "Search by email",
+          "description": "Filter by email",
           "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 50
         },
         "created_after": {
           "type": "string",
-          "description": "ISO 8601",
+          "description": "ISO 8601 date",
           "required": false
         }
       },
@@ -110,12 +105,11 @@
     },
     {
       "id": "create_candidate",
-      "description_for_ai": "Add a new candidate to Greenhouse ATS.",
+      "description_for_ai": "Add a new candidate to Greenhouse.",
       "intent": [
-        "add candidate greenhouse",
-        "create applicant",
-        "new candidate HR",
-        "добавить кандидата"
+        "add candidate Greenhouse",
+        "new applicant",
+        "создать кандидата Greenhouse"
       ],
       "endpoint": "POST https://harvest.greenhouse.io/v1/candidates",
       "input": {
@@ -129,20 +123,16 @@
         },
         "email_addresses": {
           "type": "array",
-          "description": "[{value: 'candidate@example.com', type: 'work'}]",
+          "description": "[{value: 'email@example.com', type: 'personal'}]",
           "required": false
         },
         "phone_numbers": {
           "type": "array",
-          "description": "[{value: '+1234567890', type: 'mobile'}]",
           "required": false
         },
-        "addresses": {
+        "social_media_addresses": {
           "type": "array",
-          "required": false
-        },
-        "linkedin_url": {
-          "type": "string",
+          "description": "[{value: 'https://linkedin.com/in/...'}]",
           "required": false
         }
       },
@@ -160,17 +150,18 @@
     },
     {
       "id": "move_application",
-      "description_for_ai": "Move a candidate application to a different stage in the hiring pipeline.",
+      "description_for_ai": "Move a candidate's application to a different stage.",
       "intent": [
-        "move candidate stage",
-        "advance application",
-        "pipeline stage greenhouse",
-        "перенести кандидата greenhouse"
+        "move application stage",
+        "advance candidate",
+        "pipeline stage Greenhouse",
+        "переместить заявку Greenhouse"
       ],
-      "endpoint": "POST https://harvest.greenhouse.io/v1/applications/{application_id}/move",
+      "endpoint": "POST https://harvest.greenhouse.io/v1/applications/{id}/move",
       "input": {
-        "application_id": {
+        "id": {
           "type": "integer",
+          "description": "Application ID",
           "required": true
         },
         "from_stage_id": {
@@ -179,7 +170,6 @@
         },
         "to_stage_id": {
           "type": "integer",
-          "description": "Get stage IDs from GET /v1/jobs/{job_id}/stages",
           "required": true
         }
       },
@@ -188,8 +178,59 @@
         "fields": [
           "id",
           "status",
-          "current_stage.name",
-          "applied_at"
+          "current_stage.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "schedule_interview",
+      "description_for_ai": "Schedule an interview for a Greenhouse candidate.",
+      "intent": [
+        "schedule interview",
+        "book interview",
+        "interview scheduling",
+        "назначить интервью Greenhouse"
+      ],
+      "endpoint": "POST https://harvest.greenhouse.io/v1/scheduled_interviews",
+      "input": {
+        "application_id": {
+          "type": "integer",
+          "required": true
+        },
+        "interview_id": {
+          "type": "integer",
+          "description": "Interview stage ID",
+          "required": true
+        },
+        "organizer_email": {
+          "type": "string",
+          "required": true
+        },
+        "interviewers": {
+          "type": "array",
+          "description": "[{email: 'interviewer@company.com'}]",
+          "required": true
+        },
+        "start": {
+          "type": "object",
+          "description": "{date_time: 'ISO 8601', timezone: 'America/New_York'}",
+          "required": true
+        },
+        "end": {
+          "type": "object",
+          "description": "{date_time: 'ISO 8601', timezone: 'America/New_York'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "interview",
+        "fields": [
+          "id",
+          "status",
+          "start.date_time",
+          "end.date_time"
         ]
       },
       "realtime": true,
