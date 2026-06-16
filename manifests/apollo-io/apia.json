@@ -22,76 +22,54 @@
   },
   "capabilities": [
     {
-      "id": "people_search",
-      "description_for_ai": "Search 265M+ B2B contacts with advanced filters: job title, seniority, company size, industry, location. Returns verified emails and phone numbers.",
+      "id": "search_people",
+      "description_for_ai": "Search Apollo's database of 275M+ people by title, company, location, and industry.",
       "intent": [
-        "find contacts",
-        "B2B leads",
-        "sales prospects",
-        "decision makers",
-        "CXO contacts",
-        "VP contacts"
+        "find leads",
+        "prospect search",
+        "people search Apollo",
+        "поиск контактов Apollo"
       ],
-      "endpoint": "POST https://api.apollo.io/v1/mixed_people/search",
+      "endpoint": "POST https://api.apollo.io/api/v1/mixed_people/search",
       "input": {
         "person_titles": {
           "type": "array",
-          "description": "Job titles to target: ['CEO', 'CTO', 'VP Engineering', 'Director of Marketing']",
+          "description": "Job titles: ['CEO', 'CTO', 'VP Sales']",
           "required": false
         },
-        "person_seniority_levels": {
+        "organization_domains": {
           "type": "array",
-          "description": "Seniority: ['c_suite', 'vp', 'director', 'manager', 'individual_contributor']",
-          "required": false
-        },
-        "organization_locations": {
-          "type": "array",
-          "description": "Company locations: ['United States', 'California', 'New York City']",
+          "description": "Company domains: ['google.com', 'apple.com']",
           "required": false
         },
         "person_locations": {
           "type": "array",
-          "description": "Person locations: ['San Francisco, California', 'London, England']",
+          "description": "Locations: ['San Francisco, CA', 'New York, NY']",
           "required": false
         },
-        "organization_industry_tag_ids": {
-          "type": "array",
-          "description": "Industry IDs — get from /industries endpoint. E.g. 'technology', 'financial_services'",
-          "required": false
-        },
-        "organization_num_employees_ranges": {
-          "type": "array",
-          "description": "Company size ranges: ['1,10', '11,50', '51,200', '201,1000', '1001,10000', '10001,99999']",
-          "required": false
-        },
-        "q_organization_keyword_tags": {
-          "type": "array",
-          "description": "Company keyword tags: ['SaaS', 'artificial intelligence', 'fintech']",
+        "q_keywords": {
+          "type": "string",
+          "description": "Keyword search",
           "required": false
         },
         "page": {
           "type": "integer",
-          "description": "Page number (1-indexed)",
           "default": 1
         },
         "per_page": {
           "type": "integer",
-          "description": "Results per page, max 100",
           "default": 25
         }
       },
       "output": {
         "type": "list<person>",
         "fields": [
+          "people[0].id",
           "people[0].name",
           "people[0].title",
           "people[0].email",
-          "people[0].email_status",
-          "people[0].phone_numbers[0].raw_number",
           "people[0].organization.name",
-          "people[0].organization.website_url",
-          "people[0].linkedin_url",
-          "pagination.total_entries"
+          "people[0].linkedin_url"
         ]
       },
       "realtime": true,
@@ -99,23 +77,26 @@
     },
     {
       "id": "enrich_person",
-      "description_for_ai": "Enrich a person profile from Apollo database: get verified email, direct phone, LinkedIn URL, job title, and company from name and company/domain.",
+      "description_for_ai": "Enrich a person's data with email, phone, LinkedIn, company, and more.",
       "intent": [
-        "professional contact",
-        "get phone",
-        "get phone number",
-        "contact data",
-        "find email",
-        "lead enrichment",
         "enrich contact",
-        "find email from name"
+        "find email",
+        "contact data enrichment",
+        "обогащение данных Apollo"
       ],
-      "endpoint": "POST https://api.apollo.io/v1/people/match",
+      "endpoint": "POST https://api.apollo.io/api/v1/people/match",
       "input": {
-        "name": {
+        "first_name": {
           "type": "string",
-          "required": false,
-          "description": "Name identifier"
+          "required": false
+        },
+        "last_name": {
+          "type": "string",
+          "required": false
+        },
+        "email": {
+          "type": "string",
+          "required": false
         },
         "organization_name": {
           "type": "string",
@@ -123,13 +104,10 @@
         },
         "domain": {
           "type": "string",
+          "description": "Company domain for better matching",
           "required": false
         },
         "linkedin_url": {
-          "type": "string",
-          "required": false
-        },
-        "email": {
           "type": "string",
           "required": false
         }
@@ -139,10 +117,142 @@
         "fields": [
           "person.name",
           "person.email",
-          "person.phone_numbers",
+          "person.phone_numbers[0].raw_number",
           "person.title",
           "person.organization.name",
           "person.linkedin_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_organizations",
+      "description_for_ai": "Search companies in Apollo by industry, size, revenue, and tech stack.",
+      "intent": [
+        "company search",
+        "find companies",
+        "B2B prospecting",
+        "поиск компаний Apollo"
+      ],
+      "endpoint": "POST https://api.apollo.io/api/v1/mixed_companies/search",
+      "input": {
+        "q_organization_keyword_tags": {
+          "type": "array",
+          "description": "Industry tags",
+          "required": false
+        },
+        "organization_num_employees_ranges": {
+          "type": "array",
+          "description": "Size ranges: ['1,10', '11,50', '51,200']",
+          "required": false
+        },
+        "organization_locations": {
+          "type": "array",
+          "required": false
+        },
+        "currently_using_any_of_technology_uids": {
+          "type": "array",
+          "description": "Tech stack filter",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<org>",
+        "fields": [
+          "organizations[0].id",
+          "organizations[0].name",
+          "organizations[0].website_url",
+          "organizations[0].num_employees",
+          "organizations[0].industry"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_contact",
+      "description_for_ai": "Add a contact to Apollo CRM.",
+      "intent": [
+        "add contact Apollo",
+        "create lead",
+        "save contact",
+        "добавить контакт Apollo"
+      ],
+      "endpoint": "POST https://api.apollo.io/api/v1/contacts",
+      "input": {
+        "first_name": {
+          "type": "string",
+          "required": true
+        },
+        "last_name": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": false
+        },
+        "organization_name": {
+          "type": "string",
+          "required": false
+        },
+        "title": {
+          "type": "string",
+          "required": false
+        },
+        "phone_numbers": {
+          "type": "array",
+          "description": "[{raw_number: '+1...', dnc_status: 'not_marked'}]",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "contact",
+        "fields": [
+          "contact.id",
+          "contact.name",
+          "contact.email"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_sequence",
+      "description_for_ai": "Add contacts to an email sequence for automated outreach.",
+      "intent": [
+        "email sequence",
+        "sales outreach",
+        "automated emails Apollo",
+        "автоматическая рассылка Apollo"
+      ],
+      "endpoint": "POST https://api.apollo.io/api/v1/emailer_campaigns/{emailer_campaign_id}/add_contact_ids",
+      "input": {
+        "emailer_campaign_id": {
+          "type": "string",
+          "required": true
+        },
+        "contact_ids": {
+          "type": "array",
+          "description": "Array of contact IDs to add",
+          "required": true
+        },
+        "send_email_from_email_account_id": {
+          "type": "string",
+          "description": "Email account ID to send from",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "contacts[0].id",
+          "contacts[0].emailer_campaign_id"
         ]
       },
       "realtime": true,
