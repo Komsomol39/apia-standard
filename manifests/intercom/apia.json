@@ -197,6 +197,50 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "create_note",
+      "description_for_ai": "Add an internal note to an Intercom conversation.",
+      "intent": [
+        "intercom note",
+        "internal note",
+        "add comment intercom",
+        "заметка intercom"
+      ],
+      "endpoint": "POST https://api.intercom.io/conversations/{conversation_id}/reply",
+      "input": {
+        "conversation_id": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "default": "admin"
+        },
+        "admin_id": {
+          "type": "string",
+          "required": true
+        },
+        "message_type": {
+          "type": "string",
+          "default": "note"
+        },
+        "body": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "note",
+        "fields": [
+          "type",
+          "id",
+          "body",
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
