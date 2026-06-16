@@ -26,123 +26,27 @@
   "capabilities": [
     {
       "id": "search_resumes",
-      "description_for_ai": "Поиск резюме соискателей по специальности, городу и опыту. Используй когда работодатель говорит 'найди мне кандидатов на должность Python разработчика в Москве с опытом от 3 лет'.",
+      "description_for_ai": "Search resumes on SuperJob by keyword, position, location, salary.",
       "intent": [
-        "найти кандидатов",
-        "поиск резюме",
-        "найти соискателей",
-        "кандидаты на вакансию",
-        "резюме разработчика",
-        "специалисты в городе"
+        "поиск резюме SuperJob",
+        "кандидаты SuperJob",
+        "база резюме",
+        "SuperJob resumes"
       ],
       "endpoint": "GET https://api.superjob.ru/2.0/resumes/",
-      "headers": {
-        "X-Api-App-Id": "секретный ключ приложения"
-      },
       "input": {
         "keyword": {
           "type": "string",
-          "description": "Ключевые слова поиска",
+          "description": "Keywords to search",
           "required": false
         },
         "town": {
           "type": "integer",
-          "description": "ID города",
+          "description": "City ID: 4=Moscow, 14=Saint Petersburg",
           "required": false
         },
-        "experience": {
+        "payment_from": {
           "type": "integer",
-          "description": "1=без опыта, 2=1-3 года, 3=3-6 лет, 4=более 6 лет",
-          "required": false
-        },
-        "gender": {
-          "type": "integer",
-          "description": "1=мужской, 2=женский",
-          "required": false
-        },
-        "age_from": {
-          "type": "integer",
-          "description": "Возраст от",
-          "required": false
-        },
-        "age_to": {
-          "type": "integer",
-          "description": "Возраст до",
-          "required": false
-        },
-        "count": {
-          "type": "integer",
-          "default": 20,
-          "max": 100,
-          "description": "Number of items to return"
-        },
-        "page": {
-          "type": "integer",
-          "default": 0,
-          "description": "Page number for pagination (1-indexed)"
-        }
-      },
-      "output": {
-        "type": "list<resume>",
-        "fields": [
-          "id",
-          "profession",
-          "town.title",
-          "experience.title",
-          "age",
-          "gender.title",
-          "link"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_resume",
-      "description_for_ai": "Полное резюме кандидата по ID включая опыт работы и контакты.",
-      "intent": [
-        "резюме кандидата",
-        "контакты соискателя",
-        "опыт работы кандидата"
-      ],
-      "endpoint": "GET https://api.superjob.ru/2.0/resumes/{id}/",
-      "headers": {
-        "X-Api-App-Id": "секретный ключ"
-      },
-      "input": {
-        "id": {
-          "type": "integer",
-          "description": "ID резюме из search_resumes",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "resume",
-        "fields": [
-          "profession",
-          "experience",
-          "education",
-          "skills",
-          "town.title",
-          "phones",
-          "email"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "search_resumes",
-      "description_for_ai": "Search candidate resumes on SuperJob.",
-      "intent": [
-        "superjob резюме",
-        "поиск кандидатов superjob",
-        "resumes superjob"
-      ],
-      "endpoint": "GET https://api.superjob.ru/2.0/resumes/",
-      "input": {
-        "keyword": {
-          "type": "string",
           "required": false
         },
         "age_from": {
@@ -151,11 +55,6 @@
         },
         "age_to": {
           "type": "integer",
-          "required": false
-        },
-        "experience": {
-          "type": "integer",
-          "description": "1=no exp, 2=1-3yr, 3=3-6yr, 4=6+yr",
           "required": false
         },
         "count": {
@@ -167,10 +66,11 @@
         "type": "list<resume>",
         "fields": [
           "objects[0].id",
-          "objects[0].fio",
+          "objects[0].client.name",
           "objects[0].profession",
-          "objects[0].experience[0].position",
-          "objects[0].salary"
+          "objects[0].town.title",
+          "objects[0].payment_from",
+          "objects[0].payment_to"
         ]
       },
       "realtime": true,
@@ -178,11 +78,12 @@
     },
     {
       "id": "get_resume",
-      "description_for_ai": "Get a specific resume from SuperJob.",
+      "description_for_ai": "Get full resume by ID from SuperJob.",
       "intent": [
-        "резюме superjob",
-        "кандидат superjob",
-        "cv superjob"
+        "резюме SuperJob",
+        "анкета кандидата",
+        "просмотр резюме",
+        "resume SuperJob"
       ],
       "endpoint": "GET https://api.superjob.ru/2.0/resumes/{id}/",
       "input": {
@@ -195,139 +96,115 @@
         "type": "resume",
         "fields": [
           "id",
-          "fio",
           "profession",
-          "experience[0].position",
-          "salary",
-          "skills",
-          "education[0].institution"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_contact",
-      "description_for_ai": "Get contact details of a candidate on SuperJob.",
-      "intent": [
-        "контакты кандидата superjob",
-        "телефон кандидата",
-        "email кандидата superjob"
-      ],
-      "endpoint": "GET https://api.superjob.ru/2.0/resumes/{id}/contacts/",
-      "input": {
-        "id": {
-          "type": "integer",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "contacts",
-        "fields": [
-          "phone",
-          "email"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "search_resumes",
-      "description_for_ai": "Search candidate resumes on Superjob.",
-      "intent": [
-        "резюме superjob",
-        "поиск кандидатов superjob",
-        "resumes superjob"
-      ],
-      "endpoint": "GET https://api.superjob.ru/2.0/resumes/",
-      "input": {
-        "keyword": {
-          "type": "string",
-          "required": false
-        },
-        "town": {
-          "type": "integer",
-          "description": "1=Moscow, 2=SPb",
-          "required": false
-        },
-        "experience": {
-          "type": "integer",
-          "description": "1=no exp, 2=1-3yr, 3=3-6yr, 4=6+yr",
-          "required": false
-        },
-        "count": {
-          "type": "integer",
-          "default": 20
-        }
-      },
-      "output": {
-        "type": "list<resume>",
-        "fields": [
-          "objects[0].id",
-          "objects[0].profession",
-          "objects[0].experience[0].position",
-          "objects[0].age"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_resume",
-      "description_for_ai": "Get full resume details from Superjob.",
-      "intent": [
-        "резюме детали superjob",
-        "cv superjob",
-        "get resume superjob"
-      ],
-      "endpoint": "GET https://api.superjob.ru/2.0/resumes/{id}",
-      "input": {
-        "id": {
-          "type": "integer",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "resume",
-        "fields": [
-          "id",
-          "profession",
-          "experience[0].position",
+          "payment_from",
+          "town.title",
           "education[0].name",
-          "skills",
-          "salary_from"
+          "experience[0].firm_name",
+          "experience[0].position"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "invite_candidate",
-      "description_for_ai": "Invite a candidate to a vacancy on Superjob.",
+      "id": "search_vacancies",
+      "description_for_ai": "Search job vacancies on SuperJob.",
       "intent": [
-        "пригласить кандидата superjob",
-        "invite resume superjob"
+        "поиск вакансий SuperJob",
+        "вакансии",
+        "работа SuperJob",
+        "jobs SuperJob"
       ],
-      "endpoint": "POST https://api.superjob.ru/2.0/resumes/invite/",
+      "endpoint": "GET https://api.superjob.ru/2.0/vacancies/",
       "input": {
-        "resume_id": {
-          "type": "integer",
-          "required": true
-        },
-        "vacancy_id": {
-          "type": "integer",
-          "required": true
-        },
-        "text": {
+        "keyword": {
           "type": "string",
-          "description": "Invitation message text",
           "required": false
+        },
+        "town": {
+          "type": "integer",
+          "required": false
+        },
+        "payment_from": {
+          "type": "integer",
+          "required": false
+        },
+        "catalogues": {
+          "type": "integer",
+          "description": "Category ID",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
-        "type": "status",
+        "type": "list<vacancy>",
         "fields": [
-          "success (boolean)"
+          "objects[0].id",
+          "objects[0].profession",
+          "objects[0].firm_name",
+          "objects[0].town.title",
+          "objects[0].payment_from",
+          "objects[0].payment_to"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_vacancy",
+      "description_for_ai": "Get full job vacancy details from SuperJob.",
+      "intent": [
+        "вакансия SuperJob",
+        "описание вакансии",
+        "вакансия подробно",
+        "vacancy SuperJob"
+      ],
+      "endpoint": "GET https://api.superjob.ru/2.0/vacancies/{id}/",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "vacancy",
+        "fields": [
+          "id",
+          "profession",
+          "firm_name",
+          "payment_from",
+          "payment_to",
+          "town.title",
+          "work",
+          "candidat",
+          "vacancyRichText"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_catalogs",
+      "description_for_ai": "Get SuperJob occupation/industry catalogs for filtering.",
+      "intent": [
+        "каталоги SuperJob",
+        "отрасли SuperJob",
+        "профессии SuperJob",
+        "SuperJob categories"
+      ],
+      "endpoint": "GET https://api.superjob.ru/2.0/catalogues/",
+      "input": {},
+      "output": {
+        "type": "list<catalog>",
+        "fields": [
+          "[0].title_rus",
+          "[0].key",
+          "[0].positions[0].title",
+          "[0].positions[0].key"
         ]
       },
       "realtime": true,
