@@ -96,6 +96,109 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "get_standings",
+      "description_for_ai": "Get league standings from SportsData.io.",
+      "intent": [
+        "standings sportsdata",
+        "league table",
+        "sports standings",
+        "турнирная таблица sportsdata"
+      ],
+      "endpoint": "GET https://api.sportsdata.io/v3/{sport}/scores/json/Standings/{season}",
+      "input": {
+        "sport": {
+          "type": "string",
+          "description": "nfl, nba, nhl, mlb, soccer",
+          "required": true
+        },
+        "season": {
+          "type": "string",
+          "description": "Year e.g. 2024",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<standing>",
+        "fields": [
+          "[0].Name",
+          "[0].Wins",
+          "[0].Losses",
+          "[0].Percentage",
+          "[0].Conference"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_scores",
+      "description_for_ai": "Get live and historical game scores.",
+      "intent": [
+        "game scores sportsdata",
+        "live scores",
+        "match results",
+        "счёт матча sportsdata"
+      ],
+      "endpoint": "GET https://api.sportsdata.io/v3/{sport}/scores/json/GamesByDate/{date}",
+      "input": {
+        "sport": {
+          "type": "string",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<game>",
+        "fields": [
+          "[0].HomeTeam",
+          "[0].AwayTeam",
+          "[0].HomeScore",
+          "[0].AwayScore",
+          "[0].Status",
+          "[0].DateTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_player_stats",
+      "description_for_ai": "Get player statistics for a game or season.",
+      "intent": [
+        "player stats sportsdata",
+        "athlete stats",
+        "performance stats",
+        "статистика игрока sportsdata"
+      ],
+      "endpoint": "GET https://api.sportsdata.io/v3/{sport}/stats/json/PlayerGameStatsByDate/{date}",
+      "input": {
+        "sport": {
+          "type": "string",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<stat>",
+        "fields": [
+          "[0].Name",
+          "[0].Team",
+          "[0].Points",
+          "[0].Assists",
+          "[0].Rebounds"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
