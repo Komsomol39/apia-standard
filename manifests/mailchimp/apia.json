@@ -159,6 +159,45 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "create_campaign",
+      "description_for_ai": "Create an email campaign in Mailchimp (step 1 before sending).",
+      "intent": [
+        "create campaign mailchimp",
+        "email campaign",
+        "newsletter create",
+        "создать рассылку mailchimp"
+      ],
+      "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/campaigns",
+      "input": {
+        "type": {
+          "type": "string",
+          "description": "regular, plaintext, rss, variate",
+          "required": true
+        },
+        "recipients": {
+          "type": "object",
+          "description": "{list_id: 'AUDIENCE_ID'}",
+          "required": true
+        },
+        "settings": {
+          "type": "object",
+          "description": "{subject_line: 'Subject', from_name: 'Company', reply_to: 'reply@example.com'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "campaign",
+        "fields": [
+          "id",
+          "status",
+          "type",
+          "create_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
