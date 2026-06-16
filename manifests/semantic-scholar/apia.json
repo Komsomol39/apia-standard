@@ -24,12 +24,12 @@
   "capabilities": [
     {
       "id": "search_papers",
-      "description_for_ai": "Search 220M+ academic papers. Filter by year, field of study, open access.",
+      "description_for_ai": "Search 200M+ academic papers across all disciplines with AI-powered relevance.",
       "intent": [
-        "semantic scholar search",
-        "find paper",
-        "academic search S2",
-        "поиск статей semantic scholar"
+        "academic search",
+        "find papers",
+        "Semantic Scholar search",
+        "поиск научных статей"
       ],
       "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/search",
       "input": {
@@ -39,8 +39,8 @@
         },
         "fields": {
           "type": "string",
-          "description": "paperId,title,abstract,year,citationCount,authors,externalIds,openAccessPdf",
-          "default": "paperId,title,year,citationCount"
+          "description": "title,abstract,authors,year,citationCount,openAccessPdf,venue",
+          "default": "title,year,citationCount"
         },
         "limit": {
           "type": "integer",
@@ -49,21 +49,6 @@
         "offset": {
           "type": "integer",
           "default": 0
-        },
-        "year": {
-          "type": "string",
-          "description": "Year range: 2020-2024 or exact year 2023",
-          "required": false
-        },
-        "fieldsOfStudy": {
-          "type": "string",
-          "description": "Computer Science, Medicine, Biology, Physics",
-          "required": false
-        },
-        "openAccessPdf": {
-          "type": "boolean",
-          "description": "Only papers with free PDF",
-          "required": false
         }
       },
       "output": {
@@ -73,6 +58,7 @@
           "data[0].title",
           "data[0].year",
           "data[0].citationCount",
+          "data[0].openAccessPdf.url",
           "data[0].abstract"
         ]
       },
@@ -81,24 +67,24 @@
     },
     {
       "id": "get_paper",
-      "description_for_ai": "Get full paper details: abstract, authors, citations, references, PDF URL.",
+      "description_for_ai": "Get detailed information about a paper by its ID, DOI, or ArXiv ID.",
       "intent": [
-        "paper details S2",
-        "semantic scholar paper",
-        "citation data",
-        "детали статьи semantic scholar"
+        "paper details",
+        "paper info",
+        "research paper",
+        "детали статьи"
       ],
       "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/{paper_id}",
       "input": {
         "paper_id": {
           "type": "string",
-          "description": "S2 paper ID, DOI: DOI:10.1000/xyz, arXiv: ARXIV:2001.00001",
+          "description": "S2 ID, DOI (DOI:10.1038/...), or ArXiv ID (ARXIV:2303.08774)",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "paperId,title,abstract,authors,year,citationCount,references,citations,externalIds,openAccessPdf",
-          "default": "paperId,title,abstract,year,citationCount"
+          "description": "title,abstract,authors,year,citationCount,references,citations,openAccessPdf",
+          "required": false
         }
       },
       "output": {
@@ -107,6 +93,7 @@
           "paperId",
           "title",
           "abstract",
+          "authors[0].name",
           "year",
           "citationCount",
           "openAccessPdf.url"
@@ -116,48 +103,13 @@
       "requires_auth": false
     },
     {
-      "id": "get_citations",
-      "description_for_ai": "Get papers that cite a given paper.",
-      "intent": [
-        "paper citations S2",
-        "who cited this",
-        "citation list",
-        "кто цитирует статью"
-      ],
-      "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/{paper_id}/citations",
-      "input": {
-        "paper_id": {
-          "type": "string",
-          "required": true
-        },
-        "fields": {
-          "type": "string",
-          "default": "paperId,title,year,citationCount"
-        },
-        "limit": {
-          "type": "integer",
-          "default": 100
-        }
-      },
-      "output": {
-        "type": "citations",
-        "fields": [
-          "data[0].citingPaper.paperId",
-          "data[0].citingPaper.title",
-          "data[0].citingPaper.year"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
       "id": "get_author",
-      "description_for_ai": "Get researcher profile: papers, citations, h-index.",
+      "description_for_ai": "Get author profile: papers, h-index, citation count.",
       "intent": [
-        "researcher profile S2",
-        "author papers",
-        "h-index lookup",
-        "профиль исследователя semantic scholar"
+        "author profile",
+        "researcher info",
+        "scientist papers",
+        "профиль исследователя"
       ],
       "endpoint": "GET https://api.semanticscholar.org/graph/v1/author/{author_id}",
       "input": {
@@ -167,7 +119,8 @@
         },
         "fields": {
           "type": "string",
-          "default": "authorId,name,paperCount,citationCount,hIndex,affiliations"
+          "description": "name,paperCount,citationCount,hIndex,papers",
+          "default": "name,paperCount,citationCount,hIndex"
         }
       },
       "output": {
@@ -177,8 +130,118 @@
           "name",
           "paperCount",
           "citationCount",
-          "hIndex",
-          "affiliations[0].name"
+          "hIndex"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_citations",
+      "description_for_ai": "Get papers that cite a given paper.",
+      "intent": [
+        "paper citations",
+        "citing papers",
+        "who cited",
+        "цитирования статьи"
+      ],
+      "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/{paper_id}/citations",
+      "input": {
+        "paper_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "title,year,citationCount,authors",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "list<citation>",
+        "fields": [
+          "data[0].citingPaper.paperId",
+          "data[0].citingPaper.title",
+          "data[0].citingPaper.year",
+          "total (total count)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_references",
+      "description_for_ai": "Get papers referenced by a given paper.",
+      "intent": [
+        "paper references",
+        "paper bibliography",
+        "cited works",
+        "список литературы статьи"
+      ],
+      "endpoint": "GET https://api.semanticscholar.org/graph/v1/paper/{paper_id}/references",
+      "input": {
+        "paper_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "title,year,authors",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "list<reference>",
+        "fields": [
+          "data[0].citedPaper.paperId",
+          "data[0].citedPaper.title",
+          "data[0].citedPaper.year"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "batch_paper_details",
+      "description_for_ai": "Get details for up to 500 papers in a single request by paper IDs.",
+      "intent": [
+        "bulk papers",
+        "batch query papers",
+        "multiple papers at once",
+        "пакетный запрос статей"
+      ],
+      "endpoint": "POST https://api.semanticscholar.org/graph/v1/paper/batch",
+      "input": {
+        "ids": {
+          "type": "array",
+          "description": "Up to 500 paper IDs: ['DOI:...', 'ARXIV:...', 'S2PaperId']",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "title,year,citationCount,authors,abstract",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<paper>",
+        "fields": [
+          "[0].paperId",
+          "[0].title",
+          "[0].year",
+          "[0].citationCount"
         ]
       },
       "realtime": true,
