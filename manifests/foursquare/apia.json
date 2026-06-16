@@ -22,60 +22,194 @@
   },
   "capabilities": [
     {
-      "id": "place_search",
-      "description_for_ai": "Global POI database with 100M+ places. Business categories, hours, ratings, photos. Powers apps like Apple Maps, Snapchat, Uber. Use for finding nearby places, business info, check-ins. Search for places near coordinates by category or keyword. Returns name, address, hours, distance, rating.",
+      "id": "search_places",
+      "description_for_ai": "Search for nearby places, restaurants, and POIs using Foursquare Places API.",
       "intent": [
-        "places nearby",
-        "find restaurant",
-        "coffee shop near me",
-        "foursquare search",
-        "POI search"
+        "Foursquare places",
+        "find nearby",
+        "POI search",
+        "поиск мест Foursquare"
       ],
       "endpoint": "GET https://api.foursquare.com/v3/places/search",
       "input": {
-        "query": {
-          "type": "string",
-          "description": "Search term e.g. coffee, pizza, bank",
-          "required": false
-        },
         "ll": {
           "type": "string",
-          "description": "Latitude,Longitude e.g. 55.75,37.62",
+          "description": "lat,long center e.g. 40.7128,-74.0060",
           "required": false
         },
-        "radius": {
-          "type": "integer",
-          "description": "Search radius in meters (unless otherwise specified)",
-          "default": 500
+        "near": {
+          "type": "string",
+          "description": "Location name e.g. 'New York, NY'",
+          "required": false
+        },
+        "query": {
+          "type": "string",
+          "description": "Search term: coffee, pizza, museum",
+          "required": false
         },
         "categories": {
           "type": "string",
           "description": "Category IDs comma-separated",
           "required": false
         },
-        "open_now": {
-          "type": "boolean",
-          "description": "Filter to currently open places",
-          "required": false
+        "radius": {
+          "type": "integer",
+          "description": "Search radius in meters max 100000",
+          "default": 10000
         },
         "limit": {
           "type": "integer",
-          "default": 10,
-          "max": 50,
-          "description": "Maximum number of results to return"
+          "default": 10
         }
       },
       "output": {
         "type": "list<place>",
         "fields": [
-          "fsq_id",
+          "results[0].fsq_id",
+          "results[0].name",
+          "results[0].categories[0].name",
+          "results[0].location.formatted_address",
+          "results[0].distance"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_place_details",
+      "description_for_ai": "Get full details of a Foursquare place: hours, menu, rating, tips.",
+      "intent": [
+        "place details",
+        "business info Foursquare",
+        "restaurant info",
+        "детали места Foursquare"
+      ],
+      "endpoint": "GET https://api.foursquare.com/v3/places/{fsq_id}",
+      "input": {
+        "fsq_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "name,location,categories,hours,rating,price,photos,tips,popularity",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "place",
+        "fields": [
           "name",
-          "location.address",
-          "geocodes.main",
-          "categories",
-          "hours.open_now",
+          "location.formatted_address",
+          "hours.display",
           "rating",
-          "distance"
+          "price (1-4)",
+          "categories[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_autocomplete",
+      "description_for_ai": "Autocomplete place names for search inputs.",
+      "intent": [
+        "place autocomplete",
+        "search suggest",
+        "address complete",
+        "автодополнение мест Foursquare"
+      ],
+      "endpoint": "GET https://api.foursquare.com/v3/autocomplete",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "ll": {
+          "type": "string",
+          "description": "lat,long for location bias",
+          "required": false
+        },
+        "types": {
+          "type": "string",
+          "description": "place, geo, query",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<suggestion>",
+        "fields": [
+          "results[0].type",
+          "results[0].place.name",
+          "results[0].place.location.formatted_address"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_photos",
+      "description_for_ai": "Get photos for a Foursquare place.",
+      "intent": [
+        "place photos",
+        "restaurant photos",
+        "business pictures",
+        "фото места Foursquare"
+      ],
+      "endpoint": "GET https://api.foursquare.com/v3/places/{fsq_id}/photos",
+      "input": {
+        "fsq_id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<photo>",
+        "fields": [
+          "[0].prefix",
+          "[0].suffix",
+          "Construct URL: {prefix}original{suffix}"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_tips",
+      "description_for_ai": "Get user tips and reviews for a Foursquare place.",
+      "intent": [
+        "place reviews",
+        "tips Foursquare",
+        "user reviews",
+        "отзывы Foursquare"
+      ],
+      "endpoint": "GET https://api.foursquare.com/v3/places/{fsq_id}/tips",
+      "input": {
+        "fsq_id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "sort": {
+          "type": "string",
+          "description": "POPULAR or RECENT",
+          "default": "POPULAR"
+        }
+      },
+      "output": {
+        "type": "list<tip>",
+        "fields": [
+          "[0].id",
+          "[0].text",
+          "[0].created_at",
+          "[0].agrees_count"
         ]
       },
       "realtime": true,
