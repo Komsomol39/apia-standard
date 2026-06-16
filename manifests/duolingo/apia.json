@@ -21,13 +21,13 @@
   },
   "capabilities": [
     {
-      "id": "get_user_profile",
-      "description_for_ai": "Get Duolingo user profile: streak, XP, leagues, languages.",
+      "id": "get_user_info",
+      "description_for_ai": "Get Duolingo user profile: XP, streak, languages, courses.",
       "intent": [
-        "duolingo profile",
-        "duolingo user stats",
-        "language learning stats",
-        "профиль duolingo"
+        "Duolingo profile",
+        "user stats Duolingo",
+        "XP Duolingo",
+        "профиль Duolingo"
       ],
       "endpoint": "GET https://www.duolingo.com/2017-06-30/users/{userId}",
       "input": {
@@ -35,46 +35,52 @@
           "type": "integer",
           "description": "Duolingo user ID",
           "required": true
-        },
-        "fields": {
-          "type": "string",
-          "description": "Comma-separated fields: streak,courses,xpGains,leaderboardLeague,lingots,gems,totalXp",
-          "required": false
         }
       },
       "output": {
-        "type": "profile",
+        "type": "user",
         "fields": [
+          "id",
           "username",
+          "name",
           "streak",
           "totalXp",
-          "courses[0].title",
+          "courses[0].learningLanguage",
           "courses[0].xp",
-          "learningLanguage",
-          "fromLanguage"
+          "courses[0].crowns"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_courses",
-      "description_for_ai": "Get all available Duolingo courses (language pairs).",
+      "id": "get_streak",
+      "description_for_ai": "Get Duolingo user streak calendar and current streak.",
       "intent": [
-        "duolingo courses",
-        "available languages duolingo",
-        "language courses",
-        "курсы duolingo"
+        "Duolingo streak",
+        "daily streak",
+        "learning streak",
+        "серия Duolingo"
       ],
-      "endpoint": "GET https://www.duolingo.com/api/1/store/get_items?_=",
-      "input": {},
+      "endpoint": "GET https://www.duolingo.com/2017-06-30/users/{userId}/xp_summaries",
+      "input": {
+        "userId": {
+          "type": "integer",
+          "required": true
+        },
+        "startDate": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        }
+      },
       "output": {
-        "type": "list<course>",
+        "type": "streak",
         "fields": [
-          "courses[0].title",
-          "courses[0].learning_language",
-          "courses[0].from_language",
-          "courses[0].num_learners"
+          "streakData.currentStreak.length",
+          "streakData.currentStreak.startDate",
+          "xpSummaries[0].date",
+          "xpSummaries[0].gainedXp"
         ]
       },
       "realtime": true,
@@ -82,14 +88,14 @@
     },
     {
       "id": "get_leaderboard",
-      "description_for_ai": "Get Duolingo weekly XP leaderboard for a user's league.",
+      "description_for_ai": "Get the Duolingo weekly XP leaderboard (friends or global).",
       "intent": [
-        "duolingo leaderboard",
+        "Duolingo leaderboard",
+        "weekly ranking",
         "XP ranking",
-        "league standings",
-        "рейтинг duolingo"
+        "лидерборд Duolingo"
       ],
-      "endpoint": "GET https://duolingo-leaderboards-prod.duolingo.com/users/{userId}/leaderboards/7d7d7d7d-7d7d-7d7d-7d7d-7d7d7d7d7d7d/",
+      "endpoint": "GET https://duolingo-leaderboards-prod.duolingo.com/leaderboards/7d9f5dd1-8423-491a-91f2-2532052038ce/users/{userId}",
       "input": {
         "userId": {
           "type": "string",
@@ -99,70 +105,60 @@
       "output": {
         "type": "leaderboard",
         "fields": [
-          "active_cohort.rankings[0].user_id",
-          "active_cohort.rankings[0].score",
-          "active_cohort.rankings[0].rank"
+          "active[0].display_name",
+          "active[0].score",
+          "active[0].rank"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_users",
-      "description_for_ai": "Search for Duolingo users by username.",
+      "id": "get_courses",
+      "description_for_ai": "Get all available Duolingo language courses.",
       "intent": [
-        "find duolingo user",
-        "search duolingo",
-        "duolingo username lookup",
-        "найти пользователя duolingo"
+        "Duolingo courses",
+        "available languages Duolingo",
+        "language courses",
+        "курсы Duolingo"
       ],
-      "endpoint": "GET https://www.duolingo.com/users/{username}",
-      "input": {
-        "username": {
-          "type": "string",
-          "required": true
-        }
-      },
+      "endpoint": "GET https://www.duolingo.com/api/1/version_info",
+      "input": {},
       "output": {
-        "type": "profile",
+        "type": "list<course>",
         "fields": [
-          "id",
-          "username",
-          "streak",
-          "totalXp",
-          "courses[0].title",
-          "bio"
+          "supported_directions[0].learning_language_name",
+          "supported_directions[0].from_language_name",
+          "supported_directions[0].course_id"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_daily_xp",
-      "description_for_ai": "Get daily XP history for a Duolingo user.",
+      "id": "get_user_friends",
+      "description_for_ai": "Get a Duolingo user's friends/followers list.",
       "intent": [
-        "duolingo XP history",
-        "daily progress duolingo",
-        "XP per day",
-        "прогресс duolingo"
+        "Duolingo friends",
+        "Duolingo followers",
+        "following Duolingo",
+        "друзья Duolingo"
       ],
-      "endpoint": "GET https://www.duolingo.com/2017-06-30/users/{userId}",
+      "endpoint": "GET https://www.duolingo.com/2017-06-30/users/{userId}/friends",
       "input": {
         "userId": {
           "type": "integer",
           "required": true
-        },
-        "fields": {
-          "type": "string",
-          "default": "xpGains"
         }
       },
       "output": {
-        "type": "xp_history",
+        "type": "list<friend>",
         "fields": [
-          "xpGains[0].gainedXp",
-          "xpGains[0].time",
-          "xpGains[0].skillId"
+          "users[0].userId",
+          "users[0].name",
+          "users[0].username",
+          "users[0].weeklyXp",
+          "users[0].streak"
         ]
       },
       "realtime": true,
