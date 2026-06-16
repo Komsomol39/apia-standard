@@ -22,48 +22,118 @@
   },
   "capabilities": [
     {
-      "id": "generate_image",
-      "description_for_ai": "Generate images with Stable Image Core or SD3. Text-to-image with style presets.",
+      "id": "generate_image_core",
+      "description_for_ai": "Generate images with Stable Image Core — fastest Stability AI model. Great for concepts and prototypes.",
       "intent": [
-        "stable diffusion",
-        "image generation stability",
-        "SD3 generate",
-        "генерация stability AI"
+        "Stability AI image",
+        "stable diffusion API",
+        "image generation",
+        "генерация изображений Stability AI"
       ],
       "endpoint": "POST https://api.stability.ai/v2beta/stable-image/generate/core",
       "input": {
         "prompt": {
           "type": "string",
-          "description": "Image description",
+          "description": "Image generation prompt. Be detailed: subject, style, lighting, composition.",
           "required": true
         },
         "negative_prompt": {
           "type": "string",
-          "description": "Things to avoid in image",
+          "description": "Elements to exclude: 'blurry, low quality, ugly'",
           "required": false
-        },
-        "style_preset": {
-          "type": "string",
-          "description": "3d-model, analog-film, anime, cinematic, comic-book, digital-art, enhance, fantasy-art, isometric, line-art, low-poly, modeling-compound, neon-punk, origami, photographic, pixel-art, tile-texture",
-          "required": false
-        },
-        "output_format": {
-          "type": "string",
-          "description": "webp, jpeg, png",
-          "default": "webp"
         },
         "aspect_ratio": {
           "type": "string",
           "description": "16:9, 1:1, 21:9, 2:3, 3:2, 4:5, 5:4, 9:16, 9:21",
           "default": "1:1"
+        },
+        "output_format": {
+          "type": "string",
+          "description": "jpeg, png, webp",
+          "default": "jpeg"
+        },
+        "seed": {
+          "type": "integer",
+          "description": "0 for random, or specific seed for reproducibility",
+          "default": 0
         }
       },
       "output": {
         "type": "image",
         "fields": [
-          "image (base64)",
-          "finish_reason",
-          "seed"
+          "image (base64 or binary)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_image_ultra",
+      "description_for_ai": "Generate photorealistic images with Stable Image Ultra — highest quality Stability AI model.",
+      "intent": [
+        "photorealistic AI",
+        "high quality image generation",
+        "Stable Image Ultra",
+        "фотореалистичные изображения AI"
+      ],
+      "endpoint": "POST https://api.stability.ai/v2beta/stable-image/generate/ultra",
+      "input": {
+        "prompt": {
+          "type": "string",
+          "required": true
+        },
+        "negative_prompt": {
+          "type": "string",
+          "required": false
+        },
+        "aspect_ratio": {
+          "type": "string",
+          "default": "1:1"
+        },
+        "output_format": {
+          "type": "string",
+          "default": "png"
+        },
+        "seed": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "image binary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "remove_background",
+      "description_for_ai": "Remove background from images with one-click AI precision.",
+      "intent": [
+        "remove background",
+        "background removal",
+        "cut out object",
+        "удаление фона AI"
+      ],
+      "endpoint": "POST https://api.stability.ai/v2beta/stable-image/edit/remove-background",
+      "input": {
+        "image": {
+          "type": "file",
+          "description": "Source image (JPEG, PNG, WEBP, max 50MP, max 10MB)",
+          "required": true
+        },
+        "output_format": {
+          "type": "string",
+          "description": "webp (transparent), png (transparent), jpeg",
+          "default": "png"
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "image binary (PNG with alpha channel)"
         ]
       },
       "realtime": true,
@@ -71,118 +141,118 @@
     },
     {
       "id": "upscale_image",
-      "description_for_ai": "Upscale image 4x with AI. Adds detail and sharpness. Conservative mode for photography, creative for artistic upscaling.",
+      "description_for_ai": "Upscale and enhance images up to 4x resolution with AI. Fast or creative mode.",
       "intent": [
         "upscale image",
-        "increase resolution",
-        "4x upscale",
-        "image enhancement",
-        "увеличить разрешение stability"
+        "increase resolution AI",
+        "enhance image",
+        "увеличить разрешение изображения AI"
       ],
       "endpoint": "POST https://api.stability.ai/v2beta/stable-image/upscale/conservative",
       "input": {
         "image": {
           "type": "file",
-          "description": "Image to upscale (PNG/JPEG/WEBP)",
+          "description": "Source image to upscale",
           "required": true
         },
         "prompt": {
           "type": "string",
-          "description": "Description to guide upscaling detail generation",
-          "required": true
-        },
-        "negative_prompt": {
-          "type": "string",
+          "description": "Guide enhancement with text prompt",
           "required": false
-        },
-        "creativity": {
-          "type": "float",
-          "description": "0-1 creative vs conservative upscaling",
-          "default": 0.3
-        }
-      },
-      "output": {
-        "type": "image",
-        "fields": [
-          "image (base64)"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "remove_background",
-      "description_for_ai": "Automatically remove image background. Returns PNG with transparent background.",
-      "intent": [
-        "remove background",
-        "transparent background",
-        "cut out background",
-        "background removal",
-        "убрать фон stability"
-      ],
-      "endpoint": "POST https://api.stability.ai/v2beta/stable-image/edit/remove-background",
-      "input": {
-        "image": {
-          "type": "file",
-          "description": "Image with background to remove (PNG/JPEG/WEBP)",
-          "required": true
         },
         "output_format": {
           "type": "string",
-          "description": "png (preserves transparency) or webp",
           "default": "png"
         }
       },
       "output": {
         "type": "image",
         "fields": [
-          "image (base64 PNG with transparency)"
+          "image binary (upscaled)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "image_to_image",
-      "description_for_ai": "Edit an existing image guided by a text prompt. Change style, add elements, modify content.",
+      "id": "inpaint",
+      "description_for_ai": "Edit specific areas of an image using a mask. Paint over unwanted objects or add new elements.",
       "intent": [
-        "edit image stability",
-        "image to image",
-        "image editing AI",
-        "редактировать изображение stability"
+        "inpaint image",
+        "edit image region",
+        "remove object AI",
+        "редактирование области изображения"
       ],
       "endpoint": "POST https://api.stability.ai/v2beta/stable-image/edit/inpaint",
       "input": {
         "image": {
           "type": "file",
-          "description": "Original image",
+          "description": "Source image",
           "required": true
         },
         "prompt": {
           "type": "string",
+          "description": "What to generate in the masked area",
           "required": true
         },
         "mask": {
           "type": "file",
-          "description": "Mask image (white=edit area, black=keep). If omitted, auto-generates mask.",
-          "required": false
-        },
-        "negative_prompt": {
-          "type": "string",
+          "description": "Grayscale mask — white=edit, black=keep",
           "required": false
         },
         "output_format": {
           "type": "string",
-          "default": "webp"
+          "default": "png"
         }
       },
       "output": {
         "type": "image",
         "fields": [
-          "image (base64)"
+          "image binary"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "image_to_video",
+      "description_for_ai": "Animate a still image into a short video (2-4s) with Stable Video Diffusion.",
+      "intent": [
+        "image to video",
+        "animate image AI",
+        "video generation Stability",
+        "анимация изображения AI"
+      ],
+      "endpoint": "POST https://api.stability.ai/v2beta/image-to-video",
+      "input": {
+        "image": {
+          "type": "file",
+          "description": "Source image (768x768 or 1024x576 for 16:9)",
+          "required": true
+        },
+        "seed": {
+          "type": "integer",
+          "default": 0
+        },
+        "cfg_scale": {
+          "type": "float",
+          "description": "How closely to follow the image 0-10",
+          "default": 1.8
+        },
+        "motion_bucket_id": {
+          "type": "integer",
+          "description": "Motion amount 1-255, higher=more motion",
+          "default": 127
+        }
+      },
+      "output": {
+        "type": "video",
+        "fields": [
+          "id (generation ID)",
+          "video binary after polling"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
