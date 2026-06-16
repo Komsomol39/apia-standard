@@ -22,32 +22,40 @@
   },
   "capabilities": [
     {
-      "id": "get_property_details",
-      "description_for_ai": "Get full property details by APN or address: beds, baths, sqft, year built.",
+      "id": "property_detail",
+      "description_for_ai": "Get full property details by address or AVM ID: beds, baths, sqft, year built.",
       "intent": [
-        "attom property",
-        "property data attom",
-        "home details",
-        "данные недвижимости attom"
+        "property details ATTOM",
+        "home info",
+        "real estate data",
+        "данные о недвижимости ATTOM"
       ],
       "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/detail",
       "input": {
         "address1": {
           "type": "string",
-          "required": true
+          "description": "Street address: 4529 Winona Court",
+          "required": false
         },
         "address2": {
           "type": "string",
-          "required": true
+          "description": "City, state, zip: Denver CO 80212",
+          "required": false
+        },
+        "attomid": {
+          "type": "integer",
+          "description": "ATTOM property ID (alternative to address)",
+          "required": false
         }
       },
       "output": {
         "type": "property",
         "fields": [
           "property[0].identifier.attomId",
-          "property[0].summary.proptype",
+          "property[0].address.line1",
           "property[0].building.rooms.beds",
-          "property[0].building.size.bldgsize",
+          "property[0].building.rooms.bathsfull",
+          "property[0].building.size.livingsize",
           "property[0].summary.yearbuilt"
         ]
       },
@@ -55,80 +63,25 @@
       "requires_auth": true
     },
     {
-      "id": "get_sales_history",
-      "description_for_ai": "Get property sales history: sale dates and prices.",
+      "id": "property_search",
+      "description_for_ai": "Search properties in a ZIP code or city with ATTOM.",
       "intent": [
-        "property sales history",
-        "attom sales",
-        "home sale history",
-        "история продаж недвижимости"
+        "property search ATTOM",
+        "homes in area",
+        "real estate search",
+        "поиск недвижимости ATTOM"
       ],
-      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/saleshistory/basichistory",
-      "input": {
-        "address1": {
-          "type": "string",
-          "required": true
-        },
-        "address2": {
-          "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "list<sale>",
-        "fields": [
-          "property[0].salehistory[0].amount.saleamt",
-          "property[0].salehistory[0].saleTransDate"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_avm",
-      "description_for_ai": "Get Automated Valuation Model (AVM) estimate for a property.",
-      "intent": [
-        "home value estimate",
-        "AVM attom",
-        "property value",
-        "оценка стоимости дома"
-      ],
-      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/valuation/detail",
-      "input": {
-        "address1": {
-          "type": "string",
-          "required": true
-        },
-        "address2": {
-          "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "valuation",
-        "fields": [
-          "property[0].avm.amount.value",
-          "property[0].avm.amount.high",
-          "property[0].avm.amount.low"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "search_properties",
-      "description_for_ai": "Search properties by city and zip code in ATTOM.",
-      "intent": [
-        "search attom properties",
-        "find homes attom",
-        "property search by zip",
-        "поиск недвижимости attom"
-      ],
-      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/basicprofile",
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/address",
       "input": {
         "postalcode": {
           "type": "string",
-          "required": true
+          "description": "ZIP code",
+          "required": false
+        },
+        "address2": {
+          "type": "string",
+          "description": "City State: Austin TX",
+          "required": false
         },
         "page": {
           "type": "integer",
@@ -136,43 +89,124 @@
         },
         "pagesize": {
           "type": "integer",
-          "default": 20
+          "default": 10
         }
       },
       "output": {
         "type": "list<property>",
         "fields": [
-          "property[0].identifier.attomId",
           "property[0].address.line1",
+          "property[0].address.postal1",
           "property[0].building.rooms.beds",
-          "property[0].building.size.bldgsize"
+          "property[0].identifier.attomId"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_neighborhood_stats",
-      "description_for_ai": "Get neighborhood-level statistics from ATTOM for a ZIP code.",
+      "id": "avm_detail",
+      "description_for_ai": "Get automated valuation (AVM) estimate for a property.",
       "intent": [
-        "neighborhood data attom",
-        "area stats",
-        "zip code stats",
-        "статистика района attom"
+        "property value ATTOM",
+        "home value estimate",
+        "AVM real estate",
+        "оценка недвижимости ATTOM"
       ],
-      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/area/full",
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/attomavm/detail",
       "input": {
-        "postalcode": {
+        "address1": {
           "type": "string",
-          "required": true
+          "required": false
+        },
+        "address2": {
+          "type": "string",
+          "required": false
+        },
+        "attomid": {
+          "type": "integer",
+          "required": false
         }
       },
       "output": {
-        "type": "neighborhood",
+        "type": "avm",
         "fields": [
-          "area.community.medSalePrice",
-          "area.community.avgBldgSize",
-          "area.community.medSchoolRating"
+          "property[0].avm.amount.value",
+          "property[0].avm.amount.high",
+          "property[0].avm.amount.low",
+          "property[0].avm.eventdate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "sales_history",
+      "description_for_ai": "Get sales transaction history for a property.",
+      "intent": [
+        "property sales history",
+        "transaction history",
+        "home sold prices",
+        "история продаж ATTOM"
+      ],
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/saleshistory/detail",
+      "input": {
+        "address1": {
+          "type": "string",
+          "required": false
+        },
+        "address2": {
+          "type": "string",
+          "required": false
+        },
+        "attomid": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "sales_history",
+        "fields": [
+          "property[0].salehistory[0].amount.saleamt",
+          "property[0].salehistory[0].saleTransDate",
+          "property[0].salehistory[0].calculation.priceperbed"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "community_profile",
+      "description_for_ai": "Get neighborhood/community profile: schools, crime, demographics.",
+      "intent": [
+        "neighborhood data",
+        "community profile",
+        "schools near property",
+        "район недвижимости ATTOM"
+      ],
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/neighborhood/community",
+      "input": {
+        "address1": {
+          "type": "string",
+          "required": false
+        },
+        "address2": {
+          "type": "string",
+          "required": false
+        },
+        "radius": {
+          "type": "number",
+          "description": "Miles radius",
+          "default": 3.0
+        }
+      },
+      "output": {
+        "type": "community",
+        "fields": [
+          "commV2[0].School[0].Name",
+          "commV2[0].School[0].Rating",
+          "commV2[0].CrimeIndex",
+          "commV2[0].MedianHouseValue"
         ]
       },
       "realtime": true,
