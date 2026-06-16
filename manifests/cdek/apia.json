@@ -201,6 +201,48 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "calculate_tariff",
+      "description_for_ai": "Calculate СДЭК delivery cost between cities with package parameters.",
+      "intent": [
+        "тариф СДЭК",
+        "стоимость доставки СДЭК",
+        "расчёт СДЭК"
+      ],
+      "endpoint": "POST https://api.cdek.ru/v2/calculator/tariff",
+      "input": {
+        "tariff_code": {
+          "type": "integer",
+          "description": "136=до двери, 137=до склада, 368=посылка стандарт",
+          "required": true
+        },
+        "from_location": {
+          "type": "object",
+          "description": "{postal_code: '101000'} or {city: 'Москва'}",
+          "required": true
+        },
+        "to_location": {
+          "type": "object",
+          "required": true
+        },
+        "packages": {
+          "type": "array",
+          "description": "[{weight: 1000, height: 10, width: 10, length: 10}] weight in grams",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "tariff",
+        "fields": [
+          "total_sum",
+          "period_min",
+          "period_max",
+          "currency"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
