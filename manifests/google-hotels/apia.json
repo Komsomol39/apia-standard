@@ -124,6 +124,142 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_hotels",
+      "description_for_ai": "Search hotels on Google Hotels via SerpAPI.",
+      "intent": [
+        "hotel search google",
+        "find hotels google",
+        "отели google",
+        "поиск отелей"
+      ],
+      "endpoint": "GET https://serpapi.com/search.json",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "google_hotels"
+        },
+        "q": {
+          "type": "string",
+          "description": "Hotel search: 'hotels in Paris' or 'Marriott NYC'",
+          "required": true
+        },
+        "check_in_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "check_out_date": {
+          "type": "string",
+          "required": true
+        },
+        "adults": {
+          "type": "integer",
+          "default": 2
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        }
+      },
+      "output": {
+        "type": "list<hotel>",
+        "fields": [
+          "properties[0].name",
+          "properties[0].rate_per_night.lowest",
+          "properties[0].overall_rating",
+          "properties[0].reviews",
+          "properties[0].type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_hotel_details",
+      "description_for_ai": "Get details of a specific hotel including amenities and room types.",
+      "intent": [
+        "hotel details",
+        "hotel amenities",
+        "hotel rooms",
+        "детали отеля"
+      ],
+      "endpoint": "GET https://serpapi.com/search.json",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "google_hotels"
+        },
+        "property_token": {
+          "type": "string",
+          "description": "Hotel property token from search results",
+          "required": true
+        },
+        "check_in_date": {
+          "type": "string",
+          "required": true
+        },
+        "check_out_date": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "hotel",
+        "fields": [
+          "hotel.name",
+          "hotel.description",
+          "hotel.amenities",
+          "hotel.reviews_breakdown"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "compare_hotel_prices",
+      "description_for_ai": "Compare hotel prices across booking sites.",
+      "intent": [
+        "compare hotel prices",
+        "best hotel price",
+        "hotel deals",
+        "сравнить цены отель"
+      ],
+      "endpoint": "GET https://serpapi.com/search.json",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "google_hotels"
+        },
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "check_in_date": {
+          "type": "string",
+          "required": true
+        },
+        "check_out_date": {
+          "type": "string",
+          "required": true
+        },
+        "sort_by": {
+          "type": "integer",
+          "description": "3=lowest price",
+          "default": 3
+        }
+      },
+      "output": {
+        "type": "list<hotel>",
+        "fields": [
+          "properties[0].name",
+          "properties[0].rate_per_night.lowest",
+          "properties[0].link"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
