@@ -172,6 +172,35 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_index_by_address",
+      "description_for_ai": "Get postal code (index) for a Russian address.",
+      "intent": [
+        "почтовый индекс",
+        "индекс по адресу",
+        "postal code Russia"
+      ],
+      "endpoint": "https://otpravka-api.pochta.ru/1.0/clean/address",
+      "input": {
+        "original-address": {
+          "type": "string",
+          "description": "Russian address string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "index",
+          "region",
+          "place",
+          "street",
+          "house"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
