@@ -21,48 +21,224 @@
   },
   "capabilities": [
     {
-      "id": "search_contacts",
-      "description_for_ai": "Enterprise B2B data platform. 100M+ business professionals, 20M+ companies with org charts, technographic data, buying intent signals. Most comprehensive B2B database. Enterprise sales intelligence. Search B2B contacts with advanced filters: job function, level, company size, revenue, technology used.",
+      "id": "search_companies",
+      "description_for_ai": "Search ZoomInfo B2B company database by name, industry, or size.",
       "intent": [
-        "B2B contacts",
-        "enterprise leads",
-        "executive contacts",
-        "enterprise prospecting",
-        "company directory"
+        "zoominfo companies",
+        "B2B company search",
+        "company database",
+        "поиск компаний zoominfo"
+      ],
+      "endpoint": "POST https://api.zoominfo.com/search/company",
+      "input": {
+        "companyName": {
+          "type": "string",
+          "required": false
+        },
+        "industryKeywords": {
+          "type": "array",
+          "description": "Industry filter: ['SaaS', 'FinTech', 'Healthcare']",
+          "required": false
+        },
+        "employeeCount": {
+          "type": "object",
+          "description": "{min: 100, max: 1000}",
+          "required": false
+        },
+        "revenue": {
+          "type": "object",
+          "description": "{min: 1000000, max: 50000000}",
+          "required": false
+        },
+        "rpp": {
+          "type": "integer",
+          "description": "Results per page",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<company>",
+        "fields": [
+          "data[0].id",
+          "data[0].name",
+          "data[0].revenue",
+          "data[0].employeeCount",
+          "data[0].industry",
+          "data[0].website",
+          "data[0].city"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_contacts",
+      "description_for_ai": "Search ZoomInfo for B2B contacts by name, title, or company.",
+      "intent": [
+        "zoominfo contacts",
+        "B2B leads",
+        "contact database",
+        "контакты B2B zoominfo"
       ],
       "endpoint": "POST https://api.zoominfo.com/search/contact",
       "input": {
-        "rpp": {
-          "type": "integer",
-          "description": "Records per page",
-          "default": 25
-        },
-        "jobFunction": {
-          "type": "array",
-          "description": "Function: Finance, Engineering, Marketing, Sales, HR",
+        "firstName": {
+          "type": "string",
           "required": false
         },
-        "managementLevel": {
-          "type": "array",
-          "description": "C-Suite, VP, Director, Manager",
+        "lastName": {
+          "type": "string",
           "required": false
         },
-        "companyRevenue": {
+        "jobTitles": {
           "type": "array",
-          "description": "Revenue ranges",
+          "description": "['CEO', 'CTO', 'VP of Sales']",
+          "required": false
+        },
+        "companyName": {
+          "type": "string",
+          "required": false
+        },
+        "departments": {
+          "type": "array",
+          "description": "['Engineering', 'Sales', 'Marketing']",
           "required": false
         }
       },
       "output": {
         "type": "list<contact>",
         "fields": [
+          "data[0].id",
+          "data[0].firstName",
+          "data[0].lastName",
+          "data[0].jobTitle",
+          "data[0].email",
+          "data[0].company.name",
+          "data[0].phone"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_company_profile",
+      "description_for_ai": "Get full ZoomInfo company profile by ID.",
+      "intent": [
+        "company profile zoominfo",
+        "company details B2B",
+        "company enrichment",
+        "профиль компании zoominfo"
+      ],
+      "endpoint": "POST https://api.zoominfo.com/enrich/company",
+      "input": {
+        "companyId": {
+          "type": "integer",
+          "required": false
+        },
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "url": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "id",
+          "name",
+          "revenue",
+          "employees",
+          "industry",
+          "website",
+          "description",
+          "techUsed",
+          "fundingHistory[0].amount",
+          "competitors[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_contact_profile",
+      "description_for_ai": "Enrich a contact record with ZoomInfo data (email, phone, title).",
+      "intent": [
+        "enrich contact zoominfo",
+        "contact email zoominfo",
+        "B2B email lookup",
+        "обогащение контакта zoominfo"
+      ],
+      "endpoint": "POST https://api.zoominfo.com/enrich/contact",
+      "input": {
+        "firstName": {
+          "type": "string",
+          "required": false
+        },
+        "lastName": {
+          "type": "string",
+          "required": false
+        },
+        "email": {
+          "type": "string",
+          "required": false
+        },
+        "companyName": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "contact",
+        "fields": [
+          "id",
           "firstName",
           "lastName",
-          "emailAddress",
-          "phone",
           "jobTitle",
-          "companyName",
-          "companyRevenue"
+          "email",
+          "phone",
+          "linkedInUrl",
+          "company.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_technographics",
+      "description_for_ai": "Get technology stack used by a company from ZoomInfo.",
+      "intent": [
+        "company tech stack",
+        "technographics zoominfo",
+        "technologies used",
+        "технологии компании zoominfo"
+      ],
+      "endpoint": "POST https://api.zoominfo.com/enrich/company",
+      "input": {
+        "companyId": {
+          "type": "integer",
+          "required": false
+        },
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "outputFields": {
+          "type": "array",
+          "description": "['techUsed']",
+          "default": [
+            "techUsed"
+          ]
+        }
+      },
+      "output": {
+        "type": "technographics",
+        "fields": [
+          "techUsed[0].name",
+          "techUsed[0].category",
+          "techUsed[0].vendor"
         ]
       },
       "realtime": true,
