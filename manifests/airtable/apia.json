@@ -181,6 +181,41 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_records",
+      "description_for_ai": "Search records in Airtable table by formula, keyword or field value.",
+      "intent": [
+        "search airtable",
+        "find record airtable",
+        "filter records",
+        "поиск airtable"
+      ],
+      "endpoint": "GET https://api.airtable.com/v0/{baseId}/{tableName}",
+      "input": {
+        "baseId": {
+          "type": "string",
+          "required": true
+        },
+        "tableName": {
+          "type": "string",
+          "required": true
+        },
+        "filterByFormula": {
+          "type": "string",
+          "description": "Filter formula: SEARCH('keyword', {Name}), OR({Status}='Done', {Status}='Active')",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<record>",
+        "fields": [
+          "records[0].id",
+          "records[0].fields"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
