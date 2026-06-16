@@ -22,70 +22,161 @@
   },
   "capabilities": [
     {
-      "id": "check_email",
-      "description_for_ai": "Check if an email address was found in any known data breach. Returns list of breaches.",
+      "id": "check_email_breach",
+      "description_for_ai": "Check if an email address has appeared in known data breaches.",
       "intent": [
-        "email breach",
-        "was email hacked",
-        "data breach check",
-        "is email compromised",
-        "security check",
-        "взломан ли аккаунт"
+        "check email breach",
+        "has email been hacked",
+        "HIBP check",
+        "проверить утечку email"
       ],
-      "endpoint": "GET https://haveibeenpwned.com/api/v3/breachedaccount/{email}",
+      "endpoint": "GET https://haveibeenpwned.com/api/v3/breachedaccount/{account}",
       "input": {
-        "email": {
+        "account": {
           "type": "string",
           "description": "Email address to check",
           "required": true
         },
         "truncateResponse": {
           "type": "boolean",
-          "description": "Return only breach names if true",
+          "description": "Return only breach names (no details)",
+          "default": true
+        },
+        "includeUnverified": {
+          "type": "boolean",
           "default": false
         }
       },
       "output": {
         "type": "list<breach>",
         "fields": [
-          "Name",
-          "Title",
-          "Domain",
-          "BreachDate",
-          "AddedDate",
-          "DataClasses",
-          "IsVerified"
+          "[0].Name",
+          "[0].Domain (if truncateResponse=false)",
+          "[0].BreachDate (if truncateResponse=false)",
+          "[0].PwnCount (if truncateResponse=false)"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "check_password",
-      "description_for_ai": "Check if a password has appeared in any data breach. Uses k-anonymity — only sends first 5 chars of SHA-1 hash, never the full password.",
+      "id": "get_breach_details",
+      "description_for_ai": "Get detailed information about a specific data breach.",
       "intent": [
-        "password breach",
-        "is password safe",
-        "check password",
-        "compromised password",
-        "password security"
+        "breach details HIBP",
+        "data breach info",
+        "hack details",
+        "детали утечки данных"
       ],
-      "endpoint": "GET https://api.pwnedpasswords.com/range/{hash_prefix}",
+      "endpoint": "GET https://haveibeenpwned.com/api/v3/breach/{name}",
       "input": {
-        "hash_prefix": {
+        "name": {
           "type": "string",
-          "description": "First 5 chars of SHA-1 hash of password",
+          "description": "Breach name e.g. Adobe, LinkedIn, Dropbox",
           "required": true
         }
       },
       "output": {
-        "type": "hash_suffixes",
+        "type": "breach",
         "fields": [
-          "HASH_SUFFIX:COUNT"
+          "Name",
+          "Domain",
+          "BreachDate",
+          "PwnCount",
+          "Description",
+          "DataClasses",
+          "IsVerified",
+          "IsFabricated"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_all_breaches",
+      "description_for_ai": "Get list of all known data breaches in the HIBP database.",
+      "intent": [
+        "all breaches",
+        "known data breaches",
+        "breach database",
+        "список утечек данных"
+      ],
+      "endpoint": "GET https://haveibeenpwned.com/api/v3/breaches",
+      "input": {
+        "domain": {
+          "type": "string",
+          "description": "Filter by domain e.g. adobe.com",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<breach>",
+        "fields": [
+          "[0].Name",
+          "[0].Domain",
+          "[0].BreachDate",
+          "[0].PwnCount",
+          "[0].DataClasses"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "check_password",
+      "description_for_ai": "Check if a password has appeared in data breaches using k-anonymity (safe — only first 5 chars of SHA1 sent).",
+      "intent": [
+        "check password breach",
+        "is password leaked",
+        "password check HIBP",
+        "проверить пароль на утечку"
+      ],
+      "endpoint": "GET https://api.pwnedpasswords.com/range/{hashPrefix}",
+      "input": {
+        "hashPrefix": {
+          "type": "string",
+          "description": "First 5 characters of SHA1 hash of the password (k-anonymity model — original password never sent)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<hash_suffix>",
+        "fields": [
+          "HASH_SUFFIX:COUNT (count=how many times seen in breaches)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "check_pastebin_leaks",
+      "description_for_ai": "Check if an email appears in paste (Pastebin, GitHub) leaks.",
+      "intent": [
+        "pastebin leak",
+        "email in pastebin",
+        "paste leak HIBP",
+        "утечка в pastebin"
+      ],
+      "endpoint": "GET https://haveibeenpwned.com/api/v3/pasteaccount/{account}",
+      "input": {
+        "account": {
+          "type": "string",
+          "description": "Email address to check",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<paste>",
+        "fields": [
+          "[0].Source",
+          "[0].Id",
+          "[0].Title",
+          "[0].Date",
+          "[0].EmailCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
