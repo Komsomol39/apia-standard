@@ -21,19 +21,19 @@
   },
   "capabilities": [
     {
-      "id": "get_search_analytics",
-      "description_for_ai": "Get Google Search Console analytics: clicks, impressions, CTR, average position.",
+      "id": "query_search_analytics",
+      "description_for_ai": "Get Google Search Console click, impression, CTR, position data by query, page, country.",
       "intent": [
-        "search console analytics",
-        "GSC data",
+        "Google Search Console data",
         "SEO clicks",
-        "данные search console"
+        "search queries GSC",
+        "данные Search Console"
       ],
-      "endpoint": "POST https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/searchAnalytics/query",
+      "endpoint": "POST https://searchconsole.googleapis.com/webmasters/v3/sites/{siteUrl}/searchAnalytics/query",
       "input": {
         "siteUrl": {
           "type": "string",
-          "description": "URL-encoded site: https%3A%2F%2Fexample.com",
+          "description": "URL-encoded: https%3A%2F%2Fexample.com%2F",
           "required": true
         },
         "startDate": {
@@ -47,17 +47,16 @@
         },
         "dimensions": {
           "type": "array",
-          "description": "['query', 'page', 'country', 'device', 'date', 'searchAppearance']",
-          "required": false
-        },
-        "dimensionFilterGroups": {
-          "type": "array",
-          "description": "Filter: [{filters: [{dimension: 'country', expression: 'usa'}]}]",
+          "description": "['query', 'page', 'country', 'device', 'date']",
           "required": false
         },
         "rowLimit": {
           "type": "integer",
           "default": 1000
+        },
+        "startRow": {
+          "type": "integer",
+          "default": 0
         }
       },
       "output": {
@@ -70,25 +69,25 @@
           "rows[0].position"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "list_sites",
-      "description_for_ai": "List all verified sites in a Google Search Console account.",
+      "description_for_ai": "List all sites/properties verified in Google Search Console.",
       "intent": [
-        "list sites GSC",
-        "search console properties",
+        "GSC sites",
         "verified sites",
-        "сайты search console"
+        "Search Console properties",
+        "сайты Search Console"
       ],
-      "endpoint": "GET https://www.googleapis.com/webmasters/v3/sites",
+      "endpoint": "GET https://searchconsole.googleapis.com/webmasters/v3/sites",
       "input": {},
       "output": {
         "type": "list<site>",
         "fields": [
           "siteEntry[0].siteUrl",
-          "siteEntry[0].permissionLevel"
+          "siteEntry[0].permissionLevel (siteOwner, siteFullUser, siteRestrictedUser)"
         ]
       },
       "realtime": true,
@@ -96,14 +95,14 @@
     },
     {
       "id": "get_sitemaps",
-      "description_for_ai": "Get list of sitemaps submitted to Google Search Console.",
+      "description_for_ai": "Get sitemap submission status and errors in Google Search Console.",
       "intent": [
-        "sitemaps GSC",
-        "submitted sitemaps",
+        "sitemap GSC",
         "sitemap status",
-        "карты сайта search console"
+        "indexing sitemap",
+        "карта сайта Search Console"
       ],
-      "endpoint": "GET https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/sitemaps",
+      "endpoint": "GET https://searchconsole.googleapis.com/webmasters/v3/sites/{siteUrl}/sitemaps",
       "input": {
         "siteUrl": {
           "type": "string",
@@ -115,39 +114,42 @@
         "fields": [
           "sitemap[0].path",
           "sitemap[0].lastSubmitted",
-          "sitemap[0].contents[0].indexed",
+          "sitemap[0].lastDownloaded",
+          "sitemap[0].contents[0].type",
           "sitemap[0].contents[0].submitted",
-          "sitemap[0].errors"
+          "sitemap[0].contents[0].indexed"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "submit_sitemap",
-      "description_for_ai": "Submit or resubmit a sitemap to Google Search Console.",
+      "id": "get_url_inspection",
+      "description_for_ai": "Inspect a URL's Google indexing status, mobile usability, and coverage.",
       "intent": [
-        "submit sitemap",
-        "sitemap GSC submit",
-        "add sitemap",
-        "добавить sitemap search console"
+        "URL inspection",
+        "indexing status Google",
+        "crawl status",
+        "индексирование URL Google"
       ],
-      "endpoint": "PUT https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "endpoint": "POST https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
       "input": {
-        "siteUrl": {
+        "inspectionUrl": {
           "type": "string",
           "required": true
         },
-        "feedpath": {
+        "siteUrl": {
           "type": "string",
-          "description": "URL-encoded sitemap URL",
           "required": true
         }
       },
       "output": {
-        "type": "status",
+        "type": "inspection",
         "fields": [
-          "204 No Content on success"
+          "inspectionResult.indexStatusResult.coverageState",
+          "inspectionResult.indexStatusResult.lastCrawlTime",
+          "inspectionResult.mobileUsabilityResult.verdict",
+          "inspectionResult.richResultsResult.verdict"
         ]
       },
       "realtime": true,
@@ -155,14 +157,14 @@
     },
     {
       "id": "get_crawl_errors",
-      "description_for_ai": "Get crawl errors (404s, server errors) for a site.",
+      "description_for_ai": "Get crawl errors detected by Google: 404s, server errors, etc.",
       "intent": [
-        "crawl errors GSC",
-        "404 errors",
-        "server errors search console",
-        "ошибки обхода search console"
+        "crawl errors Google",
+        "404 errors GSC",
+        "broken pages",
+        "ошибки сканирования Google"
       ],
-      "endpoint": "GET https://www.googleapis.com/webmasters/v3/sites/{siteUrl}/urlCrawlErrorsSamples",
+      "endpoint": "GET https://searchconsole.googleapis.com/webmasters/v3/sites/{siteUrl}/urlCrawlErrorsSamples",
       "input": {
         "siteUrl": {
           "type": "string",
