@@ -208,6 +208,47 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "youtube_search",
+      "description_for_ai": "Search YouTube videos via SerpAPI and get structured results.",
+      "intent": [
+        "youtube search serpapi",
+        "video search",
+        "find youtube videos",
+        "поиск youtube через api"
+      ],
+      "endpoint": "GET https://serpapi.com/search",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "youtube"
+        },
+        "search_query": {
+          "type": "string",
+          "required": true
+        },
+        "gl": {
+          "type": "string",
+          "default": "us"
+        },
+        "hl": {
+          "type": "string",
+          "default": "en"
+        }
+      },
+      "output": {
+        "type": "list<video>",
+        "fields": [
+          "video_results[0].title",
+          "video_results[0].link",
+          "video_results[0].views",
+          "video_results[0].channel.name",
+          "video_results[0].published_date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
