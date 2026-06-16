@@ -98,6 +98,107 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_product",
+      "description_for_ai": "Get nutritional info for a food product by barcode.",
+      "intent": [
+        "product nutrition barcode",
+        "food scan barcode",
+        "open food facts product",
+        "состав продукта штрихкод"
+      ],
+      "endpoint": "GET https://world.openfoodfacts.org/api/v2/product/{barcode}",
+      "input": {
+        "barcode": {
+          "type": "string",
+          "description": "EAN-13 or UPC barcode",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "product_name,brands,nutriscore_grade,nutriments,ingredients_text",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "product",
+        "fields": [
+          "product.product_name",
+          "product.brands",
+          "product.nutriscore_grade",
+          "product.nutriments.energy-kcal_100g",
+          "product.ingredients_text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_products",
+      "description_for_ai": "Search food products in Open Food Facts database.",
+      "intent": [
+        "search food products",
+        "find food open food facts",
+        "product search nutrition"
+      ],
+      "endpoint": "GET https://world.openfoodfacts.org/cgi/search.pl",
+      "input": {
+        "search_terms": {
+          "type": "string",
+          "required": true
+        },
+        "json": {
+          "type": "integer",
+          "default": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<product>",
+        "fields": [
+          "products[0].product_name",
+          "products[0].brands",
+          "products[0].nutriscore_grade",
+          "products[0].code"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_allergens",
+      "description_for_ai": "Check allergens in a food product.",
+      "intent": [
+        "allergens product",
+        "food allergens",
+        "contains nuts",
+        "аллергены продукт"
+      ],
+      "endpoint": "GET https://world.openfoodfacts.org/api/v2/product/{barcode}",
+      "input": {
+        "barcode": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "default": "allergens,allergens_tags,traces_tags"
+        }
+      },
+      "output": {
+        "type": "allergens",
+        "fields": [
+          "product.allergens",
+          "product.allergens_tags",
+          "product.traces_tags"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
