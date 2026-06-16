@@ -23,30 +23,26 @@
   "capabilities": [
     {
       "id": "search_animations",
-      "description_for_ai": "Search Lottie animations by keyword on LottieFiles.",
+      "description_for_ai": "Search free Lottie animations by keyword.",
       "intent": [
-        "lottie animation",
-        "lottiefiles search",
-        "animated icons",
-        "анимации lottie"
+        "search animations Lottie",
+        "free animations",
+        "Lottie JSON",
+        "поиск анимаций Lottie"
       ],
-      "endpoint": "GET https://api.lottiefiles.com/api/animations/public",
+      "endpoint": "GET https://publicapi.lottiefiles.com/v1/animations/search",
       "input": {
-        "search": {
+        "q": {
           "type": "string",
-          "required": false
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
         },
         "page": {
           "type": "integer",
           "default": 1
-        },
-        "per_page": {
-          "type": "integer",
-          "default": 20
-        },
-        "category": {
-          "type": "string",
-          "required": false
         }
       },
       "output": {
@@ -56,7 +52,9 @@
           "data[0].title",
           "data[0].lottie_url",
           "data[0].preview_url",
-          "data[0].tags"
+          "data[0].width",
+          "data[0].height",
+          "data[0].bg_color"
         ]
       },
       "realtime": true,
@@ -64,17 +62,17 @@
     },
     {
       "id": "get_animation",
-      "description_for_ai": "Get a specific Lottie animation by ID with download URL.",
+      "description_for_ai": "Get a specific Lottie animation by ID including its JSON data URL.",
       "intent": [
-        "get lottie",
-        "download animation",
+        "get animation Lottie",
+        "download Lottie",
         "animation details",
-        "получить анимацию lottie"
+        "анимация Lottie по ID"
       ],
-      "endpoint": "GET https://api.lottiefiles.com/api/animations/{id}",
+      "endpoint": "GET https://publicapi.lottiefiles.com/v1/animations/{animation_id}",
       "input": {
-        "id": {
-          "type": "integer",
+        "animation_id": {
+          "type": "string",
           "required": true
         }
       },
@@ -85,45 +83,30 @@
           "title",
           "lottie_url",
           "preview_url",
-          "tags",
-          "description"
+          "width",
+          "height",
+          "colors",
+          "creator.username"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_categories",
-      "description_for_ai": "Get list of LottieFiles animation categories.",
+      "id": "get_featured",
+      "description_for_ai": "Get featured/trending Lottie animations.",
       "intent": [
-        "lottie categories",
-        "animation types",
-        "categories lottiefiles"
-      ],
-      "endpoint": "GET https://api.lottiefiles.com/api/categories",
-      "input": {},
-      "output": {
-        "type": "list<category>",
-        "fields": [
-          "data[0].id",
-          "data[0].title",
-          "data[0].slug"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "featured_animations",
-      "description_for_ai": "Get featured/popular Lottie animations from LottieFiles.",
-      "intent": [
+        "featured animations",
+        "trending Lottie",
         "popular animations",
-        "featured lottie",
-        "trending animations",
-        "популярные анимации lottie"
+        "трендовые анимации Lottie"
       ],
-      "endpoint": "GET https://api.lottiefiles.com/api/animations/featured",
+      "endpoint": "GET https://publicapi.lottiefiles.com/v1/animations/featured",
       "input": {
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
         "page": {
           "type": "integer",
           "default": 1
@@ -142,34 +125,68 @@
       "requires_auth": true
     },
     {
-      "id": "user_animations",
-      "description_for_ai": "Get animations uploaded by a specific LottieFiles user.",
+      "id": "get_collections",
+      "description_for_ai": "Get curated Lottie animation collections.",
       "intent": [
-        "user animations lottie",
-        "creator animations",
-        "my lottie files",
-        "анимации пользователя lottie"
+        "animation collections",
+        "Lottie packs",
+        "animation categories",
+        "коллекции Lottie"
       ],
-      "endpoint": "GET https://api.lottiefiles.com/api/users/{username}/animations",
+      "endpoint": "GET https://publicapi.lottiefiles.com/v1/collections",
       "input": {
-        "username": {
-          "type": "string",
-          "required": true
-        },
-        "page": {
+        "limit": {
           "type": "integer",
-          "default": 1
+          "default": 10
         }
       },
       "output": {
-        "type": "list<animation>",
+        "type": "list<collection>",
         "fields": [
           "data[0].id",
           "data[0].title",
-          "data[0].lottie_url"
+          "data[0].animations_count",
+          "data[0].preview_url"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "convert_animation",
+      "description_for_ai": "Convert a Lottie animation to GIF, MP4, or WebM via the API.",
+      "intent": [
+        "convert Lottie",
+        "Lottie to GIF",
+        "export animation",
+        "конвертировать Lottie"
+      ],
+      "endpoint": "POST https://publicapi.lottiefiles.com/v1/renders",
+      "input": {
+        "animation_id": {
+          "type": "string",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "description": "gif, mp4, webm",
+          "required": true
+        },
+        "quality": {
+          "type": "string",
+          "description": "low, medium, high",
+          "default": "medium"
+        }
+      },
+      "output": {
+        "type": "render",
+        "fields": [
+          "id",
+          "status",
+          "url (download when status=done)"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
