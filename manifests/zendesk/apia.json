@@ -169,6 +169,33 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_ticket_metrics",
+      "description_for_ai": "Get resolution time and satisfaction metrics for a Zendesk ticket.",
+      "intent": [
+        "ticket metrics zendesk",
+        "resolution time",
+        "SLA zendesk",
+        "метрики тикета zendesk"
+      ],
+      "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/tickets/{ticket_id}/metrics",
+      "input": {
+        "ticket_id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "metrics",
+        "fields": [
+          "ticket_metric.reply_time_in_minutes.calendar",
+          "ticket_metric.full_resolution_time_in_minutes.calendar",
+          "ticket_metric.first_resolution_time_in_minutes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
