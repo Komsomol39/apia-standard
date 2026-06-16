@@ -23,110 +23,36 @@
   "capabilities": [
     {
       "id": "search_items",
-      "description_for_ai": "Поиск объявлений на Авито по ключевым словам, категории, городу и цене.",
+      "description_for_ai": "Search Avito marketplace listings: jobs, real estate, vehicles, goods. Russia's largest classifieds.",
       "intent": [
-        "объявления авито",
-        "купить авито",
-        "авито поиск",
-        "поиск авито",
-        "авто авито"
-      ],
-      "endpoint": "GET https://api.avito.ru/v1/ads",
-      "input": {
-        "query": {
-          "type": "string",
-          "required": false
-        },
-        "categoryId": {
-          "type": "integer",
-          "description": "ID категории. 9=Недвижимость, 4=Авто, 1=Электроника, 2=Одежда, 7=Услуги",
-          "required": false
-        },
-        "locationId": {
-          "type": "integer",
-          "description": "637640=Москва, 638587=Санкт-Петербург. Получить список: /locations",
-          "required": false
-        },
-        "priceMin": {
-          "type": "integer",
-          "required": false
-        },
-        "priceMax": {
-          "type": "integer",
-          "required": false
-        },
-        "page": {
-          "type": "integer",
-          "default": 1
-        },
-        "count": {
-          "type": "integer",
-          "default": 20
-        }
-      },
-      "output": {
-        "type": "list<ad>",
-        "fields": [
-          "ads[0].id",
-          "ads[0].title",
-          "ads[0].price.value",
-          "ads[0].location.name",
-          "ads[0].category.name",
-          "ads[0].images[0].url",
-          "ads[0].url"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_item",
-      "description_for_ai": "Получить полное объявление Авито по ID с описанием, ценой, фото и контактами.",
-      "intent": [
-        "объявление авито",
-        "детали авито",
-        "avito item",
-        "товар авито"
-      ],
-      "endpoint": "GET https://api.avito.ru/core/v1/items/{itemId}",
-      "input": {
-        "itemId": {
-          "type": "integer",
-          "description": "ID объявления",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "item",
-        "fields": [
-          "id",
-          "title",
-          "description",
-          "price.value",
-          "location.name",
-          "category.name",
-          "images",
-          "stats.uniqViews",
-          "url"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_my_items",
-      "description_for_ai": "Получить список своих объявлений с их статусами и статистикой просмотров.",
-      "intent": [
-        "мои объявления авито",
-        "my ads avito",
-        "статус объявления авито",
-        "управление объявлениями"
+        "avito search",
+        "найти объявление avito",
+        "avito объявления",
+        "поиск avito"
       ],
       "endpoint": "GET https://api.avito.ru/core/v1/items",
       "input": {
-        "status": {
+        "query": {
           "type": "string",
-          "description": "active, removed, blocked, old",
+          "description": "Search query",
+          "required": false
+        },
+        "category_id": {
+          "type": "integer",
+          "description": "Category ID from /core/v1/categories",
+          "required": false
+        },
+        "location_id": {
+          "type": "integer",
+          "description": "Location ID: 637640=Moscow, 638587=SPb",
+          "required": false
+        },
+        "price_from": {
+          "type": "integer",
+          "required": false
+        },
+        "price_to": {
+          "type": "integer",
           "required": false
         },
         "per_page": {
@@ -141,50 +67,114 @@
       "output": {
         "type": "list<item>",
         "fields": [
-          "resources[0].id",
-          "resources[0].title",
-          "resources[0].status",
-          "resources[0].price",
-          "resources[0].stats.views"
+          "result.items[0].id",
+          "result.items[0].title",
+          "result.items[0].price_string",
+          "result.items[0].url",
+          "result.items[0].location"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_messages",
-      "description_for_ai": "Получить список чатов и сообщений от покупателей по объявлениям.",
+      "id": "get_item",
+      "description_for_ai": "Get full details of an Avito listing by ID.",
       "intent": [
-        "чаты авито",
-        "сообщения авито",
-        "avito messages",
-        "покупатели авито"
+        "avito item",
+        "объявление avito",
+        "avito listing",
+        "детали avito"
       ],
-      "endpoint": "GET https://api.avito.ru/messenger/v3/accounts/{userId}/chats",
+      "endpoint": "GET https://api.avito.ru/core/v1/items/{itemId}",
       "input": {
-        "userId": {
-          "type": "string",
-          "description": "Ваш Avito user ID",
+        "itemId": {
+          "type": "integer",
           "required": true
-        },
-        "item_ids": {
-          "type": "array",
-          "description": "Фильтр по ID объявлений",
-          "required": false
-        },
-        "unread_only": {
-          "type": "boolean",
-          "description": "Только непрочитанные",
-          "default": false
         }
       },
       "output": {
-        "type": "list<chat>",
+        "type": "item",
         "fields": [
-          "chats[0].id",
-          "chats[0].context.value.item.title",
-          "chats[0].last_message.content.text",
-          "chats[0].users[0].name"
+          "item.id",
+          "item.title",
+          "item.description",
+          "item.price_string",
+          "item.url",
+          "item.category.name",
+          "item.location.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user_items",
+      "description_for_ai": "Get listings posted by a specific user.",
+      "intent": [
+        "объявления пользователя avito",
+        "user listings avito",
+        "my avito items",
+        "мои объявления avito"
+      ],
+      "endpoint": "GET https://api.avito.ru/core/v1/accounts/{user_id}/items",
+      "input": {
+        "user_id": {
+          "type": "integer",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "active, closed",
+          "default": "active"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<item>",
+        "fields": [
+          "result.items[0].id",
+          "result.items[0].title",
+          "result.items[0].status",
+          "result.items[0].price_string"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_message",
+      "description_for_ai": "Send a message to a seller on Avito.",
+      "intent": [
+        "avito message",
+        "написать продавцу avito",
+        "сообщение avito"
+      ],
+      "endpoint": "POST https://api.avito.ru/messenger/v1/accounts/{user_id}/chats/{chat_id}/messages",
+      "input": {
+        "user_id": {
+          "type": "integer",
+          "required": true
+        },
+        "chat_id": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "object",
+          "description": "{type: text, payload: {text: 'Message text'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "id",
+          "created",
+          "type"
         ]
       },
       "realtime": true,
