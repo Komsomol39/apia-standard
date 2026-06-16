@@ -22,39 +22,14 @@
   },
   "capabilities": [
     {
-      "id": "submit_metrics",
-      "description_for_ai": "Send custom metrics to Datadog for monitoring dashboards and alerts.",
-      "intent": [
-        "send metrics datadog",
-        "custom metrics",
-        "monitoring data",
-        "метрики datadog"
-      ],
-      "endpoint": "POST https://api.datadoghq.com/api/v2/series",
-      "input": {
-        "series": {
-          "type": "array",
-          "description": "[{metric: 'app.requests', points: [{timestamp: 1609459200, value: 42.0}], type: 1, tags: ['env:prod', 'service:api'], unit: 'request', host: 'server-01'}]. Types: 0=unspecified, 1=count, 2=rate, 3=gauge",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "result",
-        "fields": [
-          "errors"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "query_metrics",
-      "description_for_ai": "Query Datadog metrics for dashboards, analysis, or alerting.",
+      "description_for_ai": "Query time series metrics from Datadog. Get CPU, memory, requests per second, latency, and custom metrics.",
       "intent": [
-        "query metrics datadog",
-        "get metrics",
-        "datadog data",
-        "данные мониторинга datadog"
+        "Datadog metrics",
+        "query metrics",
+        "server monitoring",
+        "performance data",
+        "метрики Datadog"
       ],
       "endpoint": "GET https://api.datadoghq.com/api/v1/query",
       "input": {
@@ -70,7 +45,7 @@
         },
         "query": {
           "type": "string",
-          "description": "Datadog query e.g. avg:system.cpu.user{*} or sum:app.requests{env:prod}",
+          "description": "Datadog metric query: avg:system.cpu.user{host:web01}, sum:http.requests{service:api}.rollup(sum, 60)",
           "required": true
         }
       },
@@ -78,21 +53,21 @@
         "type": "timeseries",
         "fields": [
           "series[0].metric",
-          "series[0].pointlist",
+          "series[0].pointlist [[timestamp, value], ...]",
           "series[0].scope"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "create_event",
-      "description_for_ai": "Create a Datadog event: deployment marker, incident note, alert.",
+      "description_for_ai": "Create a Datadog event to mark deployments, alerts, or milestones.",
       "intent": [
-        "datadog event",
-        "deployment event",
-        "incident datadog",
-        "событие datadog"
+        "Datadog event",
+        "deployment marker",
+        "incident event",
+        "событие Datadog"
       ],
       "endpoint": "POST https://api.datadoghq.com/api/v1/events",
       "input": {
@@ -102,19 +77,25 @@
         },
         "text": {
           "type": "string",
+          "description": "Event description. Supports markdown.",
           "required": true
         },
         "tags": {
           "type": "array",
-          "description": "['env:prod', 'version:1.2.3']",
+          "description": "['env:prod', 'service:api', 'team:backend']",
           "required": false
         },
         "alert_type": {
           "type": "string",
-          "description": "info, warning, error, success",
+          "description": "error, warning, info, success, user_update, recommendation, snapshot",
           "default": "info"
         },
-        "source_type_name": {
+        "priority": {
+          "type": "string",
+          "description": "normal or low",
+          "default": "normal"
+        },
+        "host": {
           "type": "string",
           "required": false
         }
@@ -123,50 +104,171 @@
         "type": "event",
         "fields": [
           "event.id",
-          "event.title",
-          "event.url"
+          "event.url",
+          "status"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_logs",
-      "description_for_ai": "Search and retrieve logs from Datadog Log Management.",
+      "id": "list_monitors",
+      "description_for_ai": "List all Datadog monitors (alerts) and their current status.",
       "intent": [
-        "search logs datadog",
+        "Datadog monitors",
+        "list alerts",
+        "alert status",
+        "мониторы Datadog"
+      ],
+      "endpoint": "GET https://api.datadoghq.com/api/v1/monitor",
+      "input": {
+        "tags": {
+          "type": "string",
+          "description": "Filter by tags: env:prod,service:api",
+          "required": false
+        },
+        "monitor_tags": {
+          "type": "string",
+          "description": "Filter monitors by their tags",
+          "required": false
+        },
+        "name": {
+          "type": "string",
+          "description": "Search by name",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<monitor>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].type",
+          "[0].overall_state",
+          "[0].tags"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_logs",
+      "description_for_ai": "Search application logs in Datadog. Filter by service, status, time range.",
+      "intent": [
+        "search logs Datadog",
         "application logs",
         "error logs",
-        "логи datadog"
+        "поиск логов Datadog"
       ],
       "endpoint": "POST https://api.datadoghq.com/api/v2/logs/events/search",
       "input": {
         "filter": {
           "type": "object",
           "description": "{query: 'service:api status:error', from: '2024-01-15T00:00:00Z', to: '2024-01-15T23:59:59Z'}",
-          "required": false
-        },
-        "page": {
-          "type": "object",
-          "description": "{limit: 100}",
-          "required": false
+          "required": true
         },
         "sort": {
           "type": "string",
           "description": "timestamp or -timestamp",
           "default": "-timestamp"
+        },
+        "page": {
+          "type": "object",
+          "description": "{limit: 50}",
+          "required": false
         }
       },
       "output": {
         "type": "list<log>",
         "fields": [
-          "data[0].attributes.message",
+          "data[0].id",
+          "data[0].attributes.timestamp",
           "data[0].attributes.service",
           "data[0].attributes.status",
-          "data[0].attributes.timestamp"
+          "data[0].attributes.message"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_dashboard",
+      "description_for_ai": "Create a Datadog dashboard with metrics widgets.",
+      "intent": [
+        "create dashboard Datadog",
+        "monitoring dashboard",
+        "metrics dashboard",
+        "дашборд Datadog"
+      ],
+      "endpoint": "POST https://api.datadoghq.com/api/v1/dashboard",
+      "input": {
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "layout_type": {
+          "type": "string",
+          "description": "ordered or free",
+          "default": "ordered"
+        },
+        "widgets": {
+          "type": "array",
+          "description": "[{definition: {type: 'timeseries', requests: [{q: 'avg:system.cpu.user{*}', display_type: 'line'}], title: 'CPU Usage'}}]",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "dashboard",
+        "fields": [
+          "id",
+          "url",
+          "title",
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_host_info",
+      "description_for_ai": "Get host info and metadata from Datadog — tags, aliases, active integrations.",
+      "intent": [
+        "host info Datadog",
+        "server details",
+        "host metadata",
+        "информация о хосте Datadog"
+      ],
+      "endpoint": "GET https://api.datadoghq.com/api/v1/hosts",
+      "input": {
+        "filter": {
+          "type": "string",
+          "description": "Filter by hostname or tag",
+          "required": false
+        },
+        "sort_field": {
+          "type": "string",
+          "description": "status, apps, mute, name, last_reported_time",
+          "required": false
+        },
+        "count": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "hosts",
+        "fields": [
+          "host_list[0].name",
+          "host_list[0].tags_by_source",
+          "host_list[0].last_reported_time",
+          "host_list[0].apps"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
