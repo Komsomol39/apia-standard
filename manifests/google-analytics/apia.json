@@ -22,42 +22,85 @@
   "capabilities": [
     {
       "id": "run_report",
-      "description_for_ai": "Run a custom analytics report for a GA4 property. Get sessions, users, revenue, page views.",
+      "description_for_ai": "Run a GA4 analytics report for pages, sessions, users, revenue.",
       "intent": [
         "Google Analytics report",
         "GA4 data",
-        "website analytics",
-        "Google Analytics данные"
+        "website traffic",
+        "данные Google Analytics"
       ],
       "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property}/runReport",
       "input": {
         "property": {
           "type": "string",
-          "description": "properties/{property_id}",
-          "required": true
-        },
-        "dimensions": {
-          "type": "array",
-          "description": "[{name: 'date'}, {name: 'sessionSource'}, {name: 'country'}, {name: 'deviceCategory'}]",
-          "required": false
-        },
-        "metrics": {
-          "type": "array",
-          "description": "[{name: 'sessions'}, {name: 'activeUsers'}, {name: 'screenPageViews'}, {name: 'totalRevenue'}]",
+          "description": "GA4 property ID: 'properties/123456789'",
           "required": true
         },
         "dateRanges": {
           "type": "array",
-          "description": "[{startDate: '2024-01-01', endDate: '2024-01-31'}] or use 'today', '7daysAgo', '30daysAgo'",
+          "description": "[{startDate: '7daysAgo', endDate: 'today'}]",
           "required": true
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "[{name: 'pagePath'}, {name: 'country'}, {name: 'deviceCategory'}]",
+          "required": false
+        },
+        "metrics": {
+          "type": "array",
+          "description": "[{name: 'sessions'}, {name: 'users'}, {name: 'bounceRate'}, {name: 'totalRevenue'}]",
+          "required": true
+        },
+        "dimensionFilter": {
+          "type": "object",
+          "description": "Filter rows",
+          "required": false
         },
         "limit": {
           "type": "integer",
-          "default": 1000
+          "default": 100
         }
       },
       "output": {
         "type": "report",
+        "fields": [
+          "rows[0].dimensionValues[0].value",
+          "rows[0].metricValues[0].value",
+          "rowCount",
+          "totals[0].metricValues[0].value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "run_realtime_report",
+      "description_for_ai": "Get real-time analytics data from GA4 (active users in last 30 minutes).",
+      "intent": [
+        "real-time analytics",
+        "active users",
+        "live traffic",
+        "реальное время аналитика"
+      ],
+      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property}/runRealtimeReport",
+      "input": {
+        "property": {
+          "type": "string",
+          "required": true
+        },
+        "dimensions": {
+          "type": "array",
+          "description": "[{name: 'country'}, {name: 'pagePath'}]",
+          "required": false
+        },
+        "metrics": {
+          "type": "array",
+          "description": "[{name: 'activeUsers'}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "realtime_report",
         "fields": [
           "rows[0].dimensionValues[0].value",
           "rows[0].metricValues[0].value",
@@ -68,136 +111,143 @@
       "requires_auth": true
     },
     {
-      "id": "realtime_report",
-      "description_for_ai": "Get real-time analytics data: active users right now, traffic sources.",
+      "id": "list_properties",
+      "description_for_ai": "List GA4 properties in your Google Analytics account.",
       "intent": [
-        "realtime analytics",
-        "active users now",
-        "live traffic",
-        "активные пользователи сейчас GA4"
+        "GA4 properties",
+        "Analytics properties",
+        "my websites GA4",
+        "свойства Google Analytics"
       ],
-      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property}/runRealtimeReport",
+      "endpoint": "GET https://analyticsadmin.googleapis.com/v1beta/properties",
       "input": {
-        "property": {
+        "filter": {
           "type": "string",
-          "required": true
-        },
-        "dimensions": {
-          "type": "array",
-          "description": "[{name: 'country'}, {name: 'unifiedScreenName'}]",
+          "description": "parent:accounts/ACCOUNT_ID",
           "required": false
         },
-        "metrics": {
-          "type": "array",
-          "description": "[{name: 'activeUsers'}]",
-          "required": true
+        "pageSize": {
+          "type": "integer",
+          "default": 50
         }
       },
       "output": {
-        "type": "realtime",
+        "type": "list<property>",
         "fields": [
-          "rows[0].dimensionValues[0].value",
-          "rows[0].metricValues[0].value",
-          "minuteRanges[0].minutesAgo"
+          "properties[0].name",
+          "properties[0].displayName",
+          "properties[0].industryCategory",
+          "properties[0].timeZone"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_metadata",
-      "description_for_ai": "Get all available dimensions and metrics for a GA4 property.",
+      "id": "run_funnel_report",
+      "description_for_ai": "Run a GA4 funnel analysis to track conversion steps.",
       "intent": [
-        "GA4 dimensions metrics",
-        "available metrics",
-        "analytics dimensions",
-        "метрики GA4"
+        "funnel analytics",
+        "conversion funnel GA4",
+        "user journey analytics",
+        "воронка конверсии GA4"
       ],
-      "endpoint": "GET https://analyticsdata.googleapis.com/v1beta/properties/{property}/metadata",
+      "endpoint": "POST https://analyticsdata.googleapis.com/v1alpha/properties/{property}/runFunnelReport",
       "input": {
         "property": {
           "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "metadata",
-        "fields": [
-          "dimensions[0].apiName",
-          "dimensions[0].description",
-          "metrics[0].apiName",
-          "metrics[0].description"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "funnel_report",
-      "description_for_ai": "Run a funnel analysis report to understand conversion steps.",
-      "intent": [
-        "funnel analysis GA4",
-        "conversion funnel",
-        "analytics funnel",
-        "воронка конверсий GA4"
-      ],
-      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property}/runFunnelReport",
-      "input": {
-        "property": {
-          "type": "string",
-          "required": true
-        },
-        "funnel": {
-          "type": "object",
-          "description": "{steps: [{name: 'Step 1', filterExpression: {eventFilter: {eventName: 'view_item'}}}, {name: 'Step 2', filterExpression: {eventFilter: {eventName: 'add_to_cart'}}}]}",
           "required": true
         },
         "dateRanges": {
           "type": "array",
+          "required": true
+        },
+        "funnel": {
+          "type": "object",
+          "description": "{steps: [{name: 'Session Start', filterExpression: {funnel...}}, ...]}",
           "required": true
         }
       },
       "output": {
         "type": "funnel",
         "fields": [
-          "funnelTable.rows[0].dimensionValues[0].value",
-          "funnelTable.rows[0].metricValues[0].value"
+          "funnelTable.rows[0].dimensionValues",
+          "funnelTable.rows[0].metricValues"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "cohort_report",
-      "description_for_ai": "Run a cohort analysis to track user retention over time.",
+      "id": "run_pivot_report",
+      "description_for_ai": "Run a pivot table report in GA4 for multi-dimensional analysis.",
       "intent": [
-        "cohort analysis GA4",
-        "user retention",
-        "cohort report",
-        "когортный анализ GA4"
+        "pivot report GA4",
+        "advanced analytics",
+        "GA4 pivot",
+        "сводная таблица GA4"
       ],
-      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property}/runReport",
+      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property}/runPivotReport",
       "input": {
         "property": {
           "type": "string",
           "required": true
         },
-        "cohortSpec": {
-          "type": "object",
-          "description": "{cohorts: [{name: 'cohort1', dateRange: {startDate: '2024-01-01', endDate: '2024-01-07'}}], cohortsRange: {granularity: 'WEEKLY', endOffset: 4}}",
+        "dateRanges": {
+          "type": "array",
+          "required": true
+        },
+        "pivots": {
+          "type": "array",
+          "description": "[{fieldNames: ['country'], limit: 5, orderBys: [{metric: {metricName: 'sessions'}, desc: true}]}]",
+          "required": true
+        },
+        "dimensions": {
+          "type": "array",
           "required": true
         },
         "metrics": {
           "type": "array",
-          "description": "[{name: 'cohortRetentionRate'}, {name: 'cohortActiveUsers'}]",
           "required": true
         }
       },
       "output": {
-        "type": "cohort",
+        "type": "pivot_report",
         "fields": [
-          "rows[0].dimensionValues[0].value (cohort)",
-          "rows[0].metricValues[0].value (retention rate)"
+          "pivotHeaders",
+          "rows[0].dimensionValues",
+          "rows[0].metricValues"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "batch_run_reports",
+      "description_for_ai": "Run multiple GA4 reports in a single request (up to 5 reports).",
+      "intent": [
+        "batch reports GA4",
+        "multiple reports",
+        "bulk analytics",
+        "пакетные отчёты GA4"
+      ],
+      "endpoint": "POST https://analyticsdata.googleapis.com/v1beta/properties/{property}:batchRunReports",
+      "input": {
+        "property": {
+          "type": "string",
+          "required": true
+        },
+        "requests": {
+          "type": "array",
+          "description": "Array of report request objects, same format as run_report",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<report>",
+        "fields": [
+          "reports[0].rows",
+          "reports[0].rowCount"
         ]
       },
       "realtime": true,
