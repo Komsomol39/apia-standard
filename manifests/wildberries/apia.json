@@ -24,40 +24,112 @@
   },
   "capabilities": [
     {
-      "id": "get_sales",
-      "description_for_ai": "Получить статистику продаж по товарам за период. Количество продаж, выручка, возвраты.",
+      "id": "search_products",
+      "description_for_ai": "Search Wildberries marketplace products by keyword, category, and filters.",
       "intent": [
-        "продажи WB",
-        "статистика Wildberries",
-        "выручка маркетплейс",
-        "аналитика продаж"
+        "wildberries search",
+        "поиск wb",
+        "товары wildberries",
+        "найти товар wildberries"
       ],
-      "endpoint": "GET https://statistics-api.wildberries.ru/api/v1/supplier/sales",
+      "endpoint": "GET https://search.wb.ru/exactmatch/ru/common/v4/search",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Search query in Russian or English",
+          "required": true
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "sort": {
+          "type": "string",
+          "description": "popular, priceup, pricedown, rate, newly",
+          "default": "popular"
+        },
+        "priceU": {
+          "type": "string",
+          "description": "Price filter: 0;100000 (min;max in kopecks*100)",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<product>",
+        "fields": [
+          "data.products[0].id",
+          "data.products[0].name",
+          "data.products[0].brand",
+          "data.products[0].salePriceU (kopecks)",
+          "data.products[0].rating",
+          "data.products[0].reviewRating"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_product_card",
+      "description_for_ai": "Get full product card from Wildberries: description, photos, sizes, specifications.",
+      "intent": [
+        "wb card",
+        "wb товар",
+        "wildberries product",
+        "карточка wildberries"
+      ],
+      "endpoint": "GET https://card.wb.ru/cards/v2/detail",
+      "input": {
+        "nm": {
+          "type": "integer",
+          "description": "Product article (артикул WB)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "product",
+        "fields": [
+          "data.products[0].id",
+          "data.products[0].imt_name",
+          "data.products[0].colors",
+          "data.products[0].sizes",
+          "data.products[0].pics"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_seller_orders",
+      "description_for_ai": "Get marketplace orders for WB Seller API (seller portal).",
+      "intent": [
+        "wildberries orders",
+        "wb orders",
+        "заказы wildberries",
+        "заказы wb"
+      ],
+      "endpoint": "GET https://statistics-api.wildberries.ru/api/v1/supplier/orders",
       "input": {
         "dateFrom": {
           "type": "string",
-          "description": "Дата начала YYYY-MM-DD",
+          "description": "ISO 8601 date e.g. 2024-01-01T00:00:00",
           "required": true
         },
         "flag": {
           "type": "integer",
-          "description": "0=все продажи, 1=только новые с dateFrom",
+          "description": "0=all, 1=only changed since dateFrom",
           "default": 0
         }
       },
       "output": {
-        "type": "list<sale>",
+        "type": "list<order>",
         "fields": [
-          "date",
-          "lastChangeDate",
-          "supplierArticle",
-          "barcode",
-          "quantity",
-          "totalPrice",
-          "discountPercent",
-          "warehouseName",
-          "oblast",
-          "srid"
+          "[0].srid",
+          "[0].article",
+          "[0].totalPrice",
+          "[0].discountPercent",
+          "[0].warehouseName",
+          "[0].regionName",
+          "[0].date"
         ]
       },
       "realtime": false,
@@ -65,34 +137,30 @@
     },
     {
       "id": "get_stocks",
-      "description_for_ai": "Get current stock levels at Wildberries warehouses for all your products. Returns quantity available and in transit.",
+      "description_for_ai": "Get current stock levels for seller products on WB warehouses.",
       "intent": [
-        "остатки WB",
-        "склад Wildberries",
-        "запасы товаров",
-        "инвентарь"
+        "wildberries stock",
+        "wb остатки",
+        "остатки wildberries",
+        "wb склад"
       ],
       "endpoint": "GET https://statistics-api.wildberries.ru/api/v1/supplier/stocks",
       "input": {
         "dateFrom": {
           "type": "string",
-          "description": "YYYY-MM-DD",
+          "description": "ISO 8601 date",
           "required": true
         }
       },
       "output": {
         "type": "list<stock>",
         "fields": [
-          "lastChangeDate",
-          "supplierArticle",
-          "techSize",
-          "barcode",
-          "quantity",
-          "inWayToClient",
-          "inWayFromClient",
-          "nmId",
-          "subject",
-          "warehouseName"
+          "[0].nmId",
+          "[0].supplierArticle",
+          "[0].warehouseName",
+          "[0].quantity",
+          "[0].Price",
+          "[0].subject"
         ]
       },
       "realtime": false,
