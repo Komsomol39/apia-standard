@@ -97,6 +97,113 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "generate_video",
+      "description_for_ai": "Generate video from image or text prompt using Runway Gen-3.",
+      "intent": [
+        "runway video",
+        "Runway Gen-3",
+        "image to video runway",
+        "генерация видео runway"
+      ],
+      "endpoint": "POST https://api.dev.runwayml.com/v1/image_to_video",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "gen3a_turbo (fast), gen3a (quality)",
+          "default": "gen3a_turbo"
+        },
+        "promptImage": {
+          "type": "string",
+          "description": "Base64 or URL of input image",
+          "required": true
+        },
+        "promptText": {
+          "type": "string",
+          "description": "Motion description",
+          "required": false
+        },
+        "duration": {
+          "type": "integer",
+          "description": "5 or 10 seconds",
+          "default": 5
+        },
+        "ratio": {
+          "type": "string",
+          "description": "1280:768 or 768:1280",
+          "default": "1280:768"
+        }
+      },
+      "output": {
+        "type": "task",
+        "fields": [
+          "id",
+          "status (PENDING, RUNNING, SUCCEEDED, FAILED)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "text_to_video",
+      "description_for_ai": "Generate video purely from text prompt with Runway.",
+      "intent": [
+        "text to video runway",
+        "AI video text",
+        "видео из текста runway"
+      ],
+      "endpoint": "POST https://api.dev.runwayml.com/v1/text_to_video",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "gen3a_turbo"
+        },
+        "promptText": {
+          "type": "string",
+          "required": true
+        },
+        "duration": {
+          "type": "integer",
+          "default": 5
+        }
+      },
+      "output": {
+        "type": "task",
+        "fields": [
+          "id",
+          "status"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_task",
+      "description_for_ai": "Get status and download URL of a Runway generation task.",
+      "intent": [
+        "runway task status",
+        "video generation status",
+        "статус задачи runway"
+      ],
+      "endpoint": "GET https://api.dev.runwayml.com/v1/tasks/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "task",
+        "fields": [
+          "id",
+          "status",
+          "progress",
+          "output[0] (video URL when done)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
