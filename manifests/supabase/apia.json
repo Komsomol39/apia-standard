@@ -22,68 +22,65 @@
   },
   "capabilities": [
     {
-      "id": "query_database",
-      "description_for_ai": "Query PostgreSQL database using REST API. Filter, sort, select columns, paginate.",
+      "id": "select_rows",
+      "description_for_ai": "Query rows from a Supabase (PostgreSQL) table with filters, ordering, and pagination.",
       "intent": [
         "supabase query",
-        "database query",
-        "fetch rows supabase",
-        "запрос базы supabase"
+        "select data",
+        "database query supabase",
+        "получить данные supabase"
       ],
-      "endpoint": "GET https://{project_id}.supabase.co/rest/v1/{table}",
+      "endpoint": "GET https://{project}.supabase.co/rest/v1/{table}",
       "input": {
         "table": {
           "type": "string",
-          "description": "Table name",
           "required": true
         },
         "select": {
           "type": "string",
-          "description": "Columns: *, id,name,email, or related: *, profile(*)",
+          "description": "Column selection: *, id,name,email or nested: id,posts(title,body)",
           "default": "*"
         },
         "filter": {
           "type": "string",
-          "description": "Append as query params: ?status=eq.active&age=gte.18&name=ilike.*john*",
+          "description": "Query param filter: ?status=eq.active&age=gt.18. Operators: eq, neq, gt, gte, lt, lte, like, ilike, in, is",
           "required": false
         },
         "order": {
           "type": "string",
-          "description": "?order=created_at.desc.nullslast",
+          "description": "?order=created_at.desc",
           "required": false
         },
         "limit": {
           "type": "integer",
-          "description": "?limit=10",
-          "default": 20
+          "description": "?limit=20",
+          "required": false
         },
         "offset": {
           "type": "integer",
-          "description": "?offset=20 for pagination",
-          "default": 0
+          "required": false
         }
       },
       "output": {
         "type": "list<row>",
         "fields": [
           "[0].id",
-          "[0] (all selected columns)",
-          "Content-Range header for total count"
+          "[0].all requested columns"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "insert_row",
-      "description_for_ai": "Insert one or multiple rows into a Supabase table.",
+      "id": "insert_rows",
+      "description_for_ai": "Insert one or more rows into a Supabase table.",
       "intent": [
-        "insert row supabase",
-        "add data supabase",
+        "insert supabase",
+        "add row database",
         "create record supabase",
         "добавить запись supabase"
       ],
-      "endpoint": "POST https://{project_id}.supabase.co/rest/v1/{table}",
+      "endpoint": "POST https://{project}.supabase.co/rest/v1/{table}",
       "input": {
         "table": {
           "type": "string",
@@ -91,35 +88,36 @@
         },
         "data": {
           "type": "object or array",
-          "description": "Single object or array of objects. Column names as keys. Omit id for auto-generate.",
+          "description": "{column: value} or [{...}, {...}] for batch insert",
           "required": true
         },
         "prefer": {
           "type": "string",
-          "description": "return=representation to get inserted rows back",
+          "description": "Set to 'return=representation' to get inserted rows back",
           "required": false
         }
       },
       "output": {
-        "type": "inserted",
+        "type": "inserted_row",
         "fields": [
-          "[0].id",
-          "[0] (all columns if Prefer: return=representation)"
+          "id",
+          "created_at",
+          "all columns"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "update_row",
-      "description_for_ai": "Update rows matching a filter in Supabase table.",
+      "id": "update_rows",
+      "description_for_ai": "Update rows matching a filter. ALWAYS include a filter to avoid updating all rows.",
       "intent": [
         "update supabase",
-        "edit row supabase",
-        "patch record supabase",
+        "edit row database",
+        "update record",
         "обновить запись supabase"
       ],
-      "endpoint": "PATCH https://{project_id}.supabase.co/rest/v1/{table}?{filter}",
+      "endpoint": "PATCH https://{project}.supabase.co/rest/v1/{table}",
       "input": {
         "table": {
           "type": "string",
@@ -127,61 +125,55 @@
         },
         "filter": {
           "type": "string",
-          "description": "Query params to filter: id=eq.123 or status=eq.active",
+          "description": "REQUIRED: ?id=eq.123. Without filter ALL rows are updated!",
           "required": true
         },
         "data": {
           "type": "object",
-          "description": "Fields to update",
+          "description": "{column: new_value}",
           "required": true
         }
       },
       "output": {
-        "type": "updated",
+        "type": "updated_row",
         "fields": [
-          "Updated rows if Prefer: return=representation"
+          "id",
+          "updated columns"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "auth_signup",
-      "description_for_ai": "Register a new user with email and password. Returns session tokens.",
+      "id": "call_rpc",
+      "description_for_ai": "Call a PostgreSQL function (stored procedure) via Supabase RPC. Use for complex queries, business logic, or secure operations.",
       "intent": [
-        "supabase signup",
-        "register user",
-        "create account supabase",
-        "регистрация supabase"
+        "supabase function",
+        "rpc supabase",
+        "stored procedure",
+        "функция supabase"
       ],
-      "endpoint": "POST https://{project_id}.supabase.co/auth/v1/signup",
+      "endpoint": "POST https://{project}.supabase.co/rest/v1/rpc/{function_name}",
       "input": {
-        "email": {
+        "function_name": {
           "type": "string",
+          "description": "PostgreSQL function name",
           "required": true
         },
-        "password": {
-          "type": "string",
-          "required": true
-        },
-        "data": {
+        "params": {
           "type": "object",
-          "description": "Additional user metadata",
+          "description": "Function parameters as JSON object",
           "required": false
         }
       },
       "output": {
-        "type": "session",
+        "type": "any",
         "fields": [
-          "user.id",
-          "user.email",
-          "session.access_token",
-          "session.refresh_token",
-          "session.expires_in"
+          "function return value"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
     }
   ],
   "meta": {
