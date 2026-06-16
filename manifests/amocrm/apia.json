@@ -155,6 +155,119 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_contacts",
+      "description_for_ai": "List contacts in amoCRM with search.",
+      "intent": [
+        "amoCRM contacts",
+        "crm contacts list",
+        "контакты amoCRM"
+      ],
+      "endpoint": "GET https://{subdomain}.amocrm.ru/api/v4/contacts",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 50
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<contact>",
+        "fields": [
+          "_embedded.contacts[0].id",
+          "_embedded.contacts[0].name",
+          "_embedded.contacts[0].first_name",
+          "_embedded.contacts[0].last_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_lead",
+      "description_for_ai": "Create a new deal/lead in amoCRM pipeline.",
+      "intent": [
+        "новая сделка amoCRM",
+        "create deal",
+        "lead amoCRM",
+        "добавить сделку"
+      ],
+      "endpoint": "POST https://{subdomain}.amocrm.ru/api/v4/leads",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "price": {
+          "type": "integer",
+          "required": false
+        },
+        "status_id": {
+          "type": "integer",
+          "required": false
+        },
+        "pipeline_id": {
+          "type": "integer",
+          "required": false
+        },
+        "contact_id": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "lead",
+        "fields": [
+          "_embedded.leads[0].id",
+          "_embedded.leads[0].name",
+          "_embedded.leads[0].status_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_note",
+      "description_for_ai": "Add a note to a lead, contact or company in amoCRM.",
+      "intent": [
+        "заметка amoCRM",
+        "note crm",
+        "добавить комментарий amoCRM"
+      ],
+      "endpoint": "POST https://{subdomain}.amocrm.ru/api/v4/leads/{lead_id}/notes",
+      "input": {
+        "lead_id": {
+          "type": "integer",
+          "required": true
+        },
+        "note_type": {
+          "type": "string",
+          "description": "common, call_in, call_out, sms_in, sms_out",
+          "default": "common"
+        },
+        "params": {
+          "type": "object",
+          "description": "{text: 'Note text'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "note",
+        "fields": [
+          "_embedded.notes[0].id",
+          "_embedded.notes[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
