@@ -109,6 +109,113 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_standings",
+      "description_for_ai": "Get football league standings (table).",
+      "intent": [
+        "football standings",
+        "league table",
+        "таблица лиги",
+        "standings football"
+      ],
+      "endpoint": "GET https://api.football-data.org/v4/competitions/{code}/standings",
+      "input": {
+        "code": {
+          "type": "string",
+          "description": "PL (Premier League), PD (La Liga), BL1 (Bundesliga), SA (Serie A), FL1 (Ligue 1)",
+          "required": true
+        },
+        "season": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "standings",
+        "fields": [
+          "standings[0].table[0].position",
+          "standings[0].table[0].team.name",
+          "standings[0].table[0].points",
+          "standings[0].table[0].goalDifference"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_matches",
+      "description_for_ai": "Get scheduled or live football matches for a competition.",
+      "intent": [
+        "football matches",
+        "game schedule",
+        "матчи football-data",
+        "расписание матчей"
+      ],
+      "endpoint": "GET https://api.football-data.org/v4/competitions/{code}/matches",
+      "input": {
+        "code": {
+          "type": "string",
+          "required": true
+        },
+        "matchday": {
+          "type": "integer",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "description": "SCHEDULED, LIVE, IN_PLAY, PAUSED, FINISHED, POSTPONED, CANCELLED",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<match>",
+        "fields": [
+          "matches[0].homeTeam.name",
+          "matches[0].awayTeam.name",
+          "matches[0].score.fullTime.home",
+          "matches[0].score.fullTime.away",
+          "matches[0].utcDate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_scorers",
+      "description_for_ai": "Get top scorers in a football competition.",
+      "intent": [
+        "top scorers",
+        "goal scorers football",
+        "бомбардиры лиги",
+        "goalscorers"
+      ],
+      "endpoint": "GET https://api.football-data.org/v4/competitions/{code}/scorers",
+      "input": {
+        "code": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "season": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<scorer>",
+        "fields": [
+          "scorers[0].player.name",
+          "scorers[0].team.name",
+          "scorers[0].goals",
+          "scorers[0].assists"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
