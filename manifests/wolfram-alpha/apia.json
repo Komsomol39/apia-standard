@@ -23,137 +23,20 @@
   },
   "capabilities": [
     {
-      "id": "query",
-      "description_for_ai": "Answer any factual or computational query with step-by-step results. Math equations, unit conversions, science facts, statistics, geographic data.",
-      "intent": [
-        "compute integral",
-        "вычислить",
-        "unit converter",
-        "solve equation",
-        "решить задачу",
-        "compute formula",
-        "calculate",
-        "конвертировать единицы",
-        "unit conversion",
-        "scientific query",
-        "решить уравнение",
-        "scientific facts",
-        "mathematical answer",
-        "solve math",
-        "math homework",
-        "math calculation"
-      ],
-      "endpoint": "GET https://api.wolframalpha.com/v2/query",
-      "input": {
-        "input": {
-          "type": "string",
-          "description": "Natural language query e.g. integrate x^2 dx, distance from Moscow to Beijing, derivative of sin(x)",
-          "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "plaintext",
-          "description": "Response format: json, xml, or csv"
-        },
-        "output": {
-          "type": "string",
-          "default": "json"
-        },
-        "units": {
-          "type": "string",
-          "description": "metric or imperial",
-          "default": "metric"
-        }
-      },
-      "output": {
-        "type": "query_result",
-        "fields": [
-          "queryresult.pods[0].subpods[0].plaintext",
-          "queryresult.pods[1].subpods[0].plaintext"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "simple_query",
-      "description_for_ai": "Get a simple one-line answer to a factual question. Faster and cheaper than full query.",
-      "intent": [
-        "quick answer",
-        "fast fact",
-        "one-line result",
-        "simple math",
-        "simple calculation",
-        "fast answer",
-        "quick calculation"
-      ],
-      "endpoint": "GET https://api.wolframalpha.com/v1/result",
-      "input": {
-        "i": {
-          "type": "string",
-          "description": "Simple query e.g. speed of light, capital of France, 2+2",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "string",
-        "fields": [
-          "plain text answer"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
       "id": "short_answer",
-      "description_for_ai": "Get a short factual answer from Wolfram Alpha (fastest endpoint).",
+      "description_for_ai": "Get a concise short answer to a factual question using Wolfram Alpha.",
       "intent": [
-        "wolfram alpha answer",
+        "Wolfram Alpha answer",
+        "factual question",
         "quick calculation",
-        "factual query",
-        "ответ wolfram alpha"
+        "ответ Wolfram Alpha"
       ],
       "endpoint": "GET https://api.wolframalpha.com/v1/result",
       "input": {
         "i": {
           "type": "string",
-          "description": "Natural language query: 'population of France', 'sqrt(144)', 'distance from NYC to London'",
+          "description": "Query: 'distance from Earth to Moon in km', 'derivative of sin(x)', 'GDP of Germany 2023'",
           "required": true
-        }
-      },
-      "output": {
-        "type": "text",
-        "fields": [
-          "Plain text answer string"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "full_results",
-      "description_for_ai": "Get full structured Wolfram Alpha results with multiple pods (charts, formulas, related info).",
-      "intent": [
-        "wolfram full results",
-        "computational knowledge",
-        "detailed answer wolfram",
-        "подробный ответ wolfram alpha"
-      ],
-      "endpoint": "GET https://api.wolframalpha.com/v2/query",
-      "input": {
-        "input": {
-          "type": "string",
-          "required": true
-        },
-        "format": {
-          "type": "string",
-          "description": "plaintext, image, MathML, Sound",
-          "default": "plaintext"
-        },
-        "podstate": {
-          "type": "string",
-          "description": "Show additional pod states: 'Step-by-step solution'",
-          "required": false
         },
         "units": {
           "type": "string",
@@ -162,23 +45,99 @@
         }
       },
       "output": {
-        "type": "pods",
+        "type": "string",
         "fields": [
-          "queryresult.pods[0].title",
-          "queryresult.pods[0].subpods[0].plaintext"
+          "Plain text answer"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "spoken_result",
-      "description_for_ai": "Get a spoken-language answer from Wolfram Alpha, suitable for voice assistants.",
+      "id": "full_results",
+      "description_for_ai": "Get full Wolfram Alpha results with multiple pods (computations, graphs, definitions).",
       "intent": [
-        "wolfram spoken",
+        "Wolfram Alpha full",
+        "computation Wolfram",
+        "math solve Wolfram",
+        "полный ответ Wolfram Alpha"
+      ],
+      "endpoint": "GET https://api.wolframalpha.com/v2/query",
+      "input": {
+        "input": {
+          "type": "string",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "description": "image,plaintext,mathml",
+          "default": "plaintext"
+        },
+        "podstate": {
+          "type": "string",
+          "required": false
+        },
+        "units": {
+          "type": "string",
+          "default": "metric"
+        }
+      },
+      "output": {
+        "type": "pods",
+        "fields": [
+          "queryresult.pods[0].title",
+          "queryresult.pods[0].subpods[0].plaintext",
+          "queryresult.pods[1].subpods[0].plaintext"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "simple_image",
+      "description_for_ai": "Get a simple result image from Wolfram Alpha.",
+      "intent": [
+        "Wolfram image",
+        "result image",
+        "visual answer Wolfram",
+        "изображение Wolfram Alpha"
+      ],
+      "endpoint": "GET https://api.wolframalpha.com/v1/simple",
+      "input": {
+        "i": {
+          "type": "string",
+          "required": true
+        },
+        "width": {
+          "type": "integer",
+          "default": 500
+        },
+        "fontsize": {
+          "type": "integer",
+          "default": 22
+        },
+        "background": {
+          "type": "string",
+          "default": "white"
+        }
+      },
+      "output": {
+        "type": "image/gif",
+        "fields": [
+          "PNG/GIF image bytes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "spoken_answer",
+      "description_for_ai": "Get a spoken/natural language answer for voice assistants.",
+      "intent": [
+        "spoken answer Wolfram",
         "voice answer",
-        "verbal result",
-        "голосовой ответ wolfram"
+        "natural language result",
+        "речевой ответ Wolfram"
       ],
       "endpoint": "GET https://api.wolframalpha.com/v1/spoken",
       "input": {
@@ -192,9 +151,38 @@
         }
       },
       "output": {
+        "type": "string",
+        "fields": [
+          "Natural language sentence e.g. 'The answer is 42'"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "llm_api",
+      "description_for_ai": "Get LLM-optimized Wolfram Alpha results for use in AI pipelines.",
+      "intent": [
+        "Wolfram LLM API",
+        "AI computation",
+        "structured Wolfram result",
+        "Wolfram для AI"
+      ],
+      "endpoint": "GET https://www.wolframalpha.com/api/v1/llm-api",
+      "input": {
+        "input": {
+          "type": "string",
+          "required": true
+        },
+        "maxchars": {
+          "type": "integer",
+          "default": 6800
+        }
+      },
+      "output": {
         "type": "text",
         "fields": [
-          "Natural language spoken sentence"
+          "Markdown-formatted result with computation steps, formulas, tables"
         ]
       },
       "realtime": true,
