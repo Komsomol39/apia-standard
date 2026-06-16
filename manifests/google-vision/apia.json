@@ -23,22 +23,19 @@
   },
   "capabilities": [
     {
-      "id": "annotate_image",
-      "description_for_ai": "Detect labels, objects, faces, text (OCR), logos, landmarks, explicit content, colors in an image. Send base64 or GCS URI.",
+      "id": "detect_labels",
+      "description_for_ai": "Detect objects and scenes in images with Google Vision API.",
       "intent": [
-        "image analysis",
-        "OCR",
-        "detect objects",
-        "image labels",
-        "face detection",
-        "logo detection",
-        "анализ изображения google"
+        "image labels Google",
+        "object detection",
+        "what is in image Google",
+        "распознавание объектов Google Vision"
       ],
       "endpoint": "POST https://vision.googleapis.com/v1/images:annotate",
       "input": {
         "requests": {
           "type": "array",
-          "description": "[{image: {content: BASE64 or source: {imageUri: 'gs://...'}}, features: [{type: LABEL_DETECTION, maxResults: 10}, {type: TEXT_DETECTION}, {type: FACE_DETECTION}, {type: OBJECT_LOCALIZATION}]}]",
+          "description": "[{image: {content: 'base64' or source: {imageUri: 'gs://...'}}, features: [{type: 'LABEL_DETECTION', maxResults: 10}]}]",
           "required": true
         }
       },
@@ -46,9 +43,8 @@
         "type": "annotations",
         "fields": [
           "responses[0].labelAnnotations[0].description",
-          "responses[0].fullTextAnnotation.text",
-          "responses[0].faceAnnotations[0].joyLikelihood",
-          "responses[0].localizedObjectAnnotations[0].name"
+          "responses[0].labelAnnotations[0].score",
+          "responses[0].labelAnnotations[0].topicality"
         ]
       },
       "realtime": true,
@@ -56,27 +52,56 @@
     },
     {
       "id": "text_detection",
-      "description_for_ai": "Extract all text from an image (OCR). Returns raw text and structured document with bounding boxes per word.",
+      "description_for_ai": "Extract text from images using Google Vision OCR. Supports 50+ languages.",
       "intent": [
-        "OCR",
-        "extract text from image",
-        "read text in photo",
-        "image to text",
-        "распознать текст на фото"
+        "OCR Google",
+        "read image text",
+        "extract text photo",
+        "OCR Google Vision"
       ],
       "endpoint": "POST https://vision.googleapis.com/v1/images:annotate",
       "input": {
         "requests": {
           "type": "array",
-          "description": "[{image: {content: BASE64}, features: [{type: DOCUMENT_TEXT_DETECTION}]}] — use DOCUMENT_TEXT_DETECTION for structured docs, TEXT_DETECTION for simple text",
+          "description": "[{image: {content: 'base64'}, features: [{type: 'TEXT_DETECTION'}]}]",
           "required": true
         }
       },
       "output": {
         "type": "text",
         "fields": [
-          "responses[0].fullTextAnnotation.text",
-          "responses[0].fullTextAnnotation.pages[0].blocks[0].paragraphs[0].words[0].symbols[0].text"
+          "responses[0].textAnnotations[0].description (full text)",
+          "responses[0].textAnnotations[0].boundingPoly",
+          "responses[0].fullTextAnnotation.pages[0].blocks"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "face_detection",
+      "description_for_ai": "Detect faces and analyze emotions, headwear, and facial landmarks.",
+      "intent": [
+        "face detection Google",
+        "facial analysis",
+        "emotion detection photo",
+        "определение эмоций Google Vision"
+      ],
+      "endpoint": "POST https://vision.googleapis.com/v1/images:annotate",
+      "input": {
+        "requests": {
+          "type": "array",
+          "description": "[{image: {content: 'base64'}, features: [{type: 'FACE_DETECTION', maxResults: 10}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "faces",
+        "fields": [
+          "responses[0].faceAnnotations[0].joyLikelihood",
+          "responses[0].faceAnnotations[0].sorrowLikelihood",
+          "responses[0].faceAnnotations[0].angerLikelihood",
+          "responses[0].faceAnnotations[0].boundingPoly"
         ]
       },
       "realtime": true,
@@ -84,58 +109,56 @@
     },
     {
       "id": "safe_search",
-      "description_for_ai": "Detect explicit content (adult, violent, medical, spoof, racy) in images. Returns likelihood scores for content moderation.",
+      "description_for_ai": "Detect adult, violent, or racy content in images for content moderation.",
       "intent": [
-        "explicit content detection",
-        "image moderation",
-        "safe search",
+        "safe search Google",
         "NSFW detection",
-        "модерация изображений"
+        "image moderation Google",
+        "модерация фото Google Vision"
       ],
       "endpoint": "POST https://vision.googleapis.com/v1/images:annotate",
       "input": {
         "requests": {
           "type": "array",
-          "description": "[{image: {content: BASE64 or source: {imageUri: 'URL'}}, features: [{type: SAFE_SEARCH_DETECTION}]}]",
+          "description": "[{image: {content: 'base64'}, features: [{type: 'SAFE_SEARCH_DETECTION'}]}]",
           "required": true
         }
       },
       "output": {
         "type": "safe_search",
         "fields": [
-          "responses[0].safeSearchAnnotation.adult (VERY_UNLIKELY..VERY_LIKELY)",
-          "responses[0].safeSearchAnnotation.violence",
-          "responses[0].safeSearchAnnotation.racy",
-          "responses[0].safeSearchAnnotation.medical"
+          "responses[0].safeSearchAnnotation.adult (VERY_UNLIKELY to VERY_LIKELY)",
+          "safeSearchAnnotation.violence",
+          "safeSearchAnnotation.racy",
+          "safeSearchAnnotation.medical"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "image_properties",
-      "description_for_ai": "Extract dominant colors and image color profile. Returns color palette with percentage and hex values.",
+      "id": "landmark_detection",
+      "description_for_ai": "Identify famous landmarks and locations in photos.",
       "intent": [
-        "dominant colors",
-        "image colors",
-        "color palette",
-        "image properties",
-        "цвета изображения"
+        "landmark detection",
+        "identify place photo",
+        "famous landmark recognition",
+        "определение достопримечательности Google Vision"
       ],
       "endpoint": "POST https://vision.googleapis.com/v1/images:annotate",
       "input": {
         "requests": {
           "type": "array",
-          "description": "[{image: {content: BASE64}, features: [{type: IMAGE_PROPERTIES}, {type: LANDMARK_DETECTION}, {type: LOGO_DETECTION}]}] — combine multiple features in one call",
+          "description": "[{image: {content: 'base64'}, features: [{type: 'LANDMARK_DETECTION'}]}]",
           "required": true
         }
       },
       "output": {
-        "type": "properties",
+        "type": "landmarks",
         "fields": [
-          "responses[0].imagePropertiesAnnotation.dominantColors.colors[0].color",
-          "responses[0].imagePropertiesAnnotation.dominantColors.colors[0].score",
-          "responses[0].landmarkAnnotations[0].description"
+          "responses[0].landmarkAnnotations[0].description",
+          "responses[0].landmarkAnnotations[0].score",
+          "responses[0].landmarkAnnotations[0].locations[0].latLng"
         ]
       },
       "realtime": true,
