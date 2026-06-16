@@ -22,18 +22,18 @@
   "capabilities": [
     {
       "id": "create_batch",
-      "description_for_ai": "Submit a batch of OpenAI requests for async processing (50% cheaper).",
+      "description_for_ai": "Create an OpenAI batch job to process thousands of requests asynchronously at 50% cost.",
       "intent": [
-        "openai batch",
-        "bulk requests openai",
-        "async inference",
-        "пакетные запросы openai"
+        "OpenAI batch",
+        "bulk API requests",
+        "async AI processing",
+        "пакетные запросы OpenAI"
       ],
       "endpoint": "POST https://api.openai.com/v1/batches",
       "input": {
         "input_file_id": {
           "type": "string",
-          "description": "File ID uploaded with purpose=batch",
+          "description": "ID of JSONL file uploaded with /v1/files (purpose=batch)",
           "required": true
         },
         "endpoint": {
@@ -43,12 +43,12 @@
         },
         "completion_window": {
           "type": "string",
-          "description": "24h (only option currently)",
+          "description": "24h",
           "default": "24h"
         },
         "metadata": {
           "type": "object",
-          "description": "Optional metadata dict",
+          "description": "Optional metadata: {description: 'My batch job'}",
           "required": false
         }
       },
@@ -57,8 +57,9 @@
         "fields": [
           "id",
           "status (validating/in_progress/completed/failed)",
-          "request_counts.total",
-          "request_counts.completed"
+          "endpoint",
+          "created_at",
+          "expires_at"
         ]
       },
       "realtime": false,
@@ -66,12 +67,12 @@
     },
     {
       "id": "get_batch_status",
-      "description_for_ai": "Check status of an OpenAI batch job.",
+      "description_for_ai": "Get the current status and progress of a batch job.",
       "intent": [
-        "batch status openai",
-        "batch progress",
-        "check batch",
-        "статус пакетного задания openai"
+        "batch status OpenAI",
+        "job progress",
+        "batch complete?",
+        "статус пакетного задания OpenAI"
       ],
       "endpoint": "GET https://api.openai.com/v1/batches/{batch_id}",
       "input": {
@@ -88,7 +89,8 @@
           "request_counts.total",
           "request_counts.completed",
           "request_counts.failed",
-          "output_file_id"
+          "output_file_id",
+          "error_file_id"
         ]
       },
       "realtime": true,
@@ -96,23 +98,18 @@
     },
     {
       "id": "list_batches",
-      "description_for_ai": "List all OpenAI batch jobs.",
+      "description_for_ai": "List all batch jobs in the OpenAI account.",
       "intent": [
-        "list batches openai",
+        "list batches OpenAI",
+        "batch jobs",
         "my batches",
-        "batch jobs openai",
-        "список пакетов openai"
+        "список пакетных заданий OpenAI"
       ],
       "endpoint": "GET https://api.openai.com/v1/batches",
       "input": {
         "limit": {
           "type": "integer",
           "default": 20
-        },
-        "after": {
-          "type": "string",
-          "description": "Pagination cursor",
-          "required": false
         }
       },
       "output": {
@@ -121,7 +118,7 @@
           "data[0].id",
           "data[0].status",
           "data[0].created_at",
-          "data[0].request_counts.total"
+          "data[0].request_counts.completed"
         ]
       },
       "realtime": true,
@@ -129,12 +126,12 @@
     },
     {
       "id": "cancel_batch",
-      "description_for_ai": "Cancel an in-progress OpenAI batch job.",
+      "description_for_ai": "Cancel a running batch job before it completes.",
       "intent": [
-        "cancel batch openai",
-        "stop batch",
-        "abort batch job",
-        "отменить пакет openai"
+        "cancel batch OpenAI",
+        "stop batch job",
+        "abort batch",
+        "отменить пакетное задание OpenAI"
       ],
       "endpoint": "POST https://api.openai.com/v1/batches/{batch_id}/cancel",
       "input": {
@@ -155,18 +152,18 @@
     },
     {
       "id": "upload_batch_file",
-      "description_for_ai": "Upload a JSONL file with batch requests for OpenAI Batch API.",
+      "description_for_ai": "Upload a JSONL file containing batch requests to OpenAI.",
       "intent": [
         "upload batch file",
-        "prepare batch requests",
-        "JSONL openai batch",
-        "файл для пакетной обработки openai"
+        "prepare batch OpenAI",
+        "JSONL upload",
+        "загрузить файл пакета OpenAI"
       ],
       "endpoint": "POST https://api.openai.com/v1/files",
       "input": {
         "file": {
           "type": "file",
-          "description": "JSONL file where each line is: {custom_id: 'req-1', method: 'POST', url: '/v1/chat/completions', body: {model: 'gpt-4o-mini', messages: [...]}}",
+          "description": "JSONL file where each line is: {custom_id, method, url, body}",
           "required": true
         },
         "purpose": {
