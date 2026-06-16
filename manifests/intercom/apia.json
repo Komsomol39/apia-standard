@@ -22,13 +22,49 @@
   },
   "capabilities": [
     {
-      "id": "create_contact",
-      "description_for_ai": "Create or update a lead/user contact in Intercom.",
+      "id": "search_contacts",
+      "description_for_ai": "Search Intercom contacts (leads and users) by email, name, or custom attributes.",
       "intent": [
-        "intercom contact",
+        "find contact intercom",
+        "search user intercom",
+        "customer lookup intercom",
+        "поиск контакта intercom"
+      ],
+      "endpoint": "POST https://api.intercom.io/contacts/search",
+      "input": {
+        "query": {
+          "type": "object",
+          "description": "{field: 'email', operator: '=', value: 'user@example.com'} or {operator: 'AND', value: [{...}, {...}]}",
+          "required": true
+        },
+        "pagination": {
+          "type": "object",
+          "description": "{per_page: 20}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<contact>",
+        "fields": [
+          "data[0].id",
+          "data[0].email",
+          "data[0].name",
+          "data[0].external_id",
+          "data[0].created_at",
+          "total_count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_contact",
+      "description_for_ai": "Create a new Intercom user or lead.",
+      "intent": [
+        "create contact intercom",
         "add user intercom",
-        "lead intercom",
-        "контакт intercom"
+        "new lead intercom",
+        "добавить контакт intercom"
       ],
       "endpoint": "POST https://api.intercom.io/contacts",
       "input": {
@@ -45,13 +81,14 @@
           "type": "string",
           "required": false
         },
-        "phone": {
+        "external_id": {
           "type": "string",
+          "description": "Your internal user ID",
           "required": false
         },
         "custom_attributes": {
           "type": "object",
-          "description": "Custom contact fields",
+          "description": "{plan: 'pro', company: 'Acme'}",
           "required": false
         }
       },
@@ -70,34 +107,29 @@
     },
     {
       "id": "send_message",
-      "description_for_ai": "Send an in-app or email message to a contact via Intercom.",
+      "description_for_ai": "Send a message to a user via Intercom (email or in-app).",
       "intent": [
         "intercom message",
-        "send message intercom",
-        "customer message",
-        "сообщение intercom"
+        "send in-app message",
+        "customer message intercom",
+        "написать пользователю intercom"
       ],
       "endpoint": "POST https://api.intercom.io/messages",
       "input": {
         "message_type": {
           "type": "string",
-          "description": "inapp, email",
+          "description": "email or inapp",
           "required": true
         },
         "subject": {
           "type": "string",
-          "description": "Email subject (email only)",
+          "description": "Email subject",
           "required": false
         },
         "body": {
           "type": "string",
-          "description": "Message body HTML",
+          "description": "Message content (HTML for email)",
           "required": true
-        },
-        "template": {
-          "type": "string",
-          "description": "plain or personal",
-          "required": false
         },
         "from": {
           "type": "object",
@@ -114,84 +146,53 @@
         "type": "message",
         "fields": [
           "id",
-          "created_at",
-          "body"
+          "message_type",
+          "subject",
+          "body",
+          "created_at"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_contacts",
-      "description_for_ai": "Search Intercom contacts by email, name, or custom attributes.",
+      "id": "list_conversations",
+      "description_for_ai": "List Intercom conversations with filters by status and assignee.",
       "intent": [
-        "search intercom contacts",
-        "find customer intercom",
-        "поиск intercom"
+        "intercom conversations",
+        "support chats",
+        "customer conversations",
+        "разговоры intercom"
       ],
-      "endpoint": "POST https://api.intercom.io/contacts/search",
+      "endpoint": "GET https://api.intercom.io/conversations",
       "input": {
-        "query": {
-          "type": "object",
-          "description": "{field: 'email', operator: '=', value: 'user@example.com'} or {operator: 'AND', value: [{...}, {...}]}",
-          "required": true
-        },
-        "pagination": {
-          "type": "object",
-          "description": "{per_page: 25}",
+        "open": {
+          "type": "boolean",
+          "description": "true for open, false for closed",
           "required": false
+        },
+        "assigned": {
+          "type": "boolean",
+          "required": false
+        },
+        "display_as": {
+          "type": "string",
+          "description": "plaintext or html",
+          "default": "plaintext"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
-        "type": "list<contact>",
+        "type": "list<conversation>",
         "fields": [
-          "data[0].id",
-          "data[0].email",
-          "data[0].name",
-          "data[0].created_at"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "create_conversation",
-      "description_for_ai": "Start a new conversation with a contact from an admin.",
-      "intent": [
-        "intercom conversation",
-        "start chat intercom",
-        "initiate conversation",
-        "создать разговор intercom"
-      ],
-      "endpoint": "POST https://api.intercom.io/conversations",
-      "input": {
-        "from": {
-          "type": "object",
-          "description": "{type: admin, id: 'admin_id'}",
-          "required": true
-        },
-        "to": {
-          "type": "object",
-          "description": "{type: user, id: 'contact_id'}",
-          "required": true
-        },
-        "subject": {
-          "type": "string",
-          "required": false
-        },
-        "body": {
-          "type": "string",
-          "description": "Opening message",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "conversation",
-        "fields": [
-          "id",
-          "created_at",
-          "state",
-          "type"
+          "conversations[0].id",
+          "conversations[0].title",
+          "conversations[0].state",
+          "conversations[0].contact.contacts[0].id",
+          "conversations[0].statistics"
         ]
       },
       "realtime": true,
