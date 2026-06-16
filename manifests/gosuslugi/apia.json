@@ -24,180 +24,158 @@
   "capabilities": [
     {
       "id": "get_services",
-      "description_for_ai": "Get list of available government services on Gosuslugi (EPGU).",
+      "description_for_ai": "Get list of available government services on Gosuslugi (Russian e-government portal).",
       "intent": [
         "госуслуги сервисы",
-        "gosuslugi services",
-        "государственные услуги api",
-        "список госуслуг"
+        "государственные услуги",
+        "госуслуги API",
+        "gosuslugi services"
       ],
       "endpoint": "GET https://esia.gosuslugi.ru/api/public/v1/services",
       "input": {
-        "category": {
-          "type": "string",
-          "description": "Service category ID",
-          "required": false
+        "page": {
+          "type": "integer",
+          "default": 1
         },
-        "query": {
+        "size": {
+          "type": "integer",
+          "default": 20
+        },
+        "search": {
           "type": "string",
-          "description": "Service name search",
           "required": false
         }
       },
       "output": {
         "type": "list<service>",
         "fields": [
-          "services[0].id",
-          "services[0].title",
-          "services[0].shortDescription",
-          "services[0].gosNumber"
+          "[0].id",
+          "[0].title",
+          "[0].shortDescription",
+          "[0].department.title",
+          "[0].url"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "check_document",
-      "description_for_ai": "Check authenticity of a Russian official document via Gosuslugi API.",
+      "id": "get_service_details",
+      "description_for_ai": "Get detailed information about a specific government service.",
       "intent": [
-        "проверить документ госуслуги",
-        "gosuslugi document check",
-        "verify document Russia",
-        "подлинность документа"
+        "госуслуга подробно",
+        "инструкция госуслуги",
+        "как подать заявление",
+        "service details gosuslugi"
       ],
-      "endpoint": "POST https://api.gosuslugi.ru/api/public/v1/check_document",
-      "input": {
-        "documentType": {
-          "type": "string",
-          "description": "passport, snils, inn, driverLicense",
-          "required": true
-        },
-        "documentNumber": {
-          "type": "string",
-          "required": true
-        },
-        "documentSeries": {
-          "type": "string",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "check",
-        "fields": [
-          "isValid (boolean)",
-          "status",
-          "message"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_mvd_fines",
-      "description_for_ai": "Get traffic fines from GIBDD (traffic police) via Gosuslugi.",
-      "intent": [
-        "штрафы ГИБДД",
-        "traffic fines Russia",
-        "gosuslugi fines",
-        "штрафы ПДД"
-      ],
-      "endpoint": "POST https://api.gosuslugi.ru/api/mvd/v1/get_fines",
-      "input": {
-        "sts": {
-          "type": "string",
-          "description": "Registration certificate number (СТС)",
-          "required": true
-        },
-        "govRegSign": {
-          "type": "string",
-          "description": "License plate: A001AA77",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "list<fine>",
-        "fields": [
-          "fines[0].amount",
-          "fines[0].date",
-          "fines[0].article",
-          "fines[0].description",
-          "fines[0].paymentStatus"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_tax_debt",
-      "description_for_ai": "Check tax debt for an individual using INN via Gosuslugi.",
-      "intent": [
-        "налоговая задолженность",
-        "tax debt gosuslugi",
-        "задолженность ФНС",
-        "долг по налогам"
-      ],
-      "endpoint": "POST https://api.gosuslugi.ru/api/fns/v1/get_debt",
-      "input": {
-        "inn": {
-          "type": "string",
-          "description": "Individual INN (12 digits)",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "debt",
-        "fields": [
-          "totalDebt",
-          "taxDebt",
-          "penaltyDebt",
-          "fineDebt"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "book_appointment",
-      "description_for_ai": "Book an appointment at a government office via Gosuslugi MFC.",
-      "intent": [
-        "записаться МФЦ",
-        "booking gosuslugi",
-        "госуслуги запись",
-        "appointment MFC Russia"
-      ],
-      "endpoint": "POST https://api.gosuslugi.ru/api/public/v1/appointments",
+      "endpoint": "GET https://esia.gosuslugi.ru/api/public/v1/services/{serviceId}",
       "input": {
         "serviceId": {
           "type": "string",
           "required": true
+        }
+      },
+      "output": {
+        "type": "service",
+        "fields": [
+          "id",
+          "title",
+          "description",
+          "documents",
+          "processingTime",
+          "statePayment.amount",
+          "url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_departments",
+      "description_for_ai": "Get list of government departments and their services.",
+      "intent": [
+        "ведомства госуслуги",
+        "министерства API",
+        "органы власти",
+        "government departments"
+      ],
+      "endpoint": "GET https://esia.gosuslugi.ru/api/public/v1/departments",
+      "input": {
+        "page": {
+          "type": "integer",
+          "default": 1
         },
-        "officeId": {
+        "size": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<department>",
+        "fields": [
+          "[0].id",
+          "[0].title",
+          "[0].shortTitle",
+          "[0].code",
+          "[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "check_service_status",
+      "description_for_ai": "Check the status of a submitted government service application.",
+      "intent": [
+        "статус заявления госуслуги",
+        "проверить заявку",
+        "результат заявления",
+        "application status gosuslugi"
+      ],
+      "endpoint": "GET https://lk.gosuslugi.ru/api/orders/{orderId}",
+      "input": {
+        "orderId": {
           "type": "string",
-          "required": true
-        },
-        "date": {
-          "type": "string",
-          "description": "YYYY-MM-DD",
-          "required": true
-        },
-        "time": {
-          "type": "string",
-          "description": "HH:MM",
+          "description": "Application order ID",
           "required": true
         }
       },
       "output": {
-        "type": "appointment",
+        "type": "order",
         "fields": [
-          "confirmationCode",
-          "date",
-          "time",
-          "officeName",
-          "address"
+          "id",
+          "status",
+          "title",
+          "createdDate",
+          "lastModifiedDate",
+          "statusTitle"
         ]
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_life_situations",
+      "description_for_ai": "Get government services grouped by life situations (birth, marriage, etc.).",
+      "intent": [
+        "жизненные ситуации госуслуги",
+        "услуги при рождении",
+        "услуги при браке",
+        "life situations gosuslugi"
+      ],
+      "endpoint": "GET https://esia.gosuslugi.ru/api/public/v1/life-situations",
+      "input": {},
+      "output": {
+        "type": "list<situation>",
+        "fields": [
+          "[0].id",
+          "[0].title",
+          "[0].services[0].id",
+          "[0].services[0].title"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "contributor_notes": {
