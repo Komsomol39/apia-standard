@@ -24,23 +24,22 @@
   "capabilities": [
     {
       "id": "analyze_sentiment",
-      "description_for_ai": "Analyze sentiment of text or documents. Returns overall and per-sentence sentiment.",
+      "description_for_ai": "Analyze sentiment (positive/negative/neutral) of text.",
       "intent": [
-        "sentiment analysis Google",
-        "text sentiment NLP",
-        "positive negative text",
-        "анализ тональности Google NLP"
+        "sentiment analysis",
+        "text sentiment",
+        "opinion mining",
+        "анализ тональности текста"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeSentiment",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: 'PLAIN_TEXT'|'HTML', content: 'text', language: 'en'}",
+          "description": "{type: 'PLAIN_TEXT', content: 'text here'} or {type: 'HTML', content: '<p>...</p>'}",
           "required": true
         },
         "encodingType": {
           "type": "string",
-          "description": "UTF8, UTF16, UTF32",
           "default": "UTF8"
         }
       },
@@ -48,8 +47,7 @@
         "type": "sentiment",
         "fields": [
           "documentSentiment.score (-1.0 to 1.0)",
-          "documentSentiment.magnitude (0.0+)",
-          "sentences[0].text.content",
+          "documentSentiment.magnitude",
           "sentences[0].sentiment.score"
         ]
       },
@@ -58,18 +56,18 @@
     },
     {
       "id": "analyze_entities",
-      "description_for_ai": "Extract named entities from text with Wikipedia links and salience scores.",
+      "description_for_ai": "Extract named entities (people, organizations, places, dates) from text.",
       "intent": [
-        "entity extraction Google",
-        "named entities NLP",
-        "NER Google Cloud",
-        "извлечение сущностей Google NLP"
+        "entity extraction",
+        "NER",
+        "named entities",
+        "извлечение сущностей NLP"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeEntities",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: 'PLAIN_TEXT', content: 'text'}",
+          "description": "{type: 'PLAIN_TEXT', content: 'Google LLC was founded by Larry Page in Menlo Park.'}",
           "required": true
         }
       },
@@ -77,9 +75,9 @@
         "type": "entities",
         "fields": [
           "entities[0].name",
-          "entities[0].type (PERSON|LOCATION|ORGANIZATION|EVENT|WORK_OF_ART|CONSUMER_GOOD)",
-          "entities[0].salience",
-          "entities[0].metadata.wikipedia_url"
+          "entities[0].type (PERSON/ORG/LOCATION/EVENT/DATE)",
+          "entities[0].salience (0-1 importance)",
+          "entities[0].mentions[0].type"
         ]
       },
       "realtime": true,
@@ -87,31 +85,26 @@
     },
     {
       "id": "classify_content",
-      "description_for_ai": "Classify text into 700+ content categories using Google's taxonomy.",
+      "description_for_ai": "Classify text into 700+ content categories (IAB taxonomy). Good for ad targeting and content filtering.",
       "intent": [
-        "classify text Google",
+        "text classification",
         "content categories",
-        "topic classification NLP",
-        "классификация контента Google NLP"
+        "topic detection",
+        "классификация текста Google NLP"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:classifyText",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: 'PLAIN_TEXT', content: 'text (min 20 tokens)'}",
+          "description": "{type: 'PLAIN_TEXT', content: 'text with at least 20 words'}",
           "required": true
-        },
-        "classificationModelOptions": {
-          "type": "object",
-          "description": "{v2Model: {contentCategoriesVersion: 'V2'}}",
-          "required": false
         }
       },
       "output": {
         "type": "categories",
         "fields": [
-          "categories[0].name (/Finance/Banking)",
-          "categories[0].confidence"
+          "categories[0].name (IAB taxonomy path)",
+          "categories[0].confidence (0-1)"
         ]
       },
       "realtime": true,
@@ -119,18 +112,17 @@
     },
     {
       "id": "analyze_syntax",
-      "description_for_ai": "Parse text into tokens with part-of-speech and dependency analysis.",
+      "description_for_ai": "Analyze grammar and syntax: tokenize, POS tagging, dependency tree.",
       "intent": [
-        "syntax analysis Google",
+        "syntax analysis",
         "POS tagging",
-        "parse text",
-        "синтаксический анализ Google NLP"
+        "tokenize text",
+        "синтаксический анализ текста"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeSyntax",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: 'PLAIN_TEXT', content: 'text'}",
           "required": true
         },
         "encodingType": {
@@ -142,19 +134,19 @@
         "type": "syntax",
         "fields": [
           "tokens[0].text.content",
-          "tokens[0].partOfSpeech.tag (NOUN|VERB|ADJ...)",
-          "tokens[0].dependencyEdge.label (NSUBJ|DOBJ...)"
+          "tokens[0].partOfSpeech.tag (NOUN/VERB/ADJ...)",
+          "tokens[0].dependencyEdge.label"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "annotate_text",
-      "description_for_ai": "Run all NLP analyses in one call: sentiment, entities, syntax, categories.",
+      "id": "annotate_all",
+      "description_for_ai": "Run all NLP analyses (sentiment, entities, syntax, categories) in a single request.",
       "intent": [
         "full NLP analysis",
-        "all annotations Google",
+        "all annotations",
         "comprehensive text analysis",
         "полный анализ текста Google NLP"
       ],
@@ -166,17 +158,19 @@
         },
         "features": {
           "type": "object",
-          "description": "{extractSyntax: true, extractEntities: true, extractDocumentSentiment: true, classifyText: true}",
+          "description": "{extractSyntax: true, extractEntities: true, extractDocumentSentiment: true, classifyText: true, moderateText: true}",
           "required": true
         }
       },
       "output": {
         "type": "annotations",
         "fields": [
-          "documentSentiment.score",
-          "entities[0].name",
-          "tokens[0].text.content",
-          "categories[0].name"
+          "sentences",
+          "tokens",
+          "entities",
+          "documentSentiment",
+          "categories",
+          "moderationCategories"
         ]
       },
       "realtime": true,
