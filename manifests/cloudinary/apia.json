@@ -130,6 +130,110 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "upload_image",
+      "description_for_ai": "Upload an image to Cloudinary with transformations.",
+      "intent": [
+        "upload image cloudinary",
+        "store image cloudinary",
+        "загрузить изображение cloudinary"
+      ],
+      "endpoint": "POST https://api.cloudinary.com/v1_1/{cloud}/image/upload",
+      "input": {
+        "file": {
+          "type": "string",
+          "description": "URL or base64",
+          "required": true
+        },
+        "public_id": {
+          "type": "string",
+          "required": false
+        },
+        "folder": {
+          "type": "string",
+          "required": false
+        },
+        "tags": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "asset",
+        "fields": [
+          "public_id",
+          "secure_url",
+          "width",
+          "height",
+          "format",
+          "bytes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "transform_image",
+      "description_for_ai": "Apply Cloudinary transformations: resize, crop, filter, format.",
+      "intent": [
+        "transform image cloudinary",
+        "resize image cloudinary",
+        "image transformation",
+        "изменить изображение cloudinary"
+      ],
+      "endpoint": "GET https://res.cloudinary.com/{cloud}/image/upload/{transformations}/{public_id}",
+      "input": {
+        "public_id": {
+          "type": "string",
+          "required": true
+        },
+        "transformations": {
+          "type": "string",
+          "description": "w_400,h_300,c_fill or w_800,f_webp,q_80",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "URL with transformation applied"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_assets",
+      "description_for_ai": "Search assets in Cloudinary by tag, folder, or metadata.",
+      "intent": [
+        "search cloudinary",
+        "find assets",
+        "поиск cloudinary assets"
+      ],
+      "endpoint": "GET https://api.cloudinary.com/v1_1/{cloud}/resources/search",
+      "input": {
+        "expression": {
+          "type": "string",
+          "description": "tags=cats AND folder=pets",
+          "required": false
+        },
+        "max_results": {
+          "type": "integer",
+          "default": 30
+        }
+      },
+      "output": {
+        "type": "list<asset>",
+        "fields": [
+          "resources[0].public_id",
+          "resources[0].secure_url",
+          "resources[0].format",
+          "resources[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
