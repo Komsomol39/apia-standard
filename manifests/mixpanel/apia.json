@@ -23,163 +23,202 @@
   "capabilities": [
     {
       "id": "track_event",
-      "description_for_ai": "Track a user event in Mixpanel for analytics and funnel analysis.",
+      "description_for_ai": "Track a user event in Mixpanel. Must send from server or with distinct_id.",
       "intent": [
-        "track event",
+        "track event Mixpanel",
         "analytics event",
-        "mixpanel track",
-        "трекинг события mixpanel"
+        "user action tracking",
+        "аналитика Mixpanel"
       ],
       "endpoint": "POST https://api.mixpanel.com/track",
       "input": {
-        "data": {
+        "event": {
           "type": "string",
-          "description": "Base64-encoded JSON: [{event: 'Button Click', properties: {token: 'TOKEN', distinct_id: 'user123', time: 1609459200, page: '/home', $browser: 'Chrome'}}]",
+          "required": true
+        },
+        "properties": {
+          "type": "object",
+          "description": "{distinct_id: 'user123', token: 'project_token', $os: 'iOS', plan: 'pro', value: 99.99}",
           "required": true
         }
       },
       "output": {
-        "type": "result",
+        "type": "status",
         "fields": [
-          "1 (success) or 0 (failure)"
+          "1 (success)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "query_jql",
-      "description_for_ai": "Run JQL (JavaScript Query Language) queries on Mixpanel data for custom reports.",
+      "id": "identify_user",
+      "description_for_ai": "Create or update a Mixpanel user profile.",
       "intent": [
-        "mixpanel query",
-        "event analytics",
-        "funnel analysis mixpanel",
-        "аналитика mixpanel"
+        "user profile Mixpanel",
+        "identify user",
+        "set user properties",
+        "профиль пользователя Mixpanel"
+      ],
+      "endpoint": "POST https://api.mixpanel.com/engage#profile-set",
+      "input": {
+        "records": {
+          "type": "array",
+          "description": "[{$token: 'project_token', $distinct_id: 'user123', $set: {$name: 'John', $email: 'john@example.com', plan: 'pro'}}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "status",
+        "fields": [
+          "1 (success)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "query_events",
+      "description_for_ai": "Query event data with JQL (JavaScript Query Language) for custom analytics.",
+      "intent": [
+        "Mixpanel query",
+        "analytics query",
+        "event data",
+        "запрос Mixpanel"
       ],
       "endpoint": "POST https://mixpanel.com/api/2.0/jql",
       "input": {
         "script": {
           "type": "string",
-          "description": "JQL script e.g. function main() { return Events({from_date: '2024-01-01', to_date: '2024-01-31', event_selectors: [{event: 'Purchase'}]}).groupBy(['properties.plan'], mixpanel.reducer.count()); }",
+          "description": "JQL script: function main() { return Events({from_date: '2024-01-01', to_date: '2024-01-31', event_selectors: [{event: 'Sign Up'}]}).groupBy([mixpanel.numeric_bucket('$time', mixpanel.daily)], mixpanel.reducer.count()); }",
           "required": true
         }
       },
       "output": {
         "type": "list<result>",
         "fields": [
-          "results (array of {key, value})"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "set_user_profile",
-      "description_for_ai": "Create or update a Mixpanel user profile with properties.",
-      "intent": [
-        "set user mixpanel",
-        "user profile analytics",
-        "identify user",
-        "профиль пользователя mixpanel"
-      ],
-      "endpoint": "POST https://api.mixpanel.com/engage",
-      "input": {
-        "data": {
-          "type": "string",
-          "description": "Base64-encoded JSON: [{$token: 'TOKEN', $distinct_id: 'user123', $set: {$name: 'John Doe', $email: 'john@example.com', plan: 'pro', created_at: '2024-01-15'}}]",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "result",
-        "fields": [
-          "1 (success) or 0 (failure)"
+          "[0].key",
+          "[0].value"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_event_stats",
-      "description_for_ai": "Get aggregated event statistics over a time range using Mixpanel Insights API.",
+      "id": "get_funnels",
+      "description_for_ai": "Get funnel analysis from Mixpanel — conversion rates between steps.",
       "intent": [
-        "event stats mixpanel",
-        "event count",
-        "daily events",
-        "статистика событий mixpanel"
+        "funnel Mixpanel",
+        "conversion funnel",
+        "user journey",
+        "воронка Mixpanel"
       ],
-      "endpoint": "GET https://mixpanel.com/api/2.0/events",
+      "endpoint": "GET https://mixpanel.com/api/2.0/funnels",
       "input": {
-        "event": {
-          "type": "array",
-          "description": "Event names e.g. ['Purchase', 'Sign Up']",
-          "required": true
-        },
-        "type": {
-          "type": "string",
-          "description": "general or unique",
-          "default": "general"
-        },
-        "unit": {
-          "type": "string",
-          "description": "minute, hour, day, week, month",
-          "default": "day"
-        },
-        "interval": {
+        "funnel_id": {
           "type": "integer",
-          "description": "Number of units back from now",
-          "default": 30
+          "required": true
         },
         "from_date": {
           "type": "string",
           "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "to_date": {
+          "type": "string",
+          "required": true
+        },
+        "interval": {
+          "type": "integer",
+          "description": "Days per interval",
+          "default": 30
+        }
+      },
+      "output": {
+        "type": "funnel",
+        "fields": [
+          "data.steps[0].event",
+          "data.steps[0].count",
+          "data.steps[0].conversion_ratio",
+          "data.analysis.completion"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_retention",
+      "description_for_ai": "Get user retention cohort analysis.",
+      "intent": [
+        "retention Mixpanel",
+        "user retention",
+        "cohort analysis",
+        "удержание пользователей Mixpanel"
+      ],
+      "endpoint": "GET https://mixpanel.com/api/2.0/retention",
+      "input": {
+        "from_date": {
+          "type": "string",
+          "required": true
+        },
+        "to_date": {
+          "type": "string",
+          "required": true
+        },
+        "born_event": {
+          "type": "string",
+          "description": "Event defining cohort entry",
+          "required": true
+        },
+        "event": {
+          "type": "string",
+          "description": "Return event to track retention",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "retention",
+        "fields": [
+          "counts[0].first",
+          "counts[0].counts (day 1-30 retains)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "export_events",
+      "description_for_ai": "Export raw event data from Mixpanel for a date range.",
+      "intent": [
+        "export events Mixpanel",
+        "raw data export",
+        "data dump Mixpanel",
+        "экспорт данных Mixpanel"
+      ],
+      "endpoint": "GET https://data.mixpanel.com/api/2.0/export",
+      "input": {
+        "from_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "to_date": {
+          "type": "string",
+          "required": true
+        },
+        "event": {
+          "type": "array",
+          "description": "Filter by event names",
           "required": false
         }
       },
       "output": {
-        "type": "stats",
+        "type": "stream<event>",
         "fields": [
-          "data.series (dates)",
-          "data.values.EventName (date→count map)"
+          "Newline-delimited JSON: {event, properties, distinct_id, time}"
         ]
       },
       "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "create_annotation",
-      "description_for_ai": "Create an annotation on a Mixpanel chart to mark important events (deploys, campaigns).",
-      "intent": [
-        "annotation mixpanel",
-        "mark event analytics",
-        "milestone mixpanel",
-        "аннотация mixpanel"
-      ],
-      "endpoint": "POST https://mixpanel.com/api/2.0/annotations/create",
-      "input": {
-        "project_id": {
-          "type": "integer",
-          "required": true
-        },
-        "description": {
-          "type": "string",
-          "required": true
-        },
-        "date": {
-          "type": "string",
-          "description": "YYYY-MM-DDTHH:MM:SS",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "annotation",
-        "fields": [
-          "annotation.id",
-          "annotation.description",
-          "annotation.date"
-        ]
-      },
-      "realtime": true,
       "requires_auth": true
     }
   ],
