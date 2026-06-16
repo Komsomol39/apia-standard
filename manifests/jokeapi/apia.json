@@ -21,33 +21,33 @@
   "capabilities": [
     {
       "id": "get_joke",
-      "description_for_ai": "Get a random joke from JokeAPI. Supports many categories and languages.",
+      "description_for_ai": "Get a random joke from JokeAPI. Supports various categories and safe mode.",
       "intent": [
         "get joke",
         "random joke",
-        "joke API",
-        "анекдот jokeapi"
+        "funny joke",
+        "анекдот JokeAPI"
       ],
-      "endpoint": "GET https://v2.jokeapi.dev/joke/{category}",
+      "endpoint": "GET https://v2.jokeapi.dev/joke/{categories}",
       "input": {
-        "category": {
+        "categories": {
           "type": "string",
-          "description": "Any, Misc, Programming, Dark, Pun, Spooky, Christmas",
+          "description": "Any, Programming, Misc, Dark, Pun, Spooky, Christmas (comma-separated)",
           "default": "Any"
         },
         "lang": {
           "type": "string",
-          "description": "en, de, cs, es, fr, pt",
+          "description": "en, cs, de, es, fr, pt",
           "default": "en"
+        },
+        "blacklistFlags": {
+          "type": "string",
+          "description": "nsfw, religious, political, racist, sexist, explicit (comma-separated)",
+          "required": false
         },
         "type": {
           "type": "string",
           "description": "single or twopart",
-          "required": false
-        },
-        "blacklistFlags": {
-          "type": "string",
-          "description": "nsfw,racist,sexist,explicit (comma-separated to exclude)",
           "required": false
         }
       },
@@ -56,9 +56,9 @@
         "fields": [
           "type",
           "joke (single type)",
-          "setup + delivery (twopart type)",
+          "setup + delivery (twopart)",
           "category",
-          "lang"
+          "flags"
         ]
       },
       "realtime": true,
@@ -66,34 +66,37 @@
     },
     {
       "id": "get_multiple_jokes",
-      "description_for_ai": "Get multiple jokes at once (up to 10).",
+      "description_for_ai": "Get multiple jokes at once from JokeAPI (up to 10).",
       "intent": [
         "multiple jokes",
-        "batch jokes",
-        "joke list",
+        "joke batch",
+        "jokes list",
         "несколько анекдотов"
       ],
-      "endpoint": "GET https://v2.jokeapi.dev/joke/{category}",
+      "endpoint": "GET https://v2.jokeapi.dev/joke/{categories}",
       "input": {
-        "category": {
+        "categories": {
           "type": "string",
-          "default": "Programming"
+          "default": "Any"
         },
         "amount": {
           "type": "integer",
           "description": "Number of jokes 1-10",
           "default": 3
         },
-        "lang": {
+        "blacklistFlags": {
           "type": "string",
-          "default": "en"
+          "required": false
         }
       },
       "output": {
         "type": "list<joke>",
         "fields": [
+          "jokes[0].category",
           "jokes[0].type",
-          "jokes[0].joke or jokes[0].setup"
+          "jokes[0].joke",
+          "jokes[0].setup",
+          "jokes[0].delivery"
         ]
       },
       "realtime": true,
@@ -101,75 +104,85 @@
     },
     {
       "id": "search_jokes",
-      "description_for_ai": "Search jokes by keyword.",
+      "description_for_ai": "Search jokes containing a specific keyword.",
       "intent": [
         "search jokes",
-        "find joke keyword",
-        "joke search",
-        "поиск анекдотов"
+        "find joke about",
+        "keyword joke",
+        "поиск анекдота"
       ],
-      "endpoint": "GET https://v2.jokeapi.dev/joke/{category}",
+      "endpoint": "GET https://v2.jokeapi.dev/joke/Any",
       "input": {
-        "category": {
-          "type": "string",
-          "default": "Any"
-        },
         "contains": {
           "type": "string",
-          "description": "Keyword to search for in jokes",
+          "description": "Keyword that must appear in the joke",
           "required": true
+        },
+        "lang": {
+          "type": "string",
+          "default": "en"
         }
       },
       "output": {
-        "type": "list<joke>",
+        "type": "joke",
         "fields": [
-          "jokes[0].joke",
-          "jokes[0].category",
-          "total"
+          "category",
+          "type",
+          "joke or setup/delivery"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_categories",
-      "description_for_ai": "Get list of available joke categories and flags.",
+      "id": "get_joke_info",
+      "description_for_ai": "Get JokeAPI statistics and available categories/flags.",
       "intent": [
+        "JokeAPI info",
         "joke categories",
-        "available categories jokeapi",
-        "joke types",
-        "категории анекдотов"
-      ],
-      "endpoint": "GET https://v2.jokeapi.dev/categories",
-      "input": {},
-      "output": {
-        "type": "categories",
-        "fields": [
-          "categories (array)",
-          "categoryAliases",
-          "flags (array)"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "get_info",
-      "description_for_ai": "Get JokeAPI info: total jokes, categories, languages, flags.",
-      "intent": [
-        "jokeapi info",
-        "joke database info",
-        "API stats jokeapi"
+        "API stats",
+        "информация JokeAPI"
       ],
       "endpoint": "GET https://v2.jokeapi.dev/info",
       "input": {},
       "output": {
         "type": "info",
         "fields": [
-          "totalCount",
+          "version",
+          "jokes.totalCount",
+          "formats",
           "categories",
-          "availableLanguages",
-          "availableFlags"
+          "flags",
+          "lang"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_joke_by_id",
+      "description_for_ai": "Get a specific joke by its numeric ID.",
+      "intent": [
+        "joke by ID",
+        "specific joke",
+        "joke number",
+        "анекдот по ID"
+      ],
+      "endpoint": "GET https://v2.jokeapi.dev/joke/Any",
+      "input": {
+        "idRange": {
+          "type": "string",
+          "description": "Single ID (42) or range (1-50)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "joke",
+        "fields": [
+          "id",
+          "category",
+          "type",
+          "joke or setup/delivery"
         ]
       },
       "realtime": true,
