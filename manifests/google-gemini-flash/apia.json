@@ -21,20 +21,20 @@
   },
   "capabilities": [
     {
-      "id": "generate",
-      "description_for_ai": "Fast, cheap frontier AI. Best for high-volume classification, extraction, summarization, translation. 1500 req/day free.",
+      "id": "generate_content",
+      "description_for_ai": "Fast, cheap AI text generation with Gemini Flash. Best for high-volume tasks, summarization, classification.",
       "intent": [
         "fast AI",
-        "cheap AI",
-        "high volume",
-        "real-time AI",
-        "free AI 1500 day",
-        "Gemini Flash"
+        "cheap AI generation",
+        "Gemini Flash",
+        "text generation fast",
+        "быстрый AI Gemini"
       ],
-      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
       "input": {
         "contents": {
           "type": "array",
+          "description": "[{role: 'user', parts: [{text: 'prompt'}]}]",
           "required": true
         },
         "systemInstruction": {
@@ -43,16 +43,126 @@
         },
         "generationConfig": {
           "type": "object",
-          "description": "{temperature, maxOutputTokens}",
+          "description": "{temperature, maxOutputTokens, responseMimeType}",
           "required": false
         }
       },
       "output": {
-        "type": "completion",
+        "type": "response",
         "fields": [
           "candidates[0].content.parts[0].text",
-          "usageMetadata.promptTokenCount",
-          "usageMetadata.candidatesTokenCount"
+          "usageMetadata.totalTokenCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "analyze_image",
+      "description_for_ai": "Analyze images quickly and cheaply with Gemini Flash vision.",
+      "intent": [
+        "image analysis fast",
+        "Gemini Flash vision",
+        "classify image",
+        "анализ фото Gemini Flash"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "description": "[{parts: [{inline_data: {mime_type: 'image/jpeg', data: 'BASE64'}}, {text: 'question'}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "json_mode",
+      "description_for_ai": "Force Gemini Flash to return strictly valid JSON. Use for structured extraction and classification.",
+      "intent": [
+        "JSON output AI",
+        "structured extraction",
+        "JSON mode Gemini",
+        "извлечение данных JSON"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "generationConfig": {
+          "type": "object",
+          "description": "{responseMimeType: 'application/json', responseSchema: {type: 'object', properties: {...}}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "json",
+        "fields": [
+          "candidates[0].content.parts[0].text (valid JSON string)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "stream_content",
+      "description_for_ai": "Stream Gemini Flash responses token by token. Use for real-time chat interfaces.",
+      "intent": [
+        "stream AI response",
+        "real-time AI",
+        "streaming Gemini",
+        "стриминг AI"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "stream<response>",
+        "fields": [
+          "chunks[].candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "batch_process",
+      "description_for_ai": "Process multiple prompts efficiently with Gemini Flash. Lower cost per token than Pro.",
+      "intent": [
+        "batch AI",
+        "bulk processing",
+        "process many texts",
+        "пакетная обработка AI"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "generationConfig": {
+          "type": "object",
+          "description": "{temperature: 0, maxOutputTokens: 200}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text"
         ]
       },
       "realtime": true,
