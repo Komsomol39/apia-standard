@@ -23,59 +23,206 @@
   },
   "capabilities": [
     {
-      "id": "capture_screenshot",
-      "description_for_ai": "Capture website screenshots via API. Full page, viewport, mobile/desktop. Convert URLs to PNG/JPEG/PDF. Used for website monitoring, thumbnails, content archiving. 100 screenshots/month free. Capture screenshot of any URL. Returns image URL or binary. Use for website previews, monitoring, OG image generation.",
+      "id": "take_screenshot",
+      "description_for_ai": "Take a screenshot of any URL with customizable viewport.",
       "intent": [
-        "screenshot website",
-        "capture URL",
-        "website thumbnail",
-        "web page image",
-        "site preview",
+        "screenshot URL",
+        "web page screenshot",
+        "website screenshot API",
         "скриншот сайта"
       ],
       "endpoint": "GET https://shot.screenshotapi.net/screenshot",
       "input": {
+        "token": {
+          "type": "string",
+          "description": "API token",
+          "required": true
+        },
         "url": {
           "type": "string",
-          "description": "Full URL to capture e.g. https://example.com",
+          "description": "URL to screenshot",
           "required": true
         },
         "width": {
           "type": "integer",
-          "description": "Viewport width in pixels",
           "default": 1920
         },
         "height": {
           "type": "integer",
-          "description": "Viewport height",
           "default": 1080
-        },
-        "full_page": {
-          "type": "boolean",
-          "description": "Capture full scrollable page",
-          "default": false
         },
         "output": {
           "type": "string",
           "description": "image or json",
           "default": "image"
         },
-        "delay": {
-          "type": "integer",
-          "description": "Wait milliseconds before capture (for JS-heavy sites)",
-          "default": 0
-        },
-        "fresh": {
+        "full_page": {
           "type": "boolean",
-          "description": "Force fresh capture, ignore cache",
+          "description": "Capture full page length",
           "default": false
         }
       },
       "output": {
         "type": "image",
         "fields": [
-          "screenshot (binary PNG)",
-          "or JSON: {screenshot: url}"
+          "PNG/JPEG screenshot binary or JSON with screenshot URL"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "mobile_screenshot",
+      "description_for_ai": "Take a mobile device screenshot of a URL.",
+      "intent": [
+        "mobile screenshot",
+        "responsive screenshot",
+        "phone screenshot",
+        "мобильный скриншот сайта"
+      ],
+      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
+      "input": {
+        "token": {
+          "type": "string",
+          "required": true
+        },
+        "url": {
+          "type": "string",
+          "required": true
+        },
+        "width": {
+          "type": "integer",
+          "default": 390
+        },
+        "height": {
+          "type": "integer",
+          "default": 844
+        },
+        "user_agent": {
+          "type": "string",
+          "description": "Mobile UA string",
+          "required": false
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Wait ms before screenshot",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "Mobile viewport screenshot"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "pdf_from_url",
+      "description_for_ai": "Convert a web page URL to PDF.",
+      "intent": [
+        "URL to PDF",
+        "webpage PDF",
+        "print page PDF",
+        "PDF из URL"
+      ],
+      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
+      "input": {
+        "token": {
+          "type": "string",
+          "required": true
+        },
+        "url": {
+          "type": "string",
+          "required": true
+        },
+        "output": {
+          "type": "string",
+          "default": "pdf"
+        },
+        "full_page": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "pdf",
+        "fields": [
+          "PDF binary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "screenshot_with_delay",
+      "description_for_ai": "Take screenshot after waiting for JS rendering or animations.",
+      "intent": [
+        "delayed screenshot",
+        "wait for JS",
+        "dynamic content screenshot",
+        "скриншот с задержкой"
+      ],
+      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
+      "input": {
+        "token": {
+          "type": "string",
+          "required": true
+        },
+        "url": {
+          "type": "string",
+          "required": true
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Wait in ms before capturing: 2000 for SPAs",
+          "required": true
+        },
+        "lazy_load": {
+          "type": "boolean",
+          "description": "Scroll to load lazy images",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "Screenshot after delay"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "batch_screenshots",
+      "description_for_ai": "Take screenshots of multiple URLs efficiently.",
+      "intent": [
+        "batch screenshots",
+        "multiple URLs screenshot",
+        "bulk screenshots",
+        "скриншоты пакетом"
+      ],
+      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
+      "input": {
+        "token": {
+          "type": "string",
+          "required": true
+        },
+        "url": {
+          "type": "string",
+          "description": "URL to capture (call repeatedly for batch)",
+          "required": true
+        },
+        "output": {
+          "type": "string",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "json",
+        "fields": [
+          "screenshot (CDN URL to image)"
         ]
       },
       "realtime": true,
