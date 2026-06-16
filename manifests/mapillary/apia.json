@@ -24,43 +24,172 @@
   "capabilities": [
     {
       "id": "search_images",
-      "description_for_ai": "Crowdsourced street-level imagery. 2B+ photos from 200+ countries. Access street photos, map features (signs, lanes, surfaces), traffic signs, sequence data. Free for developers. Use for street view, autonomous driving data, map enrichment. Search street-level images near coordinates. Returns photo IDs, camera angles, dates.",
+      "description_for_ai": "Search street-level photos near a location on Mapillary.",
       "intent": [
-        "street view",
-        "street photo",
-        "location photo",
-        "road images",
-        "street imagery"
+        "mapillary images",
+        "street photos",
+        "geolocated photos",
+        "уличные фото mapillary"
       ],
       "endpoint": "GET https://graph.mapillary.com/images",
       "input": {
         "bbox": {
           "type": "string",
-          "description": "min_lon,min_lat,max_lon,max_lat bounding box",
+          "description": "Bounding box: west,south,east,north e.g. -122.45,37.77,-122.43,37.79",
           "required": true
         },
         "limit": {
           "type": "integer",
-          "default": 10,
-          "description": "Maximum number of results to return"
+          "default": 10
         },
         "fields": {
           "type": "string",
-          "description": "id,thumb_2048_url,geometry,captured_at,compass_angle",
-          "required": false
+          "description": "id,geometry,captured_at,compass_angle,sequence",
+          "default": "id,geometry,captured_at"
         }
       },
       "output": {
         "type": "list<image>",
         "fields": [
           "data[0].id",
-          "data[0].thumb_2048_url",
           "data[0].geometry.coordinates",
           "data[0].captured_at",
           "data[0].compass_angle"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_image",
+      "description_for_ai": "Get a specific Mapillary image by ID with download URL.",
+      "intent": [
+        "mapillary image details",
+        "street view photo",
+        "image URL mapillary",
+        "фото mapillary"
+      ],
+      "endpoint": "GET https://graph.mapillary.com/{image_id}",
+      "input": {
+        "image_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "id,geometry,thumb_2048_url,creator,captured_at,is_pano",
+          "default": "id,geometry,thumb_2048_url"
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "id",
+          "geometry.coordinates",
+          "thumb_2048_url",
+          "captured_at",
+          "is_pano"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_sequence",
+      "description_for_ai": "Get a Mapillary sequence (collection of images along a path).",
+      "intent": [
+        "mapillary sequence",
+        "photo sequence",
+        "street photo path",
+        "последовательность mapillary"
+      ],
+      "endpoint": "GET https://graph.mapillary.com/image_ids",
+      "input": {
+        "sequence_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "sequence",
+        "fields": [
+          "data (list of image IDs in sequence)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_map_features",
+      "description_for_ai": "Get map features (signs, traffic lights, etc.) detected in Mapillary images.",
+      "intent": [
+        "map features mapillary",
+        "street signs detected",
+        "traffic signs AI",
+        "дорожные знаки mapillary"
+      ],
+      "endpoint": "GET https://graph.mapillary.com/map_features",
+      "input": {
+        "bbox": {
+          "type": "string",
+          "description": "Bounding box",
+          "required": true
+        },
+        "value": {
+          "type": "string",
+          "description": "Feature type filter: regulatory--stop_sign, information--tourist_attraction, object--fire_hydrant",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<feature>",
+        "fields": [
+          "data[0].id",
+          "data[0].value",
+          "data[0].geometry.coordinates",
+          "data[0].first_seen_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_by_creator",
+      "description_for_ai": "Get Mapillary images uploaded by a specific user.",
+      "intent": [
+        "mapillary user photos",
+        "creator images mapillary",
+        "user photos street",
+        "фото пользователя mapillary"
+      ],
+      "endpoint": "GET https://graph.mapillary.com/images",
+      "input": {
+        "organization_id": {
+          "type": "string",
+          "required": false
+        },
+        "creator_id": {
+          "type": "string",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<image>",
+        "fields": [
+          "data[0].id",
+          "data[0].geometry.coordinates",
+          "data[0].captured_at"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
