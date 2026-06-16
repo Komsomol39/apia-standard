@@ -23,12 +23,12 @@
   "capabilities": [
     {
       "id": "list_droplets",
-      "description_for_ai": "List all cloud servers (Droplets) with status, IP, size, and region.",
+      "description_for_ai": "List all DigitalOcean Droplets (VMs) in your account with IPs and status.",
       "intent": [
-        "digitalocean servers",
-        "list droplets",
-        "VPS list",
-        "серверы digitalocean"
+        "DigitalOcean servers",
+        "list VMs",
+        "droplets list",
+        "серверы DigitalOcean"
       ],
       "endpoint": "GET https://api.digitalocean.com/v2/droplets",
       "input": {
@@ -36,14 +36,14 @@
           "type": "integer",
           "default": 20
         },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
         "tag_name": {
           "type": "string",
           "description": "Filter by tag",
           "required": false
-        },
-        "page": {
-          "type": "integer",
-          "default": 1
         }
       },
       "output": {
@@ -53,8 +53,8 @@
           "droplets[0].name",
           "droplets[0].status",
           "droplets[0].networks.v4[0].ip_address",
-          "droplets[0].size.slug",
-          "droplets[0].region.slug"
+          "droplets[0].size_slug",
+          "droplets[0].region.name"
         ]
       },
       "realtime": true,
@@ -62,49 +62,47 @@
     },
     {
       "id": "create_droplet",
-      "description_for_ai": "Create a new cloud server with specified OS, region, and size.",
+      "description_for_ai": "Create a new DigitalOcean Droplet (virtual machine).",
       "intent": [
-        "create server digitalocean",
-        "new VPS",
+        "create server DigitalOcean",
+        "new VM",
         "spin up droplet",
-        "создать сервер digitalocean"
+        "создать сервер DigitalOcean"
       ],
       "endpoint": "POST https://api.digitalocean.com/v2/droplets",
       "input": {
         "name": {
           "type": "string",
-          "description": "Hostname for the Droplet",
           "required": true
         },
         "region": {
           "type": "string",
-          "description": "nyc3, sfo3, lon1, fra1, sgp1, ams3, blr1, tor1, syd1",
+          "description": "nyc1, nyc3, sfo3, ams3, sgp1, lon1, fra1, tor1, blr1, syd1",
           "required": true
         },
         "size": {
           "type": "string",
-          "description": "s-1vcpu-1gb ($6/mo), s-2vcpu-2gb ($18/mo), s-2vcpu-4gb ($24/mo)",
+          "description": "s-1vcpu-1gb ($6/mo), s-2vcpu-4gb ($24/mo), c-4-8gib (CPU-opt)",
           "required": true
         },
         "image": {
           "type": "string",
-          "description": "ubuntu-24-04-x64, debian-12-x64, fedora-41-x64, centos-stream-9-x64",
+          "description": "ubuntu-24-04-x64, debian-12-x64, fedora-40-x64, ubuntu-22-04-x64",
           "required": true
         },
         "ssh_keys": {
           "type": "array",
-          "description": "SSH key IDs (get from /v2/account/keys)",
+          "description": "SSH key IDs from your account",
           "required": false
         },
         "tags": {
           "type": "array",
-          "description": "Tags for organization",
           "required": false
         },
-        "backups": {
-          "type": "boolean",
-          "description": "Enable automatic weekly backups (+20% cost)",
-          "default": false
+        "user_data": {
+          "type": "string",
+          "description": "Cloud-init script for setup",
+          "required": false
         }
       },
       "output": {
@@ -113,7 +111,7 @@
           "droplet.id",
           "droplet.name",
           "droplet.status",
-          "droplet.networks"
+          "links.actions[0].href"
         ]
       },
       "realtime": true,
@@ -121,12 +119,12 @@
     },
     {
       "id": "droplet_action",
-      "description_for_ai": "Perform action on a Droplet: reboot, power_on, power_off, shutdown, rebuild, resize, snapshot.",
+      "description_for_ai": "Perform action on a Droplet: power_on, power_off, reboot, shutdown, snapshot.",
       "intent": [
         "reboot server",
+        "power off VM",
         "restart droplet",
-        "power off server",
-        "перезагрузить сервер digitalocean"
+        "перезагрузить сервер DigitalOcean"
       ],
       "endpoint": "POST https://api.digitalocean.com/v2/droplets/{droplet_id}/actions",
       "input": {
@@ -136,13 +134,8 @@
         },
         "type": {
           "type": "string",
-          "description": "reboot, power_on, power_off, shutdown, rebuild, resize, snapshot, enable_backups",
+          "description": "power_on, power_off, power_cycle, reboot, shutdown, rebuild, resize, snapshot",
           "required": true
-        },
-        "size": {
-          "type": "string",
-          "description": "New size slug for resize action",
-          "required": false
         }
       },
       "output": {
@@ -151,29 +144,59 @@
           "action.id",
           "action.status",
           "action.type",
-          "action.started_at"
+          "action.completed_at"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "manage_databases",
-      "description_for_ai": "Create or list managed databases: PostgreSQL, MySQL, Redis, MongoDB, Kafka.",
+      "id": "create_snapshot",
+      "description_for_ai": "Create a snapshot of a Droplet or volume for backup/cloning.",
       "intent": [
-        "managed database digitalocean",
-        "create postgres",
-        "managed redis",
-        "база данных digitalocean"
+        "snapshot DigitalOcean",
+        "backup server",
+        "create image",
+        "снэпшот DigitalOcean"
       ],
-      "endpoint": "GET https://api.digitalocean.com/v2/databases",
+      "endpoint": "POST https://api.digitalocean.com/v2/droplets/{droplet_id}/actions",
       "input": {
-        "engine": {
+        "droplet_id": {
+          "type": "integer",
+          "required": true
+        },
+        "type": {
           "type": "string",
-          "description": "pg (PostgreSQL), mysql, redis, mongodb, kafka",
+          "default": "snapshot"
+        },
+        "name": {
+          "type": "string",
+          "description": "Snapshot name",
           "required": false
         }
       },
+      "output": {
+        "type": "action",
+        "fields": [
+          "action.id",
+          "action.status",
+          "action.type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_databases",
+      "description_for_ai": "List managed database clusters (PostgreSQL, MySQL, Redis, MongoDB, Kafka).",
+      "intent": [
+        "DigitalOcean database",
+        "managed DB",
+        "database cluster",
+        "базы данных DigitalOcean"
+      ],
+      "endpoint": "GET https://api.digitalocean.com/v2/databases",
+      "input": {},
       "output": {
         "type": "list<database>",
         "fields": [
@@ -182,6 +205,53 @@
           "databases[0].engine",
           "databases[0].status",
           "databases[0].connection.uri"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "manage_domains",
+      "description_for_ai": "Create and manage DNS domains and records in DigitalOcean.",
+      "intent": [
+        "DNS DigitalOcean",
+        "domain records",
+        "add domain",
+        "DNS записи DigitalOcean"
+      ],
+      "endpoint": "POST https://api.digitalocean.com/v2/domains/{domain_name}/records",
+      "input": {
+        "domain_name": {
+          "type": "string",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "A, AAAA, CNAME, MX, TXT, NS, SOA, SRV",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Record name e.g. @ or www",
+          "required": true
+        },
+        "data": {
+          "type": "string",
+          "description": "Record value e.g. IP address",
+          "required": true
+        },
+        "ttl": {
+          "type": "integer",
+          "default": 1800
+        }
+      },
+      "output": {
+        "type": "domain_record",
+        "fields": [
+          "domain_record.id",
+          "domain_record.type",
+          "domain_record.name",
+          "domain_record.data"
         ]
       },
       "realtime": true,
