@@ -22,79 +22,89 @@
   "capabilities": [
     {
       "id": "search",
-      "description_for_ai": "Geocode address to coordinates. Free, no API key. Use for any address lookup worldwide.",
+      "description_for_ai": "Search for places, addresses, landmarks worldwide. Free, open-source, no API key required.",
       "intent": [
-        "free geocoding",
-        "address to coordinates",
-        "no API key geocoding",
-        "openstreetmap geocoding"
+        "search address",
+        "find place",
+        "geocode free",
+        "найти адрес",
+        "поиск на карте бесплатно"
       ],
       "endpoint": "GET https://nominatim.openstreetmap.org/search",
       "input": {
         "q": {
           "type": "string",
-          "description": "Address or place name",
+          "description": "Free-text query: address, city, landmark, POI",
           "required": true
         },
         "format": {
           "type": "string",
-          "default": "json",
-          "description": "Response format: json, xml, or csv"
+          "default": "json"
         },
         "limit": {
           "type": "integer",
-          "default": 5,
-          "description": "Maximum number of results to return"
+          "default": 10
+        },
+        "countrycodes": {
+          "type": "string",
+          "description": "Comma-separated ISO codes to restrict: ru,by,kz",
+          "required": false
         },
         "addressdetails": {
           "type": "integer",
           "description": "1 to include address breakdown",
           "default": 0
         },
-        "countrycodes": {
+        "accept-language": {
           "type": "string",
-          "description": "ISO country filter e.g. ru,de",
+          "description": "Language for results: ru, en, de",
           "required": false
         }
       },
       "output": {
         "type": "list<place>",
         "fields": [
-          "lat",
-          "lon",
-          "display_name",
-          "address",
-          "type",
-          "importance"
+          "[0].display_name",
+          "[0].lat",
+          "[0].lon",
+          "[0].type",
+          "[0].address"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": false
     },
     {
       "id": "reverse",
-      "description_for_ai": "Convert coordinates to address. Free, no API key.",
+      "description_for_ai": "Reverse geocode coordinates to address. Free, open-source.",
       "intent": [
-        "reverse geocode",
+        "reverse geocode free",
         "coordinates to address",
-        "what address is this location"
+        "what is at location",
+        "адрес по координатам"
       ],
       "endpoint": "GET https://nominatim.openstreetmap.org/reverse",
       "input": {
         "lat": {
           "type": "float",
-          "required": true,
-          "description": "Latitude coordinate (decimal degrees, -90 to 90)"
+          "required": true
         },
         "lon": {
           "type": "float",
-          "required": true,
-          "description": "Longitude coordinate (decimal degrees, -180 to 180)"
+          "required": true
         },
         "format": {
           "type": "string",
-          "default": "json",
-          "description": "Response format: json, xml, or csv"
+          "default": "json"
+        },
+        "zoom": {
+          "type": "integer",
+          "description": "Level of detail: 3=country, 8=city, 14=suburb, 18=street",
+          "default": 18
+        },
+        "accept-language": {
+          "type": "string",
+          "required": false
         }
       },
       "output": {
@@ -103,10 +113,83 @@
           "display_name",
           "address.road",
           "address.city",
-          "address.country"
+          "address.country",
+          "address.postcode"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "lookup",
+      "description_for_ai": "Look up details for a specific OSM object by its ID.",
+      "intent": [
+        "osm object",
+        "openstreetmap lookup",
+        "place details osm"
+      ],
+      "endpoint": "GET https://nominatim.openstreetmap.org/lookup",
+      "input": {
+        "osm_ids": {
+          "type": "string",
+          "description": "Comma-separated OSM IDs: N123,W456,R789 (N=node, W=way, R=relation)",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "json"
+        },
+        "addressdetails": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<place>",
+        "fields": [
+          "[0].display_name",
+          "[0].lat",
+          "[0].lon",
+          "[0].address"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "details",
+      "description_for_ai": "Get detailed information about a specific Nominatim place including hierarchy and extra tags.",
+      "intent": [
+        "place details nominatim",
+        "osm details",
+        "детали места osm"
+      ],
+      "endpoint": "GET https://nominatim.openstreetmap.org/details",
+      "input": {
+        "osmtype": {
+          "type": "string",
+          "description": "N, W, or R",
+          "required": true
+        },
+        "osmid": {
+          "type": "integer",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "place_details",
+        "fields": [
+          "localname",
+          "addresstags",
+          "hierarchy",
+          "extratags"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
     }
   ],
