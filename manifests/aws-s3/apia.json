@@ -22,56 +22,50 @@
   "capabilities": [
     {
       "id": "put_object",
-      "description_for_ai": "Upload a file to S3. Set permissions, content type, metadata, and server-side encryption.",
+      "description_for_ai": "Upload a file to S3 bucket. Supports any content type, metadata, and access control.",
       "intent": [
         "upload to S3",
-        "store file AWS",
-        "S3 upload",
+        "store file S3",
+        "AWS S3 upload",
         "загрузить файл S3"
       ],
       "endpoint": "PUT https://{bucket}.s3.{region}.amazonaws.com/{key}",
       "input": {
-        "Bucket": {
+        "bucket": {
           "type": "string",
           "required": true
         },
-        "Key": {
+        "key": {
           "type": "string",
-          "description": "Object path e.g. images/photo.jpg",
+          "description": "File path in bucket e.g. images/photo.jpg",
           "required": true
         },
-        "Body": {
+        "body": {
           "type": "binary",
           "description": "File content",
           "required": true
         },
         "ContentType": {
           "type": "string",
-          "description": "MIME type: image/jpeg, application/pdf, text/plain",
+          "description": "MIME type: image/jpeg, application/json, etc.",
           "required": false
         },
         "ACL": {
           "type": "string",
-          "description": "private (default), public-read, authenticated-read",
-          "required": false
+          "description": "private, public-read, public-read-write",
+          "default": "private"
         },
         "Metadata": {
           "type": "object",
           "description": "Custom key-value metadata",
           "required": false
-        },
-        "ServerSideEncryption": {
-          "type": "string",
-          "description": "AES256 or aws:kms",
-          "required": false
         }
       },
       "output": {
-        "type": "put_result",
+        "type": "upload",
         "fields": [
           "ETag",
-          "VersionId",
-          "ServerSideEncryption"
+          "VersionId (if versioning enabled)"
         ]
       },
       "realtime": true,
@@ -79,42 +73,36 @@
     },
     {
       "id": "get_object",
-      "description_for_ai": "Download a file from S3. Returns file content.",
+      "description_for_ai": "Download a file from S3 bucket.",
       "intent": [
         "download from S3",
-        "get S3 file",
+        "get file S3",
         "read S3 object",
-        "скачать файл S3"
+        "скачать из S3"
       ],
       "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/{key}",
       "input": {
-        "Bucket": {
+        "bucket": {
           "type": "string",
           "required": true
         },
-        "Key": {
+        "key": {
           "type": "string",
           "required": true
         },
-        "Range": {
+        "range": {
           "type": "string",
-          "description": "Partial content: bytes=0-1023",
-          "required": false
-        },
-        "VersionId": {
-          "type": "string",
-          "description": "Specific version",
+          "description": "Byte range: bytes=0-999",
           "required": false
         }
       },
       "output": {
         "type": "object",
         "fields": [
-          "Body (file content)",
+          "body (binary)",
           "ContentType",
           "ContentLength",
           "LastModified",
-          "ETag",
           "Metadata"
         ]
       },
@@ -123,37 +111,36 @@
     },
     {
       "id": "list_objects",
-      "description_for_ai": "List files in an S3 bucket with size, last modified, and storage class.",
+      "description_for_ai": "List objects in an S3 bucket with optional prefix filter.",
       "intent": [
         "list S3 files",
         "S3 bucket contents",
-        "list objects",
-        "файлы в S3 bucket"
+        "list files S3",
+        "список файлов S3"
       ],
-      "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/",
+      "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/?list-type=2",
       "input": {
-        "Bucket": {
+        "bucket": {
           "type": "string",
           "required": true
         },
-        "Prefix": {
+        "prefix": {
           "type": "string",
-          "description": "Filter by key prefix e.g. images/",
+          "description": "Filter by prefix e.g. images/",
           "required": false
         },
-        "MaxKeys": {
+        "delimiter": {
+          "type": "string",
+          "description": "/ to list like directories",
+          "required": false
+        },
+        "max-keys": {
           "type": "integer",
-          "description": "Max results 1-1000",
           "default": 1000
         },
-        "ContinuationToken": {
+        "continuation-token": {
           "type": "string",
           "description": "Pagination token",
-          "required": false
-        },
-        "Delimiter": {
-          "type": "string",
-          "description": "Group keys by delimiter e.g. / for folder-like listing",
           "required": false
         }
       },
@@ -163,7 +150,6 @@
           "Contents[0].Key",
           "Contents[0].Size",
           "Contents[0].LastModified",
-          "Contents[0].StorageClass",
           "IsTruncated",
           "NextContinuationToken"
         ]
@@ -172,39 +158,105 @@
       "requires_auth": true
     },
     {
-      "id": "generate_presigned_url",
-      "description_for_ai": "Generate a temporary URL to access a private S3 object. Set expiration time. Use for download links without exposing AWS credentials.",
+      "id": "delete_object",
+      "description_for_ai": "Delete an object from S3 bucket.",
       "intent": [
-        "S3 download link",
-        "presigned URL",
-        "share S3 file",
+        "delete S3 file",
+        "remove object S3",
+        "удалить файл S3"
+      ],
+      "endpoint": "DELETE https://{bucket}.s3.{region}.amazonaws.com/{key}",
+      "input": {
+        "bucket": {
+          "type": "string",
+          "required": true
+        },
+        "key": {
+          "type": "string",
+          "required": true
+        },
+        "versionId": {
+          "type": "string",
+          "description": "Specific version to delete",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "presigned_url",
+      "description_for_ai": "Generate a pre-signed URL for temporary access to an S3 object without AWS credentials.",
+      "intent": [
+        "S3 presigned URL",
+        "share file link",
+        "temporary URL S3",
         "временная ссылка S3"
       ],
-      "endpoint": "GET https://{bucket}.s3.{region}.amazonaws.com/{key}?X-Amz-Signature=...",
+      "endpoint": "SDK method (not REST)",
       "input": {
-        "Bucket": {
+        "bucket": {
           "type": "string",
           "required": true
         },
-        "Key": {
+        "key": {
           "type": "string",
           "required": true
         },
-        "ExpiresIn": {
+        "operation": {
+          "type": "string",
+          "description": "GetObject (download) or PutObject (upload)",
+          "required": true
+        },
+        "expires_in": {
           "type": "integer",
-          "description": "URL validity in seconds. Default 1 hour. Max 7 days.",
+          "description": "Seconds until expiry, max 604800 (7 days)",
           "default": 3600
-        },
-        "ResponseContentDisposition": {
-          "type": "string",
-          "description": "attachment; filename=file.pdf — forces download",
-          "required": false
         }
       },
       "output": {
         "type": "url",
         "fields": [
-          "presigned URL string with embedded auth parameters"
+          "presignedUrl (string)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "multipart_upload",
+      "description_for_ai": "Upload large files (>100MB) to S3 using multipart upload for reliability.",
+      "intent": [
+        "large file upload S3",
+        "multipart S3",
+        "upload big file",
+        "загрузка большого файла S3"
+      ],
+      "endpoint": "POST https://{bucket}.s3.{region}.amazonaws.com/{key}?uploads",
+      "input": {
+        "bucket": {
+          "type": "string",
+          "required": true
+        },
+        "key": {
+          "type": "string",
+          "required": true
+        },
+        "ContentType": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "multipart",
+        "fields": [
+          "UploadId (use to upload parts and complete)"
         ]
       },
       "realtime": true,
