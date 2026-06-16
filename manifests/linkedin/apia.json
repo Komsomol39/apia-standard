@@ -24,12 +24,12 @@
   "capabilities": [
     {
       "id": "get_profile",
-      "description_for_ai": "Get authenticated user's LinkedIn profile: name, headline, location, summary.",
+      "description_for_ai": "Get LinkedIn user profile: name, headline, industry, location, education, experience.",
       "intent": [
-        "linkedin profile",
-        "my linkedin",
-        "linkedin user",
-        "профиль linkedin"
+        "LinkedIn profile",
+        "user info LinkedIn",
+        "professional profile",
+        "профиль LinkedIn"
       ],
       "endpoint": "GET https://api.linkedin.com/v2/userinfo",
       "input": {},
@@ -50,23 +50,23 @@
     },
     {
       "id": "create_post",
-      "description_for_ai": "Publish a text post or article to LinkedIn as a person or organization.",
+      "description_for_ai": "Publish a post on LinkedIn (text, article, or with image).",
       "intent": [
-        "post linkedin",
-        "share linkedin",
-        "linkedin update",
-        "опубликовать linkedin"
+        "post on LinkedIn",
+        "LinkedIn share",
+        "publish LinkedIn",
+        "опубликовать LinkedIn"
       ],
       "endpoint": "POST https://api.linkedin.com/v2/ugcPosts",
       "input": {
         "author": {
           "type": "string",
-          "description": "urn:li:person:{personId} or urn:li:organization:{orgId}",
+          "description": "urn:li:person:{id} or urn:li:organization:{id}",
           "required": true
         },
-        "commentary": {
+        "text": {
           "type": "string",
-          "description": "Post text, max 3000 chars",
+          "description": "Post content",
           "required": true
         },
         "visibility": {
@@ -74,57 +74,51 @@
           "description": "PUBLIC or CONNECTIONS",
           "default": "PUBLIC"
         },
-        "media_category": {
-          "type": "string",
-          "description": "NONE, ARTICLE, IMAGE, VIDEO",
-          "default": "NONE"
+        "media": {
+          "type": "object",
+          "description": "{status: 'READY', originalUrl: 'https://...', title: 'Article Title'} for link posts",
+          "required": false
         }
       },
       "output": {
         "type": "post",
         "fields": [
           "id",
-          "created.time"
+          "created.time",
+          "lifecycleState"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_people",
-      "description_for_ai": "Search LinkedIn for people by keywords, company, title (requires Marketing API access).",
+      "id": "search_companies",
+      "description_for_ai": "Search LinkedIn companies by name, industry, location.",
       "intent": [
-        "linkedin search",
-        "find person linkedin",
-        "company employees",
-        "поиск linkedin"
+        "search companies LinkedIn",
+        "find company LinkedIn",
+        "LinkedIn company",
+        "поиск компаний LinkedIn"
       ],
-      "endpoint": "GET https://api.linkedin.com/v2/search",
+      "endpoint": "GET https://api.linkedin.com/v2/organizationalEntitySearch",
       "input": {
         "q": {
           "type": "string",
-          "default": "people"
+          "description": "Search query type: search",
+          "required": true
         },
         "keywords": {
           "type": "string",
+          "description": "Company name keywords",
           "required": false
-        },
-        "facetCurrentCompany": {
-          "type": "string",
-          "description": "Company URN",
-          "required": false
-        },
-        "count": {
-          "type": "integer",
-          "default": 10
         }
       },
       "output": {
-        "type": "list<person>",
+        "type": "list<company>",
         "fields": [
           "elements[0].id",
-          "elements[0].firstName",
-          "elements[0].lastName"
+          "elements[0].localizedName",
+          "elements[0].industries"
         ]
       },
       "realtime": true,
@@ -132,12 +126,12 @@
     },
     {
       "id": "send_message",
-      "description_for_ai": "Send a direct message to a LinkedIn connection.",
+      "description_for_ai": "Send a LinkedIn message via LinkedIn Messaging API.",
       "intent": [
-        "linkedin message",
-        "DM linkedin",
-        "message connection",
-        "сообщение linkedin"
+        "LinkedIn message",
+        "InMail",
+        "send message LinkedIn",
+        "сообщение LinkedIn"
       ],
       "endpoint": "POST https://api.linkedin.com/v2/messages",
       "input": {
@@ -160,6 +154,72 @@
         "fields": [
           "id",
           "createdAt"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_company_updates",
+      "description_for_ai": "Get recent posts and updates from a LinkedIn company page.",
+      "intent": [
+        "company posts LinkedIn",
+        "brand content LinkedIn",
+        "LinkedIn feed company",
+        "обновления компании LinkedIn"
+      ],
+      "endpoint": "GET https://api.linkedin.com/v2/ugcPosts",
+      "input": {
+        "q": {
+          "type": "string",
+          "default": "authors"
+        },
+        "authors": {
+          "type": "string",
+          "description": "urn:li:organization:{id}",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<post>",
+        "fields": [
+          "elements[0].id",
+          "elements[0].specificContent.com.linkedin.ugc.ShareContent.shareCommentary.text",
+          "elements[0].created.time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_post_analytics",
+      "description_for_ai": "Get analytics for LinkedIn posts: impressions, clicks, engagement.",
+      "intent": [
+        "LinkedIn analytics",
+        "post stats",
+        "LinkedIn metrics",
+        "аналитика поста LinkedIn"
+      ],
+      "endpoint": "GET https://api.linkedin.com/v2/socialActions/{ugcPostUrn}/statistics",
+      "input": {
+        "ugcPostUrn": {
+          "type": "string",
+          "description": "UGC post URN: urn:li:ugcPost:id",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "stats",
+        "fields": [
+          "likeCount",
+          "commentCount",
+          "shareCount",
+          "clickCount",
+          "impressionCount"
         ]
       },
       "realtime": true,
