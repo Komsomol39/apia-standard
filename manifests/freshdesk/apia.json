@@ -23,11 +23,10 @@
   "capabilities": [
     {
       "id": "list_tickets",
-      "description_for_ai": "List customer support tickets with filters by status, priority, and agent.",
+      "description_for_ai": "List Freshdesk tickets with filters by status, priority, and agent.",
       "intent": [
         "freshdesk tickets",
-        "support queue",
-        "customer tickets",
+        "support tickets freshdesk",
         "тикеты freshdesk"
       ],
       "endpoint": "GET https://{domain}.freshdesk.com/api/v2/tickets",
@@ -37,10 +36,6 @@
           "description": "new_and_my_open, watching, spam, deleted",
           "required": false
         },
-        "requester_id": {
-          "type": "integer",
-          "required": false
-        },
         "order_by": {
           "type": "string",
           "description": "created_at, due_by, updated_at, status",
@@ -48,12 +43,15 @@
         },
         "order_type": {
           "type": "string",
-          "description": "asc or desc",
           "default": "desc"
         },
         "per_page": {
           "type": "integer",
           "default": 30
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
         }
       },
       "output": {
@@ -64,7 +62,8 @@
           "[0].status",
           "[0].priority",
           "[0].requester_id",
-          "[0].created_at"
+          "[0].created_at",
+          "[0].updated_at"
         ]
       },
       "realtime": true,
@@ -72,36 +71,42 @@
     },
     {
       "id": "create_ticket",
-      "description_for_ai": "Create a support ticket. Assign priority, status, tags, and CC recipients.",
+      "description_for_ai": "Create a new Freshdesk support ticket with custom fields.",
       "intent": [
         "create freshdesk ticket",
+        "open ticket freshdesk",
         "new support ticket",
-        "создать обращение freshdesk"
+        "создать тикет freshdesk"
       ],
       "endpoint": "POST https://{domain}.freshdesk.com/api/v2/tickets",
       "input": {
-        "subject": {
+        "name": {
           "type": "string",
-          "required": true
-        },
-        "description": {
-          "type": "string",
-          "description": "HTML body of the ticket",
-          "required": true
+          "description": "Requester name",
+          "required": false
         },
         "email": {
           "type": "string",
           "description": "Requester email",
           "required": true
         },
-        "priority": {
-          "type": "integer",
-          "description": "1=Low, 2=Medium, 3=High, 4=Urgent",
-          "default": 2
+        "subject": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "description": "HTML or plain text",
+          "required": true
         },
         "status": {
           "type": "integer",
           "description": "2=Open, 3=Pending, 4=Resolved, 5=Closed",
+          "default": 2
+        },
+        "priority": {
+          "type": "integer",
+          "description": "1=Low, 2=Medium, 3=High, 4=Urgent",
           "default": 2
         },
         "tags": {
@@ -123,13 +128,13 @@
       "requires_auth": true
     },
     {
-      "id": "create_reply",
+      "id": "reply_ticket",
       "description_for_ai": "Reply to a Freshdesk ticket as an agent.",
       "intent": [
         "reply freshdesk",
-        "ticket reply",
-        "agent response",
-        "ответить freshdesk"
+        "add comment ticket",
+        "answer ticket",
+        "ответить на тикет freshdesk"
       ],
       "endpoint": "POST https://{domain}.freshdesk.com/api/v2/tickets/{ticket_id}/reply",
       "input": {
@@ -139,12 +144,15 @@
         },
         "body": {
           "type": "string",
-          "description": "Reply body in HTML",
+          "description": "HTML reply body",
           "required": true
+        },
+        "from_email": {
+          "type": "string",
+          "required": false
         },
         "cc_emails": {
           "type": "array",
-          "description": "Additional CC recipients",
           "required": false
         }
       },
@@ -153,42 +161,45 @@
         "fields": [
           "id",
           "body",
-          "created_at"
+          "created_at",
+          "from_email"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_ticket",
-      "description_for_ai": "Get full ticket details including conversation history.",
+      "id": "list_contacts",
+      "description_for_ai": "List Freshdesk contacts (customers) with search.",
       "intent": [
-        "ticket details freshdesk",
-        "get ticket",
-        "ticket info",
-        "детали тикета freshdesk"
+        "freshdesk contacts",
+        "customers freshdesk",
+        "search contact",
+        "контакты freshdesk"
       ],
-      "endpoint": "GET https://{domain}.freshdesk.com/api/v2/tickets/{id}",
+      "endpoint": "GET https://{domain}.freshdesk.com/api/v2/contacts",
       "input": {
-        "id": {
-          "type": "integer",
-          "required": true
-        },
-        "include": {
+        "email": {
           "type": "string",
-          "description": "conversations, requester, company, stats",
           "required": false
+        },
+        "phone": {
+          "type": "string",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 30
         }
       },
       "output": {
-        "type": "ticket",
+        "type": "list<contact>",
         "fields": [
-          "id",
-          "subject",
-          "description",
-          "status",
-          "priority",
-          "conversations[0].body"
+          "[0].id",
+          "[0].name",
+          "[0].email",
+          "[0].phone",
+          "[0].company_id"
         ]
       },
       "realtime": true,
