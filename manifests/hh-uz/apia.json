@@ -28,12 +28,11 @@
   "capabilities": [
     {
       "id": "search_vacancies",
-      "description_for_ai": "Поиск вакансий в Узбекистане. Зарплаты в сумах (UZS). Используй для запросов о работе в Узбекистане, вакансиях в Ташкенте.",
+      "description_for_ai": "Search job vacancies on hh.uz (Uzbekistan job board).",
       "intent": [
-        "работа в Узбекистане",
-        "вакансии в Ташкенте",
-        "найти работу UZ",
-        "вакансии в Узбекистане"
+        "вакансии hh.uz",
+        "работа узбекистан",
+        "hh uz jobs"
       ],
       "endpoint": "GET https://api.hh.uz/vacancies",
       "input": {
@@ -43,30 +42,136 @@
         },
         "area": {
           "type": "integer",
-          "description": "ID города. Ташкент=2200",
+          "description": "Region: 97=Tashkent",
           "required": false
         },
         "salary": {
           "type": "integer",
-          "description": "Минимальная зарплата в UZS",
           "required": false
         },
         "per_page": {
           "type": "integer",
-          "default": 20,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "default": 20
         }
       },
       "output": {
         "type": "list<vacancy>",
         "fields": [
+          "items[0].id",
+          "items[0].name",
+          "items[0].salary.from",
+          "items[0].employer.name",
+          "items[0].area.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_vacancy",
+      "description_for_ai": "Get full vacancy details from hh.uz.",
+      "intent": [
+        "вакансия hh.uz",
+        "детали вакансии узбекистан"
+      ],
+      "endpoint": "GET https://api.hh.uz/vacancies/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "vacancy",
+        "fields": [
           "id",
           "name",
-          "area.name",
-          "salary.from",
-          "salary.currency",
+          "description",
+          "salary",
           "employer.name",
-          "url"
+          "schedule.name",
+          "experience.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_areas",
+      "description_for_ai": "Get list of regions/cities in Uzbekistan for job search.",
+      "intent": [
+        "регионы узбекистан",
+        "города hh.uz",
+        "areas uzbekistan"
+      ],
+      "endpoint": "GET https://api.hh.uz/areas",
+      "input": {},
+      "output": {
+        "type": "list<area>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].areas[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_employers",
+      "description_for_ai": "Search companies posting jobs on hh.uz.",
+      "intent": [
+        "работодатели hh.uz",
+        "компании узбекистан",
+        "employers hh uz"
+      ],
+      "endpoint": "GET https://api.hh.uz/employers",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": false
+        },
+        "area": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<employer>",
+        "fields": [
+          "items[0].id",
+          "items[0].name",
+          "items[0].area.name",
+          "items[0].open_vacancies"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_employer",
+      "description_for_ai": "Get details about an employer on hh.uz.",
+      "intent": [
+        "работодатель hh.uz",
+        "компания узбекистан",
+        "employer details hh uz"
+      ],
+      "endpoint": "GET https://api.hh.uz/employers/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "employer",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "site_url",
+          "area.name",
+          "open_vacancies"
         ]
       },
       "realtime": true,
