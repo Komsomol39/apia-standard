@@ -98,6 +98,100 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_crm_leads",
+      "description_for_ai": "List CRM leads in Bitrix24.",
+      "intent": [
+        "лиды bitrix24",
+        "crm leads bitrix",
+        "список лидов"
+      ],
+      "endpoint": "POST https://{portal}.bitrix24.ru/rest/crm.lead.list.json",
+      "input": {
+        "order": {
+          "type": "object",
+          "description": "{DATE_CREATE: DESC}",
+          "required": false
+        },
+        "filter": {
+          "type": "object",
+          "description": "{ASSIGNED_BY_ID: 1}",
+          "required": false
+        },
+        "select": {
+          "type": "array",
+          "description": "['ID', 'TITLE', 'STATUS_ID', 'DATE_CREATE']",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<lead>",
+        "fields": [
+          "result[0].ID",
+          "result[0].TITLE",
+          "result[0].STATUS_ID",
+          "result[0].DATE_CREATE"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_task",
+      "description_for_ai": "Create a task in Bitrix24.",
+      "intent": [
+        "задача bitrix24",
+        "create task bitrix",
+        "новая задача bitrix"
+      ],
+      "endpoint": "POST https://{portal}.bitrix24.ru/rest/tasks.task.add.json",
+      "input": {
+        "fields": {
+          "type": "object",
+          "description": "{TITLE: 'Task', RESPONSIBLE_ID: 1, DEADLINE: '2024-12-31T18:00:00'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "task",
+        "fields": [
+          "result.task.id",
+          "result.task.title",
+          "result.task.status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_message",
+      "description_for_ai": "Send a message in Bitrix24 chat or notification.",
+      "intent": [
+        "сообщение bitrix24",
+        "чат bitrix",
+        "уведомление bitrix24"
+      ],
+      "endpoint": "POST https://{portal}.bitrix24.ru/rest/im.message.add.json",
+      "input": {
+        "DIALOG_ID": {
+          "type": "string",
+          "description": "User ID (U123) or chat ID (chat123)",
+          "required": true
+        },
+        "MESSAGE": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "result (message ID)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
