@@ -82,6 +82,98 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_pokemon",
+      "description_for_ai": "Get detailed Pokemon info: stats, types, abilities, moves.",
+      "intent": [
+        "pokemon info",
+        "get pokemon stats",
+        "pikachu info",
+        "информация о покемоне"
+      ],
+      "endpoint": "GET https://pokeapi.co/api/v2/pokemon/{id_or_name}",
+      "input": {
+        "id_or_name": {
+          "type": "string",
+          "description": "Pokemon ID (1-1025) or name (pikachu, charizard)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "pokemon",
+        "fields": [
+          "id",
+          "name",
+          "height",
+          "weight",
+          "base_experience",
+          "types[0].type.name",
+          "stats[0].stat.name",
+          "stats[0].base_stat",
+          "abilities[0].ability.name"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_move",
+      "description_for_ai": "Get Pokemon move details: power, accuracy, type, effect.",
+      "intent": [
+        "pokemon move",
+        "move details",
+        "атака покемон"
+      ],
+      "endpoint": "GET https://pokeapi.co/api/v2/move/{id_or_name}",
+      "input": {
+        "id_or_name": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "move",
+        "fields": [
+          "name",
+          "type.name",
+          "power",
+          "accuracy",
+          "pp",
+          "damage_class.name",
+          "effect_entries[0].effect"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_type",
+      "description_for_ai": "Get Pokemon type info: damage relations (strengths and weaknesses).",
+      "intent": [
+        "pokemon type",
+        "type effectiveness",
+        "weakness strength pokemon",
+        "тип покемон слабости"
+      ],
+      "endpoint": "GET https://pokeapi.co/api/v2/type/{id_or_name}",
+      "input": {
+        "id_or_name": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "type",
+        "fields": [
+          "name",
+          "damage_relations.double_damage_to",
+          "damage_relations.double_damage_from",
+          "pokemon[0].pokemon.name"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "meta": {
