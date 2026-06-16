@@ -21,31 +21,82 @@
   },
   "capabilities": [
     {
-      "id": "get_orders",
-      "description_for_ai": "Get orders from Amazon seller account. Returns order status, items, shipping info.",
+      "id": "search_catalog_items",
+      "description_for_ai": "Search Amazon product catalog by keywords, ASIN, EAN, UPC.",
       "intent": [
-        "amazon orders",
-        "seller orders",
-        "marketplace orders",
-        "fulfillment orders",
-        "Amazon sales"
+        "Amazon search",
+        "product search Amazon",
+        "ASIN lookup",
+        "поиск товаров Amazon"
+      ],
+      "endpoint": "GET https://sellingpartnerapi-na.amazon.com/catalog/2022-04-01/items",
+      "input": {
+        "keywords": {
+          "type": "array",
+          "description": "Search keywords",
+          "required": false
+        },
+        "identifiers": {
+          "type": "array",
+          "description": "ASINs, EANs, UPCs",
+          "required": false
+        },
+        "identifiersType": {
+          "type": "string",
+          "description": "ASIN, EAN, UPC, GTIN, ISBN, JAN",
+          "required": false
+        },
+        "marketplaceIds": {
+          "type": "array",
+          "description": "e.g. ATVPDKIKX0DER (US), A1F83G8C2ARO7P (UK)",
+          "required": true
+        },
+        "includedData": {
+          "type": "string",
+          "description": "attributes, identifiers, images, productTypes, salesRanks, summaries",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<item>",
+        "fields": [
+          "items[0].asin",
+          "items[0].summaries[0].itemName",
+          "items[0].salesRanks[0].classificationRanks[0].rank"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_orders",
+      "description_for_ai": "Get seller orders from Amazon Marketplace with status filtering.",
+      "intent": [
+        "Amazon orders",
+        "seller orders Amazon",
+        "order management",
+        "заказы Amazon"
       ],
       "endpoint": "GET https://sellingpartnerapi-na.amazon.com/orders/v0/orders",
       "input": {
         "MarketplaceIds": {
-          "type": "string",
-          "description": "Marketplace ID. US=ATVPDKIKX0DER, UK=A1F83G8C2ARO7P",
+          "type": "array",
+          "description": "Marketplace IDs",
           "required": true
         },
         "CreatedAfter": {
           "type": "string",
-          "description": "ISO 8601 date filter",
+          "description": "ISO 8601 date",
           "required": false
         },
         "OrderStatuses": {
-          "type": "string",
-          "description": "Pending, Unshipped, Shipped, Canceled",
+          "type": "array",
+          "description": "Pending, Unshipped, PartiallyShipped, Shipped, Canceled",
           "required": false
+        },
+        "MaxResultsPerPage": {
+          "type": "integer",
+          "default": 100
         }
       },
       "output": {
@@ -53,51 +104,121 @@
         "fields": [
           "Orders[0].AmazonOrderId",
           "Orders[0].OrderStatus",
-          "Orders[0].OrderTotal",
-          "Orders[0].ShipmentServiceLevelCategory",
-          "Orders[0].BuyerInfo"
+          "Orders[0].OrderTotal.Amount",
+          "Orders[0].BuyerInfo.BuyerEmail",
+          "Orders[0].PurchaseDate"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_catalog_item",
-      "description_for_ai": "Get product details from Amazon catalog by ASIN.",
+      "id": "get_inventory",
+      "description_for_ai": "Get FBA inventory levels for seller SKUs.",
       "intent": [
-        "product info Amazon",
-        "ASIN details",
-        "product listing",
-        "Amazon catalog"
+        "Amazon inventory",
+        "FBA stock",
+        "inventory levels Amazon",
+        "инвентарь Amazon FBA"
       ],
-      "endpoint": "GET https://sellingpartnerapi-na.amazon.com/catalog/2022-04-01/items/{asin}",
+      "endpoint": "GET https://sellingpartnerapi-na.amazon.com/fba/inventory/v1/summaries",
       "input": {
-        "asin": {
+        "granularityType": {
           "type": "string",
-          "description": "Amazon ASIN",
+          "default": "Marketplace"
+        },
+        "granularityId": {
+          "type": "string",
+          "description": "Marketplace ID",
           "required": true
         },
         "marketplaceIds": {
-          "type": "string",
+          "type": "array",
           "required": true
         },
-        "includedData": {
-          "type": "string",
-          "description": "attributes, dimensions, images, productTypes, summaries",
+        "sellerSkus": {
+          "type": "array",
+          "description": "Filter by SKUs",
           "required": false
         }
       },
       "output": {
-        "type": "catalog_item",
+        "type": "list<inventory>",
         "fields": [
-          "asin",
-          "summaries[0].itemName",
-          "summaries[0].brand",
-          "summaries[0].manufacturer",
-          "images[0].images[0].link"
+          "inventorySummaries[0].asin",
+          "inventorySummaries[0].sellerSku",
+          "inventorySummaries[0].inventoryDetails.fulfillableQuantity"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_pricing",
+      "description_for_ai": "Get competitive pricing data for Amazon products.",
+      "intent": [
+        "Amazon pricing",
+        "product price Amazon",
+        "competitor price",
+        "цена Amazon"
+      ],
+      "endpoint": "GET https://sellingpartnerapi-na.amazon.com/products/pricing/v0/competitivePrice",
+      "input": {
+        "Asin": {
+          "type": "array",
+          "description": "ASINs to price check",
+          "required": true
+        },
+        "MarketplaceId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<pricing>",
+        "fields": [
+          "Product[0].ASIN",
+          "Product[0].CompetitivePricing.CompetitivePrices[0].Price.LandedPrice.Amount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_shipment",
+      "description_for_ai": "Create an FBA shipment plan to Amazon fulfillment centers.",
+      "intent": [
+        "FBA shipment",
+        "Amazon shipping",
+        "send to Amazon warehouse",
+        "отправить на Amazon FBA"
+      ],
+      "endpoint": "POST https://sellingpartnerapi-na.amazon.com/fba/inbound/v0/plans",
+      "input": {
+        "ShipFromAddress": {
+          "type": "object",
+          "description": "{Name, AddressLine1, City, StateOrProvinceCode, PostalCode, CountryCode}",
+          "required": true
+        },
+        "InboundShipmentPlanRequestItems": {
+          "type": "array",
+          "description": "[{SellerSKU, ASIN, Condition, Quantity}]",
+          "required": true
+        },
+        "LabelPrepPreference": {
+          "type": "string",
+          "description": "SELLER_LABEL or AMAZON_LABEL_ONLY",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "shipment_plan",
+        "fields": [
+          "InboundShipmentPlans[0].ShipmentId",
+          "InboundShipmentPlans[0].DestinationFulfillmentCenterId"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
