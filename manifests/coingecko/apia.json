@@ -131,6 +131,82 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "get_coin_details",
+      "description_for_ai": "Get detailed info about a cryptocurrency: market cap, price, supply, description.",
+      "intent": [
+        "coin info coingecko",
+        "crypto details",
+        "market cap coin",
+        "детали монеты coingecko"
+      ],
+      "endpoint": "GET https://api.coingecko.com/api/v3/coins/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Coin ID: bitcoin, ethereum, solana",
+          "required": true
+        },
+        "localization": {
+          "type": "boolean",
+          "default": false
+        },
+        "tickers": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "coin",
+        "fields": [
+          "id",
+          "name",
+          "symbol",
+          "market_data.current_price.usd",
+          "market_data.market_cap.usd",
+          "market_data.total_supply",
+          "description.en"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_price",
+      "description_for_ai": "Get current price of coins in any currency. Fast and simple endpoint.",
+      "intent": [
+        "crypto price coingecko",
+        "coin price",
+        "цена крипты coingecko"
+      ],
+      "endpoint": "GET https://api.coingecko.com/api/v3/simple/price",
+      "input": {
+        "ids": {
+          "type": "string",
+          "description": "Comma-separated: bitcoin,ethereum,solana",
+          "required": true
+        },
+        "vs_currencies": {
+          "type": "string",
+          "description": "Comma-separated: usd,eur,rub",
+          "required": true
+        },
+        "include_24hr_change": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "prices",
+        "fields": [
+          "bitcoin.usd",
+          "bitcoin.eur",
+          "ethereum.usd"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
