@@ -24,65 +24,48 @@
   "capabilities": [
     {
       "id": "domain_search",
-      "description_for_ai": "Find all publicly known email addresses at a company domain. Returns emails with name, job title, and LinkedIn when available.",
+      "description_for_ai": "Find all professional email addresses for a company domain.",
       "intent": [
-        "find company emails",
-        "company contacts",
-        "email prospecting",
-        "sales leads",
-        "find decision maker",
-        "B2B emails"
+        "find emails Hunter",
+        "company emails",
+        "domain emails",
+        "найти email Hunter.io"
       ],
       "endpoint": "GET https://api.hunter.io/v2/domain-search",
       "input": {
         "domain": {
           "type": "string",
-          "description": "Company domain without http/www e.g. stripe.com, google.com, microsoft.com",
+          "description": "Company domain: google.com, microsoft.com",
           "required": true
-        },
-        "company": {
-          "type": "string",
-          "description": "Company name as alternative to domain (less reliable)",
-          "required": false
         },
         "limit": {
           "type": "integer",
-          "description": "Max results per page, max 100",
           "default": 10
         },
         "offset": {
           "type": "integer",
-          "description": "Pagination offset",
           "default": 0
         },
         "type": {
           "type": "string",
-          "description": "Filter by email type: personal (first.last@) or generic (info@, support@, sales@)",
-          "required": false
-        },
-        "seniority": {
-          "type": "string",
-          "description": "Filter by seniority level: junior, senior, executive",
+          "description": "personal or generic",
           "required": false
         },
         "department": {
           "type": "string",
-          "description": "Filter by department: executive, it, finance, management, sales, legal, support, hr, marketing, communication",
+          "description": "executive, finance, hr, it, marketing, sales, support",
           "required": false
         }
       },
       "output": {
-        "type": "domain_search",
+        "type": "domain",
         "fields": [
           "data.emails[0].value",
           "data.emails[0].first_name",
           "data.emails[0].last_name",
-          "data.emails[0].position",
-          "data.emails[0].department",
-          "data.emails[0].seniority",
-          "data.emails[0].linkedin",
-          "data.organization",
-          "meta.total"
+          "data.emails[0].type",
+          "data.emails[0].confidence",
+          "data.organization"
         ]
       },
       "realtime": true,
@@ -90,13 +73,12 @@
     },
     {
       "id": "email_finder",
-      "description_for_ai": "Find email address for a specific person at a company given their name and domain.",
+      "description_for_ai": "Find a person's professional email by name and company domain.",
       "intent": [
-        "find email",
-        "person email",
-        "contact email",
-        "email lookup",
-        "find professional email"
+        "find email person",
+        "email finder",
+        "guess email",
+        "найти email по имени"
       ],
       "endpoint": "GET https://api.hunter.io/v2/email-finder",
       "input": {
@@ -117,23 +99,23 @@
         "type": "email",
         "fields": [
           "data.email",
-          "data.score",
+          "data.score (0-100 confidence)",
+          "data.position",
           "data.first_name",
-          "data.last_name",
-          "data.sources[0].domain"
+          "data.last_name"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "verify_email",
-      "description_for_ai": "Verify if an email address is valid and deliverable. Checks MX records, SMTP, disposable email.",
+      "id": "email_verifier",
+      "description_for_ai": "Verify if an email address is valid and deliverable.",
       "intent": [
-        "verify email",
-        "check email valid",
+        "verify email Hunter",
         "email validation",
-        "is email deliverable"
+        "check email validity",
+        "проверить email Hunter"
       ],
       "endpoint": "GET https://api.hunter.io/v2/email-verifier",
       "input": {
@@ -145,79 +127,67 @@
       "output": {
         "type": "verification",
         "fields": [
-          "data.result",
+          "data.status (valid/invalid/accept_all/webmail/unknown)",
           "data.score",
-          "data.regexp",
-          "data.gibberish",
           "data.disposable",
           "data.webmail",
-          "data.mx_records",
-          "data.smtp_server",
-          "data.smtp_check"
+          "data.smtp_server_accepts_all"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "find_email",
-      "description_for_ai": "Find the email address for a person at a company.",
+      "id": "get_account_info",
+      "description_for_ai": "Get Hunter.io account info: plan, requests used/remaining.",
       "intent": [
-        "find email hunter",
-        "email finder",
-        "найти email hunter"
+        "Hunter account",
+        "API quota",
+        "requests remaining Hunter",
+        "квота Hunter.io"
       ],
-      "endpoint": "GET https://api.hunter.io/v2/email-finder",
-      "input": {
-        "domain": {
-          "type": "string",
-          "required": true
-        },
-        "first_name": {
-          "type": "string",
-          "required": true
-        },
-        "last_name": {
-          "type": "string",
-          "required": true
-        }
-      },
+      "endpoint": "GET https://api.hunter.io/v2/account",
+      "input": {},
       "output": {
-        "type": "email",
+        "type": "account",
         "fields": [
           "data.email",
-          "data.score",
-          "data.sources[0].uri"
+          "data.plan_name",
+          "data.requests.searches.used",
+          "data.requests.searches.available",
+          "data.requests.verifications.used"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "verify_email",
-      "description_for_ai": "Verify that an email address exists and is deliverable.",
+      "id": "bulk_email_finder",
+      "description_for_ai": "Find emails for multiple people in bulk (requires LEADS plan).",
       "intent": [
-        "verify email hunter",
-        "email verification",
-        "проверить email hunter"
+        "bulk email finder",
+        "mass email find",
+        "list email lookup",
+        "массовый поиск email"
       ],
-      "endpoint": "GET https://api.hunter.io/v2/email-verifier",
+      "endpoint": "POST https://api.hunter.io/v2/bulk-email-finder",
       "input": {
-        "email": {
-          "type": "string",
+        "people": {
+          "type": "array",
+          "description": "[{first_name: 'John', last_name: 'Doe', domain: 'google.com', company: 'Google'}]",
           "required": true
         }
       },
       "output": {
-        "type": "verification",
+        "type": "list<email>",
         "fields": [
-          "data.result",
-          "data.score",
-          "data.disposable",
-          "data.smtp_check"
+          "data[0].email",
+          "data[0].score",
+          "data[0].first_name",
+          "data[0].last_name"
         ]
       },
-      "realtime": true,
+      "realtime": false,
       "requires_auth": true
     }
   ],
