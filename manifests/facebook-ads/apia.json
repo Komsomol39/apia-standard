@@ -21,38 +21,117 @@
   },
   "capabilities": [
     {
-      "id": "get_ad_insights",
-      "description_for_ai": "Advertise on Facebook and Instagram. Create campaigns, ad sets, ads. Access detailed analytics. 3B+ users reach. Powerful audience targeting: interests, demographics, lookalikes, custom audiences. Get Facebook/Instagram ad performance: reach, impressions, clicks, spend, conversions, ROAS by campaign, ad set, or ad.",
+      "id": "get_campaigns",
+      "description_for_ai": "List Facebook Ads campaigns with spend and performance metrics.",
       "intent": [
-        "facebook ads performance",
-        "instagram ads",
-        "social media advertising",
-        "ad metrics",
-        "ad spend ROI",
-        "social ads report"
+        "facebook ads campaigns",
+        "FB ads list",
+        "advertising campaigns",
+        "кампании facebook ads"
       ],
-      "endpoint": "GET https://graph.facebook.com/v20.0/{ad_account_id}/insights",
+      "endpoint": "GET https://graph.facebook.com/v19.0/act_{ad_account_id}/campaigns",
       "input": {
-        "level": {
+        "ad_account_id": {
           "type": "string",
-          "description": "campaign, adset, ad, account",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "impressions,clicks,spend,reach,conversions,ctr,cpm,cpc,roas",
+          "description": "id,name,status,objective,spend_cap,budget_remaining",
+          "default": "id,name,status"
+        },
+        "effective_status": {
+          "type": "array",
+          "description": "['ACTIVE', 'PAUSED', 'DELETED']",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<campaign>",
+        "fields": [
+          "data[0].id",
+          "data[0].name",
+          "data[0].status",
+          "data[0].objective",
+          "data[0].spend_cap"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_campaign",
+      "description_for_ai": "Create a new Facebook Ads campaign.",
+      "intent": [
+        "create FB campaign",
+        "new facebook ad",
+        "launch campaign",
+        "создать кампанию facebook"
+      ],
+      "endpoint": "POST https://graph.facebook.com/v19.0/act_{ad_account_id}/campaigns",
+      "input": {
+        "ad_account_id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "objective": {
+          "type": "string",
+          "description": "OUTCOME_AWARENESS, OUTCOME_TRAFFIC, OUTCOME_ENGAGEMENT, OUTCOME_LEADS, OUTCOME_APP_PROMOTION, OUTCOME_SALES",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "ACTIVE or PAUSED",
+          "default": "PAUSED"
+        },
+        "special_ad_categories": {
+          "type": "array",
+          "description": "[] unless housing/employment/credit",
+          "default": []
+        }
+      },
+      "output": {
+        "type": "campaign",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_ad_insights",
+      "description_for_ai": "Get Facebook Ads performance: impressions, clicks, CTR, CPC, ROAS, spend.",
+      "intent": [
+        "facebook ads insights",
+        "ad performance",
+        "CTR facebook",
+        "эффективность facebook ads"
+      ],
+      "endpoint": "GET https://graph.facebook.com/v19.0/act_{ad_account_id}/insights",
+      "input": {
+        "ad_account_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "campaign_name,impressions,clicks,spend,ctr,cpc,actions,cost_per_action_type,roas",
           "required": true
         },
         "date_preset": {
           "type": "string",
-          "description": "last_7d, last_30d, last_month, this_month",
-          "required": false
+          "description": "today, yesterday, last_7d, last_30d, this_month, last_month",
+          "default": "last_7d"
         },
-        "time_range": {
-          "type": "object",
-          "description": "{since: YYYY-MM-DD, until: YYYY-MM-DD}",
-          "required": false,
-          "note": "See description for full object structure"
+        "level": {
+          "type": "string",
+          "description": "account, campaign, adset, ad",
+          "default": "campaign"
         }
       },
       "output": {
@@ -62,12 +141,96 @@
           "data[0].impressions",
           "data[0].clicks",
           "data[0].spend",
-          "data[0].reach",
           "data[0].ctr",
           "data[0].cpc"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_ad_set",
+      "description_for_ai": "Create an Ad Set within a Facebook campaign (targeting + budget).",
+      "intent": [
+        "facebook ad set",
+        "audience targeting fb",
+        "create ad set",
+        "настройка аудитории facebook"
+      ],
+      "endpoint": "POST https://graph.facebook.com/v19.0/act_{ad_account_id}/adsets",
+      "input": {
+        "ad_account_id": {
+          "type": "string",
+          "required": true
+        },
+        "campaign_id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "daily_budget": {
+          "type": "integer",
+          "description": "In cents: 1000 = $10",
+          "required": true
+        },
+        "targeting": {
+          "type": "object",
+          "description": "{geo_locations: {countries: ['US']}, age_min: 25, age_max: 55, interests: [{id: '6003139266461', name: 'Technology'}]}",
+          "required": true
+        },
+        "billing_event": {
+          "type": "string",
+          "description": "IMPRESSIONS or LINK_CLICKS",
+          "required": true
+        },
+        "optimization_goal": {
+          "type": "string",
+          "description": "REACH, LINK_CLICKS, CONVERSIONS, APP_INSTALLS",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "adset",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_audiences",
+      "description_for_ai": "Get Custom Audiences in a Facebook Ads account.",
+      "intent": [
+        "facebook custom audiences",
+        "retargeting audiences",
+        "lookalike audience",
+        "аудитории facebook"
+      ],
+      "endpoint": "GET https://graph.facebook.com/v19.0/act_{ad_account_id}/customaudiences",
+      "input": {
+        "ad_account_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "default": "id,name,subtype,approximate_count_lower_bound"
+        }
+      },
+      "output": {
+        "type": "list<audience>",
+        "fields": [
+          "data[0].id",
+          "data[0].name",
+          "data[0].subtype",
+          "data[0].approximate_count_lower_bound"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
