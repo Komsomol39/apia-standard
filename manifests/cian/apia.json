@@ -21,76 +21,19 @@
   },
   "capabilities": [
     {
-      "id": "search_listings",
-      "description_for_ai": "Search real estate listings on CIAN by city and parameters.",
+      "id": "search_apartments",
+      "description_for_ai": "Search apartments for rent or sale on CIAN (Russian real estate).",
       "intent": [
-        "CIAN недвижимость",
-        "cian аренда",
-        "cian купить квартиру",
-        "cian search"
+        "поиск квартир ЦИАН",
+        "аренда квартир",
+        "купить квартиру ЦИАН",
+        "CIAN apartments"
       ],
-      "endpoint": "POST https://api.cian.ru/search-offers/v1/search-offers-desktop/",
+      "endpoint": "POST https://api.cian.ru/search-offers/v2/search-offers-desktop/",
       "input": {
-        "jsonQuery": {
-          "type": "object",
-          "description": "{_type: 'flatsale', engine_version: {type: 'term', value: 2}, region: {type: 'terms', value: [1]}, room: {type: 'terms', value: [1,2,3]}}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "list<offer>",
-        "fields": [
-          "offersSerialized[0].id",
-          "offersSerialized[0].fullUrl",
-          "offersSerialized[0].bargainTerms.price",
-          "offersSerialized[0].totalArea",
-          "offersSerialized[0].floorsCount"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_listing",
-      "description_for_ai": "Get full CIAN listing details by offer ID.",
-      "intent": [
-        "объявление CIAN",
-        "cian offer details",
-        "квартира cian"
-      ],
-      "endpoint": "GET https://api.cian.ru/offer-card/v1/get-offer-data-by-id/",
-      "input": {
-        "offerId": {
-          "type": "integer",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "offer",
-        "fields": [
-          "offerData.offer.id",
-          "offerData.offer.totalArea",
-          "offerData.offer.bargainTerms.price",
-          "offerData.offer.phones[0].number",
-          "offerData.offer.description"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_price_map",
-      "description_for_ai": "Get average price per sqm heatmap for an area on CIAN.",
-      "intent": [
-        "цена CIAN карта",
-        "средняя цена CIAN",
-        "heatmap cian"
-      ],
-      "endpoint": "POST https://api.cian.ru/price-map/v1/get-price-map/",
-      "input": {
-        "region": {
-          "type": "integer",
-          "description": "Region ID: 1=Moscow",
+        "offerType": {
+          "type": "string",
+          "description": "flat (квартира), suburban (загородная), commercial",
           "required": true
         },
         "dealType": {
@@ -98,81 +41,182 @@
           "description": "sale or rent",
           "required": true
         },
-        "objectType": {
-          "type": "string",
-          "description": "flat, house",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "price_map",
-        "fields": [
-          "items[0].pricePerMeter",
-          "items[0].location"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_building_info",
-      "description_for_ai": "Get building information for a CIAN address.",
-      "intent": [
-        "дом CIAN",
-        "здание CIAN",
-        "building info cian"
-      ],
-      "endpoint": "GET https://api.cian.ru/building/v1/get-building-summary/",
-      "input": {
-        "buildingId": {
+        "engine_version": {
           "type": "integer",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "building",
-        "fields": [
-          "name",
-          "address",
-          "floors",
-          "material",
-          "buildYear",
-          "heatingType"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "similar_offers",
-      "description_for_ai": "Get similar listings to a CIAN offer.",
-      "intent": [
-        "похожие CIAN",
-        "similar cian",
-        "аналоги CIAN"
-      ],
-      "endpoint": "GET https://api.cian.ru/recommendation/v1/get-similar-offers/",
-      "input": {
-        "offerId": {
-          "type": "integer",
-          "required": true
+          "default": 2
         },
-        "limit": {
+        "page": {
           "type": "integer",
-          "default": 5
+          "default": 1
+        },
+        "region": {
+          "type": "integer",
+          "description": "1=Moscow, 2=Saint Petersburg, 4593=Moscow region",
+          "required": false
         }
       },
       "output": {
         "type": "list<offer>",
         "fields": [
-          "offers[0].id",
-          "offers[0].bargainTerms.price",
-          "offers[0].totalArea",
-          "offers[0].fullUrl"
+          "offersSerialized[0].cianId",
+          "offersSerialized[0].fullUrl",
+          "offersSerialized[0].priceTotalRur",
+          "offersSerialized[0].roomsCount",
+          "offersSerialized[0].totalArea"
         ]
       },
       "realtime": true,
-      "requires_auth": true
+      "requires_auth": false
+    },
+    {
+      "id": "get_offer",
+      "description_for_ai": "Get full CIAN real estate listing details.",
+      "intent": [
+        "объявление ЦИАН",
+        "листинг ЦИАН",
+        "квартира ЦИАН по ID",
+        "CIAN listing"
+      ],
+      "endpoint": "GET https://api.cian.ru/v1/get-offer-card/",
+      "input": {
+        "id": {
+          "type": "integer",
+          "description": "CIAN offer ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "offer",
+        "fields": [
+          "id",
+          "fullUrl",
+          "priceTotalRur",
+          "pricePerMeterRur",
+          "roomsCount",
+          "totalArea",
+          "floor",
+          "floorsCount",
+          "description",
+          "address"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_price_analytics",
+      "description_for_ai": "Get real estate price analytics for a Moscow region area.",
+      "intent": [
+        "цены на квартиры ЦИАН",
+        "аналитика цен ЦИАН",
+        "рынок недвижимости",
+        "CIAN price analytics"
+      ],
+      "endpoint": "POST https://api.cian.ru/price-estimates/v1/get-estimates/",
+      "input": {
+        "offerType": {
+          "type": "string",
+          "required": true
+        },
+        "dealType": {
+          "type": "string",
+          "required": true
+        },
+        "coordinates": {
+          "type": "object",
+          "description": "{lat: 55.75, lng: 37.62}",
+          "required": false
+        },
+        "totalArea": {
+          "type": "number",
+          "required": false
+        },
+        "roomsCount": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "estimates",
+        "fields": [
+          "priceEstimate",
+          "pricePerMeterEstimate",
+          "priceRange.min",
+          "priceRange.max"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_metro_stations",
+      "description_for_ai": "Get Moscow metro stations list for real estate search.",
+      "intent": [
+        "метро ЦИАН",
+        "станции метро Москва",
+        "метро поиск ЦИАН",
+        "metro CIAN"
+      ],
+      "endpoint": "GET https://api.cian.ru/v1/get-metro-stations/",
+      "input": {
+        "regionId": {
+          "type": "integer",
+          "description": "1=Moscow, 2=Saint Petersburg",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<station>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].lat",
+          "[0].lng",
+          "[0].lineColor"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_newbuildings",
+      "description_for_ai": "Search new building (новостройки) listings on CIAN.",
+      "intent": [
+        "новостройки ЦИАН",
+        "ЖК ЦИАН",
+        "купить новостройку",
+        "new buildings CIAN"
+      ],
+      "endpoint": "POST https://api.cian.ru/search-offers/v2/search-offers-desktop/",
+      "input": {
+        "offerType": {
+          "type": "string",
+          "default": "newobject"
+        },
+        "dealType": {
+          "type": "string",
+          "default": "sale"
+        },
+        "region": {
+          "type": "integer",
+          "required": false
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<newbuilding>",
+        "fields": [
+          "offersSerialized[0].cianId",
+          "offersSerialized[0].fullUrl",
+          "offersSerialized[0].newbuilding.name",
+          "offersSerialized[0].priceTotalRur"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
