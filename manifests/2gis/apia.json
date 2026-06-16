@@ -32,198 +32,196 @@
   },
   "capabilities": [
     {
-      "id": "search_places",
-      "description_for_ai": "Поиск организаций и мест по запросу рядом с координатами. Основной метод для запросов 'найди аптеку рядом', 'кафе поблизости', 'банкомат рядом со мной', 'магазины в этом районе'. Возвращает название, адрес, часы работы, телефон.",
-      "intent": [
-        "найди рядом",
-        "что есть поблизости",
-        "магазин рядом",
-        "кафе рядом",
-        "аптека рядом",
-        "банк рядом",
-        "где поесть",
-        "организации рядом",
-        "найди место",
-        "открытые магазины"
-      ],
-      "endpoint": "GET https://catalog.api.2gis.com/3.0/items",
-      "input": {
-        "q": {
-          "type": "string",
-          "description": "Поисковый запрос. Например: 'аптека', 'кофе', 'супермаркет', 'банкомат Сбербанк'",
-          "required": true
-        },
-        "point": {
-          "type": "string",
-          "description": "Координаты центра поиска в формате 'lng,lat'. Например: '37.6156,55.7522'",
-          "required": false
-        },
-        "radius": {
-          "type": "integer",
-          "description": "Радиус поиска в метрах",
-          "default": 500,
-          "max": 50000
-        },
-        "sort": {
-          "type": "string",
-          "description": "distance — сортировать по расстоянию от point",
-          "default": "distance"
-        },
-        "fields": {
-          "type": "string",
-          "description": "Дополнительные поля: items.schedule,items.contact_groups,items.rubrics,items.reviews",
-          "required": false
-        },
-        "page_size": {
-          "type": "integer",
-          "description": "Количество результатов",
-          "default": 10,
-          "max": 50
-        },
-        "locale": {
-          "type": "string",
-          "description": "Язык ответа: ru_RU, en_US",
-          "default": "ru_RU"
-        }
-      },
-      "output": {
-        "type": "list<place>",
-        "fields": [
-          "id",
-          "name",
-          "address.name",
-          "address.building_name",
-          "point.lat",
-          "point.lon",
-          "schedule",
-          "contact_groups.contacts",
-          "rubrics.name",
-          "rating",
-          "reviews.general_rating"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "geocode",
-      "description_for_ai": "Прямое и обратное геокодирование. Прямое: адрес → координаты. Обратное: координаты → адрес. Используй когда нужно определить адрес по координатам пользователя или найти координаты по названию улицы.",
+      "description_for_ai": "Forward and reverse geocoding for Russia and CIS countries with 2GIS.",
       "intent": [
-        "адрес по координатам",
-        "координаты адреса",
-        "что за адрес",
-        "где находится улица",
-        "определить адрес",
-        "геокодировать"
+        "2GIS geocode",
+        "адрес координаты 2ГИС",
+        "координаты адреса Россия",
+        "геокодинг 2ГИС"
       ],
       "endpoint": "GET https://catalog.api.2gis.com/3.0/items/geocode",
       "input": {
         "q": {
           "type": "string",
-          "description": "Адрес для прямого геокодирования. Например: 'Москва, Тверская 1'",
-          "required": false
-        },
-        "lat": {
-          "type": "float",
-          "description": "Широта для обратного геокодирования",
-          "required": false
-        },
-        "lon": {
-          "type": "float",
-          "description": "Долгота для обратного геокодирования",
-          "required": false
+          "description": "Address query",
+          "required": true
         },
         "fields": {
           "type": "string",
-          "description": "items.point,items.geometry.centroid,items.adm_div,items.address",
+          "description": "items.point,items.address_name,items.full_name",
           "required": false
-        }
-      },
-      "output": {
-        "type": "list<geo_object>",
-        "fields": [
-          "name",
-          "full_name",
-          "point.lat",
-          "point.lon",
-          "address.name",
-          "adm_div"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "suggest",
-      "description_for_ai": "Автодополнение поискового запроса. Используй для подсказок когда пользователь вводит название организации или адрес — возвращает список вариантов.",
-      "intent": [
-        "подсказки поиска",
-        "автодополнение",
-        "варианты адреса"
-      ],
-      "endpoint": "GET https://catalog.api.2gis.com/3.0/suggests",
-      "input": {
-        "q": {
+        },
+        "key": {
           "type": "string",
-          "description": "Частичный запрос пользователя",
           "required": true
-        },
-        "point": {
-          "type": "string",
-          "description": "Координаты для приоритизации результатов 'lng,lat'",
-          "required": false
-        },
-        "locale": {
-          "type": "string",
-          "default": "ru_RU",
-          "description": "Locale code: en-US, ru-RU, de-DE, fr-FR, etc."
         }
       },
       "output": {
-        "type": "list<suggest>",
+        "type": "geocode",
         "fields": [
-          "name",
-          "full_name",
-          "type",
-          "id"
+          "result.items[0].point.lat",
+          "result.items[0].point.lon",
+          "result.items[0].full_name",
+          "result.items[0].address_name"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_place_by_id",
-      "description_for_ai": "Полная информация об организации по её ID. Используй после search_places когда пользователь хочет подробности: все телефоны, полное расписание, сайт, описание.",
+      "id": "search_places",
+      "description_for_ai": "Search for places, businesses, and organizations in 2GIS catalog.",
       "intent": [
-        "подробнее об организации",
-        "контакты",
-        "часы работы",
-        "сайт компании",
-        "телефон"
+        "2GIS search",
+        "поиск мест 2ГИС",
+        "найти организацию 2ГИС",
+        "search 2GIS"
       ],
-      "endpoint": "GET https://catalog.api.2gis.com/3.0/items/{object_id}",
+      "endpoint": "GET https://catalog.api.2gis.com/3.0/items",
       "input": {
-        "object_id": {
+        "q": {
           "type": "string",
-          "description": "ID объекта из результатов search_places",
+          "description": "Search query",
+          "required": true
+        },
+        "point": {
+          "type": "string",
+          "description": "Center point: lon,lat e.g. 37.617635,55.755814",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Search radius in meters",
+          "required": false
+        },
+        "type": {
+          "type": "string",
+          "description": "branch or building",
+          "required": false
+        },
+        "key": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<place>",
+        "fields": [
+          "result.items[0].id",
+          "result.items[0].name",
+          "result.items[0].address_name",
+          "result.items[0].point.lat"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_routing",
+      "description_for_ai": "Get driving, cycling, or walking directions in Russia with 2GIS.",
+      "intent": [
+        "маршрут 2ГИС",
+        "directions Russia",
+        "route calculation 2GIS",
+        "проложить маршрут 2ГИС"
+      ],
+      "endpoint": "GET https://routing.api.2gis.com/carrouting/6.0.0/global",
+      "input": {
+        "points": {
+          "type": "array",
+          "description": "[{x: lon, y: lat}, {x: lon, y: lat}]",
+          "required": true
+        },
+        "output": {
+          "type": "string",
+          "description": "Result type: routing_path,polyline",
+          "default": "routing_path"
+        },
+        "key": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "route",
+        "fields": [
+          "result[0].total_distance",
+          "result[0].total_duration",
+          "result[0].maneuvers[0].outcoming_path.points"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_place_details",
+      "description_for_ai": "Get detailed info about a 2GIS place: hours, phones, photos, reviews.",
+      "intent": [
+        "place details 2GIS",
+        "organization info 2ГИС",
+        "business info Russia",
+        "детали организации 2ГИС"
+      ],
+      "endpoint": "GET https://catalog.api.2gis.com/3.0/items/byid",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "2GIS object ID",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "items.schedule,items.contact_groups,items.description,items.reviews,items.attribute_groups",
+          "description": "items.schedule,items.contact_groups,items.reviews,items.photos",
           "required": false
+        },
+        "key": {
+          "type": "string",
+          "required": true
         }
       },
       "output": {
         "type": "place",
         "fields": [
-          "name",
-          "address.name",
-          "schedule",
-          "contact_groups",
-          "description",
-          "reviews.general_rating",
-          "attribute_groups"
+          "result.items[0].name",
+          "result.items[0].schedule.Mon.working_hours[0].from",
+          "result.items[0].contact_groups[0].contacts[0].value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "suggest",
+      "description_for_ai": "Autocomplete address and place queries for search inputs in 2GIS.",
+      "intent": [
+        "address autocomplete 2GIS",
+        "place suggest Russia",
+        "автодополнение адреса 2ГИС"
+      ],
+      "endpoint": "GET https://suggest.api.2gis.com/2.0/suggest",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Partial search query",
+          "required": true
+        },
+        "locale": {
+          "type": "string",
+          "description": "ru_RU, en_RU, de_RU",
+          "default": "ru_RU"
+        },
+        "key": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<suggestion>",
+        "fields": [
+          "result.items[0].name",
+          "result.items[0].full_name",
+          "result.items[0].type"
         ]
       },
       "realtime": true,
