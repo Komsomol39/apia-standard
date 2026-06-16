@@ -20,100 +20,24 @@
   },
   "capabilities": [
     {
-      "id": "get_indicator",
-      "description_for_ai": "Get WHO health indicator data for countries and years. E.g. life expectancy, mortality rates, disease prevalence, vaccination coverage.",
-      "intent": [
-        "mortality data",
-        "disease rates",
-        "WHO statistics",
-        "vaccination coverage",
-        "world health data",
-        "global health",
-        "mortality rate",
-        "world health",
-        "life expectancy",
-        "health metrics"
-      ],
-      "endpoint": "GET https://ghoapi.azureedge.net/api/{indicator_code}",
-      "input": {
-        "indicator_code": {
-          "type": "string",
-          "description": "WHO indicator code e.g. WHOSIS_000001=Life expectancy, MDG_0000000001=Under-5 mortality",
-          "required": true
-        },
-        "$filter": {
-          "type": "string",
-          "description": "OData filter e.g. SpatialDim eq USD for USA",
-          "required": false
-        },
-        "$top": {
-          "type": "integer",
-          "default": 100
-        }
-      },
-      "output": {
-        "type": "list<observation>",
-        "fields": [
-          "SpatialDim",
-          "TimeDim",
-          "NumericValue",
-          "Low",
-          "High"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": false
-    },
-    {
-      "id": "list_indicators",
-      "description_for_ai": "List all available WHO health indicators with codes and names.",
-      "intent": [
-        "health metrics list",
-        "WHO indicators",
-        "available statistics",
-        "available health data"
-      ],
-      "endpoint": "GET https://ghoapi.azureedge.net/api/Indicator",
-      "input": {
-        "$filter": {
-          "type": "string",
-          "required": false
-        },
-        "$top": {
-          "type": "integer",
-          "default": 100
-        }
-      },
-      "output": {
-        "type": "list<indicator>",
-        "fields": [
-          "IndicatorCode",
-          "IndicatorName",
-          "Language"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": false
-    },
-    {
-      "id": "get_health_data",
-      "description_for_ai": "Get WHO global health statistics by indicator and country.",
+      "id": "get_indicator_data",
+      "description_for_ai": "Get WHO global health indicator data by country and year (mortality, disease rates, etc.).",
       "intent": [
         "WHO health data",
         "global health statistics",
-        "world health indicators",
+        "disease data WHO",
         "данные ВОЗ"
       ],
-      "endpoint": "GET https://ghoapi.azureedge.net/api/{indicator_code}",
+      "endpoint": "GET https://ghoapi.azureedge.net/api/{indicatorCode}",
       "input": {
-        "indicator_code": {
+        "indicatorCode": {
           "type": "string",
-          "description": "WHO GHO indicator: WHOSIS_000001 (life expectancy), NCD_BMI_30A (obesity), SA_0000001400 (alcohol), RSUD_560 (road traffic deaths)",
+          "description": "Indicator code: WHOSIS_000001 (life expectancy), MDG_0000000026 (infant mortality), SDGHEALTHWORKERS (health workers)",
           "required": true
         },
         "$filter": {
           "type": "string",
-          "description": "OData filter: SpatialDim eq 'USA' and TimeDim eq 2020",
+          "description": "OData filter: SpatialDim eq 'RUS' and TimeDim eq 2020",
           "required": false
         },
         "$top": {
@@ -127,7 +51,8 @@
           "value[0].SpatialDim (country)",
           "value[0].TimeDim (year)",
           "value[0].NumericValue",
-          "value[0].Value"
+          "value[0].Low",
+          "value[0].High"
         ]
       },
       "realtime": false,
@@ -135,24 +60,23 @@
     },
     {
       "id": "list_indicators",
-      "description_for_ai": "List all WHO GHO health indicators.",
+      "description_for_ai": "List all WHO Global Health Observatory indicators.",
       "intent": [
         "WHO indicators",
         "health metrics list",
-        "GHO data WHO",
+        "GHO indicators",
         "показатели ВОЗ"
       ],
       "endpoint": "GET https://ghoapi.azureedge.net/api/Indicator",
       "input": {
         "$filter": {
           "type": "string",
-          "description": "IndicatorName eq 'Life expectancy at birth'",
+          "description": "Filter: contains(IndicatorName, 'mortality')",
           "required": false
         },
-        "$search": {
-          "type": "string",
-          "description": "Text search",
-          "required": false
+        "$top": {
+          "type": "integer",
+          "default": 50
         }
       },
       "output": {
@@ -167,35 +91,95 @@
       "requires_auth": false
     },
     {
-      "id": "get_disease_data",
-      "description_for_ai": "Get WHO data on specific diseases: malaria, tuberculosis, HIV, COVID-19.",
+      "id": "get_country_data",
+      "description_for_ai": "Get all health statistics for a specific country.",
       "intent": [
-        "WHO disease data",
-        "malaria statistics",
-        "tuberculosis WHO",
-        "данные болезней ВОЗ"
+        "country health WHO",
+        "health data country",
+        "statistics country WHO",
+        "здоровье страны ВОЗ"
       ],
-      "endpoint": "GET https://ghoapi.azureedge.net/api/{indicator_code}",
+      "endpoint": "GET https://ghoapi.azureedge.net/api/{indicatorCode}",
       "input": {
-        "indicator_code": {
+        "indicatorCode": {
           "type": "string",
-          "description": "MALARIA_EST_CASES (malaria cases), TB_e_mort_100k (TB mortality), HIV_0000000001 (HIV prevalence)",
           "required": true
         },
         "$filter": {
           "type": "string",
+          "description": "SpatialDim eq 'DEU'",
+          "required": true
+        },
+        "$orderby": {
+          "type": "string",
+          "description": "TimeDim desc",
           "required": false
         }
       },
       "output": {
         "type": "list<record>",
         "fields": [
-          "value[0].SpatialDim",
+          "value[0].NumericValue",
           "value[0].TimeDim",
-          "value[0].NumericValue"
+          "value[0].Dim1 (sex/age group)"
         ]
       },
       "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "list_countries",
+      "description_for_ai": "Get the list of countries and regions in the WHO GHO database.",
+      "intent": [
+        "WHO countries",
+        "country list WHO",
+        "regions WHO",
+        "страны ВОЗ"
+      ],
+      "endpoint": "GET https://ghoapi.azureedge.net/api/DIMENSION/COUNTRY/DimensionValues",
+      "input": {},
+      "output": {
+        "type": "list<country>",
+        "fields": [
+          "value[0].Code",
+          "value[0].Title",
+          "value[0].ParentTitle (region)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_disease_outbreak",
+      "description_for_ai": "Get WHO disease outbreak news and alerts.",
+      "intent": [
+        "disease outbreak WHO",
+        "epidemic alert",
+        "health emergency",
+        "вспышка болезни ВОЗ"
+      ],
+      "endpoint": "GET https://www.who.int/api/news/diseaseoutbreaknews",
+      "input": {
+        "sf_cultureInfo": {
+          "type": "string",
+          "description": "Language: en, ru, fr, es, ar, zh",
+          "default": "en"
+        },
+        "$top": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<outbreak>",
+        "fields": [
+          "value[0].Title",
+          "value[0].PublicationDateAndTime",
+          "value[0].ItemDefaultUrl",
+          "value[0].Summary"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
     }
   ],
