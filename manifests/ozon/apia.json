@@ -24,41 +24,81 @@
   },
   "capabilities": [
     {
-      "id": "get_products",
-      "description_for_ai": "Получить список товаров продавца с ценами, остатками и статусами.",
+      "id": "list_products",
+      "description_for_ai": "Get seller's product catalog from Ozon marketplace.",
       "intent": [
-        "товары Ozon",
-        "каталог продавца",
-        "список продуктов",
-        "управление ассортиментом"
+        "ozon products",
+        "товары ozon",
+        "каталог ozon",
+        "продукты ozon"
       ],
       "endpoint": "POST https://api-seller.ozon.ru/v2/product/list",
       "input": {
         "filter": {
           "type": "object",
-          "description": "{visibility: ALL|VISIBLE|HIDDEN, offer_id: []}",
+          "description": "{visibility: 'ALL'|'IN_SALE'|'NOT_ON_SALE', offer_id: ['sku1'], sku: [123456]}",
           "required": false
         },
         "last_id": {
           "type": "string",
-          "description": "Для пагинации",
+          "description": "Pagination cursor from previous response",
           "required": false
         },
         "limit": {
           "type": "integer",
-          "default": 100,
-          "description": "Maximum number of results to return"
+          "default": 100
         }
       },
       "output": {
         "type": "list<product>",
         "fields": [
-          "items[0].product_id",
-          "items[0].offer_id",
-          "items[0].name",
-          "items[0].price",
-          "items[0].stocks.present",
-          "items[0].status.state"
+          "result.items[0].product_id",
+          "result.items[0].offer_id",
+          "result.items[0].name",
+          "result.last_id",
+          "result.total"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_product_info",
+      "description_for_ai": "Get full product details from Ozon: price, description, attributes, category.",
+      "intent": [
+        "ozon product info",
+        "ozon card",
+        "карточка ozon",
+        "информация о товаре ozon"
+      ],
+      "endpoint": "POST https://api-seller.ozon.ru/v2/product/info",
+      "input": {
+        "product_id": {
+          "type": "integer",
+          "description": "Ozon product ID",
+          "required": false
+        },
+        "sku": {
+          "type": "integer",
+          "description": "Ozon SKU",
+          "required": false
+        },
+        "offer_id": {
+          "type": "string",
+          "description": "Seller's article",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "product",
+        "fields": [
+          "result.id",
+          "result.name",
+          "result.offer_id",
+          "result.price",
+          "result.marketing_price",
+          "result.stocks.present",
+          "result.stocks.reserved"
         ]
       },
       "realtime": true,
@@ -66,38 +106,68 @@
     },
     {
       "id": "get_orders",
-      "description_for_ai": "Get FBS (fulfilled by seller) orders from Ozon marketplace requiring packaging and shipping by seller.",
+      "description_for_ai": "Get Ozon marketplace orders with shipment and payment status.",
       "intent": [
-        "заказы Ozon",
-        "обработка заказов",
-        "отгрузка",
-        "FBS заказы"
+        "ozon orders",
+        "заказы ozon",
+        "ozon продажи"
       ],
       "endpoint": "POST https://api-seller.ozon.ru/v3/posting/fbs/list",
       "input": {
-        "filter": {
-          "type": "object",
-          "description": "{status: awaiting_packaging, since: datetime, to: datetime}",
-          "required": false
-        },
         "dir": {
           "type": "string",
-          "description": "ASC или DESC",
-          "default": "ASC"
+          "description": "asc or desc",
+          "default": "desc"
+        },
+        "filter": {
+          "type": "object",
+          "description": "{since: '2024-01-01T00:00:00.000Z', to: '2024-01-31T23:59:59.999Z', status: 'awaiting_deliver'}",
+          "required": false
         },
         "limit": {
           "type": "integer",
-          "default": 50,
-          "description": "Maximum number of results to return"
+          "default": 50
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0
         }
       },
       "output": {
         "type": "list<order>",
         "fields": [
           "result.postings[0].posting_number",
+          "result.postings[0].order_id",
           "result.postings[0].status",
-          "result.postings[0].products",
-          "result.postings[0].shipment_date"
+          "result.postings[0].products[0].name",
+          "result.postings[0].ship_last_mile"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_price",
+      "description_for_ai": "Update product prices on Ozon. Supports bulk update up to 1000 products.",
+      "intent": [
+        "ozon price update",
+        "изменить цену ozon",
+        "обновить цену ozon"
+      ],
+      "endpoint": "POST https://api-seller.ozon.ru/v1/product/import/prices",
+      "input": {
+        "prices": {
+          "type": "array",
+          "description": "[{product_id: 123, price: '999.99', old_price: '1299.99', price_strategy_enabled: false}] or use offer_id instead of product_id",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<result>",
+        "fields": [
+          "result[0].product_id",
+          "result[0].updated",
+          "result[0].errors"
         ]
       },
       "realtime": true,
