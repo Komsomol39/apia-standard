@@ -118,6 +118,107 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "code_generation",
+      "description_for_ai": "Generate code with Codestral. Optimized for coding tasks.",
+      "intent": [
+        "Codestral",
+        "code generation Mistral",
+        "write code AI",
+        "программирование Codestral"
+      ],
+      "endpoint": "POST https://codestral.mistral.ai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "codestral-latest"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0.0
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "fill_in_middle",
+      "description_for_ai": "Fill-in-the-middle code completion. Give prefix and suffix, Codestral fills the gap.",
+      "intent": [
+        "FIM completion",
+        "code completion Codestral",
+        "fill code Mistral"
+      ],
+      "endpoint": "POST https://codestral.mistral.ai/v1/fim/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "codestral-latest"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Code before cursor",
+          "required": true
+        },
+        "suffix": {
+          "type": "string",
+          "description": "Code after cursor",
+          "required": false
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0.0
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "code_review",
+      "description_for_ai": "Review code for bugs, security issues, and improvements with Codestral.",
+      "intent": [
+        "code review AI",
+        "bug detection",
+        "security review code",
+        "проверка кода Codestral"
+      ],
+      "endpoint": "POST https://codestral.mistral.ai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "codestral-latest"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: 'user', content: 'Review this code:\\n```python\\n...\\n```'}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
