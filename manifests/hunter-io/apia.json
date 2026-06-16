@@ -158,6 +158,67 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "find_email",
+      "description_for_ai": "Find the email address for a person at a company.",
+      "intent": [
+        "find email hunter",
+        "email finder",
+        "найти email hunter"
+      ],
+      "endpoint": "GET https://api.hunter.io/v2/email-finder",
+      "input": {
+        "domain": {
+          "type": "string",
+          "required": true
+        },
+        "first_name": {
+          "type": "string",
+          "required": true
+        },
+        "last_name": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "email",
+        "fields": [
+          "data.email",
+          "data.score",
+          "data.sources[0].uri"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "verify_email",
+      "description_for_ai": "Verify that an email address exists and is deliverable.",
+      "intent": [
+        "verify email hunter",
+        "email verification",
+        "проверить email hunter"
+      ],
+      "endpoint": "GET https://api.hunter.io/v2/email-verifier",
+      "input": {
+        "email": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "verification",
+        "fields": [
+          "data.result",
+          "data.score",
+          "data.disposable",
+          "data.smtp_check"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
