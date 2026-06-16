@@ -23,12 +23,12 @@
   "capabilities": [
     {
       "id": "list_tickets",
-      "description_for_ai": "List support tickets with filters by status, priority, assignee, and requester.",
+      "description_for_ai": "List support tickets in Zendesk. Filter by status, assignee, priority.",
       "intent": [
-        "zendesk tickets",
+        "Zendesk tickets",
         "support tickets",
-        "customer tickets",
-        "тикеты zendesk"
+        "customer issues",
+        "заявки Zendesk"
       ],
       "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/tickets",
       "input": {
@@ -39,17 +39,17 @@
         },
         "priority": {
           "type": "string",
-          "description": "low, normal, high, urgent",
+          "description": "urgent, high, normal, low",
+          "required": false
+        },
+        "assignee_id": {
+          "type": "integer",
           "required": false
         },
         "sort_by": {
           "type": "string",
           "description": "created_at, updated_at, priority, status",
           "default": "created_at"
-        },
-        "sort_order": {
-          "type": "string",
-          "default": "desc"
         },
         "per_page": {
           "type": "integer",
@@ -64,7 +64,6 @@
           "tickets[0].status",
           "tickets[0].priority",
           "tickets[0].requester_id",
-          "tickets[0].assignee_id",
           "tickets[0].created_at"
         ]
       },
@@ -73,19 +72,41 @@
     },
     {
       "id": "create_ticket",
-      "description_for_ai": "Create a new Zendesk support ticket.",
+      "description_for_ai": "Create a new support ticket in Zendesk.",
       "intent": [
-        "create zendesk ticket",
+        "create Zendesk ticket",
+        "submit support request",
         "new ticket",
-        "open support ticket",
-        "создать тикет zendesk"
+        "создать заявку Zendesk"
       ],
       "endpoint": "POST https://{subdomain}.zendesk.com/api/v2/tickets",
       "input": {
-        "ticket": {
-          "type": "object",
-          "description": "{subject: 'Issue title', comment: {body: 'Description'}, requester: {email, name}, priority: 'normal', status: 'new', tags: ['bug', 'billing'], custom_fields: [{id: 123, value: 'value'}]}",
+        "subject": {
+          "type": "string",
           "required": true
+        },
+        "body": {
+          "type": "string",
+          "description": "Comment body",
+          "required": true
+        },
+        "requester_email": {
+          "type": "string",
+          "required": false
+        },
+        "priority": {
+          "type": "string",
+          "description": "urgent, high, normal, low",
+          "default": "normal"
+        },
+        "tags": {
+          "type": "array",
+          "required": false
+        },
+        "type": {
+          "type": "string",
+          "description": "problem, incident, question, task",
+          "required": false
         }
       },
       "output": {
@@ -102,12 +123,12 @@
     },
     {
       "id": "update_ticket",
-      "description_for_ai": "Update a ticket: change status, priority, assignee, or add a comment.",
+      "description_for_ai": "Update ticket status, priority, assignee, or add a comment.",
       "intent": [
-        "update ticket zendesk",
-        "close ticket",
-        "reply to ticket zendesk",
-        "обновить тикет zendesk"
+        "update ticket Zendesk",
+        "resolve ticket",
+        "assign ticket",
+        "обновить заявку Zendesk"
       ],
       "endpoint": "PUT https://{subdomain}.zendesk.com/api/v2/tickets/{ticket_id}",
       "input": {
@@ -115,10 +136,23 @@
           "type": "integer",
           "required": true
         },
-        "ticket": {
+        "status": {
+          "type": "string",
+          "description": "open, pending, solved, closed",
+          "required": false
+        },
+        "assignee_id": {
+          "type": "integer",
+          "required": false
+        },
+        "comment": {
           "type": "object",
-          "description": "{status: 'solved', priority: 'urgent', comment: {body: 'Reply text', public: true}, assignee_id: 123}",
-          "required": true
+          "description": "{body: 'Reply text', public: true}",
+          "required": false
+        },
+        "priority": {
+          "type": "string",
+          "required": false
         }
       },
       "output": {
@@ -133,24 +167,52 @@
       "requires_auth": true
     },
     {
-      "id": "search",
-      "description_for_ai": "Search across tickets, users, and organizations using Zendesk Search API.",
+      "id": "search_tickets",
+      "description_for_ai": "Search tickets by keyword, requester, tag, or date.",
       "intent": [
-        "zendesk search",
+        "search Zendesk",
         "find ticket",
-        "search support",
-        "поиск zendesk"
+        "ticket search",
+        "поиск заявок Zendesk"
       ],
       "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/search",
       "input": {
         "query": {
           "type": "string",
-          "description": "Search query: 'type:ticket status:open priority:urgent' or 'billing error created>2024-01-01'",
+          "description": "Zendesk search: 'type:ticket status:open priority:urgent' or keyword",
           "required": true
         },
-        "sort_by": {
+        "per_page": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<ticket>",
+        "fields": [
+          "results[0].id",
+          "results[0].subject",
+          "results[0].status",
+          "results[0].requester.email"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_users",
+      "description_for_ai": "List agents and end-users in Zendesk.",
+      "intent": [
+        "Zendesk users",
+        "agents list",
+        "customer list Zendesk",
+        "пользователи Zendesk"
+      ],
+      "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/users",
+      "input": {
+        "role": {
           "type": "string",
-          "description": "created_at, updated_at, priority, status, ticket_type",
+          "description": "end-user, agent, admin",
           "required": false
         },
         "per_page": {
@@ -159,39 +221,53 @@
         }
       },
       "output": {
-        "type": "list<result>",
+        "type": "list<user>",
         "fields": [
-          "results[0].id",
-          "results[0].subject",
-          "results[0].status",
-          "count"
+          "users[0].id",
+          "users[0].name",
+          "users[0].email",
+          "users[0].role",
+          "users[0].created_at"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_ticket_metrics",
-      "description_for_ai": "Get resolution time and satisfaction metrics for a Zendesk ticket.",
+      "id": "add_comment",
+      "description_for_ai": "Add a public or private comment to an existing ticket.",
       "intent": [
-        "ticket metrics zendesk",
-        "resolution time",
-        "SLA zendesk",
-        "метрики тикета zendesk"
+        "reply ticket Zendesk",
+        "add comment",
+        "respond to customer",
+        "ответить клиенту Zendesk"
       ],
-      "endpoint": "GET https://{subdomain}.zendesk.com/api/v2/tickets/{ticket_id}/metrics",
+      "endpoint": "PUT https://{subdomain}.zendesk.com/api/v2/tickets/{ticket_id}",
       "input": {
         "ticket_id": {
           "type": "integer",
           "required": true
+        },
+        "body": {
+          "type": "string",
+          "description": "Comment text",
+          "required": true
+        },
+        "public": {
+          "type": "boolean",
+          "description": "True = customer sees it, False = internal note",
+          "default": true
+        },
+        "author_id": {
+          "type": "integer",
+          "required": false
         }
       },
       "output": {
-        "type": "metrics",
+        "type": "ticket",
         "fields": [
-          "ticket_metric.reply_time_in_minutes.calendar",
-          "ticket_metric.full_resolution_time_in_minutes.calendar",
-          "ticket_metric.first_resolution_time_in_minutes"
+          "ticket.id",
+          "audit.id"
         ]
       },
       "realtime": true,
