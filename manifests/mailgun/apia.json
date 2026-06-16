@@ -23,37 +23,42 @@
   "capabilities": [
     {
       "id": "send_email",
-      "description_for_ai": "Send email via Mailgun. Supports HTML, attachments, templates, tags, and scheduled delivery.",
+      "description_for_ai": "Send email via Mailgun. Reliable transactional email with tracking and analytics.",
       "intent": [
         "send email mailgun",
-        "transactional email",
-        "email delivery mailgun",
-        "отправить email mailgun"
+        "mailgun email",
+        "transactional mail",
+        "отправить письмо mailgun"
       ],
       "endpoint": "POST https://api.mailgun.net/v3/{domain}/messages",
       "input": {
+        "domain": {
+          "type": "string",
+          "description": "Your Mailgun domain e.g. mg.example.com",
+          "required": true
+        },
         "from": {
           "type": "string",
-          "description": "Sender: Name <email@domain.com>",
+          "description": "Sender: Name <from@domain.com>",
           "required": true
         },
         "to": {
           "type": "string",
-          "description": "Comma-separated recipients",
+          "description": "Recipient email(s), comma-separated",
           "required": true
         },
         "subject": {
           "type": "string",
           "required": true
         },
+        "html": {
+          "type": "string",
+          "description": "HTML email body",
+          "required": false
+        },
         "text": {
           "type": "string",
           "description": "Plain text body",
-          "required": false
-        },
-        "html": {
-          "type": "string",
-          "description": "HTML body",
           "required": false
         },
         "cc": {
@@ -64,19 +69,14 @@
           "type": "string",
           "required": false
         },
-        "o:tag": {
+        "h:X-Mailgun-Variables": {
           "type": "string",
-          "description": "Tag for tracking (max 3)",
-          "required": false
-        },
-        "o:deliverytime": {
-          "type": "string",
-          "description": "RFC 2822 future time for scheduled send",
+          "description": "JSON string of custom tracking variables",
           "required": false
         }
       },
       "output": {
-        "type": "result",
+        "type": "send_result",
         "fields": [
           "id",
           "message"
@@ -87,11 +87,11 @@
     },
     {
       "id": "get_events",
-      "description_for_ai": "Get email event log: delivered, opened, clicked, bounced, complained.",
+      "description_for_ai": "Get email event logs: delivered, opened, clicked, bounced, complained.",
       "intent": [
         "mailgun events",
-        "email tracking",
-        "delivery events",
+        "email logs",
+        "delivery tracking",
         "события mailgun"
       ],
       "endpoint": "GET https://api.mailgun.net/v3/{domain}/events",
@@ -102,17 +102,12 @@
         },
         "event": {
           "type": "string",
-          "description": "accepted, rejected, delivered, failed, opened, clicked, unsubscribed, complained",
-          "required": false
-        },
-        "recipient": {
-          "type": "string",
-          "description": "Filter by recipient email",
+          "description": "delivered, opened, clicked, bounced, complained, unsubscribed, rejected",
           "required": false
         },
         "begin": {
           "type": "string",
-          "description": "Start time",
+          "description": "RFC 2822 or Unix timestamp",
           "required": false
         },
         "end": {
@@ -125,7 +120,7 @@
         }
       },
       "output": {
-        "type": "events",
+        "type": "list<event>",
         "fields": [
           "items[0].event",
           "items[0].recipient",
@@ -137,50 +132,14 @@
       "requires_auth": true
     },
     {
-      "id": "manage_mailing_list",
-      "description_for_ai": "Create or get a Mailgun mailing list for bulk email management.",
-      "intent": [
-        "mailing list mailgun",
-        "email list",
-        "bulk email group",
-        "список рассылки mailgun"
-      ],
-      "endpoint": "POST https://api.mailgun.net/v3/lists",
-      "input": {
-        "address": {
-          "type": "string",
-          "description": "List email address: devs@mg.yourdomain.com",
-          "required": true
-        },
-        "description": {
-          "type": "string",
-          "required": false
-        },
-        "access_level": {
-          "type": "string",
-          "description": "readonly (members only), members (anyone can post), everyone",
-          "default": "readonly"
-        }
-      },
-      "output": {
-        "type": "list",
-        "fields": [
-          "list.address",
-          "list.members_count",
-          "list.access_level"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "validate_email",
-      "description_for_ai": "Validate email address: check MX records, syntax, catch-all, and mailbox existence.",
+      "description_for_ai": "Validate an email address — check if it's real, deliverable, and not disposable.",
       "intent": [
-        "validate email mailgun",
-        "email validation",
-        "check email exists",
-        "проверить email mailgun"
+        "validate email",
+        "email check",
+        "email verification",
+        "проверить email",
+        "валидация email"
       ],
       "endpoint": "GET https://api.mailgun.net/v4/address/validate",
       "input": {
@@ -188,21 +147,62 @@
           "type": "string",
           "description": "Email address to validate",
           "required": true
-        },
-        "provider_lookup": {
-          "type": "boolean",
-          "description": "Check actual mailbox existence (slower)",
-          "default": false
         }
       },
       "output": {
         "type": "validation",
         "fields": [
           "address",
+          "is_valid",
+          "reason",
           "is_disposable_address",
           "is_role_address",
-          "reason",
-          "result (deliverable|undeliverable|catch_all|unknown)"
+          "result"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_mailing_list_member",
+      "description_for_ai": "Add a subscriber to a Mailgun mailing list.",
+      "intent": [
+        "mailing list mailgun",
+        "add subscriber",
+        "email list",
+        "список рассылки mailgun"
+      ],
+      "endpoint": "POST https://api.mailgun.net/v3/lists/{address}/members",
+      "input": {
+        "address": {
+          "type": "string",
+          "description": "Mailing list address e.g. list@mg.example.com",
+          "required": true
+        },
+        "member_address": {
+          "type": "string",
+          "description": "Subscriber email",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "subscribed": {
+          "type": "boolean",
+          "default": true
+        },
+        "upsert": {
+          "type": "boolean",
+          "description": "Update if exists",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "member",
+        "fields": [
+          "member.address",
+          "member.subscribed"
         ]
       },
       "realtime": true,
