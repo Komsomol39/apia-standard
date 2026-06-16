@@ -21,125 +21,33 @@
   "capabilities": [
     {
       "id": "get_indicator",
-      "description_for_ai": "Get economic indicator data for countries and years. GDP, inflation, unemployment, exports, population, education, health.",
-      "intent": [
-        "GDP data",
-        "economic data",
-        "country statistics",
-        "development indicators",
-        "population data",
-        "unemployment rate",
-        "world bank data"
-      ],
-      "endpoint": "GET https://api.worldbank.org/v2/country/{country}/indicator/{indicator}",
-      "input": {
-        "country": {
-          "type": "string",
-          "description": "ISO 2-letter country code or all for all countries. e.g. RU, US, DE, CN",
-          "required": true
-        },
-        "indicator": {
-          "type": "string",
-          "description": "NY.GDP.MKTP.CD=GDP, SP.POP.TOTL=Population, FP.CPI.TOTL.ZG=Inflation, SL.UEM.TOTL.ZS=Unemployment",
-          "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "json",
-          "description": "Response format: json, xml, or csv"
-        },
-        "date": {
-          "type": "string",
-          "description": "Year range e.g. 2010:2023",
-          "required": false
-        },
-        "per_page": {
-          "type": "integer",
-          "default": 50,
-          "description": "Results per page. Check API docs for maximum allowed."
-        }
-      },
-      "output": {
-        "type": "list<data_point>",
-        "fields": [
-          "[1][0].country.value",
-          "[1][0].date",
-          "[1][0].value"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": false
-    },
-    {
-      "id": "search_indicators",
-      "description_for_ai": "Search available World Bank indicators by keyword.",
-      "intent": [
-        "find indicator",
-        "economic metric",
-        "World Bank indicators list"
-      ],
-      "endpoint": "GET https://api.worldbank.org/v2/indicator",
-      "input": {
-        "format": {
-          "type": "string",
-          "default": "json",
-          "description": "Response format: json, xml, or csv"
-        },
-        "per_page": {
-          "type": "integer",
-          "default": 20,
-          "description": "Results per page. Check API docs for maximum allowed."
-        },
-        "source": {
-          "type": "string",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "list<indicator>",
-        "fields": [
-          "[1][0].id",
-          "[1][0].name",
-          "[1][0].sourceNote"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": false
-    },
-    {
-      "id": "get_indicator_data",
-      "description_for_ai": "Get World Bank indicator data for any country/countries.",
+      "description_for_ai": "Get World Bank indicator data by country and year (GDP, inflation, poverty, etc.).",
       "intent": [
         "World Bank data",
-        "economic data",
-        "development indicators",
-        "данные Всемирного Банка"
+        "economic indicators",
+        "GDP data",
+        "данные Всемирного банка"
       ],
       "endpoint": "GET https://api.worldbank.org/v2/country/{country}/indicator/{indicator}",
       "input": {
         "country": {
           "type": "string",
-          "description": "ISO 2-letter code or 'all': US, RU, CN, all",
+          "description": "ISO 3-letter code: USA, DEU, RUS, CHN, all",
           "required": true
         },
         "indicator": {
           "type": "string",
-          "description": "NY.GDP.MKTP.CD (GDP), SP.POP.TOTL (population), SL.UEM.TOTL.ZS (unemployment), SI.POV.GINI (Gini)",
+          "description": "NY.GDP.MKTP.CD (GDP), SP.POP.TOTL (population), FP.CPI.TOTL.ZG (inflation), SI.POV.GINI (Gini index)",
           "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "json"
-        },
-        "mrv": {
-          "type": "integer",
-          "description": "Most recent N values",
-          "required": false
         },
         "date": {
           "type": "string",
-          "description": "Year or range: 2020 or 2010:2020",
+          "description": "Year or range: 2020, 2015:2023",
           "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 50
         }
       },
       "output": {
@@ -155,21 +63,16 @@
       "requires_auth": false
     },
     {
-      "id": "list_indicators",
-      "description_for_ai": "List World Bank indicators by topic or search by keyword.",
+      "id": "search_indicators",
+      "description_for_ai": "Search World Bank indicators by topic or keyword.",
       "intent": [
         "World Bank indicators",
-        "economic indicators list",
-        "development metrics",
-        "показатели Всемирного Банка"
+        "development indicators",
+        "economic metrics",
+        "индикаторы Всемирного банка"
       ],
       "endpoint": "GET https://api.worldbank.org/v2/indicator",
       "input": {
-        "topic": {
-          "type": "integer",
-          "description": "Topic ID: 1=Agriculture, 2=Aid, 3=Economy, 5=Education, 8=Health",
-          "required": false
-        },
         "format": {
           "type": "string",
           "default": "json"
@@ -177,6 +80,11 @@
         "per_page": {
           "type": "integer",
           "default": 50
+        },
+        "source": {
+          "type": "integer",
+          "description": "Source ID: 2=World Development Indicators",
+          "required": false
         }
       },
       "output": {
@@ -193,33 +101,115 @@
     },
     {
       "id": "get_country_info",
-      "description_for_ai": "Get World Bank country metadata: region, income level, capital, coordinates.",
+      "description_for_ai": "Get country metadata: region, income level, capital city.",
       "intent": [
         "country info World Bank",
         "country metadata",
-        "income level country",
-        "данные страны Всемирный Банк"
+        "income level",
+        "данные страны Всемирный банк"
       ],
       "endpoint": "GET https://api.worldbank.org/v2/country/{country}",
       "input": {
         "country": {
           "type": "string",
-          "description": "ISO 2-letter code: US, RU, CN, DE, IN",
+          "description": "ISO 3-letter: USA, DEU, RUS, or 'all'",
           "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "json"
         }
       },
       "output": {
-        "type": "country",
+        "type": "list<country>",
         "fields": [
+          "[1][0].id",
           "[1][0].name",
           "[1][0].capitalCity",
           "[1][0].region.value",
           "[1][0].incomeLevel.value",
           "[1][0].lendingType.value"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "compare_countries",
+      "description_for_ai": "Compare indicator values across multiple countries for a year.",
+      "intent": [
+        "compare countries GDP",
+        "country comparison",
+        "cross-country data",
+        "сравнение стран"
+      ],
+      "endpoint": "GET https://api.worldbank.org/v2/country/{countries}/indicator/{indicator}",
+      "input": {
+        "countries": {
+          "type": "string",
+          "description": "Semicolon-separated: USA;DEU;JPN;CHN;RUS",
+          "required": true
+        },
+        "indicator": {
+          "type": "string",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "required": false
+        },
+        "mrv": {
+          "type": "integer",
+          "description": "Most recent N values",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<record>",
+        "fields": [
+          "[1][0].country.value",
+          "[1][0].date",
+          "[1][0].value"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_projects",
+      "description_for_ai": "Search World Bank development projects by country or sector.",
+      "intent": [
+        "World Bank projects",
+        "development loans",
+        "aid projects",
+        "проекты Всемирного банка"
+      ],
+      "endpoint": "GET https://search.worldbank.org/api/v2/projects",
+      "input": {
+        "countrycode": {
+          "type": "string",
+          "description": "ISO 2-letter: US, RU, DE",
+          "required": false
+        },
+        "sector": {
+          "type": "string",
+          "required": false
+        },
+        "status": {
+          "type": "string",
+          "description": "Active, Closed, Pipeline",
+          "required": false
+        },
+        "rows": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<project>",
+        "fields": [
+          "projects[0].id",
+          "projects[0].project_name",
+          "projects[0].countryname",
+          "projects[0].sector1.Name",
+          "projects[0].totalcommamt",
+          "projects[0].status"
         ]
       },
       "realtime": false,
