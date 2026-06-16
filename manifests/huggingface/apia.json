@@ -22,140 +22,234 @@
   },
   "capabilities": [
     {
-      "id": "text_generation",
-      "description_for_ai": "Run any text generation model from HuggingFace Hub. 300K+ models. Llama, Mistral, Falcon, custom fine-tunes.",
+      "id": "inference_api",
+      "description_for_ai": "Run 200,000+ ML models via API. Text generation, image classification, NLP, audio — all from one API.",
       "intent": [
-        "huggingface model",
-        "run LLM",
-        "open source model",
-        "custom model inference",
-        "запустить модель huggingface"
+        "HuggingFace models",
+        "run ML model",
+        "AI model API",
+        "запустить модель HuggingFace"
       ],
       "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
       "input": {
         "model": {
           "type": "string",
-          "description": "Model ID e.g. meta-llama/Llama-3.1-8B-Instruct, mistralai/Mixtral-8x7B-Instruct-v0.1",
+          "description": "Model name e.g. meta-llama/Llama-3.1-8B-Instruct, mistralai/Mistral-7B, gpt2, bert-base-uncased",
           "required": true
         },
         "inputs": {
-          "type": "string",
-          "description": "Input text or prompt",
+          "type": "string or object",
+          "description": "Input depends on task: string for text-gen/classification, {source_sentence, sentences} for embeddings, etc.",
           "required": true
         },
         "parameters": {
           "type": "object",
-          "description": "{max_new_tokens: 500, temperature: 0.7, return_full_text: false, do_sample: true}",
+          "description": "{max_new_tokens: 200, temperature: 0.7, return_full_text: false}",
           "required": false
         }
       },
       "output": {
-        "type": "list<generation>",
+        "type": "varies",
         "fields": [
-          "[0].generated_text"
+          "[0].generated_text (text-gen)",
+          "[0].label, [0].score (classification)",
+          "[0] (embedding float array)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "image_classification",
-      "description_for_ai": "Classify an image using any vision model. Returns top labels with confidence scores.",
+      "id": "search_models",
+      "description_for_ai": "Search and filter 200,000+ models on HuggingFace Hub by task, library, language, dataset.",
       "intent": [
-        "classify image huggingface",
-        "image labels",
-        "what is in image HF",
-        "классификация изображения huggingface"
+        "find HuggingFace model",
+        "search models",
+        "ML model search",
+        "найти модель HuggingFace"
       ],
-      "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
+      "endpoint": "GET https://huggingface.co/api/models",
       "input": {
-        "model": {
+        "search": {
           "type": "string",
-          "description": "google/vit-base-patch16-224, microsoft/resnet-50",
-          "required": true
+          "description": "Search query",
+          "required": false
         },
-        "data": {
-          "type": "binary",
-          "description": "Image binary data",
-          "required": true
+        "task": {
+          "type": "string",
+          "description": "text-generation, text-classification, token-classification, translation, summarization, image-classification, text-to-image, automatic-speech-recognition",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "description": "ISO code: en, ru, zh, de",
+          "required": false
+        },
+        "library": {
+          "type": "string",
+          "description": "transformers, diffusers, peft, gguf",
+          "required": false
+        },
+        "sort": {
+          "type": "string",
+          "description": "downloads, likes, trending",
+          "default": "downloads"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
-        "type": "list<label>",
+        "type": "list<model>",
         "fields": [
-          "[0].label",
-          "[0].score"
+          "[0].id",
+          "[0].task",
+          "[0].downloads",
+          "[0].likes",
+          "[0].tags"
         ]
       },
       "realtime": true,
-      "requires_auth": true
+      "requires_auth": false
     },
     {
-      "id": "feature_extraction",
-      "description_for_ai": "Generate embeddings/features from text or images. Use for semantic search, clustering, RAG.",
+      "id": "text_to_image",
+      "description_for_ai": "Generate images from text using Stable Diffusion, FLUX, or other image models on HuggingFace.",
       "intent": [
-        "huggingface embeddings",
-        "text embeddings HF",
-        "feature vectors",
-        "эмбеддинги huggingface"
+        "generate image HuggingFace",
+        "Stable Diffusion API",
+        "text to image",
+        "генерация изображений HuggingFace"
       ],
       "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
       "input": {
         "model": {
           "type": "string",
-          "description": "sentence-transformers/all-MiniLM-L6-v2, BAAI/bge-large-en-v1.5",
+          "description": "black-forest-labs/FLUX.1-schnell, stabilityai/stable-diffusion-xl-base-1.0, runwayml/stable-diffusion-v1-5",
           "required": true
         },
         "inputs": {
-          "type": "string or array",
-          "description": "Text or list of texts to embed",
+          "type": "string",
+          "description": "Image generation prompt",
           "required": true
         },
-        "options": {
+        "parameters": {
           "type": "object",
-          "description": "{wait_for_model: true}",
+          "description": "{negative_prompt, num_inference_steps: 20, width: 512, height: 512}",
           "required": false
         }
       },
       "output": {
-        "type": "embeddings",
+        "type": "image",
         "fields": [
-          "array of float arrays — one per input text"
+          "image binary (PNG)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "image_to_text",
-      "description_for_ai": "Generate text descriptions from images (image captioning) or extract text from images (OCR models).",
+      "id": "sentence_similarity",
+      "description_for_ai": "Calculate semantic similarity between sentences using embedding models.",
       "intent": [
-        "image captioning",
-        "describe image HF",
-        "image OCR huggingface",
-        "описание изображения huggingface"
+        "text similarity",
+        "sentence similarity",
+        "semantic match",
+        "схожесть текстов HuggingFace"
       ],
-      "endpoint": "POST https://api-inference.huggingface.co/models/{model}",
+      "endpoint": "POST https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2",
       "input": {
-        "model": {
-          "type": "string",
-          "description": "Salesforce/blip-image-captioning-large, microsoft/trocr-base-printed (OCR)",
-          "required": true
-        },
-        "data": {
-          "type": "binary",
-          "description": "Image binary",
+        "inputs": {
+          "type": "object",
+          "description": "{source_sentence: 'main text', sentences: ['compare to this', 'and this']}",
           "required": true
         }
       },
       "output": {
-        "type": "list<caption>",
+        "type": "similarities",
         "fields": [
-          "[0].generated_text"
+          "[0] (float 0-1 similarity score per sentence)"
         ]
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_model_info",
+      "description_for_ai": "Get model details: task, downloads, license, tags, files available.",
+      "intent": [
+        "model info",
+        "model details HuggingFace",
+        "model card",
+        "информация о модели HuggingFace"
+      ],
+      "endpoint": "GET https://huggingface.co/api/models/{model}",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "Model ID e.g. meta-llama/Llama-3.1-8B-Instruct",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "model",
+        "fields": [
+          "id",
+          "task",
+          "downloads",
+          "likes",
+          "tags",
+          "license",
+          "siblings (files)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "list_datasets",
+      "description_for_ai": "Search and browse datasets on HuggingFace Hub.",
+      "intent": [
+        "find dataset",
+        "HuggingFace dataset",
+        "ML dataset",
+        "наборы данных HuggingFace"
+      ],
+      "endpoint": "GET https://huggingface.co/api/datasets",
+      "input": {
+        "search": {
+          "type": "string",
+          "required": false
+        },
+        "task": {
+          "type": "string",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "required": false
+        },
+        "sort": {
+          "type": "string",
+          "default": "downloads"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<dataset>",
+        "fields": [
+          "[0].id",
+          "[0].downloads",
+          "[0].likes",
+          "[0].tags"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
