@@ -22,99 +22,48 @@
   },
   "capabilities": [
     {
-      "id": "top_headlines",
-      "description_for_ai": "Get breaking news headlines by country, category, or source.",
+      "id": "everything",
+      "description_for_ai": "Search 80,000+ news sources for articles about any topic.",
       "intent": [
-        "top news",
-        "breaking news",
-        "headlines",
-        "последние новости",
-        "топ новости"
-      ],
-      "endpoint": "GET https://newsapi.org/v2/top-headlines",
-      "input": {
-        "country": {
-          "type": "string",
-          "description": "ae, ar, at, au, be, bg, br, ca, ch, cn, co, cu, cz, de, eg, fr, gb, gr, hk, hu, id, ie, il, in, it, jp, kr, lt, lv, ma, mx, my, ng, nl, no, nz, ph, pl, pt, ro, rs, ru, sa, se, sg, si, sk, th, tr, tw, ua, us, ve, za",
-          "required": false
-        },
-        "category": {
-          "type": "string",
-          "description": "business, entertainment, general, health, science, sports, technology",
-          "required": false
-        },
-        "sources": {
-          "type": "string",
-          "description": "Comma-separated source IDs. Cannot mix with country/category.",
-          "required": false
-        },
-        "q": {
-          "type": "string",
-          "description": "Keywords to filter headlines",
-          "required": false
-        },
-        "pageSize": {
-          "type": "integer",
-          "default": 20
-        }
-      },
-      "output": {
-        "type": "list<article>",
-        "fields": [
-          "articles[0].title",
-          "articles[0].source.name",
-          "articles[0].author",
-          "articles[0].publishedAt",
-          "articles[0].url",
-          "articles[0].description"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "search_news",
-      "description_for_ai": "Search all news articles with keyword, date range, language, and source filters.",
-      "intent": [
-        "search news",
-        "news articles",
-        "find news about",
-        "поиск новостей",
-        "статьи про"
+        "news search",
+        "find news articles",
+        "news API",
+        "поиск новостей"
       ],
       "endpoint": "GET https://newsapi.org/v2/everything",
       "input": {
         "q": {
           "type": "string",
-          "description": "Keywords: bitcoin, 'apple AND iphone', 'elon musk'",
+          "description": "Search query. Supports AND, OR, NOT and quotes: '\"bitcoin\" AND (crash OR rally)'",
           "required": true
+        },
+        "sources": {
+          "type": "string",
+          "description": "Comma-separated source IDs: bbc-news,cnn,reuters",
+          "required": false
         },
         "language": {
           "type": "string",
           "description": "ar, de, en, es, fr, he, it, nl, no, pt, ru, sv, ud, zh",
-          "required": false
-        },
-        "from": {
-          "type": "string",
-          "description": "ISO 8601 date",
-          "required": false
-        },
-        "to": {
-          "type": "string",
-          "required": false
+          "default": "en"
         },
         "sortBy": {
           "type": "string",
           "description": "relevancy, popularity, publishedAt",
           "default": "publishedAt"
         },
+        "from": {
+          "type": "string",
+          "description": "ISO 8601 date: 2024-01-01",
+          "required": false
+        },
+        "to": {
+          "type": "string",
+          "required": false
+        },
         "pageSize": {
           "type": "integer",
           "default": 20
-        },
-        "sources": {
-          "type": "string",
-          "required": false
         }
       },
       "output": {
@@ -122,8 +71,53 @@
         "fields": [
           "articles[0].title",
           "articles[0].description",
-          "articles[0].url",
           "articles[0].source.name",
+          "articles[0].url",
+          "articles[0].publishedAt",
+          "articles[0].author"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "top_headlines",
+      "description_for_ai": "Get breaking news top headlines by country, category, or keyword.",
+      "intent": [
+        "top news",
+        "breaking news",
+        "headlines",
+        "главные новости"
+      ],
+      "endpoint": "GET https://newsapi.org/v2/top-headlines",
+      "input": {
+        "country": {
+          "type": "string",
+          "description": "ISO country code: us, gb, de, ru, fr, cn, in, jp, au, ca",
+          "required": false
+        },
+        "category": {
+          "type": "string",
+          "description": "business, entertainment, general, health, science, sports, technology",
+          "required": false
+        },
+        "q": {
+          "type": "string",
+          "description": "Search within headlines",
+          "required": false
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<article>",
+        "fields": [
+          "articles[0].title",
+          "articles[0].description",
+          "articles[0].source.name",
+          "articles[0].url",
           "articles[0].publishedAt",
           "totalResults"
         ]
@@ -133,17 +127,18 @@
     },
     {
       "id": "get_sources",
-      "description_for_ai": "List available news sources filtered by category, language, or country.",
+      "description_for_ai": "Get list of available news sources filtered by category, language, country.",
       "intent": [
         "news sources",
         "available publishers",
-        "news websites",
-        "источники новостей newsapi"
+        "media sources",
+        "источники новостей"
       ],
-      "endpoint": "GET https://newsapi.org/v2/top-headlines/sources",
+      "endpoint": "GET https://newsapi.org/v2/sources",
       "input": {
         "category": {
           "type": "string",
+          "description": "business, entertainment, general, health, science, sports, technology",
           "required": false
         },
         "language": {
@@ -162,34 +157,32 @@
           "sources[0].name",
           "sources[0].description",
           "sources[0].url",
-          "sources[0].country"
+          "sources[0].category",
+          "sources[0].language"
         ]
       },
       "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "search_news_ru",
-      "description_for_ai": "Поиск русскоязычных новостей на NewsAPI.",
+      "id": "search_by_source",
+      "description_for_ai": "Get latest articles from a specific news source.",
       "intent": [
-        "русские новости",
-        "новости на русском",
-        "поиск новостей russia",
-        "Russian news"
+        "BBC news",
+        "CNN articles",
+        "source articles",
+        "новости конкретного источника"
       ],
       "endpoint": "GET https://newsapi.org/v2/everything",
       "input": {
-        "q": {
+        "sources": {
           "type": "string",
+          "description": "Source ID from get_sources: bbc-news, the-verge, techcrunch",
           "required": true
         },
-        "language": {
+        "q": {
           "type": "string",
-          "default": "ru"
-        },
-        "sortBy": {
-          "type": "string",
-          "default": "publishedAt"
+          "required": false
         },
         "pageSize": {
           "type": "integer",
@@ -201,8 +194,59 @@
         "fields": [
           "articles[0].title",
           "articles[0].url",
+          "articles[0].publishedAt",
+          "articles[0].content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "monitor_topic",
+      "description_for_ai": "Monitor news coverage of a topic over a time range. Useful for media analysis.",
+      "intent": [
+        "news monitoring",
+        "press coverage",
+        "media monitoring",
+        "мониторинг новостей"
+      ],
+      "endpoint": "GET https://newsapi.org/v2/everything",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "from": {
+          "type": "string",
+          "description": "Start date YYYY-MM-DD",
+          "required": true
+        },
+        "to": {
+          "type": "string",
+          "description": "End date YYYY-MM-DD",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "default": "en"
+        },
+        "sortBy": {
+          "type": "string",
+          "default": "publishedAt"
+        },
+        "pageSize": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "list<article>",
+        "fields": [
+          "articles[0].title",
           "articles[0].source.name",
-          "articles[0].publishedAt"
+          "articles[0].publishedAt",
+          "articles[0].url",
+          "totalResults"
         ]
       },
       "realtime": true,
