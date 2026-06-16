@@ -79,6 +79,85 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "check_inn",
+      "description_for_ai": "Validate and get info about a Russian INN via HFLabs API.",
+      "intent": [
+        "проверить ИНН HFLabs",
+        "ИНН валидация",
+        "inn check hflabs"
+      ],
+      "endpoint": "GET https://api.hflabs.ru/v1/INN",
+      "input": {
+        "inn": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "inn",
+        "fields": [
+          "inn",
+          "type",
+          "valid"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "standardize_address",
+      "description_for_ai": "Standardize a Russian postal address using HFLabs.",
+      "intent": [
+        "стандартизация адреса HFLabs",
+        "адрес ФИАС hflabs",
+        "clean address russia"
+      ],
+      "endpoint": "POST https://api.hflabs.ru/v1/clean/address",
+      "input": {
+        "address": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "result.address",
+          "result.postalcode",
+          "result.fias_id",
+          "result.quality"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "phone_validation",
+      "description_for_ai": "Validate and format a Russian phone number.",
+      "intent": [
+        "валидация номера телефона",
+        "phone HFLabs",
+        "формат телефона"
+      ],
+      "endpoint": "POST https://api.hflabs.ru/v1/clean/phone",
+      "input": {
+        "phone": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "phone",
+        "fields": [
+          "result.phone",
+          "result.type",
+          "result.region"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
