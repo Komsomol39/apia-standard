@@ -161,6 +161,41 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "translate_batch",
+      "description_for_ai": "Translate up to 50 texts in one request for efficiency. Same API as translate, but pass array.",
+      "intent": [
+        "bulk translate",
+        "batch translation deepl",
+        "multiple texts deepl",
+        "пакетный перевод deepl"
+      ],
+      "endpoint": "POST https://api-free.deepl.com/v2/translate",
+      "input": {
+        "text": {
+          "type": "array",
+          "description": "Array of up to 50 strings",
+          "required": true
+        },
+        "target_lang": {
+          "type": "string",
+          "required": true
+        },
+        "source_lang": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<translation>",
+        "fields": [
+          "translations[0].text",
+          "translations[0].detected_source_language"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
