@@ -21,62 +21,24 @@
   },
   "capabilities": [
     {
-      "id": "get_user_profile",
-      "description_for_ai": "Get Instagram Business/Creator account info: followers, media count, bio.",
+      "id": "get_user_media",
+      "description_for_ai": "Get Instagram media (photos/videos) for a connected Business/Creator account.",
       "intent": [
-        "instagram profile",
-        "instagram account",
-        "followers instagram",
-        "профиль instagram"
-      ],
-      "endpoint": "GET https://graph.instagram.com/me",
-      "input": {
-        "fields": {
-          "type": "string",
-          "description": "id,username,name,biography,followers_count,media_count,profile_picture_url,website",
-          "required": false
-        },
-        "access_token": {
-          "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "user",
-        "fields": [
-          "id",
-          "username",
-          "biography",
-          "followers_count",
-          "media_count"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_media",
-      "description_for_ai": "Get list of Instagram posts (media) for a Business/Creator account.",
-      "intent": [
-        "instagram posts",
-        "instagram media",
-        "get posts instagram",
-        "посты instagram"
+        "Instagram posts",
+        "user media",
+        "get photos Instagram",
+        "публикации Instagram"
       ],
       "endpoint": "GET https://graph.instagram.com/me/media",
       "input": {
         "fields": {
           "type": "string",
-          "description": "id,caption,media_type,media_url,permalink,thumbnail_url,timestamp,like_count,comments_count",
-          "required": false
+          "description": "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count",
+          "default": "id,caption,media_type,media_url,permalink,timestamp"
         },
         "limit": {
           "type": "integer",
           "default": 20
-        },
-        "access_token": {
-          "type": "string",
-          "required": true
         }
       },
       "output": {
@@ -86,53 +48,44 @@
           "data[0].caption",
           "data[0].media_type",
           "data[0].media_url",
-          "data[0].timestamp",
-          "data[0].like_count"
+          "data[0].permalink",
+          "data[0].timestamp"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_post",
-      "description_for_ai": "Publish a photo or video post to Instagram Business account (2-step: create container then publish).",
+      "id": "publish_photo",
+      "description_for_ai": "Publish a photo to Instagram. Two-step: create container then publish.",
       "intent": [
-        "post instagram",
-        "publish instagram",
-        "instagram photo post",
-        "опубликовать instagram"
+        "post to Instagram",
+        "publish photo Instagram",
+        "Instagram post",
+        "опубликовать фото Instagram"
       ],
-      "endpoint": "POST https://graph.instagram.com/me/media",
+      "endpoint": "POST https://graph.instagram.com/{user-id}/media",
       "input": {
         "image_url": {
           "type": "string",
-          "description": "Public image URL for photo post",
-          "required": false
-        },
-        "video_url": {
-          "type": "string",
-          "description": "Public video URL for video post",
-          "required": false
+          "description": "Public URL of image to post",
+          "required": true
         },
         "caption": {
           "type": "string",
           "description": "Post caption with hashtags",
           "required": false
         },
-        "media_type": {
+        "user_action": {
           "type": "string",
-          "description": "IMAGE, VIDEO, REELS, CAROUSEL_ALBUM",
-          "default": "IMAGE"
-        },
-        "access_token": {
-          "type": "string",
-          "required": true
+          "description": "Step 1: POST to /media to create container. Step 2: POST to /media_publish with creation_id from step 1.",
+          "required": false
         }
       },
       "output": {
-        "type": "media_container",
+        "type": "media",
         "fields": [
-          "id (use to publish via /me/media_publish)"
+          "id (creation_id for publishing)"
         ]
       },
       "realtime": true,
@@ -140,27 +93,22 @@
     },
     {
       "id": "get_insights",
-      "description_for_ai": "Get insights/analytics for Instagram Business account: reach, impressions, profile views.",
+      "description_for_ai": "Get engagement insights for Instagram account or specific media posts.",
       "intent": [
-        "instagram analytics",
-        "instagram insights",
-        "instagram stats",
-        "статистика instagram"
+        "Instagram insights",
+        "engagement data",
+        "Instagram analytics",
+        "аналитика Instagram"
       ],
-      "endpoint": "GET https://graph.instagram.com/me/insights",
+      "endpoint": "GET https://graph.instagram.com/{media-id}/insights",
       "input": {
+        "media_id": {
+          "type": "string",
+          "required": true
+        },
         "metric": {
           "type": "string",
-          "description": "reach,impressions,profile_views,follower_count,email_contacts,phone_call_clicks,website_clicks",
-          "required": true
-        },
-        "period": {
-          "type": "string",
-          "description": "day, week, days_28, month",
-          "required": true
-        },
-        "access_token": {
-          "type": "string",
+          "description": "impressions, reach, engagement, saved, video_views, profile_visits, follows",
           "required": true
         }
       },
@@ -169,10 +117,107 @@
         "fields": [
           "data[0].name",
           "data[0].values[0].value",
-          "data[0].values[0].end_time"
+          "data[0].period"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_account_info",
+      "description_for_ai": "Get Instagram Business/Creator account details: followers, biography, website.",
+      "intent": [
+        "Instagram profile",
+        "account info",
+        "followers count",
+        "профиль Instagram"
+      ],
+      "endpoint": "GET https://graph.instagram.com/me",
+      "input": {
+        "fields": {
+          "type": "string",
+          "description": "id,name,biography,followers_count,media_count,profile_picture_url,website",
+          "default": "id,name,biography,followers_count,media_count"
+        }
+      },
+      "output": {
+        "type": "account",
+        "fields": [
+          "id",
+          "name",
+          "biography",
+          "followers_count",
+          "media_count",
+          "website"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "reply_to_comment",
+      "description_for_ai": "Reply to a comment on an Instagram media post.",
+      "intent": [
+        "reply Instagram comment",
+        "comment reply",
+        "respond Instagram",
+        "ответ на комментарий Instagram"
+      ],
+      "endpoint": "POST https://graph.instagram.com/{comment-id}/replies",
+      "input": {
+        "comment_id": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "reply",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_hashtag_media",
+      "description_for_ai": "Search recent or top media by hashtag on Instagram.",
+      "intent": [
+        "Instagram hashtag",
+        "hashtag search",
+        "find by hashtag",
+        "поиск по хэштегу Instagram"
+      ],
+      "endpoint": "GET https://graph.instagram.com/{hashtag-id}/recent_media",
+      "input": {
+        "hashtag_id": {
+          "type": "string",
+          "description": "Get ID first from /ig_hashtag_search?q=hashtag",
+          "required": true
+        },
+        "user_id": {
+          "type": "string",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "id,media_url,permalink,caption,media_type",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<media>",
+        "fields": [
+          "data[0].id",
+          "data[0].permalink",
+          "data[0].caption"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
