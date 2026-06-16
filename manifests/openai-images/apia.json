@@ -22,51 +22,49 @@
   "capabilities": [
     {
       "id": "generate_image",
-      "description_for_ai": "Generate image from text prompt. DALL-E 3 creates high quality photorealistic or artistic images. Returns URL or base64.",
+      "description_for_ai": "Generate images with DALL-E 3 from text descriptions. HD quality available.",
       "intent": [
-        "generate image",
-        "create image",
-        "DALL-E",
+        "generate image openai",
+        "DALL-E 3",
         "text to image",
-        "AI image",
-        "create illustration",
-        "create photo"
+        "создать изображение dall-e",
+        "нарисовать"
       ],
       "endpoint": "POST https://api.openai.com/v1/images/generations",
       "input": {
         "model": {
           "type": "string",
-          "description": "dall-e-3 or gpt-image-1",
-          "default": "dall-e-3"
+          "description": "dall-e-3 (best quality) or dall-e-2",
+          "required": true
         },
         "prompt": {
           "type": "string",
-          "description": "Image description. Be specific: style, lighting, composition.",
+          "description": "Detailed image description. DALL-E 3 auto-rewrites for safety.",
           "required": true
-        },
-        "n": {
-          "type": "integer",
-          "description": "Number of images. DALL-E 3: always 1",
-          "default": 1
         },
         "size": {
           "type": "string",
-          "description": "1024x1024, 1792x1024, 1024x1792 for DALL-E 3",
+          "description": "1024x1024, 1792x1024 (landscape), 1024x1792 (portrait) for DALL-E 3. 256x256, 512x512, 1024x1024 for DALL-E 2",
           "default": "1024x1024"
         },
         "quality": {
           "type": "string",
-          "description": "standard or hd",
+          "description": "standard or hd (DALL-E 3 only)",
           "default": "standard"
         },
         "style": {
           "type": "string",
-          "description": "vivid (dramatic) or natural (realistic)",
+          "description": "vivid (dramatic) or natural (realistic) — DALL-E 3 only",
           "default": "vivid"
+        },
+        "n": {
+          "type": "integer",
+          "description": "DALL-E 3: always 1. DALL-E 2: 1-10",
+          "default": 1
         },
         "response_format": {
           "type": "string",
-          "description": "url or b64_json",
+          "description": "url (expires in 1h) or b64_json",
           "default": "url"
         }
       },
@@ -83,35 +81,33 @@
     },
     {
       "id": "edit_image",
-      "description_for_ai": "Edit an existing image using a text prompt and optional mask. Replace or modify parts of an image.",
+      "description_for_ai": "Edit an existing image using inpainting — provide original image and mask to replace areas. DALL-E 2 only.",
       "intent": [
         "edit image",
-        "inpainting",
-        "replace background",
-        "modify image",
-        "image editing AI"
+        "inpaint image",
+        "image editing AI",
+        "редактировать изображение dall-e"
       ],
       "endpoint": "POST https://api.openai.com/v1/images/edits",
       "input": {
         "image": {
           "type": "file",
-          "description": "PNG image to edit (max 4MB)",
-          "required": true
-        },
-        "prompt": {
-          "type": "string",
-          "description": "What to change or add",
+          "description": "PNG file ≤4MB, square format",
           "required": true
         },
         "mask": {
           "type": "file",
-          "description": "PNG mask where transparent areas indicate edit regions",
+          "description": "PNG mask — transparent areas will be replaced",
           "required": false
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Description of changes",
+          "required": true
         },
         "model": {
           "type": "string",
-          "default": "gpt-image-1",
-          "description": "AI/ML model identifier to use for this request"
+          "default": "dall-e-2"
         },
         "n": {
           "type": "integer",
@@ -119,8 +115,8 @@
         },
         "size": {
           "type": "string",
-          "default": "1024x1024",
-          "description": "Page size — number of results per request"
+          "description": "256x256, 512x512, or 1024x1024",
+          "default": "1024x1024"
         }
       },
       "output": {
@@ -128,6 +124,93 @@
         "fields": [
           "data[0].url",
           "data[0].b64_json"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_variation",
+      "description_for_ai": "Create variations of an existing image. DALL-E 2 generates similar but different versions.",
+      "intent": [
+        "image variation",
+        "image alternatives",
+        "similar images",
+        "варианты изображения"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/images/variations",
+      "input": {
+        "image": {
+          "type": "file",
+          "description": "PNG file ≤4MB, square format",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "dall-e-2"
+        },
+        "n": {
+          "type": "integer",
+          "description": "Number of variations 1-10",
+          "default": 1
+        },
+        "size": {
+          "type": "string",
+          "default": "1024x1024"
+        },
+        "response_format": {
+          "type": "string",
+          "default": "url"
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "data[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_with_gpt4o",
+      "description_for_ai": "Generate or edit images using GPT-4o's native image generation (gpt-image-1 model). Higher quality than DALL-E for photo-realistic results.",
+      "intent": [
+        "gpt4o image",
+        "gpt image",
+        "native image generation",
+        "генерация gpt-4o"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/images/generations",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "gpt-image-1"
+        },
+        "prompt": {
+          "type": "string",
+          "required": true
+        },
+        "size": {
+          "type": "string",
+          "description": "1024x1024, 1536x1024, 1024x1536, auto",
+          "default": "auto"
+        },
+        "quality": {
+          "type": "string",
+          "description": "low, medium, high, auto",
+          "default": "auto"
+        },
+        "n": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "data[0].b64_json",
+          "data[0].url"
         ]
       },
       "realtime": true,
