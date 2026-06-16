@@ -22,39 +22,151 @@
   },
   "capabilities": [
     {
-      "id": "call_any_api",
-      "description_for_ai": "Access any of 40,000+ APIs on RapidAPI using their host and endpoint. Use when you need a specific niche API like: sports scores, stock news, recipe generators, IP intelligence, image processing, etc.",
+      "id": "list_apis",
+      "description_for_ai": "Search and list APIs available in the RapidAPI marketplace.",
       "intent": [
-        "niche API",
-        "specific API",
-        "API marketplace",
+        "search APIs",
         "find API",
-        "sports API",
-        "recipe API",
-        "image API"
+        "RapidAPI marketplace",
+        "поиск API RapidAPI"
       ],
-      "endpoint": "GET https://{api-host}.p.rapidapi.com/{endpoint}",
+      "endpoint": "GET https://api.rapidapi.com/api/v1/search",
       "input": {
-        "X-RapidAPI-Host": {
+        "query": {
           "type": "string",
-          "description": "API host from RapidAPI e.g. v3.football.api-sports.io",
           "required": true
         },
-        "endpoint": {
+        "category": {
           "type": "string",
-          "description": "Specific endpoint path",
-          "required": true
+          "required": false
         },
-        "params": {
-          "type": "object",
-          "description": "Query parameters specific to the API",
+        "pricing": {
+          "type": "string",
+          "description": "free, paid",
           "required": false
         }
       },
       "output": {
-        "type": "varies",
+        "type": "list<api>",
         "fields": [
-          "Depends on specific API"
+          "apis[0].id",
+          "apis[0].name",
+          "apis[0].description",
+          "apis[0].version",
+          "apis[0].pricing.type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "test_endpoint",
+      "description_for_ai": "Test any RapidAPI endpoint with your subscription key.",
+      "intent": [
+        "test RapidAPI endpoint",
+        "call RapidAPI",
+        "API request RapidAPI",
+        "запрос через RapidAPI"
+      ],
+      "endpoint": "GET https://{api_host}/",
+      "input": {
+        "X-RapidAPI-Key": {
+          "type": "string",
+          "description": "Your RapidAPI subscription key",
+          "required": true
+        },
+        "X-RapidAPI-Host": {
+          "type": "string",
+          "description": "API host from RapidAPI URL",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "API-specific response"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_api_details",
+      "description_for_ai": "Get details about a specific RapidAPI API: docs, pricing, endpoints.",
+      "intent": [
+        "API details RapidAPI",
+        "API documentation",
+        "endpoint list",
+        "детали API RapidAPI"
+      ],
+      "endpoint": "GET https://api.rapidapi.com/api/v1/apis/{apiId}",
+      "input": {
+        "apiId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "api",
+        "fields": [
+          "name",
+          "description",
+          "pricing[0].plan",
+          "pricing[0].requests",
+          "endpoints[0].name",
+          "endpoints[0].method",
+          "endpoints[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_my_usage",
+      "description_for_ai": "Get your RapidAPI subscription usage statistics.",
+      "intent": [
+        "RapidAPI usage",
+        "API requests count",
+        "my API stats",
+        "статистика использования RapidAPI"
+      ],
+      "endpoint": "GET https://api.rapidapi.com/api/v1/user/usage",
+      "input": {
+        "period": {
+          "type": "string",
+          "description": "day, week, month",
+          "default": "month"
+        }
+      },
+      "output": {
+        "type": "usage",
+        "fields": [
+          "requests",
+          "errors",
+          "quotaUsed",
+          "quotaLimit"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_categories",
+      "description_for_ai": "Get all API categories in the RapidAPI marketplace.",
+      "intent": [
+        "RapidAPI categories",
+        "API types",
+        "marketplace categories",
+        "категории RapidAPI"
+      ],
+      "endpoint": "GET https://api.rapidapi.com/api/v1/categories",
+      "input": {},
+      "output": {
+        "type": "list<category>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].apisCount"
         ]
       },
       "realtime": true,
