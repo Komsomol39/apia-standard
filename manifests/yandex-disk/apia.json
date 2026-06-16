@@ -119,6 +119,58 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "create_folder",
+      "description_for_ai": "Create a new folder on Yandex.Disk.",
+      "intent": [
+        "создать папку яндекс диск",
+        "new folder yandex disk",
+        "mkdir yandex disk"
+      ],
+      "endpoint": "PUT https://cloud-api.yandex.net/v1/disk/resources",
+      "input": {
+        "path": {
+          "type": "string",
+          "description": "Path for new folder e.g. disk:/MyFolder",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "201 Created with Location header"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_download_link",
+      "description_for_ai": "Get a direct download link for a file on Yandex.Disk.",
+      "intent": [
+        "скачать файл яндекс диск",
+        "download link yandex",
+        "ссылка на файл"
+      ],
+      "endpoint": "GET https://cloud-api.yandex.net/v1/disk/resources/download",
+      "input": {
+        "path": {
+          "type": "string",
+          "description": "File path on disk",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "link",
+        "fields": [
+          "href (direct download URL)",
+          "method",
+          "templated"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
