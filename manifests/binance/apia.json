@@ -27,20 +27,20 @@
   "capabilities": [
     {
       "id": "get_price",
-      "description_for_ai": "Get current price of any crypto pair. No API key needed. Fastest and most accurate crypto price data.",
+      "description_for_ai": "Get current price of any crypto pair. Real-time, no auth required.",
       "intent": [
-        "crypto price",
         "bitcoin price",
-        "BTC USDT price",
-        "crypto market price",
-        "binance price"
+        "crypto price",
+        "BTC price",
+        "цена биткоина",
+        "курс крипты"
       ],
       "endpoint": "GET https://api.binance.com/api/v3/ticker/price",
       "input": {
         "symbol": {
           "type": "string",
-          "description": "Trading pair e.g. BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT",
-          "required": false
+          "description": "Trading pair e.g. BTCUSDT, ETHUSDT, BNBUSDT",
+          "required": true
         }
       },
       "output": {
@@ -54,43 +54,109 @@
       "requires_auth": false
     },
     {
-      "id": "get_klines",
-      "description_for_ai": "Get OHLCV candlestick data for any crypto pair and interval. Use for price charts, technical analysis.",
+      "id": "get_24h_stats",
+      "description_for_ai": "Get 24h price change, high, low, volume for a trading pair.",
       "intent": [
-        "crypto chart",
-        "price history",
+        "24h stats",
+        "price change",
+        "crypto volume",
+        "daily stats",
+        "изменение цены за сутки"
+      ],
+      "endpoint": "GET https://api.binance.com/api/v3/ticker/24hr",
+      "input": {
+        "symbol": {
+          "type": "string",
+          "description": "e.g. BTCUSDT",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "stats",
+        "fields": [
+          "symbol",
+          "priceChange",
+          "priceChangePercent",
+          "highPrice",
+          "lowPrice",
+          "volume",
+          "quoteVolume"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_klines",
+      "description_for_ai": "Get OHLCV candlestick data for chart analysis. Supports intervals from 1m to 1M.",
+      "intent": [
         "candlestick data",
-        "OHLCV crypto",
-        "technical analysis"
+        "OHLCV",
+        "price history crypto",
+        "klines",
+        "исторические цены крипты"
       ],
       "endpoint": "GET https://api.binance.com/api/v3/klines",
       "input": {
         "symbol": {
           "type": "string",
-          "description": "Trading pair e.g. BTCUSDT",
           "required": true
         },
         "interval": {
           "type": "string",
-          "description": "1m, 5m, 15m, 1h, 4h, 1d, 1w",
+          "description": "1m, 5m, 15m, 1h, 4h, 1d, 1w, 1M",
           "required": true
         },
         "limit": {
           "type": "integer",
-          "description": "Number of candles",
-          "default": 100,
-          "max": 1000
+          "description": "Number of candles, max 1000",
+          "default": 500
+        },
+        "startTime": {
+          "type": "integer",
+          "description": "Unix ms timestamp",
+          "required": false
+        },
+        "endTime": {
+          "type": "integer",
+          "required": false
         }
       },
       "output": {
-        "type": "list<kline>",
+        "type": "list<candle>",
         "fields": [
-          "[0]=open_time",
-          "[1]=open",
-          "[2]=high",
-          "[3]=low",
-          "[4]=close",
-          "[5]=volume"
+          "[open_time, open, high, low, close, volume, close_time]"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_order_book",
+      "description_for_ai": "Get order book (bids and asks) for a trading pair. Shows market depth.",
+      "intent": [
+        "order book",
+        "bids asks",
+        "market depth",
+        "книга ордеров"
+      ],
+      "endpoint": "GET https://api.binance.com/api/v3/depth",
+      "input": {
+        "symbol": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "description": "5, 10, 20, 50, 100, 500, 1000, 5000",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "order_book",
+        "fields": [
+          "bids[0] ([price, quantity])",
+          "asks[0] ([price, quantity])"
         ]
       },
       "realtime": true,
