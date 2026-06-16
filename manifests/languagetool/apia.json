@@ -21,17 +21,13 @@
   },
   "capabilities": [
     {
-      "id": "check",
-      "description_for_ai": "Free grammar and spell checker. Supports 25+ languages including Russian, German, French, Spanish. Detects grammar errors, punctuation mistakes, style issues. Free: 20 req/min 20KB text. Check text for grammar, spelling, punctuation and style errors. Returns list of mistakes with suggestions.",
+      "id": "check_text",
+      "description_for_ai": "Check text for grammar, spelling, and style errors with LanguageTool.",
       "intent": [
         "grammar check",
         "spell check",
-        "proofread",
-        "fix grammar",
-        "writing errors",
-        "correct text",
-        "проверка грамматики",
-        "проверить текст"
+        "LanguageTool check",
+        "проверка грамматики LanguageTool"
       ],
       "endpoint": "POST https://api.languagetool.org/v2/check",
       "input": {
@@ -42,23 +38,162 @@
         },
         "language": {
           "type": "string",
-          "description": "Language code: en-US, ru-RU, de-DE, fr, es, it, pt-BR",
+          "description": "Language code: en-US, en-GB, de-DE, fr, es, pt-BR, nl, ru, pl, it",
           "required": true
         },
-        "enabledOnly": {
-          "type": "boolean",
-          "default": false
+        "enabledRules": {
+          "type": "string",
+          "description": "Comma-separated rule IDs to enable",
+          "required": false
+        },
+        "disabledRules": {
+          "type": "string",
+          "required": false
         }
       },
       "output": {
-        "type": "check_result",
+        "type": "matches",
         "fields": [
           "matches[0].message",
-          "matches[0].context.text",
           "matches[0].offset",
           "matches[0].length",
           "matches[0].replacements[0].value",
-          "matches[0].rule.description"
+          "matches[0].rule.description",
+          "matches[0].rule.issueType"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_languages",
+      "description_for_ai": "Get list of supported languages in LanguageTool.",
+      "intent": [
+        "languagetool languages",
+        "supported languages",
+        "available locales",
+        "языки LanguageTool"
+      ],
+      "endpoint": "GET https://api.languagetool.org/v2/languages",
+      "input": {},
+      "output": {
+        "type": "list<language>",
+        "fields": [
+          "[0].name",
+          "[0].code",
+          "[0].longCode"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "check_with_context",
+      "description_for_ai": "Grammar check with additional context (text before/after main text).",
+      "intent": [
+        "grammar check context",
+        "LanguageTool context",
+        "check with context",
+        "проверка с контекстом LanguageTool"
+      ],
+      "endpoint": "POST https://api.languagetool.org/v2/check",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "required": true
+        },
+        "motherTongue": {
+          "type": "string",
+          "description": "User's native language code for false-friend detection",
+          "required": false
+        },
+        "preferredVariants": {
+          "type": "string",
+          "description": "Comma-separated: en-US,de-AT",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "matches",
+        "fields": [
+          "matches[0].message",
+          "matches[0].replacements[0].value",
+          "matches[0].context.text",
+          "software.apiVersion"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "check_sentences",
+      "description_for_ai": "Check multiple sentences with LanguageTool for batch grammar checking.",
+      "intent": [
+        "batch grammar check",
+        "multiple sentences check",
+        "bulk text check",
+        "массовая проверка текста"
+      ],
+      "endpoint": "POST https://api.languagetool.org/v2/check",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Multiple sentences separated by newlines",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "required": true
+        },
+        "level": {
+          "type": "string",
+          "description": "default or picky (stricter)",
+          "default": "default"
+        }
+      },
+      "output": {
+        "type": "matches",
+        "fields": [
+          "matches (array of all errors)",
+          "language.detectedLanguage.code",
+          "sentenceRanges"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_rules",
+      "description_for_ai": "Get specific grammar rules or categories available in LanguageTool.",
+      "intent": [
+        "grammar rules",
+        "languagetool rules",
+        "rule categories",
+        "правила грамматики"
+      ],
+      "endpoint": "GET https://api.languagetool.org/v2/rule/examples",
+      "input": {
+        "lang": {
+          "type": "string",
+          "required": true
+        },
+        "ruleId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "rule",
+        "fields": [
+          "rule.id",
+          "rule.description",
+          "rule.pattern",
+          "rule.examples[0].correct",
+          "rule.examples[0].incorrect"
         ]
       },
       "realtime": true,
