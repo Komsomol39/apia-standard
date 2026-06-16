@@ -128,6 +128,69 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "create_shipment",
+      "description_for_ai": "Create a shipment with EasyPost to compare rates across carriers.",
+      "intent": [
+        "easypost shipment",
+        "shipping rates compare",
+        "create shipment",
+        "создать отправление easypost"
+      ],
+      "endpoint": "POST https://api.easypost.com/v2/shipments",
+      "input": {
+        "shipment": {
+          "type": "object",
+          "description": "{to_address: {name, street1, city, state, zip, country}, from_address: {...}, parcel: {weight: 16, length: 10, width: 8, height: 4}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "shipment",
+        "fields": [
+          "id",
+          "rates[0].carrier",
+          "rates[0].service",
+          "rates[0].rate",
+          "rates[0].delivery_days"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "buy_shipment",
+      "description_for_ai": "Purchase a shipping label for the chosen rate.",
+      "intent": [
+        "buy shipping label",
+        "purchase rate easypost",
+        "print label",
+        "купить этикетку easypost"
+      ],
+      "endpoint": "POST https://api.easypost.com/v2/shipments/{id}/buy",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Shipment ID",
+          "required": true
+        },
+        "rate": {
+          "type": "object",
+          "description": "{id: 'rate_xxx'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "shipment",
+        "fields": [
+          "tracking_code",
+          "postage_label.label_url",
+          "selected_rate.rate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
