@@ -22,55 +22,39 @@
   },
   "capabilities": [
     {
-      "id": "send_otp",
-      "description_for_ai": "Send a one-time password (OTP) code to a user's phone via SMS, WhatsApp, voice call, or email. Part of 2FA flow.",
+      "id": "send_verification",
+      "description_for_ai": "Send OTP verification code via SMS, WhatsApp, voice call, or email.",
       "intent": [
         "send OTP",
-        "two factor auth",
-        "2FA",
-        "phone verification",
-        "SMS code",
-        "verify phone",
-        "подтверждение телефона"
+        "SMS verification",
+        "two-factor auth",
+        "отправить OTP код"
       ],
       "endpoint": "POST https://verify.twilio.com/v2/Services/{ServiceSid}/Verifications",
       "input": {
         "ServiceSid": {
           "type": "string",
-          "description": "Verify Service SID starting with 'VA' — created in Twilio Console → Verify → Services",
+          "description": "Twilio Verify service SID",
           "required": true
         },
         "To": {
           "type": "string",
-          "description": "Recipient phone number in E.164 format: +79161234567 (Russia), +12125551234 (US)",
+          "description": "Phone number in E.164 format: +79001234567",
           "required": true
         },
         "Channel": {
           "type": "string",
-          "description": "Delivery channel: sms (default), call (voice), whatsapp, email, totp (authenticator app)",
-          "default": "sms"
-        },
-        "Locale": {
-          "type": "string",
-          "description": "Language for OTP message: en, ru, de, fr, es, etc.",
-          "required": false
-        },
-        "CustomFriendlyName": {
-          "type": "string",
-          "description": "Override service name in OTP message",
-          "required": false
+          "description": "sms, whatsapp, call, email, totp",
+          "required": true
         }
       },
       "output": {
         "type": "verification",
         "fields": [
           "sid",
-          "service_sid",
-          "account_sid",
+          "status",
           "to",
           "channel",
-          "status (pending/approved/canceled)",
-          "valid",
           "date_created"
         ]
       },
@@ -78,41 +62,153 @@
       "requires_auth": true
     },
     {
-      "id": "check_otp",
-      "description_for_ai": "Verify the OTP code entered by the user. Returns approved if correct, pending/canceled if wrong or expired.",
+      "id": "check_verification",
+      "description_for_ai": "Verify the OTP code entered by a user.",
       "intent": [
         "verify OTP",
         "check code",
-        "confirm code",
-        "2FA verify",
-        "validate code"
+        "validate SMS code",
+        "проверить OTP код"
       ],
       "endpoint": "POST https://verify.twilio.com/v2/Services/{ServiceSid}/VerificationCheck",
       "input": {
         "ServiceSid": {
           "type": "string",
-          "description": "Verify Service SID (same as used in send_otp)",
           "required": true
         },
         "To": {
           "type": "string",
-          "description": "Same phone number used in send_otp",
+          "description": "Phone number that received the code",
           "required": true
         },
         "Code": {
           "type": "string",
-          "description": "6-digit OTP code entered by the user",
+          "description": "6-digit code entered by user",
           "required": true
         }
       },
       "output": {
-        "type": "verification_check",
+        "type": "verification",
         "fields": [
           "status (approved/pending/canceled)",
-          "valid (boolean)",
-          "to",
-          "channel",
-          "sid"
+          "valid (boolean)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_service",
+      "description_for_ai": "Create a new Twilio Verify service for your application.",
+      "intent": [
+        "create Verify service",
+        "setup 2FA service",
+        "Twilio Verify setup",
+        "создать сервис верификации Twilio"
+      ],
+      "endpoint": "POST https://verify.twilio.com/v2/Services",
+      "input": {
+        "FriendlyName": {
+          "type": "string",
+          "description": "Your service name shown to users",
+          "required": true
+        },
+        "CodeLength": {
+          "type": "integer",
+          "description": "OTP length 4-10",
+          "default": 6
+        },
+        "LookupEnabled": {
+          "type": "boolean",
+          "description": "Validate phone number before sending",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "service",
+        "fields": [
+          "sid",
+          "friendly_name",
+          "code_length",
+          "date_created"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_verification_attempts",
+      "description_for_ai": "Get a log of all verification attempts for security monitoring.",
+      "intent": [
+        "verification log",
+        "OTP attempts",
+        "security audit 2FA",
+        "журнал верификаций Twilio"
+      ],
+      "endpoint": "GET https://verify.twilio.com/v2/Attempts",
+      "input": {
+        "DateCreatedAfter": {
+          "type": "string",
+          "description": "ISO 8601 date filter",
+          "required": false
+        },
+        "To": {
+          "type": "string",
+          "required": false
+        },
+        "Channel": {
+          "type": "string",
+          "required": false
+        },
+        "VerificationSid": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<attempt>",
+        "fields": [
+          "attempts[0].sid",
+          "attempts[0].date_created",
+          "attempts[0].channel_data.to",
+          "attempts[0].conversion_status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "rate_limits",
+      "description_for_ai": "Configure rate limits to prevent OTP abuse (too many requests from same IP/phone).",
+      "intent": [
+        "rate limit OTP",
+        "prevent OTP abuse",
+        "security rate limit",
+        "лимит запросов OTP"
+      ],
+      "endpoint": "POST https://verify.twilio.com/v2/Services/{ServiceSid}/RateLimits",
+      "input": {
+        "ServiceSid": {
+          "type": "string",
+          "required": true
+        },
+        "UniqueName": {
+          "type": "string",
+          "description": "Rate limit name e.g. per-phone or per-ip",
+          "required": true
+        },
+        "Description": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "rate_limit",
+        "fields": [
+          "sid",
+          "unique_name",
+          "service_sid",
+          "date_created"
         ]
       },
       "realtime": true,
