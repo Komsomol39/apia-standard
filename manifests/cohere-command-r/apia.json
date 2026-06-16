@@ -21,56 +21,180 @@
   },
   "capabilities": [
     {
-      "id": "rag_chat",
-      "description_for_ai": "Chat with document grounding. Pass documents and model cites them in response. Best RAG model for enterprise document Q&A.",
+      "id": "chat",
+      "description_for_ai": "Chat with Cohere Command R+. Excels at RAG (retrieval-augmented generation), tool use, and enterprise search.",
       "intent": [
-        "document Q&A",
+        "cohere chat",
+        "command r",
         "enterprise AI",
-        "grounded generation",
-        "cite sources",
         "RAG chat",
-        "enterprise search"
+        "спросить cohere"
       ],
-      "endpoint": "POST https://api.cohere.ai/v1/chat",
+      "endpoint": "POST https://api.cohere.com/v2/chat",
       "input": {
         "model": {
           "type": "string",
-          "description": "command-r-plus (best), command-r (balanced)",
+          "description": "command-r-plus (best, 128k context), command-r (fast), command-r-08-2024",
           "required": true
         },
-        "message": {
-          "type": "string",
+        "messages": {
+          "type": "array",
+          "description": "[{role: user|assistant|system, content: string}]",
           "required": true
+        },
+        "tools": {
+          "type": "array",
+          "description": "Function/tool definitions for tool use",
+          "required": false
         },
         "documents": {
           "type": "array",
-          "description": "[{title: str, text: str}] documents to ground answer in",
+          "description": "[{id, data: {title, text}}] — grounding documents for RAG",
           "required": false
         },
-        "preamble": {
-          "type": "string",
-          "description": "System prompt override",
-          "required": false
+        "temperature": {
+          "type": "float",
+          "default": 0.3
         },
-        "chat_history": {
-          "type": "array",
-          "description": "[{role: USER|CHATBOT, message: str}]",
-          "required": false
-        },
-        "connectors": {
-          "type": "array",
-          "description": "[{id: web-search}] for live web search",
+        "max_tokens": {
+          "type": "integer",
           "required": false
         }
       },
       "output": {
         "type": "completion",
         "fields": [
-          "text",
-          "citations[0].document_ids",
-          "citations[0].text",
-          "search_results",
-          "finish_reason"
+          "message.content[0].text",
+          "finish_reason",
+          "usage.tokens.input_tokens",
+          "tool_calls"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "rerank",
+      "description_for_ai": "Rerank a list of documents by relevance to a query. Essential for improving RAG retrieval quality.",
+      "intent": [
+        "rerank documents",
+        "sort by relevance",
+        "relevance scoring",
+        "ранжирование документов cohere"
+      ],
+      "endpoint": "POST https://api.cohere.com/v2/rerank",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "rerank-v3.5"
+        },
+        "query": {
+          "type": "string",
+          "description": "Search query",
+          "required": true
+        },
+        "documents": {
+          "type": "array",
+          "description": "['doc text 1', 'doc text 2'] or [{title, text}]",
+          "required": true
+        },
+        "top_n": {
+          "type": "integer",
+          "description": "Return top N results. Default: all.",
+          "required": false
+        },
+        "return_documents": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "ranking",
+        "fields": [
+          "results[0].index",
+          "results[0].relevance_score",
+          "results[0].document.text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "embed",
+      "description_for_ai": "Generate embeddings with Cohere Embed v3. Best-in-class multilingual embeddings with input_type support.",
+      "intent": [
+        "cohere embeddings",
+        "embed documents",
+        "semantic embeddings",
+        "векторизация cohere"
+      ],
+      "endpoint": "POST https://api.cohere.com/v2/embed",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "embed-v4.0"
+        },
+        "texts": {
+          "type": "array",
+          "description": "List of strings to embed",
+          "required": true
+        },
+        "input_type": {
+          "type": "string",
+          "description": "search_document (for storage), search_query (for queries), classification, clustering",
+          "required": true
+        },
+        "embedding_types": {
+          "type": "array",
+          "description": "['float'] or ['int8'] for compression",
+          "default": [
+            "float"
+          ]
+        }
+      },
+      "output": {
+        "type": "embeddings",
+        "fields": [
+          "embeddings.float[0] (vector)",
+          "id",
+          "usage.billed_units.input_tokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "classify",
+      "description_for_ai": "Classify text into categories using few-shot examples. No fine-tuning needed.",
+      "intent": [
+        "classify text",
+        "text classification",
+        "sentiment analysis cohere",
+        "категоризация текста cohere"
+      ],
+      "endpoint": "POST https://api.cohere.com/v1/classify",
+      "input": {
+        "inputs": {
+          "type": "array",
+          "description": "List of strings to classify",
+          "required": true
+        },
+        "examples": {
+          "type": "array",
+          "description": "[{text: 'example text', label: 'category'}] — at least 2 per class",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "embed-multilingual-v3.0"
+        }
+      },
+      "output": {
+        "type": "classification",
+        "fields": [
+          "classifications[0].input",
+          "classifications[0].prediction",
+          "classifications[0].confidence"
         ]
       },
       "realtime": true,
