@@ -23,32 +23,32 @@
   "capabilities": [
     {
       "id": "list_issues",
-      "description_for_ai": "List error issues in Sentry with filters by status, assignee, and date.",
+      "description_for_ai": "List Sentry error issues for a project with filters.",
       "intent": [
         "sentry errors",
-        "bug tracking sentry",
-        "production errors",
+        "sentry issues",
+        "application errors",
         "ошибки sentry"
       ],
-      "endpoint": "GET https://sentry.io/api/0/projects/{organization_slug}/{project_slug}/issues/",
+      "endpoint": "GET https://sentry.io/api/0/projects/{organization}/{project}/issues/",
       "input": {
-        "organization_slug": {
+        "organization": {
           "type": "string",
           "required": true
         },
-        "project_slug": {
+        "project": {
           "type": "string",
           "required": true
         },
         "query": {
           "type": "string",
-          "description": "Sentry query: is:unresolved, assigned:me, level:error, browser:Chrome",
+          "description": "Search: is:unresolved, level:error, browser:Chrome, user.email:user@example.com",
           "required": false
         },
-        "status": {
+        "sort": {
           "type": "string",
-          "description": "resolved, unresolved, ignored",
-          "default": "unresolved"
+          "description": "date, freq, new, priority",
+          "default": "date"
         },
         "limit": {
           "type": "integer",
@@ -61,10 +61,11 @@
           "[0].id",
           "[0].title",
           "[0].culprit",
-          "[0].status",
           "[0].count",
+          "[0].userCount",
           "[0].firstSeen",
-          "[0].lastSeen"
+          "[0].lastSeen",
+          "[0].level"
         ]
       },
       "realtime": true,
@@ -72,10 +73,10 @@
     },
     {
       "id": "get_issue",
-      "description_for_ai": "Get full Sentry issue details including stack trace and tags.",
+      "description_for_ai": "Get details of a specific Sentry issue with stack trace and event data.",
       "intent": [
         "sentry issue details",
-        "error details",
+        "error details sentry",
         "stack trace sentry",
         "детали ошибки sentry"
       ],
@@ -92,12 +93,12 @@
           "id",
           "title",
           "culprit",
-          "status",
+          "metadata.filename",
           "count",
           "userCount",
-          "tags",
           "firstSeen",
-          "lastSeen"
+          "lastSeen",
+          "tags"
         ]
       },
       "realtime": true,
@@ -105,12 +106,12 @@
     },
     {
       "id": "resolve_issue",
-      "description_for_ai": "Update Sentry issue status: resolve, ignore, or assign to team member.",
+      "description_for_ai": "Resolve or ignore a Sentry issue.",
       "intent": [
         "resolve sentry issue",
-        "close error",
-        "ignore error sentry",
-        "закрыть ошибку sentry"
+        "close error sentry",
+        "ignore error",
+        "исправить ошибку sentry"
       ],
       "endpoint": "PUT https://sentry.io/api/0/issues/{issue_id}/",
       "input": {
@@ -120,12 +121,12 @@
         },
         "status": {
           "type": "string",
-          "description": "resolved, unresolved, ignored",
+          "description": "resolved, resolvedInNextRelease, ignored, unresolved",
           "required": true
         },
         "assignedTo": {
           "type": "string",
-          "description": "Username or team slug to assign",
+          "description": "Username or email to assign",
           "required": false
         }
       },
@@ -145,34 +146,34 @@
       "description_for_ai": "Create a Sentry release to track deployments and associate errors with versions.",
       "intent": [
         "sentry release",
-        "deployment tracking",
-        "version release sentry",
+        "deployment sentry",
+        "track version sentry",
         "релиз sentry"
       ],
-      "endpoint": "POST https://sentry.io/api/0/organizations/{organization_slug}/releases/",
+      "endpoint": "POST https://sentry.io/api/0/organizations/{organization}/releases/",
       "input": {
-        "organization_slug": {
+        "organization": {
           "type": "string",
           "required": true
         },
         "version": {
           "type": "string",
-          "description": "Release version: 1.0.0 or git SHA",
+          "description": "Release version e.g. 1.0.0 or git SHA",
           "required": true
         },
         "projects": {
           "type": "array",
-          "description": "Project slugs to associate",
+          "description": "Project slugs",
           "required": true
+        },
+        "ref": {
+          "type": "string",
+          "description": "Git commit reference",
+          "required": false
         },
         "url": {
           "type": "string",
-          "description": "URL with release info",
-          "required": false
-        },
-        "dateReleased": {
-          "type": "string",
-          "description": "ISO 8601 datetime",
+          "description": "Release URL",
           "required": false
         }
       },
@@ -180,9 +181,9 @@
         "type": "release",
         "fields": [
           "version",
-          "url",
-          "projects[0].slug",
-          "dateCreated"
+          "projects",
+          "dateCreated",
+          "url"
         ]
       },
       "realtime": true,
