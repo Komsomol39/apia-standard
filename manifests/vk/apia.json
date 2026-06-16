@@ -160,6 +160,90 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "wall_search",
+      "description_for_ai": "Search posts on VK wall by keyword.",
+      "intent": [
+        "поиск постов VK",
+        "vk wall search",
+        "найти пост VK"
+      ],
+      "endpoint": "GET https://api.vk.com/method/wall.search",
+      "input": {
+        "owner_id": {
+          "type": "integer",
+          "description": "User or group ID (negative for groups)",
+          "required": true
+        },
+        "query": {
+          "type": "string",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
+        },
+        "v": {
+          "type": "string",
+          "default": "5.199"
+        },
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<post>",
+        "fields": [
+          "items[0].id",
+          "items[0].text",
+          "items[0].likes.count",
+          "items[0].reposts.count",
+          "items[0].date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "groups_search",
+      "description_for_ai": "Search VK groups/communities by keyword.",
+      "intent": [
+        "поиск групп VK",
+        "vk communities",
+        "найти группу VK"
+      ],
+      "endpoint": "GET https://api.vk.com/method/groups.search",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
+        },
+        "v": {
+          "type": "string",
+          "default": "5.199"
+        },
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<group>",
+        "fields": [
+          "items[0].id",
+          "items[0].name",
+          "items[0].screen_name",
+          "items[0].members_count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
