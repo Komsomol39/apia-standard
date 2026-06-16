@@ -23,48 +23,52 @@
   },
   "capabilities": [
     {
-      "id": "geocode",
-      "description_for_ai": "Convert address to coordinates or coordinates to address. High accuracy worldwide.",
+      "id": "geocoding",
+      "description_for_ai": "Forward and reverse geocoding with Mapbox. Convert addresses to coordinates and back.",
       "intent": [
-        "mapbox geocoding",
+        "geocode Mapbox",
         "address to coordinates",
-        "reverse geocoding mapbox",
-        "геокодирование mapbox"
+        "location lookup",
+        "геокодирование Mapbox"
       ],
       "endpoint": "GET https://api.mapbox.com/geocoding/v5/mapbox.places/{search_text}.json",
       "input": {
         "search_text": {
           "type": "string",
-          "description": "Address string or 'lon,lat' for reverse geocoding",
+          "description": "Address or place name to geocode",
           "required": true
+        },
+        "proximity": {
+          "type": "string",
+          "description": "Bias results to lng,lat e.g. -74.0,40.7",
+          "required": false
         },
         "country": {
           "type": "string",
-          "description": "ISO 3166-1 country code to limit results",
+          "description": "ISO 3166-1 country code filter",
           "required": false
         },
         "language": {
           "type": "string",
-          "description": "BCP 47 language tag: en, ru, de",
+          "description": "IETF language tag: en, ru, de",
           "required": false
         },
         "limit": {
           "type": "integer",
-          "description": "Max results 1-10",
           "default": 5
         },
         "types": {
           "type": "string",
-          "description": "country, region, postcode, district, place, locality, neighborhood, address, poi",
+          "description": "country, region, place, address, poi",
           "required": false
         }
       },
       "output": {
         "type": "geocode",
         "fields": [
+          "features[0].center [lng, lat]",
           "features[0].place_name",
-          "features[0].center (lon,lat)",
-          "features[0].properties.accuracy",
+          "features[0].id",
           "features[0].context"
         ]
       },
@@ -72,39 +76,39 @@
       "requires_auth": true
     },
     {
-      "id": "get_directions",
-      "description_for_ai": "Get turn-by-turn directions between coordinates. Driving, walking, cycling, or traffic-aware.",
+      "id": "directions",
+      "description_for_ai": "Get turn-by-turn directions between coordinates. Driving, cycling, walking.",
       "intent": [
-        "mapbox directions",
-        "route mapbox",
-        "turn by turn navigation",
-        "маршрут mapbox"
+        "directions Mapbox",
+        "route Mapbox",
+        "driving route",
+        "маршрут Mapbox"
       ],
       "endpoint": "GET https://api.mapbox.com/directions/v5/mapbox/{profile}/{coordinates}",
       "input": {
         "profile": {
           "type": "string",
-          "description": "mapbox/driving-traffic, mapbox/driving, mapbox/walking, mapbox/cycling",
+          "description": "mapbox/driving, mapbox/driving-traffic, mapbox/walking, mapbox/cycling",
           "required": true
         },
         "coordinates": {
           "type": "string",
-          "description": "Semicolon-separated lon,lat pairs: -77.03,38.91;-77.09,38.91",
+          "description": "lng,lat;lng,lat;... semicolon-separated waypoints",
           "required": true
-        },
-        "overview": {
-          "type": "string",
-          "description": "full, simplified, or false. Geometry detail level.",
-          "default": "full"
         },
         "steps": {
           "type": "boolean",
           "description": "Include turn-by-turn instructions",
-          "default": true
+          "default": false
+        },
+        "alternatives": {
+          "type": "boolean",
+          "description": "Return alternative routes",
+          "default": false
         },
         "geometries": {
           "type": "string",
-          "description": "geojson, polyline, or polyline6",
+          "description": "geojson or polyline",
           "default": "geojson"
         }
       },
@@ -121,40 +125,127 @@
       "requires_auth": true
     },
     {
-      "id": "search_places",
-      "description_for_ai": "Search for places (restaurants, hotels, POIs) near a location.",
+      "id": "isochrone",
+      "description_for_ai": "Get areas reachable within a time limit from a location. Good for service area analysis.",
       "intent": [
-        "search places mapbox",
-        "POI search",
-        "nearby places mapbox",
-        "поиск мест mapbox"
+        "isochrone Mapbox",
+        "reachable area",
+        "drive time zone",
+        "зона доступности"
+      ],
+      "endpoint": "GET https://api.mapbox.com/isochrone/v1/mapbox/{profile}/{coordinates}",
+      "input": {
+        "profile": {
+          "type": "string",
+          "description": "mapbox/driving, mapbox/walking, mapbox/cycling",
+          "required": true
+        },
+        "coordinates": {
+          "type": "string",
+          "description": "lng,lat of center",
+          "required": true
+        },
+        "contours_minutes": {
+          "type": "string",
+          "description": "Comma-separated times e.g. 5,10,15",
+          "required": true
+        },
+        "polygons": {
+          "type": "boolean",
+          "description": "Return as polygon (true) or lines (false)",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "geojson",
+        "fields": [
+          "features[0].geometry.coordinates",
+          "features[0].properties.contour (minutes)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "matrix",
+      "description_for_ai": "Calculate travel durations or distances between multiple origins and destinations.",
+      "intent": [
+        "distance matrix Mapbox",
+        "travel time matrix",
+        "routing matrix",
+        "матрица расстояний Mapbox"
+      ],
+      "endpoint": "GET https://api.mapbox.com/directions-matrix/v1/mapbox/{profile}/{coordinates}",
+      "input": {
+        "profile": {
+          "type": "string",
+          "required": true
+        },
+        "coordinates": {
+          "type": "string",
+          "description": "lng,lat;... all waypoints",
+          "required": true
+        },
+        "sources": {
+          "type": "string",
+          "description": "Indices of source points: 0;1 or all",
+          "default": "all"
+        },
+        "destinations": {
+          "type": "string",
+          "description": "Indices of destination points",
+          "default": "all"
+        },
+        "annotations": {
+          "type": "string",
+          "description": "duration, distance, or duration,distance",
+          "default": "duration"
+        }
+      },
+      "output": {
+        "type": "matrix",
+        "fields": [
+          "durations[0][0] (seconds)",
+          "distances[0][0] (meters)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_places",
+      "description_for_ai": "Search for places and points of interest with Mapbox Places API.",
+      "intent": [
+        "search places Mapbox",
+        "find POI",
+        "nearby places",
+        "поиск мест Mapbox"
       ],
       "endpoint": "GET https://api.mapbox.com/geocoding/v5/mapbox.places/{query}.json",
       "input": {
         "query": {
           "type": "string",
-          "description": "Place type or name: restaurant, coffee, ATM, hospital",
           "required": true
-        },
-        "proximity": {
-          "type": "string",
-          "description": "lon,lat to bias results toward",
-          "required": false
         },
         "types": {
           "type": "string",
-          "description": "poi to get points of interest only",
-          "default": "poi"
+          "description": "poi, address, neighborhood, place, locality",
+          "required": false
         },
-        "limit": {
-          "type": "integer",
-          "default": 5
+        "proximity": {
+          "type": "string",
+          "description": "lng,lat",
+          "required": false
+        },
+        "bbox": {
+          "type": "string",
+          "description": "min_lng,min_lat,max_lng,max_lat",
+          "required": false
         }
       },
       "output": {
         "type": "list<place>",
         "fields": [
-          "features[0].text",
           "features[0].place_name",
           "features[0].center",
           "features[0].properties.category"
@@ -165,32 +256,23 @@
     },
     {
       "id": "static_map_image",
-      "description_for_ai": "Generate a static map image PNG with custom markers, paths, and styling.",
+      "description_for_ai": "Generate a static map image with custom markers and overlays.",
       "intent": [
-        "static map image",
-        "map screenshot",
+        "static map",
         "map image",
-        "изображение карты mapbox"
+        "map screenshot",
+        "изображение карты Mapbox"
       ],
       "endpoint": "GET https://api.mapbox.com/styles/v1/{username}/{style_id}/static/{overlay}/{lon},{lat},{zoom}/{width}x{height}",
       "input": {
-        "username": {
-          "type": "string",
-          "description": "mapbox (for default styles) or your username",
-          "required": true
-        },
         "style_id": {
           "type": "string",
           "description": "streets-v12, satellite-v9, light-v11, dark-v11, outdoors-v12",
           "required": true
         },
-        "overlay": {
-          "type": "string",
-          "description": "pin-s-marker+ff0000(lon,lat) for marker, path+ff0000(encoded_polyline) for path, or empty",
-          "required": false
-        },
         "lon": {
           "type": "float",
+          "description": "Center longitude",
           "required": true
         },
         "lat": {
@@ -199,18 +281,22 @@
         },
         "zoom": {
           "type": "float",
-          "description": "Zoom level 0-22",
+          "description": "0-22",
           "required": true
         },
         "width": {
           "type": "integer",
-          "description": "Image width 1-1280",
+          "description": "1-1280 pixels",
           "default": 600
         },
         "height": {
           "type": "integer",
-          "description": "Image height 1-1280",
           "default": 400
+        },
+        "overlay": {
+          "type": "string",
+          "description": "pin-s+f44(lon,lat) for marker",
+          "required": false
         }
       },
       "output": {
