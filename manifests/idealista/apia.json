@@ -120,6 +120,122 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_properties",
+      "description_for_ai": "Search real estate listings on Idealista (Spain, Italy, Portugal).",
+      "intent": [
+        "idealista search",
+        "property Spain",
+        "buy apartment Spain",
+        "недвижимость испания"
+      ],
+      "endpoint": "GET https://api.idealista.com/3.5/es/search",
+      "input": {
+        "operation": {
+          "type": "string",
+          "description": "sale or rent",
+          "required": true
+        },
+        "propertyType": {
+          "type": "string",
+          "description": "homes, offices, premises, garages, bedrooms, newDevelopments",
+          "required": true
+        },
+        "center": {
+          "type": "string",
+          "description": "lat,lon e.g. 40.4167,-3.7037",
+          "required": true
+        },
+        "distance": {
+          "type": "integer",
+          "description": "Radius in meters",
+          "default": 1000
+        },
+        "maxPrice": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<property>",
+        "fields": [
+          "elementList[0].propertyCode",
+          "elementList[0].price",
+          "elementList[0].rooms",
+          "elementList[0].size",
+          "elementList[0].address",
+          "elementList[0].thumbnail"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_property",
+      "description_for_ai": "Get full details of a property listing on Idealista.",
+      "intent": [
+        "property details idealista",
+        "listing info Spain",
+        "real estate details"
+      ],
+      "endpoint": "GET https://api.idealista.com/3.5/es/detail/{propertyCode}",
+      "input": {
+        "propertyCode": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "property",
+        "fields": [
+          "propertyCode",
+          "price",
+          "rooms",
+          "bathrooms",
+          "size",
+          "floor",
+          "description",
+          "images",
+          "address"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_agencies",
+      "description_for_ai": "Find real estate agencies on Idealista.",
+      "intent": [
+        "real estate agency Spain",
+        "idealista agencies",
+        "найти агентство недвижимости"
+      ],
+      "endpoint": "GET https://api.idealista.com/3.5/es/search",
+      "input": {
+        "propertyType": {
+          "type": "string",
+          "default": "agencies"
+        },
+        "center": {
+          "type": "string",
+          "required": true
+        },
+        "distance": {
+          "type": "integer",
+          "default": 5000
+        }
+      },
+      "output": {
+        "type": "list<agency>",
+        "fields": [
+          "agencyList[0].name",
+          "agencyList[0].phone",
+          "agencyList[0].address"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
