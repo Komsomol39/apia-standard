@@ -21,72 +21,34 @@
   },
   "capabilities": [
     {
-      "id": "search_channels",
-      "description_for_ai": "Search Twitch channels/streamers by name.",
+      "id": "get_streams",
+      "description_for_ai": "Get live streams on Twitch, filtered by game, language, or specific users.",
       "intent": [
-        "twitch stream",
-        "find streamer",
-        "search twitch",
-        "стримеры twitch"
-      ],
-      "endpoint": "GET https://api.twitch.tv/helix/search/channels",
-      "input": {
-        "query": {
-          "type": "string",
-          "required": true
-        },
-        "live_only": {
-          "type": "boolean",
-          "description": "Only return live channels",
-          "default": false
-        },
-        "first": {
-          "type": "integer",
-          "default": 20
-        }
-      },
-      "output": {
-        "type": "list<channel>",
-        "fields": [
-          "data[0].id",
-          "data[0].display_name",
-          "data[0].game_name",
-          "data[0].is_live",
-          "data[0].title",
-          "data[0].thumbnail_url"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_live_streams",
-      "description_for_ai": "Get currently live streams filtered by game, language, or users.",
-      "intent": [
-        "live streams twitch",
-        "who is live",
-        "top streams",
-        "прямые трансляции twitch"
+        "Twitch live streams",
+        "streams now",
+        "who is live Twitch",
+        "прямые эфиры Twitch"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/streams",
       "input": {
         "game_id": {
           "type": "string",
-          "description": "Filter by game ID",
+          "description": "Filter by game/category ID",
+          "required": false
+        },
+        "user_login": {
+          "type": "array",
+          "description": "Specific streamers to check",
           "required": false
         },
         "language": {
           "type": "string",
-          "description": "Stream language code e.g. en, ru",
-          "required": false
-        },
-        "user_login": {
-          "type": "string",
-          "description": "Comma-separated usernames",
+          "description": "ISO 639-1 language code",
           "required": false
         },
         "first": {
           "type": "integer",
+          "description": "Max results 1-100",
           "default": 20
         }
       },
@@ -97,8 +59,8 @@
           "data[0].game_name",
           "data[0].title",
           "data[0].viewer_count",
-          "data[0].thumbnail_url",
-          "data[0].started_at"
+          "data[0].started_at",
+          "data[0].thumbnail_url"
         ]
       },
       "realtime": true,
@@ -106,55 +68,60 @@
     },
     {
       "id": "get_user",
-      "description_for_ai": "Get Twitch user profile by username or ID.",
+      "description_for_ai": "Get Twitch user profile: display name, description, followers, broadcaster type.",
       "intent": [
-        "twitch user",
+        "Twitch user",
         "streamer info",
-        "twitch profile",
-        "профиль twitch"
+        "Twitch profile",
+        "профиль Twitch"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/users",
       "input": {
         "login": {
-          "type": "string",
-          "description": "Username (up to 100 comma-separated)",
+          "type": "array",
+          "description": "Username(s) to look up",
           "required": false
         },
         "id": {
-          "type": "string",
-          "description": "User ID",
+          "type": "array",
+          "description": "User ID(s) to look up",
           "required": false
         }
       },
       "output": {
-        "type": "user",
+        "type": "list<user>",
         "fields": [
           "data[0].id",
           "data[0].login",
           "data[0].display_name",
           "data[0].description",
           "data[0].view_count",
-          "data[0].profile_image_url",
-          "data[0].created_at"
+          "data[0].broadcaster_type",
+          "data[0].profile_image_url"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_top_games",
-      "description_for_ai": "Get most watched games/categories on Twitch right now.",
+      "id": "get_games",
+      "description_for_ai": "Get top games/categories on Twitch or search by name.",
       "intent": [
-        "top games twitch",
-        "popular games",
-        "trending twitch",
-        "топ игры twitch"
+        "top games Twitch",
+        "Twitch categories",
+        "games list Twitch",
+        "категории Twitch"
       ],
       "endpoint": "GET https://api.twitch.tv/helix/games/top",
       "input": {
         "first": {
           "type": "integer",
           "default": 20
+        },
+        "after": {
+          "type": "string",
+          "description": "Pagination cursor",
+          "required": false
         }
       },
       "output": {
@@ -163,6 +130,122 @@
           "data[0].id",
           "data[0].name",
           "data[0].box_art_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_chat_message",
+      "description_for_ai": "Send a chat message to a Twitch channel as a bot.",
+      "intent": [
+        "Twitch chat message",
+        "bot message Twitch",
+        "send chat Twitch",
+        "сообщение в чат Twitch"
+      ],
+      "endpoint": "POST https://api.twitch.tv/helix/chat/messages",
+      "input": {
+        "broadcaster_id": {
+          "type": "string",
+          "description": "Channel owner user ID",
+          "required": true
+        },
+        "sender_id": {
+          "type": "string",
+          "description": "Bot user ID",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "description": "Message text, max 500 chars",
+          "required": true
+        },
+        "reply_parent_message_id": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "data[0].message_id",
+          "data[0].is_sent"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_channel_info",
+      "description_for_ai": "Get channel info: game, title, tags, subscriber count.",
+      "intent": [
+        "channel info Twitch",
+        "stream info",
+        "channel details",
+        "информация о канале Twitch"
+      ],
+      "endpoint": "GET https://api.twitch.tv/helix/channels",
+      "input": {
+        "broadcaster_id": {
+          "type": "string",
+          "description": "Channel owner user ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "channel",
+        "fields": [
+          "data[0].broadcaster_name",
+          "data[0].game_name",
+          "data[0].title",
+          "data[0].tags",
+          "data[0].broadcaster_language"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_clips",
+      "description_for_ai": "Get top clips from a Twitch channel or game.",
+      "intent": [
+        "Twitch clips",
+        "best clips",
+        "stream clips",
+        "клипы Twitch"
+      ],
+      "endpoint": "GET https://api.twitch.tv/helix/clips",
+      "input": {
+        "broadcaster_id": {
+          "type": "string",
+          "description": "Get clips for this channel",
+          "required": false
+        },
+        "game_id": {
+          "type": "string",
+          "description": "Get clips for this game",
+          "required": false
+        },
+        "first": {
+          "type": "integer",
+          "default": 20
+        },
+        "started_at": {
+          "type": "string",
+          "description": "ISO 8601 date range start",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<clip>",
+        "fields": [
+          "data[0].id",
+          "data[0].title",
+          "data[0].view_count",
+          "data[0].url",
+          "data[0].thumbnail_url",
+          "data[0].creator_name"
         ]
       },
       "realtime": true,
