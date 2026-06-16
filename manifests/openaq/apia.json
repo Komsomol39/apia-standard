@@ -144,6 +144,141 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_air_quality",
+      "description_for_ai": "Get current air quality measurements from OpenAQ sensors.",
+      "intent": [
+        "air quality OpenAQ",
+        "PM2.5 measurement",
+        "pollution data",
+        "качество воздуха OpenAQ"
+      ],
+      "endpoint": "GET https://api.openaq.org/v2/measurements",
+      "input": {
+        "location_id": {
+          "type": "integer",
+          "required": false
+        },
+        "city": {
+          "type": "string",
+          "required": false
+        },
+        "country": {
+          "type": "string",
+          "description": "ISO country code",
+          "required": false
+        },
+        "parameter": {
+          "type": "string",
+          "description": "pm25, pm10, o3, no2, so2, co",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "list<measurement>",
+        "fields": [
+          "results[0].location",
+          "results[0].parameter",
+          "results[0].value",
+          "results[0].unit",
+          "results[0].date.utc",
+          "results[0].city"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_locations",
+      "description_for_ai": "Find OpenAQ monitoring stations near a location.",
+      "intent": [
+        "air quality stations",
+        "monitoring stations",
+        "nearby sensors",
+        "станции мониторинга воздуха"
+      ],
+      "endpoint": "GET https://api.openaq.org/v2/locations",
+      "input": {
+        "coordinates": {
+          "type": "string",
+          "description": "lat,lon",
+          "required": false
+        },
+        "radius": {
+          "type": "integer",
+          "description": "Search radius meters",
+          "default": 10000
+        },
+        "country": {
+          "type": "string",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<location>",
+        "fields": [
+          "results[0].id",
+          "results[0].name",
+          "results[0].city",
+          "results[0].country",
+          "results[0].parameters[0].parameter"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_historical",
+      "description_for_ai": "Get historical air quality data for a time range.",
+      "intent": [
+        "historical air quality",
+        "past pollution",
+        "air quality history",
+        "история загрязнения воздуха"
+      ],
+      "endpoint": "GET https://api.openaq.org/v2/measurements",
+      "input": {
+        "location_id": {
+          "type": "integer",
+          "required": true
+        },
+        "date_from": {
+          "type": "string",
+          "description": "ISO 8601",
+          "required": true
+        },
+        "date_to": {
+          "type": "string",
+          "required": true
+        },
+        "parameter": {
+          "type": "string",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 1000
+        }
+      },
+      "output": {
+        "type": "list<measurement>",
+        "fields": [
+          "results[0].value",
+          "results[0].parameter",
+          "results[0].date.utc"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
