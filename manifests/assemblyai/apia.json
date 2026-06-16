@@ -22,57 +22,61 @@
   },
   "capabilities": [
     {
-      "id": "submit_transcription",
-      "description_for_ai": "Submit audio for transcription. Returns job ID to poll. Supports 100+ languages, speaker diarization, auto chapters.",
+      "id": "transcribe_audio",
+      "description_for_ai": "Transcribe audio files with AssemblyAI. Speaker diarization, sentiment, entity detection included.",
       "intent": [
-        "assemblyai transcribe",
-        "submit audio",
-        "async transcription",
-        "транскрибация assemblyai"
+        "transcribe audio",
+        "AssemblyAI STT",
+        "speech to text AI",
+        "транскрибация AssemblyAI"
       ],
       "endpoint": "POST https://api.assemblyai.com/v2/transcript",
       "input": {
         "audio_url": {
           "type": "string",
-          "description": "Public URL of audio file",
+          "description": "Public URL of audio/video file",
           "required": true
         },
         "language_code": {
           "type": "string",
-          "description": "en, ru, de, fr, es, etc. Auto-detected if omitted.",
+          "description": "en, ru, de, fr, es, it, pt, nl, hi, ja, zh. Auto-detected if omitted.",
           "required": false
         },
         "speaker_labels": {
           "type": "boolean",
-          "description": "Identify different speakers",
-          "default": false
-        },
-        "auto_chapters": {
-          "type": "boolean",
-          "description": "Auto-generate chapters with summaries",
+          "description": "Enable speaker diarization",
           "default": false
         },
         "sentiment_analysis": {
           "type": "boolean",
+          "description": "Sentiment per sentence",
           "default": false
         },
         "entity_detection": {
           "type": "boolean",
-          "description": "Detect PII, names, dates, locations",
+          "description": "Named entity recognition",
           "default": false
         },
-        "iab_categories": {
+        "auto_highlights": {
           "type": "boolean",
-          "description": "Classify content into IAB categories",
+          "description": "Key phrases extraction",
+          "default": false
+        },
+        "summarization": {
+          "type": "boolean",
+          "description": "Automatic summary",
           "default": false
         }
       },
       "output": {
-        "type": "job",
+        "type": "transcript",
         "fields": [
           "id",
-          "status",
-          "language_code"
+          "status (polling required)",
+          "text",
+          "utterances[0].speaker",
+          "utterances[0].text",
+          "sentiment_analysis_results[0].sentiment"
         ]
       },
       "realtime": false,
@@ -80,18 +84,17 @@
     },
     {
       "id": "get_transcript",
-      "description_for_ai": "Get transcription result by job ID. Poll until status=completed.",
+      "description_for_ai": "Poll for transcript completion and get results.",
       "intent": [
-        "get transcript result",
-        "check transcription status",
+        "get transcript",
+        "transcript status",
         "poll transcription",
-        "получить транскрипцию assemblyai"
+        "получить транскрипт"
       ],
-      "endpoint": "GET https://api.assemblyai.com/v2/transcript/{id}",
+      "endpoint": "GET https://api.assemblyai.com/v2/transcript/{transcript_id}",
       "input": {
-        "id": {
+        "transcript_id": {
           "type": "string",
-          "description": "Transcript ID from submit_transcription",
           "required": true
         }
       },
@@ -99,94 +102,119 @@
         "type": "transcript",
         "fields": [
           "id",
-          "status (queued|processing|completed|error)",
+          "status (queued/processing/completed/error)",
           "text",
           "words[0].text",
           "words[0].start",
-          "words[0].speaker",
-          "chapters[0].summary"
+          "words[0].end",
+          "words[0].confidence"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "lemur_task",
-      "description_for_ai": "Use LeMUR to ask questions about audio content, generate summaries, extract insights from transcripts using LLMs.",
+      "id": "lemur_qa",
+      "description_for_ai": "Ask questions about audio content using LeMUR (LLM powered by your transcript).",
       "intent": [
         "audio Q&A",
-        "summarize audio",
-        "LeMUR",
-        "ask questions about audio",
-        "анализ аудио LLM assemblyai"
+        "LeMUR questions",
+        "ask about recording",
+        "вопросы по аудио AssemblyAI"
       ],
-      "endpoint": "POST https://api.assemblyai.com/lemur/v3/request",
+      "endpoint": "POST https://api.assemblyai.com/lemur/v3/generate/task",
       "input": {
-        "transcript_ids": {
-          "type": "array",
-          "description": "List of completed transcript IDs",
-          "required": true
-        },
         "prompt": {
           "type": "string",
-          "description": "Question or task e.g. 'Summarize the main points'",
+          "description": "Question or instruction about the transcript",
           "required": true
+        },
+        "transcript_ids": {
+          "type": "array",
+          "description": "Transcript IDs to analyze",
+          "required": true
+        },
+        "context": {
+          "type": "string",
+          "description": "Background context for better answers",
+          "required": false
         },
         "final_model": {
           "type": "string",
-          "description": "anthropic/claude-3-5-haiku (default), anthropic/claude-3-5-sonnet",
-          "required": false
-        },
-        "max_output_size": {
-          "type": "integer",
-          "description": "Max output tokens",
-          "default": 2048
+          "description": "anthropic/claude-3-5-sonnet or anthropic/claude-3-haiku",
+          "default": "anthropic/claude-3-5-sonnet"
         }
       },
       "output": {
-        "type": "lemur",
+        "type": "response",
         "fields": [
-          "request_id",
           "response",
           "usage.input_tokens",
           "usage.output_tokens"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_transcripts",
+      "description_for_ai": "List all transcripts with status and creation time.",
+      "intent": [
+        "list transcripts",
+        "transcript history",
+        "список транскриптов"
+      ],
+      "endpoint": "GET https://api.assemblyai.com/v2/transcript",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 10
+        },
+        "status": {
+          "type": "string",
+          "description": "queued, processing, completed, error",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<transcript>",
+        "fields": [
+          "transcripts[0].id",
+          "transcripts[0].status",
+          "transcripts[0].created",
+          "transcripts[0].audio_url"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "realtime_transcription",
-      "description_for_ai": "Real-time streaming transcription via WebSocket. Connect, stream audio, get partial and final transcripts.",
+      "description_for_ai": "Real-time streaming speech-to-text using AssemblyAI WebSocket API.",
       "intent": [
-        "real-time STT assemblyai",
-        "live transcription",
-        "streaming speech assemblyai",
-        "потоковая транскрибация assemblyai"
+        "real-time transcription",
+        "live STT",
+        "streaming speech",
+        "транскрибация в реальном времени"
       ],
       "endpoint": "WSS wss://api.assemblyai.com/v2/realtime/ws",
       "input": {
         "sample_rate": {
           "type": "integer",
-          "description": "Audio sample rate in Hz e.g. 16000",
+          "description": "16000 Hz recommended",
           "required": true
         },
         "word_boost": {
           "type": "array",
-          "description": "Domain-specific words to boost accuracy",
-          "required": false
-        },
-        "encoding": {
-          "type": "string",
-          "description": "pcm_s16le (default) or pcm_mulaw",
+          "description": "Custom vocabulary words",
           "required": false
         }
       },
       "output": {
-        "type": "streaming",
+        "type": "realtime_transcript",
         "fields": [
-          "text (partial)",
-          "message_type (PartialTranscript|FinalTranscript)"
+          "text (partial result on message_type=PartialTranscript)",
+          "text (final on message_type=FinalTranscript)"
         ]
       },
       "realtime": true,
