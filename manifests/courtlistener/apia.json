@@ -23,61 +23,172 @@
   },
   "capabilities": [
     {
-      "id": "search_opinions",
-      "description_for_ai": "Free US court case database. 5M+ court opinions, oral arguments, federal court dockets. Search by case name, court, judge, citation. Use for legal research, case lookup, precedent finding. Search US court opinions by keyword, court, date, citation. Returns case name, court, date, citation, text snippet.",
+      "id": "search_cases",
+      "description_for_ai": "Search US court cases and opinions in CourtListener database.",
       "intent": [
-        "case precedent",
-        "court case",
-        "court opinion",
-        "legal research",
-        "US case law",
-        "judicial decision",
-        "judicial ruling",
-        "federal court",
-        "case law",
-        "court decisions",
-        "legal precedent"
+        "search court cases",
+        "legal case search",
+        "CourtListener search",
+        "поиск судебных дел"
       ],
-      "endpoint": "GET https://www.courtlistener.com/api/rest/v3/opinions/",
+      "endpoint": "GET https://www.courtlistener.com/api/rest/v3/search/",
       "input": {
         "q": {
           "type": "string",
-          "description": "Search query or filter expression",
-          "required": false
+          "description": "Full-text search query",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "o (opinions), r (recap, PACER), p (people)",
+          "default": "o"
         },
         "court": {
           "type": "string",
-          "description": "Court ID e.g. scotus (Supreme Court), ca9 (9th Circuit)",
+          "description": "Court ID: scotus, ca1, ca9, dcd, nysd",
           "required": false
         },
         "filed_after": {
           "type": "string",
           "description": "YYYY-MM-DD",
           "required": false
-        },
-        "filed_before": {
-          "type": "string",
-          "description": "YYYY-MM-DD",
-          "required": false
-        },
-        "order_by": {
-          "type": "string",
-          "description": "score, dateFiled, citeCount",
-          "default": "score"
         }
       },
       "output": {
-        "type": "list<opinion>",
+        "type": "list<case>",
         "fields": [
+          "results[0].id",
           "results[0].caseName",
           "results[0].court",
           "results[0].dateFiled",
-          "results[0].citation",
           "results[0].snippet"
         ]
       },
-      "realtime": false,
-      "requires_auth": false
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_opinion",
+      "description_for_ai": "Get full text of a court opinion from CourtListener.",
+      "intent": [
+        "court opinion text",
+        "case full text",
+        "legal ruling",
+        "текст решения суда"
+      ],
+      "endpoint": "GET https://www.courtlistener.com/api/rest/v3/opinions/{id}/",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "opinion",
+        "fields": [
+          "id",
+          "case_name",
+          "date_filed",
+          "html (opinion HTML)",
+          "plain_text",
+          "author_str",
+          "joined_by_str"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_docket",
+      "description_for_ai": "Get docket entries (PACER case events) for a federal case.",
+      "intent": [
+        "case docket",
+        "PACER entries",
+        "federal case docket",
+        "судебный реестр"
+      ],
+      "endpoint": "GET https://www.courtlistener.com/api/rest/v3/dockets/{id}/",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "docket",
+        "fields": [
+          "case_name",
+          "court_id",
+          "date_filed",
+          "date_terminated",
+          "docket_number",
+          "docket_entries[0].date_filed",
+          "docket_entries[0].description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_judge_info",
+      "description_for_ai": "Get information about a federal judge from CourtListener.",
+      "intent": [
+        "judge info",
+        "federal judge",
+        "court judge",
+        "информация о судье"
+      ],
+      "endpoint": "GET https://www.courtlistener.com/api/rest/v3/people/{id}/",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "judge",
+        "fields": [
+          "name_full",
+          "date_dob",
+          "political_affiliation",
+          "positions[0].court.full_name",
+          "positions[0].date_start",
+          "education[0].school.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_citations",
+      "description_for_ai": "Get cases that cite a specific opinion (forward citations).",
+      "intent": [
+        "case citations",
+        "citing cases",
+        "how cited",
+        "ссылки на судебное дело"
+      ],
+      "endpoint": "GET https://www.courtlistener.com/api/rest/v3/search/?q=cites:{opinion_id}",
+      "input": {
+        "opinion_id": {
+          "type": "integer",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<case>",
+        "fields": [
+          "results[0].caseName",
+          "results[0].dateFiled",
+          "results[0].court"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
