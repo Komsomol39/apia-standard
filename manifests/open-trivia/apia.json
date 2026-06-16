@@ -21,13 +21,12 @@
   "capabilities": [
     {
       "id": "get_questions",
-      "description_for_ai": "Free trivia questions API. 4000+ verified questions across 24 categories. Multiple difficulty levels. No API key needed. Use for quiz games, trivia apps, educational games. Get random trivia questions by category and difficulty. Returns question, correct answer, and incorrect answers.",
+      "description_for_ai": "Get trivia questions by category, difficulty, and type.",
       "intent": [
         "trivia questions",
-        "quiz questions",
-        "game questions",
-        "random quiz",
-        "test knowledge"
+        "quiz API",
+        "random trivia",
+        "вопросы для викторины"
       ],
       "endpoint": "GET https://opentdb.com/api.php",
       "input": {
@@ -38,7 +37,7 @@
         },
         "category": {
           "type": "integer",
-          "description": "9=General, 17=Science, 18=Computers, 21=Sports, 22=Geography, 23=History, 25=Art",
+          "description": "9=General, 10=Entertainment:Books, 11=Entertainment:Film, 12=Music, 14=TV, 15=Video Games, 17=Science, 18=Computers, 21=Sports, 22=Geography, 23=History",
           "required": false
         },
         "difficulty": {
@@ -48,22 +47,136 @@
         },
         "type": {
           "type": "string",
-          "description": "multiple (multiple choice) or boolean (true/false)",
+          "description": "multiple (4 choices) or boolean (True/False)",
+          "required": false
+        },
+        "encode": {
+          "type": "string",
+          "description": "url3986 or base64 to handle special chars",
           "required": false
         }
       },
       "output": {
         "type": "list<question>",
         "fields": [
-          "category",
-          "type",
-          "difficulty",
-          "question",
-          "correct_answer",
-          "incorrect_answers"
+          "results[0].category",
+          "results[0].type",
+          "results[0].difficulty",
+          "results[0].question",
+          "results[0].correct_answer",
+          "results[0].incorrect_answers"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_categories",
+      "description_for_ai": "Get list of all available trivia categories.",
+      "intent": [
+        "trivia categories",
+        "quiz categories",
+        "category list trivia",
+        "категории викторин"
+      ],
+      "endpoint": "GET https://opentdb.com/api_category.php",
+      "input": {},
+      "output": {
+        "type": "list<category>",
+        "fields": [
+          "trivia_categories[0].id",
+          "trivia_categories[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_question_count",
+      "description_for_ai": "Get number of available questions per category.",
+      "intent": [
+        "question count",
+        "trivia stats",
+        "available questions",
+        "количество вопросов"
+      ],
+      "endpoint": "GET https://opentdb.com/api_count.php",
+      "input": {
+        "category": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "count",
+        "fields": [
+          "category_id",
+          "category_question_count.total_question_count",
+          "category_question_count.total_easy_question_count",
+          "category_question_count.total_medium_question_count",
+          "category_question_count.total_hard_question_count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_session_token",
+      "description_for_ai": "Get a session token to avoid duplicate questions across requests.",
+      "intent": [
+        "session token trivia",
+        "no duplicate questions",
+        "unique trivia",
+        "токен сессии викторины"
+      ],
+      "endpoint": "GET https://opentdb.com/api_token.php?command=request",
+      "input": {},
+      "output": {
+        "type": "token",
+        "fields": [
+          "response_code",
+          "token"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "multiple_categories",
+      "description_for_ai": "Get trivia questions across all categories with consistent session.",
+      "intent": [
+        "mixed trivia",
+        "general knowledge quiz",
+        "all categories trivia",
+        "вопросы по всем темам"
+      ],
+      "endpoint": "GET https://opentdb.com/api.php",
+      "input": {
+        "amount": {
+          "type": "integer",
+          "default": 20
+        },
+        "difficulty": {
+          "type": "string",
+          "required": false
+        },
+        "token": {
+          "type": "string",
+          "description": "Session token to avoid repeats",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<question>",
+        "fields": [
+          "results[0].category",
+          "results[0].question",
+          "results[0].correct_answer",
+          "results[0].incorrect_answers",
+          "results[0].difficulty"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
     }
   ],
