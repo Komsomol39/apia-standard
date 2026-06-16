@@ -191,6 +191,48 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "reverse_geocode",
+      "description_for_ai": "Reverse geocode coordinates to address using free OpenStreetMap Nominatim.",
+      "intent": [
+        "coordinates to address",
+        "reverse geocode free",
+        "location to address",
+        "адрес по координатам nominatim"
+      ],
+      "endpoint": "GET https://nominatim.openstreetmap.org/reverse",
+      "input": {
+        "lat": {
+          "type": "float",
+          "required": true
+        },
+        "lon": {
+          "type": "float",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "json"
+        },
+        "zoom": {
+          "type": "integer",
+          "description": "18=street, 14=suburb, 8=city, 3=country",
+          "default": 18
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "display_name",
+          "address.road",
+          "address.city",
+          "address.country",
+          "address.postcode"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
