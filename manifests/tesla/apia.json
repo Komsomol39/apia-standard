@@ -181,6 +181,91 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_vehicle_state",
+      "description_for_ai": "Get current vehicle state: location, lock status, windows, charge.",
+      "intent": [
+        "tesla vehicle state",
+        "car status tesla",
+        "tesla location",
+        "состояние Tesla"
+      ],
+      "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles/{id}/vehicle_data",
+      "input": {
+        "id": {
+          "type": "integer",
+          "description": "Vehicle ID from vehicle list",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "vehicle_data",
+        "fields": [
+          "response.vehicle_state.locked",
+          "response.vehicle_state.odometer",
+          "response.charge_state.battery_level",
+          "response.charge_state.charging_state",
+          "response.drive_state.latitude",
+          "response.drive_state.longitude"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_command",
+      "description_for_ai": "Send command to Tesla: lock/unlock, honk, flash lights, start charging.",
+      "intent": [
+        "tesla command",
+        "lock tesla",
+        "control tesla",
+        "команда Tesla"
+      ],
+      "endpoint": "POST https://owner-api.teslamotors.com/api/1/vehicles/{id}/command/{command}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        },
+        "command": {
+          "type": "string",
+          "description": "lock, unlock, honk_horn, flash_lights, charge_start, charge_stop, set_temps, remote_start_drive",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "response.result (true/false)",
+          "response.reason"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_vehicles",
+      "description_for_ai": "List all Tesla vehicles in an account.",
+      "intent": [
+        "list tesla vehicles",
+        "my tesla cars",
+        "tesla fleet",
+        "список Tesla"
+      ],
+      "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles",
+      "input": {},
+      "output": {
+        "type": "list<vehicle>",
+        "fields": [
+          "response[0].id",
+          "response[0].vin",
+          "response[0].display_name",
+          "response[0].state"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
