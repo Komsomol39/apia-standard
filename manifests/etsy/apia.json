@@ -21,64 +21,179 @@
   },
   "capabilities": [
     {
-      "id": "find_all_listings",
-      "description_for_ai": "Handmade, vintage, and craft marketplace API. 90M+ active buyers. Listing management, order processing, shop analytics, shipping profiles. Use for Etsy seller automation, shop management, marketplace integration. Search Etsy listings by keyword and filters. Returns handmade, vintage, and craft items.",
+      "id": "search_listings",
+      "description_for_ai": "Search Etsy marketplace for handmade items, vintage goods, and unique products.",
       "intent": [
+        "Etsy search",
         "handmade items",
-        "custom products",
-        "craft products",
-        "vintage products",
-        "etsy shop",
-        "hand-made",
-        "craft marketplace",
-        "etsy search",
-        "vintage items",
-        "handmade marketplace",
-        "custom gifts",
-        "etsy listings"
+        "find Etsy products",
+        "поиск Etsy"
       ],
       "endpoint": "GET https://openapi.etsy.com/v3/application/listings/active",
       "input": {
         "keywords": {
           "type": "string",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 25,
-          "description": "Maximum number of results to return"
-        },
-        "offset": {
-          "type": "integer",
-          "default": 0,
-          "description": "Number of records to skip for pagination"
+          "required": true
         },
         "sort_on": {
           "type": "string",
           "description": "created, price, updated, score",
           "default": "score"
         },
+        "sort_order": {
+          "type": "string",
+          "description": "asc, desc",
+          "default": "desc"
+        },
         "min_price": {
-          "type": "number",
+          "type": "float",
           "required": false
         },
         "max_price": {
-          "type": "number",
+          "type": "float",
           "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 25
         }
       },
       "output": {
         "type": "list<listing>",
         "fields": [
+          "results[0].listing_id",
+          "results[0].title",
+          "results[0].price.amount",
+          "results[0].currency_code",
+          "results[0].url",
+          "results[0].tags"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_listing",
+      "description_for_ai": "Get full details of an Etsy listing with images and seller info.",
+      "intent": [
+        "Etsy listing",
+        "product details Etsy",
+        "item info Etsy",
+        "товар Etsy"
+      ],
+      "endpoint": "GET https://openapi.etsy.com/v3/application/listings/{listing_id}",
+      "input": {
+        "listing_id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "listing",
+        "fields": [
           "listing_id",
           "title",
           "description",
           "price.amount",
-          "price.currency_code",
-          "url",
-          "state",
-          "images[0].url_fullxfull",
+          "quantity",
+          "tags",
+          "materials",
           "shop_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_shop",
+      "description_for_ai": "Get Etsy shop details: name, announcement, ratings, reviews.",
+      "intent": [
+        "Etsy shop",
+        "seller profile Etsy",
+        "shop info",
+        "магазин Etsy"
+      ],
+      "endpoint": "GET https://openapi.etsy.com/v3/application/shops/{shop_id}",
+      "input": {
+        "shop_id": {
+          "type": "integer",
+          "required": false
+        },
+        "shop_name": {
+          "type": "string",
+          "description": "Alternatively use shop name",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "shop",
+        "fields": [
+          "shop_id",
+          "shop_name",
+          "url",
+          "sale_message",
+          "review_count",
+          "review_average"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_shop_listings",
+      "description_for_ai": "Get all active listings from a specific Etsy shop.",
+      "intent": [
+        "Etsy shop listings",
+        "seller products",
+        "shop items",
+        "листинги магазина Etsy"
+      ],
+      "endpoint": "GET https://openapi.etsy.com/v3/application/shops/{shop_id}/listings/active",
+      "input": {
+        "shop_id": {
+          "type": "integer",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<listing>",
+        "fields": [
+          "results[0].listing_id",
+          "results[0].title",
+          "results[0].price.amount",
+          "results[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_listing_images",
+      "description_for_ai": "Get images for an Etsy listing.",
+      "intent": [
+        "Etsy listing images",
+        "product photos",
+        "item photos Etsy",
+        "фото листинга Etsy"
+      ],
+      "endpoint": "GET https://openapi.etsy.com/v3/application/listings/{listing_id}/images",
+      "input": {
+        "listing_id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<image>",
+        "fields": [
+          "results[0].listing_image_id",
+          "results[0].url_fullxfull",
+          "results[0].url_170x135",
+          "results[0].rank"
         ]
       },
       "realtime": true,
