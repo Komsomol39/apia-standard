@@ -22,19 +22,19 @@
   "capabilities": [
     {
       "id": "transcribe",
-      "description_for_ai": "Transcribe audio to text. Best-in-class accuracy for 100+ languages. $0.006/minute. Max 25MB.",
+      "description_for_ai": "Transcribe audio to text using OpenAI Whisper. 97%+ accuracy across 100+ languages. $0.006/minute.",
       "intent": [
         "transcribe audio",
         "speech to text",
-        "audio to text",
-        "whisper",
-        "транскрибация whisper"
+        "voice to text",
+        "транскрибация аудио",
+        "перевод голоса в текст"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file (mp3, mp4, mpeg, mpga, m4a, wav, webm). Max 25MB.",
+          "description": "Audio file max 25MB. Formats: mp3, mp4, mpeg, mpga, m4a, wav, webm, ogg, flac",
           "required": true
         },
         "model": {
@@ -43,57 +43,49 @@
         },
         "language": {
           "type": "string",
-          "description": "ISO 639-1 code. Providing language improves speed and accuracy.",
+          "description": "ISO 639-1 code: en, ru, de, fr, zh, etc. Auto-detected if omitted. Providing it improves accuracy.",
           "required": false
         },
         "prompt": {
           "type": "string",
-          "description": "Guide transcription style or vocabulary. 'The following is a medical consultation.' or 'Names: John, Anthropic, GPT-4'",
+          "description": "Vocabulary hints for domain-specific terms. Spell out proper nouns, technical terms.",
           "required": false
         },
         "response_format": {
           "type": "string",
-          "description": "json (default), text, srt (subtitles), vtt (subtitles), verbose_json (with timestamps)",
+          "description": "json (text only), text, srt (subtitles), verbose_json (with timestamps), vtt",
           "default": "json"
         },
         "temperature": {
           "type": "float",
-          "description": "0 for deterministic. Increase if transcription seems stuck.",
+          "description": "0-1. Higher=more creative, may cause hallucination. Keep at 0 for best accuracy.",
           "default": 0
-        },
-        "timestamp_granularities": {
-          "type": "array",
-          "description": "['word', 'segment'] — requires verbose_json format",
-          "required": false
         }
       },
       "output": {
-        "type": "transcript",
+        "type": "transcription",
         "fields": [
-          "text",
-          "words[0].word (verbose_json)",
-          "words[0].start",
-          "words[0].end",
-          "segments[0].text"
+          "text (json format)",
+          "segments[0].start, segments[0].end, segments[0].text (verbose_json)"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "translate",
-      "description_for_ai": "Transcribe AND translate audio to English in one call. Any language input → English output.",
+      "description_for_ai": "Translate audio from any language to English text using Whisper. One step: audio → English.",
       "intent": [
         "translate audio",
-        "transcribe and translate",
         "audio translation",
-        "перевод аудио whisper"
+        "speech translation",
+        "перевод аудио на английский"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/translations",
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file in any language",
+          "description": "Audio file in any supported language, max 25MB",
           "required": true
         },
         "model": {
@@ -102,10 +94,12 @@
         },
         "prompt": {
           "type": "string",
+          "description": "Hint about content in English",
           "required": false
         },
         "response_format": {
           "type": "string",
+          "description": "json, text, srt, verbose_json, vtt",
           "default": "json"
         },
         "temperature": {
@@ -116,83 +110,82 @@
       "output": {
         "type": "translation",
         "fields": [
-          "text (English translation)"
+          "text (always in English)"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "transcribe_long",
-      "description_for_ai": "Handle audio longer than 25MB by splitting into chunks. This is a pattern — split audio, transcribe each chunk, merge results.",
+      "description_for_ai": "Split and transcribe audio files larger than 25MB by chunking them. Whisper limit is 25MB.",
       "intent": [
         "long audio transcription",
-        "transcribe podcast",
-        "transcribe meeting recording",
-        "длинная транскрибация"
+        "large file transcription",
+        "transcribe long video",
+        "транскрибация длинного аудио"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
       "input": {
         "file": {
           "type": "file",
-          "description": "Split audio chunk under 25MB. Use ffmpeg: ffmpeg -i audio.mp3 -segment_time 300 -f segment chunk_%03d.mp3",
+          "description": "Audio chunk under 25MB. Split large files at silence: ffmpeg -i input.mp3 -f segment -segment_time 600 -c copy chunk_%03d.mp3",
           "required": true
         },
         "model": {
           "type": "string",
           "default": "whisper-1"
         },
+        "response_format": {
+          "type": "string",
+          "default": "verbose_json"
+        },
         "language": {
           "type": "string",
           "required": false
-        },
-        "response_format": {
-          "type": "string",
-          "description": "verbose_json to get timestamps for accurate merging",
-          "default": "verbose_json"
         }
       },
       "output": {
-        "type": "transcript",
+        "type": "transcription",
         "fields": [
           "text",
           "segments[0].start",
-          "segments[0].end",
-          "segments[0].text"
+          "segments[0].end"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "transcribe_realtime",
-      "description_for_ai": "Near-realtime transcription using GPT-4o audio preview model via chat completions API.",
+      "description_for_ai": "Real-time audio transcription using OpenAI Realtime API (WebSocket). Lower latency than file upload.",
       "intent": [
-        "realtime whisper",
-        "streaming transcription openai",
-        "live audio openai",
-        "реальное время транскрибация openai"
+        "real-time transcription",
+        "live transcription",
+        "streaming speech to text",
+        "транскрибация в реальном времени"
       ],
-      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "endpoint": "WSS wss://api.openai.com/v1/realtime",
       "input": {
         "model": {
           "type": "string",
-          "default": "gpt-4o-audio-preview"
+          "default": "gpt-4o-realtime-preview"
         },
-        "messages": {
-          "type": "array",
-          "description": "[{role: user, content: [{type: input_audio, input_audio: {data: BASE64_AUDIO, format: wav|mp3}}]}]",
+        "input_audio_transcription": {
+          "type": "object",
+          "description": "{model: whisper-1}",
           "required": true
         },
-        "max_tokens": {
-          "type": "integer",
-          "default": 1024
+        "turn_detection": {
+          "type": "object",
+          "description": "{type: server_vad, threshold: 0.5, prefix_padding_ms: 300, silence_duration_ms: 500}",
+          "required": false
         }
       },
       "output": {
-        "type": "completion",
+        "type": "realtime_transcript",
         "fields": [
-          "choices[0].message.content"
+          "conversation.item.input_audio_transcription.completed event with transcript"
         ]
       },
       "realtime": true,
