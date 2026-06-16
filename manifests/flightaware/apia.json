@@ -100,6 +100,101 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_flight",
+      "description_for_ai": "Get current or historical flight status and tracking data.",
+      "intent": [
+        "flight status",
+        "track flight",
+        "отследить рейс",
+        "FlightAware track"
+      ],
+      "endpoint": "GET https://aeroapi.flightaware.com/aeroapi/flights/{ident}",
+      "input": {
+        "ident": {
+          "type": "string",
+          "description": "Flight number e.g. UAL1, BA294",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "flight",
+        "fields": [
+          "flights[0].ident",
+          "flights[0].status",
+          "flights[0].origin.city",
+          "flights[0].destination.city",
+          "flights[0].departure_delay",
+          "flights[0].estimated_in"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "airport_flights",
+      "description_for_ai": "Get arrivals or departures at an airport.",
+      "intent": [
+        "airport arrivals",
+        "airport departures",
+        "flights at airport",
+        "рейсы аэропорт"
+      ],
+      "endpoint": "GET https://aeroapi.flightaware.com/aeroapi/airports/{airport_code}/flights/arrivals",
+      "input": {
+        "airport_code": {
+          "type": "string",
+          "description": "ICAO or IATA code e.g. KJFK or JFK",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "arrivals or departures",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<flight>",
+        "fields": [
+          "arrivals[0].ident",
+          "arrivals[0].status",
+          "arrivals[0].origin.city",
+          "arrivals[0].estimated_in"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "track_aircraft",
+      "description_for_ai": "Get live position and flight track for an aircraft by tail number.",
+      "intent": [
+        "track aircraft",
+        "plane position",
+        "live flight track",
+        "местоположение самолёта"
+      ],
+      "endpoint": "GET https://aeroapi.flightaware.com/aeroapi/flights/{ident}/track",
+      "input": {
+        "ident": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "track",
+        "fields": [
+          "positions[0].fa_flight_id",
+          "positions[0].timestamp",
+          "positions[0].latitude",
+          "positions[0].longitude",
+          "positions[0].altitude",
+          "positions[0].groundspeed"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
