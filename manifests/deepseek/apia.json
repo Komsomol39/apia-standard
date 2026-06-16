@@ -22,29 +22,28 @@
   },
   "capabilities": [
     {
-      "id": "chat",
-      "description_for_ai": "Chat completion with DeepSeek V3 — fastest and cheapest frontier model. OpenAI-compatible API. $0.14/1M input tokens. Best for everyday tasks.",
+      "id": "chat_completion",
+      "description_for_ai": "Chat with DeepSeek models. Chinese-developed AI, strong at coding and math. OpenAI-compatible API.",
       "intent": [
-        "deepseek chat",
+        "DeepSeek chat",
+        "Chinese AI",
         "cheap AI",
-        "fast LLM",
-        "OpenAI alternative cheap",
-        "дешёвый ИИ"
+        "DeepSeek API",
+        "чат DeepSeek"
       ],
       "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "default": "deepseek-chat"
+          "description": "deepseek-chat (V3, general), deepseek-reasoner (R1, reasoning)",
+          "required": true
         },
         "messages": {
           "type": "array",
-          "description": "[{role: system|user|assistant, content: string}]",
           "required": true
         },
         "temperature": {
           "type": "float",
-          "description": "0-2",
           "default": 1.0
         },
         "max_tokens": {
@@ -68,13 +67,48 @@
       "requires_auth": true
     },
     {
-      "id": "chat_with_prefix",
-      "description_for_ai": "Chat with prefix caching — pass assistant prefix to force output format. Reduces cost 10x for repeated prompts via cache hits.",
+      "id": "reasoning_r1",
+      "description_for_ai": "Use DeepSeek-R1 for complex reasoning, math, and logic. Shows chain-of-thought thinking before answering.",
       "intent": [
-        "prefix caching deepseek",
-        "forced output format",
-        "cache deepseek",
-        "кэш deepseek"
+        "DeepSeek reasoning",
+        "R1 model",
+        "math AI",
+        "chain of thought",
+        "рассуждение DeepSeek R1"
+      ],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "deepseek-reasoner"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.reasoning_content (thinking)",
+          "choices[0].message.content (answer)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "code_generation",
+      "description_for_ai": "Generate, complete, and review code. DeepSeek V3 is top-ranked on coding benchmarks.",
+      "intent": [
+        "code generation DeepSeek",
+        "DeepSeek coder",
+        "write code AI",
+        "программирование DeepSeek"
       ],
       "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
       "input": {
@@ -84,12 +118,41 @@
         },
         "messages": {
           "type": "array",
-          "description": "Last message can be from assistant role to force prefix",
           "required": true
         },
-        "max_tokens": {
-          "type": "integer",
-          "required": false
+        "temperature": {
+          "type": "float",
+          "description": "0.0 for deterministic code",
+          "default": 0.0
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "prefix_caching",
+      "description_for_ai": "Use DeepSeek with prefix caching for repeated prompts — saves cost when system prompt is reused.",
+      "intent": [
+        "prefix caching",
+        "cache prompt",
+        "reduce AI cost",
+        "кэш промптов"
+      ],
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
         }
       },
       "output": {
@@ -104,33 +167,48 @@
       "requires_auth": true
     },
     {
-      "id": "list_models",
-      "description_for_ai": "List available DeepSeek models.",
+      "id": "json_mode",
+      "description_for_ai": "Force DeepSeek to output strict JSON. Reliable structured extraction.",
       "intent": [
-        "deepseek models",
-        "available models",
-        "модели deepseek"
+        "JSON mode DeepSeek",
+        "structured output",
+        "extract JSON",
+        "структурированный вывод DeepSeek"
       ],
-      "endpoint": "GET https://api.deepseek.com/v1/models",
-      "input": {},
+      "endpoint": "POST https://api.deepseek.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "Include 'Output JSON' in system prompt",
+          "required": true
+        },
+        "response_format": {
+          "type": "object",
+          "description": "{type: 'json_object'}",
+          "required": true
+        }
+      },
       "output": {
-        "type": "list<model>",
+        "type": "json",
         "fields": [
-          "data[0].id",
-          "data[0].owned_by"
+          "choices[0].message.content (valid JSON string)"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_user_balance",
-      "description_for_ai": "Get current API balance and usage statistics for your DeepSeek account.",
+      "id": "get_balance",
+      "description_for_ai": "Check your DeepSeek API account balance and usage.",
       "intent": [
-        "deepseek balance",
+        "DeepSeek balance",
         "API credits",
         "account balance",
-        "баланс deepseek"
+        "баланс DeepSeek"
       ],
       "endpoint": "GET https://api.deepseek.com/user/balance",
       "input": {},
@@ -138,10 +216,8 @@
         "type": "balance",
         "fields": [
           "is_available",
-          "balance_infos[0].currency",
           "balance_infos[0].total_balance",
-          "balance_infos[0].granted_balance",
-          "balance_infos[0].topped_up_balance"
+          "balance_infos[0].currency"
         ]
       },
       "realtime": true,
