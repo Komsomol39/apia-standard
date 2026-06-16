@@ -23,56 +23,175 @@
   "capabilities": [
     {
       "id": "search_articles",
-      "description_for_ai": "World largest abstract and citation database. 87M+ records from 24K+ journals. Article search, author profiles, journal metrics, citation analysis, h-index, affiliation data. Used by researchers and librarians worldwide. Requires institutional access or developer key. Search Scopus database for peer-reviewed articles by keyword, author, journal, DOI, affiliation.",
+      "description_for_ai": "Search Scopus academic database for scientific articles.",
       "intent": [
-        "peer reviewed papers",
-        "journal articles",
         "scopus search",
-        "academic database",
-        "citation metrics",
-        "research papers"
+        "academic paper search",
+        "scientific article scopus",
+        "поиск научных статей scopus"
       ],
       "endpoint": "GET https://api.elsevier.com/content/search/scopus",
       "input": {
         "query": {
           "type": "string",
-          "description": "Scopus query e.g. TITLE-ABS-KEY(machine learning) AND PUBYEAR > 2020",
+          "description": "Scopus search: TITLE-ABS-KEY(machine learning) AND PUBYEAR > 2020",
           "required": true
         },
         "count": {
           "type": "integer",
-          "default": 25,
-          "description": "Number of items to return"
+          "default": 25
         },
         "start": {
           "type": "integer",
-          "default": 0,
-          "description": "Pagination start offset (0-indexed)"
+          "default": 0
         },
         "field": {
           "type": "string",
-          "description": "dc:title,dc:creator,prism:publicationName,citedby-count,prism:doi",
-          "required": false
-        },
-        "sort": {
-          "type": "string",
-          "description": "citedby-count desc, prism:coverDate desc",
+          "description": "Comma-separated fields to return",
           "required": false
         }
       },
       "output": {
         "type": "list<article>",
         "fields": [
-          "dc:title",
-          "dc:creator",
-          "prism:publicationName",
-          "prism:coverDate",
-          "citedby-count",
-          "prism:doi",
-          "eid"
+          "search-results.entry[0].dc:title",
+          "search-results.entry[0].dc:creator",
+          "search-results.entry[0].prism:publicationName",
+          "search-results.entry[0].prism:coverDate",
+          "search-results.entry[0].citedby-count"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_article_abstract",
+      "description_for_ai": "Get abstract and metadata for a Scopus article by DOI or EID.",
+      "intent": [
+        "scopus abstract",
+        "article details scopus",
+        "paper abstract",
+        "аннотация статьи scopus"
+      ],
+      "endpoint": "GET https://api.elsevier.com/content/abstract/eid/{eid}",
+      "input": {
+        "eid": {
+          "type": "string",
+          "description": "Scopus EID: 2-s2.0-XXXXXXXX or DOI",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "article",
+        "fields": [
+          "abstracts-retrieval-response.coredata.dc:title",
+          "abstracts-retrieval-response.coredata.dc:description",
+          "abstracts-retrieval-response.coredata.citedby-count",
+          "abstracts-retrieval-response.authors.author[0].ce:indexed-name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_author",
+      "description_for_ai": "Get Scopus author profile: publications count, h-index, citation count.",
+      "intent": [
+        "scopus author",
+        "researcher profile",
+        "author h-index",
+        "профиль автора scopus"
+      ],
+      "endpoint": "GET https://api.elsevier.com/content/author/author_id/{authorId}",
+      "input": {
+        "authorId": {
+          "type": "string",
+          "required": true
+        },
+        "field": {
+          "type": "string",
+          "description": "h-index,document-count,citation-count",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "author",
+        "fields": [
+          "author-retrieval-response[0].coredata.h-index",
+          "author-retrieval-response[0].coredata.document-count",
+          "author-retrieval-response[0].coredata.citation-count",
+          "author-retrieval-response[0].author-profile.preferred-name.indexed-name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_citations",
+      "description_for_ai": "Get citation count and citing articles for a Scopus paper.",
+      "intent": [
+        "citation count scopus",
+        "citing papers",
+        "scopus citations",
+        "цитирования scopus"
+      ],
+      "endpoint": "GET https://api.elsevier.com/content/search/scopus",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "REFEID(2-s2.0-XXXXXXXX) to get citing papers",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<citation>",
+        "fields": [
+          "search-results.entry[0].dc:title",
+          "search-results.entry[0].prism:coverDate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_journal",
+      "description_for_ai": "Search Scopus for publications in a specific journal.",
+      "intent": [
+        "journal search scopus",
+        "publications in journal",
+        "journal articles",
+        "статьи в журнале scopus"
+      ],
+      "endpoint": "GET https://api.elsevier.com/content/search/scopus",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "SRCTITLE(Nature) or ISSN(0028-0836)",
+          "required": true
+        },
+        "count": {
+          "type": "integer",
+          "default": 25
+        },
+        "sort": {
+          "type": "string",
+          "description": "citedby-count, pubyear, relevancy",
+          "default": "relevancy"
+        }
+      },
+      "output": {
+        "type": "list<article>",
+        "fields": [
+          "search-results.entry[0].dc:title",
+          "search-results.entry[0].dc:creator",
+          "search-results.entry[0].prism:coverDate"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
