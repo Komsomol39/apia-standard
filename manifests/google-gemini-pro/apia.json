@@ -21,17 +21,15 @@
   },
   "capabilities": [
     {
-      "id": "generate",
-      "description_for_ai": "Generate with Google flagship model. Best for: 1M token context, code review of entire repos, complex reasoning, long document analysis.",
+      "id": "generate_content",
+      "description_for_ai": "High-quality text generation with Gemini 1.5 Pro. Best for complex reasoning, long documents, code.",
       "intent": [
-        "flagship AI",
-        "best quality AI",
-        "1M context",
-        "large codebase",
+        "Gemini Pro",
+        "best AI Google",
         "complex reasoning",
-        "Gemini Pro"
+        "качественная генерация Gemini Pro"
       ],
-      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent",
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
       "input": {
         "contents": {
           "type": "array",
@@ -43,18 +41,134 @@
         },
         "generationConfig": {
           "type": "object",
-          "required": false
-        },
-        "tools": {
-          "type": "array",
+          "description": "{temperature, maxOutputTokens, topK, topP}",
           "required": false
         }
       },
       "output": {
-        "type": "completion",
+        "type": "response",
         "fields": [
           "candidates[0].content.parts[0].text",
           "usageMetadata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "long_context",
+      "description_for_ai": "Process up to 1 million tokens with Gemini 1.5 Pro. Analyze entire codebases, books, or long documents.",
+      "intent": [
+        "long document",
+        "analyze codebase",
+        "book summary",
+        "million tokens",
+        "длинный контекст Gemini"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "description": "Supports very long texts — up to 1M tokens context window",
+          "required": true
+        },
+        "generationConfig": {
+          "type": "object",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text",
+          "usageMetadata.promptTokenCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "code_generation",
+      "description_for_ai": "Generate, review, and debug code with Gemini Pro. Supports all major languages.",
+      "intent": [
+        "code generation Gemini",
+        "write code AI",
+        "code review AI",
+        "генерация кода Gemini"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "generationConfig": {
+          "type": "object",
+          "description": "{temperature: 0, responseMimeType: 'text/plain'}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "multimodal_analysis",
+      "description_for_ai": "Analyze images, audio, video, and documents together in a single prompt with Gemini Pro.",
+      "intent": [
+        "multimodal AI",
+        "image and text",
+        "video analysis",
+        "мультимодальный анализ Gemini"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "description": "Mix text, images (base64/URL), audio, video in parts array",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "grounding_with_search",
+      "description_for_ai": "Enable Gemini Pro to search Google and ground its answers in real-time web results.",
+      "intent": [
+        "Gemini with search",
+        "grounded AI",
+        "real-time knowledge",
+        "актуальная информация Gemini"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{google_search: {}}] — enables web grounding",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text",
+          "candidates[0].groundingMetadata.searchEntryPoint"
         ]
       },
       "realtime": true,
