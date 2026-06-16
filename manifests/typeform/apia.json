@@ -21,13 +21,54 @@
   },
   "capabilities": [
     {
-      "id": "get_responses",
-      "description_for_ai": "Get form responses with answers, metadata, and scores. Use to process survey results or form submissions.",
+      "id": "list_forms",
+      "description_for_ai": "List all Typeform forms in the workspace.",
       "intent": [
-        "form responses",
-        "survey answers",
-        "get submissions",
-        "typeform results"
+        "typeform forms",
+        "list forms",
+        "my forms typeform",
+        "формы typeform"
+      ],
+      "endpoint": "GET https://api.typeform.com/forms",
+      "input": {
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 10
+        },
+        "search": {
+          "type": "string",
+          "required": false
+        },
+        "workspace_id": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<form>",
+        "fields": [
+          "items[0].id",
+          "items[0].title",
+          "items[0].type",
+          "items[0]._links.display",
+          "items[0].settings.is_public"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_responses",
+      "description_for_ai": "Get form responses with answers, submission time, and metadata.",
+      "intent": [
+        "typeform responses",
+        "form answers",
+        "survey results typeform",
+        "ответы typeform"
       ],
       "endpoint": "GET https://api.typeform.com/forms/{form_id}/responses",
       "input": {
@@ -37,27 +78,32 @@
         },
         "page_size": {
           "type": "integer",
-          "default": 25,
-          "max": 1000
+          "description": "Max 1000",
+          "default": 25
         },
         "since": {
           "type": "string",
-          "description": "ISO 8601 date to filter responses from",
+          "description": "ISO 8601 date filter",
+          "required": false
+        },
+        "until": {
+          "type": "string",
           "required": false
         },
         "completed": {
           "type": "boolean",
-          "description": "true for only completed responses",
+          "description": "Only completed submissions",
           "required": false
         }
       },
       "output": {
-        "type": "responses",
+        "type": "list<response>",
         "fields": [
-          "items[0].answers",
-          "items[0].calculated.score",
+          "items[0].response_id",
+          "items[0].answers[0].field.title",
+          "items[0].answers[0].text",
           "items[0].submitted_at",
-          "items[0].hidden"
+          "items[0].score"
         ]
       },
       "realtime": true,
@@ -65,27 +111,27 @@
     },
     {
       "id": "create_form",
-      "description_for_ai": "Create a new Typeform with custom questions, logic jumps, and design. Returns form ID and public URL.",
+      "description_for_ai": "Create a Typeform form programmatically with questions and logic.",
       "intent": [
-        "create form",
-        "new survey",
-        "build quiz",
-        "create questionnaire"
+        "create form typeform",
+        "build form",
+        "new survey typeform",
+        "создать форму typeform"
       ],
       "endpoint": "POST https://api.typeform.com/forms",
       "input": {
         "title": {
           "type": "string",
-          "required": true,
-          "description": "Title or name string"
+          "required": true
         },
         "fields": {
           "type": "array",
-          "description": "Array of question objects with type, title, properties",
+          "description": "[{type: short_text, title: 'Your name'}, {type: multiple_choice, title: 'How did you hear?', properties: {choices: [{label: 'Google'}, {label: 'Friend'}]}}]",
           "required": true
         },
-        "welcome_screens": {
-          "type": "array",
+        "settings": {
+          "type": "object",
+          "description": "{is_public: true, language: 'en', progress_bar: 'percentage'}",
           "required": false
         }
       },
@@ -94,6 +140,36 @@
         "fields": [
           "id",
           "title",
+          "_links.display (form URL)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_form",
+      "description_for_ai": "Get a Typeform form definition including all fields, logic, and settings.",
+      "intent": [
+        "get form typeform",
+        "form definition",
+        "form schema typeform",
+        "структура формы typeform"
+      ],
+      "endpoint": "GET https://api.typeform.com/forms/{form_id}",
+      "input": {
+        "form_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "form",
+        "fields": [
+          "id",
+          "title",
+          "fields",
+          "logic",
+          "settings",
           "_links.display"
         ]
       },
