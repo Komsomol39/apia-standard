@@ -23,12 +23,91 @@
   "capabilities": [
     {
       "id": "chat",
-      "description_for_ai": "Fast, low-cost chat with Claude 3 Haiku. Best for high-volume tasks.",
+      "description_for_ai": "Send a message to Claude Haiku and get a fast, cost-effective response.",
       "intent": [
-        "Claude Haiku",
-        "fast chat claude",
-        "cheap inference",
-        "быстрый Claude Haiku"
+        "Claude Haiku chat",
+        "fast AI response",
+        "cheap AI",
+        "Claude Haiku"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "claude-haiku-4-5"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: 'user', content: 'Hello!'}]",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 1024
+        },
+        "system": {
+          "type": "string",
+          "description": "System prompt",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "content[0].text",
+          "usage.input_tokens",
+          "usage.output_tokens",
+          "stop_reason"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "classify",
+      "description_for_ai": "Use Claude Haiku for fast, cheap text classification.",
+      "intent": [
+        "text classification Claude",
+        "classify with AI",
+        "category detection",
+        "классификация Claude Haiku"
+      ],
+      "endpoint": "POST https://api.anthropic.com/v1/messages",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "claude-haiku-4-5"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 256
+        },
+        "system": {
+          "type": "string",
+          "description": "Instructions: 'Classify the user message as positive/negative/neutral. Reply with one word only.'"
+        }
+      },
+      "output": {
+        "type": "classification",
+        "fields": [
+          "content[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "extract_data",
+      "description_for_ai": "Use Claude Haiku to extract structured data from unstructured text.",
+      "intent": [
+        "data extraction Claude",
+        "parse text AI",
+        "extract JSON Claude",
+        "извлечение данных Claude"
       ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
@@ -43,81 +122,16 @@
         "max_tokens": {
           "type": "integer",
           "default": 1024
-        }
-      },
-      "output": {
-        "type": "completion",
-        "fields": [
-          "content[0].text",
-          "usage.input_tokens",
-          "usage.output_tokens"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "classify",
-      "description_for_ai": "Use Claude Haiku for fast text classification tasks.",
-      "intent": [
-        "classify text haiku",
-        "fast classification",
-        "label text",
-        "классификация текста Claude Haiku"
-      ],
-      "endpoint": "POST https://api.anthropic.com/v1/messages",
-      "input": {
-        "model": {
+        },
+        "system": {
           "type": "string",
-          "default": "claude-haiku-4-5"
-        },
-        "messages": {
-          "type": "array",
-          "description": "[{role: 'user', content: 'Classify as positive/negative: [text]'}]",
-          "required": true
-        },
-        "max_tokens": {
-          "type": "integer",
-          "default": 50
+          "description": "Extraction instructions with JSON schema"
         }
       },
       "output": {
-        "type": "classification",
+        "type": "json",
         "fields": [
-          "content[0].text (label)"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "extract_data",
-      "description_for_ai": "Use Claude Haiku to extract structured data from text cheaply and fast.",
-      "intent": [
-        "extract data haiku",
-        "parse text AI",
-        "information extraction",
-        "извлечение данных Claude Haiku"
-      ],
-      "endpoint": "POST https://api.anthropic.com/v1/messages",
-      "input": {
-        "model": {
-          "type": "string",
-          "default": "claude-haiku-4-5"
-        },
-        "messages": {
-          "type": "array",
-          "required": true
-        },
-        "max_tokens": {
-          "type": "integer",
-          "default": 500
-        }
-      },
-      "output": {
-        "type": "extraction",
-        "fields": [
-          "content[0].text"
+          "content[0].text (JSON string to parse)"
         ]
       },
       "realtime": true,
@@ -125,12 +139,12 @@
     },
     {
       "id": "summarize",
-      "description_for_ai": "Summarize text with Claude Haiku — low cost, high speed.",
+      "description_for_ai": "Use Claude Haiku to summarize text cheaply and quickly.",
       "intent": [
-        "summarize haiku",
-        "fast summary",
-        "brief summary",
-        "краткое содержание Claude Haiku"
+        "summarize Claude Haiku",
+        "text summary AI",
+        "cheap summary",
+        "резюме Claude Haiku"
       ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
@@ -144,7 +158,7 @@
         },
         "max_tokens": {
           "type": "integer",
-          "default": 300
+          "default": 512
         }
       },
       "output": {
@@ -157,13 +171,13 @@
       "requires_auth": true
     },
     {
-      "id": "translate",
-      "description_for_ai": "Translate text using Claude Haiku — cheap and fast for bulk translation.",
+      "id": "stream_response",
+      "description_for_ai": "Stream Claude Haiku responses token by token for real-time output.",
       "intent": [
-        "translate haiku",
-        "AI translation claude",
-        "bulk translate",
-        "перевод Claude Haiku"
+        "stream Claude Haiku",
+        "streaming AI",
+        "real time tokens",
+        "стриминг Claude Haiku"
       ],
       "endpoint": "POST https://api.anthropic.com/v1/messages",
       "input": {
@@ -173,18 +187,21 @@
         },
         "messages": {
           "type": "array",
-          "description": "[{role: 'user', content: 'Translate to French: [text]'}]",
           "required": true
         },
         "max_tokens": {
           "type": "integer",
-          "default": 500
+          "default": 1024
+        },
+        "stream": {
+          "type": "boolean",
+          "default": true
         }
       },
       "output": {
-        "type": "translation",
+        "type": "stream",
         "fields": [
-          "content[0].text"
+          "SSE events: content_block_delta.delta.text"
         ]
       },
       "realtime": true,
