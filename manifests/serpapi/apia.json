@@ -24,14 +24,12 @@
   "capabilities": [
     {
       "id": "google_search",
-      "description_for_ai": "Search Google and get structured results: organic links, featured snippets, People Also Ask, Knowledge Panel. Use for web research, SEO analysis, competitive intelligence.",
+      "description_for_ai": "Scrape Google search results: organic results, ads, featured snippets, knowledge panels.",
       "intent": [
-        "google search",
-        "web search results",
-        "search the web",
-        "find information",
+        "google search results",
         "SERP data",
-        "SEO research"
+        "search scraping",
+        "результаты google поиск"
       ],
       "endpoint": "GET https://serpapi.com/search",
       "input": {
@@ -41,39 +39,44 @@
         },
         "q": {
           "type": "string",
-          "description": "Search query or filter expression",
+          "description": "Search query",
           "required": true
-        },
-        "location": {
-          "type": "string",
-          "description": "Target location e.g. New York,United States",
-          "required": false
         },
         "gl": {
           "type": "string",
           "description": "Country code: us, ru, de, gb",
-          "required": false
+          "default": "us"
         },
         "hl": {
           "type": "string",
-          "description": "Language: en, ru, de, fr",
+          "description": "Language: en, ru, de",
           "default": "en"
         },
         "num": {
           "type": "integer",
-          "description": "Number of results 10-100",
+          "description": "Results per page 10-100",
           "default": 10
+        },
+        "location": {
+          "type": "string",
+          "description": "Geolocation: 'Austin, Texas, United States'",
+          "required": false
+        },
+        "device": {
+          "type": "string",
+          "description": "desktop, tablet, mobile",
+          "default": "desktop"
         }
       },
       "output": {
         "type": "search_results",
         "fields": [
+          "organic_results[0].position",
           "organic_results[0].title",
           "organic_results[0].link",
           "organic_results[0].snippet",
           "answer_box.answer",
-          "knowledge_graph.title",
-          "related_questions[0].question"
+          "knowledge_graph.title"
         ]
       },
       "realtime": true,
@@ -81,18 +84,12 @@
     },
     {
       "id": "google_maps_search",
-      "description_for_ai": "Search Google Maps for businesses and places via SerpAPI. Returns ratings, addresses, hours, and phone numbers.",
+      "description_for_ai": "Scrape Google Maps local business results with ratings, reviews, and contact info.",
       "intent": [
-        "local search",
-        "business search",
-        "local SEO data",
-        "restaurant search",
-        "Google Maps data",
-        "restaurants near",
-        "find places",
-        "google maps search",
-        "business finder",
-        "places search"
+        "google maps results",
+        "local business search",
+        "maps scraping",
+        "поиск google maps serpapi"
       ],
       "endpoint": "GET https://serpapi.com/search",
       "input": {
@@ -102,12 +99,11 @@
         },
         "q": {
           "type": "string",
-          "required": true,
-          "description": "Search query or filter expression"
+          "required": true
         },
         "ll": {
           "type": "string",
-          "description": "GPS coordinates @lat,lng,zoom e.g. @40.7455096,-74.0083012,14z",
+          "description": "Coordinates: @40.7455096,-74.0083012,15.1z",
           "required": false
         },
         "type": {
@@ -117,14 +113,95 @@
         }
       },
       "output": {
-        "type": "list<place>",
+        "type": "maps_results",
         "fields": [
           "local_results[0].title",
           "local_results[0].rating",
           "local_results[0].reviews",
           "local_results[0].address",
-          "local_results[0].hours",
           "local_results[0].phone"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "google_shopping",
+      "description_for_ai": "Scrape Google Shopping results with prices, stores, and product details.",
+      "intent": [
+        "google shopping",
+        "product prices",
+        "price comparison",
+        "цены google shopping"
+      ],
+      "endpoint": "GET https://serpapi.com/search",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "google_shopping"
+        },
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "gl": {
+          "type": "string",
+          "default": "us"
+        },
+        "hl": {
+          "type": "string",
+          "default": "en"
+        }
+      },
+      "output": {
+        "type": "shopping_results",
+        "fields": [
+          "shopping_results[0].title",
+          "shopping_results[0].price",
+          "shopping_results[0].source",
+          "shopping_results[0].link",
+          "shopping_results[0].rating"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "google_news",
+      "description_for_ai": "Scrape Google News search results for a keyword.",
+      "intent": [
+        "google news serpapi",
+        "news search results",
+        "news SERP",
+        "новости google serpapi"
+      ],
+      "endpoint": "GET https://serpapi.com/search",
+      "input": {
+        "engine": {
+          "type": "string",
+          "default": "google_news"
+        },
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "gl": {
+          "type": "string",
+          "required": false
+        },
+        "hl": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "news_results",
+        "fields": [
+          "news_results[0].title",
+          "news_results[0].link",
+          "news_results[0].source.name",
+          "news_results[0].date",
+          "news_results[0].snippet"
         ]
       },
       "realtime": true,
