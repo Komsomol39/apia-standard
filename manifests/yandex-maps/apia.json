@@ -197,6 +197,101 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_places",
+      "description_for_ai": "Search for places and organizations on Yandex Maps.",
+      "intent": [
+        "поиск яндекс карты",
+        "найти место яндекс",
+        "yandex maps search"
+      ],
+      "endpoint": "GET https://search-maps.yandex.ru/v1/",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": true
+        },
+        "ll": {
+          "type": "string",
+          "description": "Center coordinates lon,lat",
+          "required": false
+        },
+        "spn": {
+          "type": "string",
+          "description": "Search span lon,lat",
+          "required": false
+        },
+        "type": {
+          "type": "string",
+          "description": "geo, biz",
+          "default": "biz"
+        },
+        "lang": {
+          "type": "string",
+          "default": "ru_RU"
+        },
+        "results": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<place>",
+        "fields": [
+          "features[0].properties.name",
+          "features[0].properties.description",
+          "features[0].properties.GeocoderMetaData.text",
+          "features[0].geometry.coordinates"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "static_map",
+      "description_for_ai": "Generate a static map image with Yandex Maps.",
+      "intent": [
+        "статичная карта яндекс",
+        "карта изображение яндекс",
+        "yandex static map"
+      ],
+      "endpoint": "GET https://static-maps.yandex.ru/1.x/",
+      "input": {
+        "ll": {
+          "type": "string",
+          "description": "Center lon,lat e.g. 37.620070,55.753630",
+          "required": true
+        },
+        "z": {
+          "type": "integer",
+          "description": "Zoom level 1-21",
+          "default": 12
+        },
+        "size": {
+          "type": "string",
+          "description": "widthxheight pixels e.g. 600,400",
+          "default": "600,400"
+        },
+        "l": {
+          "type": "string",
+          "description": "Layer: map, sat, sat,skl",
+          "default": "map"
+        },
+        "pt": {
+          "type": "string",
+          "description": "Point marker: lon,lat,pm2rdm",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "PNG image binary"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
