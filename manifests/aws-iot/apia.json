@@ -81,6 +81,111 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_things",
+      "description_for_ai": "List IoT devices registered in AWS IoT Core.",
+      "intent": [
+        "list IoT devices",
+        "AWS IoT things",
+        "connected devices",
+        "устройства AWS IoT"
+      ],
+      "endpoint": "GET https://iot.{region}.amazonaws.com/things",
+      "input": {
+        "maxResults": {
+          "type": "integer",
+          "default": 50
+        },
+        "thingTypeName": {
+          "type": "string",
+          "required": false
+        },
+        "nextToken": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<thing>",
+        "fields": [
+          "things[0].thingName",
+          "things[0].thingTypeName",
+          "things[0].thingArn",
+          "things[0].attributes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "publish_message",
+      "description_for_ai": "Publish MQTT message to an AWS IoT topic.",
+      "intent": [
+        "IoT publish",
+        "MQTT message",
+        "send IoT data",
+        "отправить сообщение IoT"
+      ],
+      "endpoint": "POST https://{endpoint}.iot.{region}.amazonaws.com/topics/{topic}",
+      "input": {
+        "topic": {
+          "type": "string",
+          "description": "MQTT topic e.g. device/temperature",
+          "required": true
+        },
+        "payload": {
+          "type": "string",
+          "description": "JSON message payload",
+          "required": true
+        },
+        "qos": {
+          "type": "integer",
+          "description": "Quality of service 0 or 1",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "200 OK on success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_shadow",
+      "description_for_ai": "Update device shadow (desired state) for a registered IoT device.",
+      "intent": [
+        "device shadow AWS IoT",
+        "update device state",
+        "IoT shadow",
+        "тень устройства AWS IoT"
+      ],
+      "endpoint": "POST https://{endpoint}.iot.{region}.amazonaws.com/things/{thingName}/shadow",
+      "input": {
+        "thingName": {
+          "type": "string",
+          "required": true
+        },
+        "state": {
+          "type": "object",
+          "description": "{desired: {temperature: 22, lights: 'on'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "shadow",
+        "fields": [
+          "state.desired",
+          "state.reported",
+          "metadata",
+          "version"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
