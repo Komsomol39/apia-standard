@@ -153,6 +153,43 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "historical_range",
+      "description_for_ai": "Get exchange rates for a range of dates.",
+      "intent": [
+        "historical exchange rates",
+        "rate range",
+        "исторические курсы диапазон"
+      ],
+      "endpoint": "GET https://v6.exchangerate-api.com/v6/{api_key}/history/{base}/{year}/{month}/{day}",
+      "input": {
+        "base": {
+          "type": "string",
+          "required": true
+        },
+        "year": {
+          "type": "integer",
+          "required": true
+        },
+        "month": {
+          "type": "integer",
+          "required": true
+        },
+        "day": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "rates",
+        "fields": [
+          "conversion_rates",
+          "time_last_update_utc"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
