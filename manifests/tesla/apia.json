@@ -21,89 +21,13 @@
   },
   "capabilities": [
     {
-      "id": "get_vehicle_data",
-      "description_for_ai": "Get comprehensive Tesla vehicle data: location, speed, battery level, charging state, climate, lock status, odometer.",
-      "intent": [
-        "tesla battery",
-        "car location",
-        "vehicle status",
-        "charging status",
-        "is car locked",
-        "tesla data",
-        "заряд машины"
-      ],
-      "endpoint": "GET https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/{id}/vehicle_data",
-      "input": {
-        "id": {
-          "type": "string",
-          "description": "Vehicle ID from list_vehicles",
-          "required": true
-        },
-        "endpoints": {
-          "type": "string",
-          "description": "Comma-separated data categories: charge_state,climate_state,drive_state,location_data,vehicle_state",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "vehicle_data",
-        "fields": [
-          "charge_state.battery_level",
-          "charge_state.charging_state",
-          "drive_state.latitude",
-          "drive_state.longitude",
-          "drive_state.speed",
-          "climate_state.inside_temp",
-          "vehicle_state.locked",
-          "vehicle_state.odometer"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "send_command",
-      "description_for_ai": "Send command to Tesla vehicle: lock/unlock, honk horn, flash lights, start/stop climate, open trunk.",
-      "intent": [
-        "lock tesla",
-        "unlock car",
-        "remote start",
-        "climate control",
-        "flash lights",
-        "honk horn",
-        "open trunk"
-      ],
-      "endpoint": "POST https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/{id}/command/{command}",
-      "input": {
-        "id": {
-          "type": "string",
-          "required": true,
-          "description": "Unique identifier"
-        },
-        "command": {
-          "type": "string",
-          "description": "door_lock, door_unlock, honk_horn, flash_lights, remote_start_drive, auto_conditioning_start, auto_conditioning_stop, charge_start, charge_stop",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "command_result",
-        "fields": [
-          "result",
-          "reason"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "list_vehicles",
-      "description_for_ai": "List all Tesla vehicles in the account.",
+      "id": "get_vehicles",
+      "description_for_ai": "Get all Tesla vehicles associated with the account.",
       "intent": [
         "Tesla vehicles",
         "my Tesla",
-        "list cars Tesla",
-        "мои Tesla"
+        "car list Tesla",
+        "автомобили Tesla"
       ],
       "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles",
       "input": {},
@@ -111,10 +35,10 @@
         "type": "list<vehicle>",
         "fields": [
           "response[0].id",
-          "response[0].vin",
+          "response[0].vehicle_id",
           "response[0].display_name",
           "response[0].state",
-          "response[0].option_codes"
+          "response[0].vin"
         ]
       },
       "realtime": true,
@@ -122,26 +46,26 @@
     },
     {
       "id": "get_vehicle_state",
-      "description_for_ai": "Get current state of a Tesla vehicle: battery, location, climate.",
+      "description_for_ai": "Get current Tesla vehicle state: charge level, location, locked status, climate.",
       "intent": [
         "Tesla state",
-        "vehicle status Tesla",
-        "battery Tesla",
+        "car status Tesla",
+        "Tesla charge",
         "состояние Tesla"
       ],
       "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles/{id}/vehicle_data",
       "input": {
         "id": {
-          "type": "integer",
+          "type": "string",
           "description": "Vehicle ID from list_vehicles",
           "required": true
         }
       },
       "output": {
-        "type": "state",
+        "type": "vehicle_data",
         "fields": [
           "response.charge_state.battery_level",
-          "response.charge_state.est_battery_range",
+          "response.charge_state.charging_state",
           "response.drive_state.latitude",
           "response.drive_state.longitude",
           "response.climate_state.inside_temp",
@@ -153,84 +77,22 @@
     },
     {
       "id": "send_command",
-      "description_for_ai": "Send a command to a Tesla: flash lights, honk, lock/unlock, climate on/off.",
+      "description_for_ai": "Send a command to a Tesla vehicle: lock/unlock, flash lights, honk, start charging.",
       "intent": [
         "Tesla command",
-        "control Tesla",
         "unlock Tesla",
+        "lock Tesla",
         "команда Tesla"
       ],
       "endpoint": "POST https://owner-api.teslamotors.com/api/1/vehicles/{id}/command/{command}",
       "input": {
         "id": {
-          "type": "integer",
+          "type": "string",
           "required": true
         },
         "command": {
           "type": "string",
-          "description": "flash_lights, honk_horn, door_lock, door_unlock, auto_conditioning_start, auto_conditioning_stop, charge_start, charge_stop",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "result",
-        "fields": [
-          "response.result",
-          "response.reason"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_vehicle_state",
-      "description_for_ai": "Get current vehicle state: location, lock status, windows, charge.",
-      "intent": [
-        "tesla vehicle state",
-        "car status tesla",
-        "tesla location",
-        "состояние Tesla"
-      ],
-      "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles/{id}/vehicle_data",
-      "input": {
-        "id": {
-          "type": "integer",
-          "description": "Vehicle ID from vehicle list",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "vehicle_data",
-        "fields": [
-          "response.vehicle_state.locked",
-          "response.vehicle_state.odometer",
-          "response.charge_state.battery_level",
-          "response.charge_state.charging_state",
-          "response.drive_state.latitude",
-          "response.drive_state.longitude"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "send_command",
-      "description_for_ai": "Send command to Tesla: lock/unlock, honk, flash lights, start charging.",
-      "intent": [
-        "tesla command",
-        "lock tesla",
-        "control tesla",
-        "команда Tesla"
-      ],
-      "endpoint": "POST https://owner-api.teslamotors.com/api/1/vehicles/{id}/command/{command}",
-      "input": {
-        "id": {
-          "type": "integer",
-          "required": true
-        },
-        "command": {
-          "type": "string",
-          "description": "lock, unlock, honk_horn, flash_lights, charge_start, charge_stop, set_temps, remote_start_drive",
+          "description": "door_lock, door_unlock, flash_lights, honk_horn, charge_start, charge_stop, set_charge_limit, auto_conditioning_start, auto_conditioning_stop",
           "required": true
         }
       },
@@ -245,23 +107,55 @@
       "requires_auth": true
     },
     {
-      "id": "list_vehicles",
-      "description_for_ai": "List all Tesla vehicles in an account.",
+      "id": "wake_up",
+      "description_for_ai": "Wake up a sleeping Tesla vehicle before sending commands.",
       "intent": [
-        "list tesla vehicles",
-        "my tesla cars",
-        "tesla fleet",
-        "список Tesla"
+        "wake Tesla",
+        "Tesla wake up",
+        "activate Tesla",
+        "разбудить Tesla"
       ],
-      "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles",
-      "input": {},
+      "endpoint": "POST https://owner-api.teslamotors.com/api/1/vehicles/{id}/wake_up",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
       "output": {
-        "type": "list<vehicle>",
+        "type": "vehicle",
         "fields": [
-          "response[0].id",
-          "response[0].vin",
-          "response[0].display_name",
-          "response[0].state"
+          "response.id",
+          "response.state (online/asleep)",
+          "response.display_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_charge_history",
+      "description_for_ai": "Get Tesla charging history and energy costs.",
+      "intent": [
+        "Tesla charging history",
+        "charge sessions",
+        "energy usage Tesla",
+        "история зарядки Tesla"
+      ],
+      "endpoint": "GET https://owner-api.teslamotors.com/api/1/vehicles/{id}/charge_history",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "charge_history",
+        "fields": [
+          "response[0].charger_voltage",
+          "response[0].charge_energy_added",
+          "response[0].charge_miles_added_rated",
+          "response[0].timestamp"
         ]
       },
       "realtime": true,
