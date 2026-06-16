@@ -119,6 +119,108 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "symptom_analysis",
+      "description_for_ai": "Analyze patient symptoms and get likely diagnoses.",
+      "intent": [
+        "symptom checker",
+        "medical diagnosis AI",
+        "symptoms analysis",
+        "анализ симптомов медицина"
+      ],
+      "endpoint": "POST https://api.infermedica.com/v3/diagnosis",
+      "input": {
+        "sex": {
+          "type": "string",
+          "description": "male or female",
+          "required": true
+        },
+        "age": {
+          "type": "object",
+          "description": "{value: 30}",
+          "required": true
+        },
+        "evidence": {
+          "type": "array",
+          "description": "[{id: 's_21', choice_id: 'present'}, {id: 's_2', choice_id: 'present'}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "diagnosis",
+        "fields": [
+          "conditions[0].common_name",
+          "conditions[0].probability",
+          "question.text",
+          "question.items[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_symptoms",
+      "description_for_ai": "Search for symptoms by name in Infermedica database.",
+      "intent": [
+        "find symptom",
+        "symptom search",
+        "medical symptom lookup",
+        "поиск симптомов медицина"
+      ],
+      "endpoint": "GET https://api.infermedica.com/v3/search",
+      "input": {
+        "phrase": {
+          "type": "string",
+          "required": true
+        },
+        "max_results": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<symptom>",
+        "fields": [
+          "[0].id",
+          "[0].label"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "parse_text",
+      "description_for_ai": "Parse free-text medical description and extract symptoms.",
+      "intent": [
+        "parse symptoms",
+        "NLP symptoms",
+        "extract medical entities",
+        "извлечение симптомов из текста"
+      ],
+      "endpoint": "POST https://api.infermedica.com/v3/parse",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Free-text symptom description",
+          "required": true
+        },
+        "context": {
+          "type": "array",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "parsed",
+        "fields": [
+          "mentions[0].id",
+          "mentions[0].common_name",
+          "mentions[0].choice_id",
+          "mentions[0].orth"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
