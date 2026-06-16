@@ -146,6 +146,97 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_places",
+      "description_for_ai": "Search places on 2GIS for CIS countries (Russia, Kazakhstan, etc).",
+      "intent": [
+        "поиск 2gis",
+        "найти место 2gis",
+        "2gis search"
+      ],
+      "endpoint": "GET https://catalog.api.2gis.com/3.0/items",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "location": {
+          "type": "string",
+          "description": "lon,lat",
+          "required": true
+        },
+        "radius": {
+          "type": "integer",
+          "default": 1000
+        }
+      },
+      "output": {
+        "type": "list<place>",
+        "fields": [
+          "result.items[0].id",
+          "result.items[0].name",
+          "result.items[0].address_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_place_details",
+      "description_for_ai": "Get full details of a 2GIS place: address, phone, working hours.",
+      "intent": [
+        "детали 2gis",
+        "информация о месте 2gis"
+      ],
+      "endpoint": "GET https://catalog.api.2gis.com/3.0/items/byid",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "place",
+        "fields": [
+          "result.items[0].name",
+          "result.items[0].address.full_name",
+          "result.items[0].contact_groups[0].contacts[0].value",
+          "result.items[0].schedule"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "geocode",
+      "description_for_ai": "Geocode an address using 2GIS.",
+      "intent": [
+        "геокодирование 2gis",
+        "адрес в координаты 2gis"
+      ],
+      "endpoint": "GET https://catalog.api.2gis.com/3.0/items/geocode",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Address to geocode",
+          "required": true
+        },
+        "fields": {
+          "type": "string",
+          "default": "items.point,items.address"
+        }
+      },
+      "output": {
+        "type": "geocode",
+        "fields": [
+          "result.items[0].point.lon",
+          "result.items[0].point.lat",
+          "result.items[0].address.full_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "city_coordinates": {
