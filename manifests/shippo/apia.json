@@ -22,25 +22,20 @@
   },
   "capabilities": [
     {
-      "id": "create_shipment",
-      "description_for_ai": "Multi-carrier shipping API. Rates from 85+ carriers worldwide. Label generation, tracking, returns. Popular with Shopify merchants. Use for e-commerce shipping automation. Create shipment and get rates from multiple carriers. Returns all available rates for comparison.",
+      "id": "get_rates",
+      "description_for_ai": "Get shipping rates across all carriers for a package.",
       "intent": [
-        "shipping labels",
-        "multi-carrier shipping",
-        "compare shipping",
         "shipping rates",
-        "create shipment",
-        "Shippo labels",
-        "carrier rates",
-        "shipping API"
+        "compare carriers",
+        "shippo rates",
+        "тарифы доставки shippo"
       ],
       "endpoint": "POST https://api.goshippo.com/shipments/",
       "input": {
         "address_from": {
           "type": "object",
-          "description": "{name, street1, city, state, zip, country, phone, email}",
-          "required": true,
-          "note": "See description for full object structure"
+          "description": "{name, street1, city, state, zip, country, phone}",
+          "required": true
         },
         "address_to": {
           "type": "object",
@@ -48,7 +43,7 @@
         },
         "parcels": {
           "type": "array",
-          "description": "[{length, width, height, distance_unit: in, weight, mass_unit: lb}]",
+          "description": "[{length: 10, width: 8, height: 4, distance_unit: in, weight: 2, mass_unit: lb}]",
           "required": true
         },
         "async": {
@@ -57,14 +52,170 @@
         }
       },
       "output": {
-        "type": "shipment",
+        "type": "list<rate>",
         "fields": [
-          "object_id",
           "rates[0].provider",
           "rates[0].servicelevel.name",
           "rates[0].amount",
           "rates[0].currency",
           "rates[0].estimated_days"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "buy_label",
+      "description_for_ai": "Purchase a shipping label from Shippo at a chosen rate.",
+      "intent": [
+        "buy label shippo",
+        "purchase shipping",
+        "print label shippo",
+        "купить этикетку shippo"
+      ],
+      "endpoint": "POST https://api.goshippo.com/transactions/",
+      "input": {
+        "rate": {
+          "type": "string",
+          "description": "Rate object ID from get_rates",
+          "required": true
+        },
+        "label_file_type": {
+          "type": "string",
+          "description": "PDF, ZPLII, PNG, PDF_4X6",
+          "default": "PDF"
+        },
+        "async": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "label",
+        "fields": [
+          "tracking_number",
+          "tracking_url",
+          "label_url",
+          "status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "track_shipment",
+      "description_for_ai": "Track a shipment by tracking number.",
+      "intent": [
+        "track shipment shippo",
+        "package tracking",
+        "delivery status",
+        "отслеживание посылки shippo"
+      ],
+      "endpoint": "GET https://api.goshippo.com/tracks/{carrier}/{tracking_number}",
+      "input": {
+        "carrier": {
+          "type": "string",
+          "description": "ups, fedex, usps, dhl_express, canada_post",
+          "required": true
+        },
+        "tracking_number": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "tracking",
+        "fields": [
+          "tracking_status.status",
+          "tracking_status.status_details",
+          "tracking_history[0].status",
+          "tracking_history[0].status_date",
+          "eta"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_address",
+      "description_for_ai": "Create and validate a shipping address with Shippo.",
+      "intent": [
+        "create address shippo",
+        "validate address",
+        "shipping address",
+        "адрес для доставки shippo"
+      ],
+      "endpoint": "POST https://api.goshippo.com/addresses/",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "street1": {
+          "type": "string",
+          "required": true
+        },
+        "city": {
+          "type": "string",
+          "required": true
+        },
+        "state": {
+          "type": "string",
+          "required": false
+        },
+        "zip": {
+          "type": "string",
+          "required": true
+        },
+        "country": {
+          "type": "string",
+          "description": "ISO 2-letter code",
+          "required": true
+        },
+        "validate": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "object_id",
+          "validation_results.is_valid",
+          "validation_results.messages[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_shipments",
+      "description_for_ai": "List recent Shippo shipments.",
+      "intent": [
+        "shippo shipments",
+        "my shipments",
+        "order history shippo",
+        "история отправлений shippo"
+      ],
+      "endpoint": "GET https://api.goshippo.com/shipments/",
+      "input": {
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "results": {
+          "type": "integer",
+          "default": 25
+        }
+      },
+      "output": {
+        "type": "list<shipment>",
+        "fields": [
+          "results[0].object_id",
+          "results[0].status",
+          "results[0].address_to.city",
+          "results[0].parcels[0].weight",
+          "results[0].rates"
         ]
       },
       "realtime": true,
