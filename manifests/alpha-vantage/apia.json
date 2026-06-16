@@ -24,37 +24,30 @@
   "capabilities": [
     {
       "id": "get_stock_quote",
-      "description_for_ai": "Get real-time stock price quote with open, high, low, close, volume.",
+      "description_for_ai": "Get real-time stock quote with price, change, and volume.",
       "intent": [
+        "stock quote Alpha Vantage",
         "stock price",
-        "stock quote",
-        "AAPL price",
-        "цена акции"
+        "real time stock",
+        "цена акции Alpha Vantage"
       ],
-      "endpoint": "GET https://www.alphavantage.co/query",
+      "endpoint": "GET https://www.alphavantage.co/query?function=GLOBAL_QUOTE",
       "input": {
-        "function": {
-          "type": "string",
-          "default": "GLOBAL_QUOTE"
-        },
         "symbol": {
           "type": "string",
-          "description": "Stock ticker: AAPL, MSFT, TSLA, AMZN",
-          "required": true
-        },
-        "apikey": {
-          "type": "string",
+          "description": "Stock ticker: AAPL, TSLA, MSFT",
           "required": true
         }
       },
       "output": {
         "type": "quote",
         "fields": [
-          "Global Quote.01. symbol",
           "Global Quote.05. price",
           "Global Quote.09. change",
           "Global Quote.10. change percent",
-          "Global Quote.06. volume"
+          "Global Quote.06. volume",
+          "Global Quote.03. high",
+          "Global Quote.04. low"
         ]
       },
       "realtime": true,
@@ -62,97 +55,118 @@
     },
     {
       "id": "get_daily_prices",
-      "description_for_ai": "Get daily historical OHLCV data for a stock.",
+      "description_for_ai": "Get daily OHLCV (open, high, low, close, volume) price history for a stock.",
       "intent": [
-        "stock history",
+        "stock history Alpha Vantage",
         "daily prices",
-        "historical stock data",
-        "история цен акции"
+        "OHLCV stock",
+        "история цен Alpha Vantage"
       ],
-      "endpoint": "GET https://www.alphavantage.co/query",
+      "endpoint": "GET https://www.alphavantage.co/query?function=TIME_SERIES_DAILY",
       "input": {
-        "function": {
-          "type": "string",
-          "default": "TIME_SERIES_DAILY"
-        },
         "symbol": {
           "type": "string",
           "required": true
         },
         "outputsize": {
           "type": "string",
-          "description": "compact (100 days) or full (20 years)",
+          "description": "compact (100 days) or full (20+ years)",
           "default": "compact"
         },
-        "apikey": {
+        "datatype": {
           "type": "string",
-          "required": true
+          "description": "json or csv",
+          "default": "json"
         }
       },
       "output": {
         "type": "timeseries",
         "fields": [
-          "Time Series (Daily).{date}.1. open",
-          "{date}.4. close",
-          "{date}.5. volume"
+          "Time Series (Daily).2024-01-15.1. open",
+          "Time Series (Daily).2024-01-15.4. close",
+          "Time Series (Daily).2024-01-15.5. volume"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_forex_rate",
-      "description_for_ai": "Get real-time foreign exchange rate between two currencies.",
+      "id": "search_symbols",
+      "description_for_ai": "Search for stocks, ETFs, and other securities by keyword.",
       "intent": [
-        "forex rate",
-        "currency exchange",
-        "EUR USD rate",
-        "курс валют"
+        "stock search Alpha Vantage",
+        "find ticker",
+        "symbol search",
+        "поиск акции Alpha Vantage"
       ],
-      "endpoint": "GET https://www.alphavantage.co/query",
+      "endpoint": "GET https://www.alphavantage.co/query?function=SYMBOL_SEARCH",
       "input": {
-        "function": {
+        "keywords": {
           "type": "string",
-          "default": "CURRENCY_EXCHANGE_RATE"
-        },
-        "from_currency": {
-          "type": "string",
-          "description": "Source currency: USD, EUR, GBP, RUB",
-          "required": true
-        },
-        "to_currency": {
-          "type": "string",
-          "required": true
-        },
-        "apikey": {
-          "type": "string",
+          "description": "Company name or symbol",
           "required": true
         }
       },
       "output": {
-        "type": "exchange_rate",
+        "type": "list<match>",
         "fields": [
-          "Realtime Currency Exchange Rate.5. Exchange Rate",
-          "Realtime Currency Exchange Rate.7. Last Refreshed"
+          "bestMatches[0].1. symbol",
+          "bestMatches[0].2. name",
+          "bestMatches[0].3. type",
+          "bestMatches[0].4. region",
+          "bestMatches[0].8. matchScore"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_technical_indicator",
-      "description_for_ai": "Get technical indicators: RSI, MACD, SMA, EMA, Bollinger Bands.",
+      "id": "forex_rate",
+      "description_for_ai": "Get real-time forex exchange rate between two currencies.",
+      "intent": [
+        "forex rate Alpha Vantage",
+        "currency exchange rate",
+        "FX rate",
+        "курс валют Alpha Vantage"
+      ],
+      "endpoint": "GET https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE",
+      "input": {
+        "from_currency": {
+          "type": "string",
+          "description": "From currency: USD, EUR, GBP, BTC",
+          "required": true
+        },
+        "to_currency": {
+          "type": "string",
+          "description": "To currency",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "forex",
+        "fields": [
+          "Realtime Currency Exchange Rate.5. Exchange Rate",
+          "Realtime Currency Exchange Rate.6. Last Refreshed",
+          "Realtime Currency Exchange Rate.1. From_Currency Code"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "technical_indicators",
+      "description_for_ai": "Calculate technical indicators: SMA, EMA, RSI, MACD, Bollinger Bands.",
       "intent": [
         "technical analysis",
-        "RSI indicator",
-        "MACD stock",
-        "технический анализ акции"
+        "RSI stock",
+        "MACD indicator",
+        "технический анализ Alpha Vantage"
       ],
-      "endpoint": "GET https://www.alphavantage.co/query",
+      "endpoint": "GET https://www.alphavantage.co/query?function={indicator}",
       "input": {
         "function": {
           "type": "string",
-          "description": "SMA, EMA, RSI, MACD, BBANDS, STOCH, ATR, ADX",
+          "description": "SMA, EMA, WMA, DEMA, TEMA, RSI, MACD, BBANDS, STOCH, ADX, CCI, AROON, OBV",
           "required": true
         },
         "symbol": {
@@ -166,55 +180,45 @@
         },
         "time_period": {
           "type": "integer",
-          "description": "Time period for indicator e.g. 14 for RSI",
+          "description": "Number of periods (14 for RSI, 20 for SMA)",
           "required": false
-        },
-        "apikey": {
-          "type": "string",
-          "required": true
         }
       },
       "output": {
         "type": "indicator",
         "fields": [
-          "Technical Analysis: {FUNCTION}.{date}.{FUNCTION} (indicator value)"
+          "Technical Analysis.{indicator}.2024-01-15.{indicator value}"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_ticker",
-      "description_for_ai": "Search for stock tickers by company name or keyword.",
+      "id": "get_crypto_price",
+      "description_for_ai": "Get cryptocurrency daily price data.",
       "intent": [
-        "search stock ticker",
-        "find stock symbol",
-        "ticker lookup",
-        "поиск тикера акции"
+        "crypto price Alpha Vantage",
+        "Bitcoin price history",
+        "ETH price",
+        "история цен крипто Alpha Vantage"
       ],
-      "endpoint": "GET https://www.alphavantage.co/query",
+      "endpoint": "GET https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY",
       "input": {
-        "function": {
+        "symbol": {
           "type": "string",
-          "default": "SYMBOL_SEARCH"
-        },
-        "keywords": {
-          "type": "string",
-          "description": "Company name or partial ticker",
+          "description": "Crypto symbol: BTC, ETH, SOL",
           "required": true
         },
-        "apikey": {
+        "market": {
           "type": "string",
+          "description": "Market currency: USD, EUR, CNY",
           "required": true
         }
       },
       "output": {
-        "type": "list<match>",
+        "type": "timeseries",
         "fields": [
-          "bestMatches[0].1. symbol",
-          "bestMatches[0].2. name",
-          "bestMatches[0].3. type",
-          "bestMatches[0].4. region"
+          "Time Series (Digital Currency Daily).2024-01-15.4a. close (USD)"
         ]
       },
       "realtime": true,
