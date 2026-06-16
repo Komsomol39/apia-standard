@@ -21,20 +21,20 @@
   },
   "capabilities": [
     {
-      "id": "chat",
-      "description_for_ai": "Ultra-fast LLM inference on Groq LPU hardware. 300+ tokens/sec. Llama 3, Mixtral, Gemma. Free tier 6000 tokens/min. Best for latency-critical apps.",
+      "id": "chat_completion",
+      "description_for_ai": "Ultra-fast AI inference with Groq LPU hardware. Llama, Mixtral, Gemma available. OpenAI-compatible API. 1000+ tokens/sec.",
       "intent": [
-        "groq fast AI",
-        "fastest LLM",
-        "low latency AI",
-        "быстрый ИИ groq",
-        "groq llama"
+        "fast AI",
+        "Groq inference",
+        "LLM fast",
+        "Groq API",
+        "быстрый AI Groq"
       ],
       "endpoint": "POST https://api.groq.com/openai/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "llama-3.3-70b-versatile (best), llama-3.1-8b-instant (fastest), mixtral-8x7b-32768 (32K context)",
+          "description": "llama-3.1-70b-versatile (best), llama-3.1-8b-instant (fastest), mixtral-8x7b-32768 (32k context), gemma2-9b-it",
           "required": true
         },
         "messages": {
@@ -52,11 +52,6 @@
         "stream": {
           "type": "boolean",
           "default": false
-        },
-        "stop": {
-          "type": "array",
-          "description": "Stop sequences",
-          "required": false
         }
       },
       "output": {
@@ -65,7 +60,7 @@
           "choices[0].message.content",
           "usage.prompt_tokens",
           "usage.completion_tokens",
-          "x_groq.usage.queue_time"
+          "x_groq.id"
         ]
       },
       "realtime": true,
@@ -73,33 +68,32 @@
     },
     {
       "id": "speech_to_text",
-      "description_for_ai": "Fast Whisper STT on Groq. Faster than OpenAI Whisper. Free tier available.",
+      "description_for_ai": "Fast speech transcription with Whisper on Groq hardware. Much faster than OpenAI Whisper.",
       "intent": [
-        "groq whisper",
-        "fast transcription",
-        "speech to text groq",
-        "транскрибация groq"
+        "transcribe Groq",
+        "fast STT",
+        "audio to text Groq",
+        "транскрипция Groq"
       ],
       "endpoint": "POST https://api.groq.com/openai/v1/audio/transcriptions",
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file: mp3, mp4, mpeg, mpga, m4a, wav, webm (max 25MB)",
+          "description": "Audio file (mp3, mp4, mpeg, mpga, m4a, wav, webm, max 25MB)",
           "required": true
         },
         "model": {
           "type": "string",
-          "description": "whisper-large-v3 or whisper-large-v3-turbo (faster)",
-          "default": "whisper-large-v3"
+          "description": "whisper-large-v3, whisper-large-v3-turbo, distil-whisper-large-v3-en",
+          "required": true
         },
         "language": {
           "type": "string",
-          "description": "ISO 639-1 language code. Auto-detected if omitted.",
           "required": false
         },
         "response_format": {
           "type": "string",
-          "description": "json, text, srt, vtt, verbose_json",
+          "description": "json, text, srt, vtt",
           "default": "json"
         }
       },
@@ -113,12 +107,82 @@
       "requires_auth": true
     },
     {
-      "id": "list_models",
-      "description_for_ai": "List all available Groq models with context window sizes.",
+      "id": "function_calling",
+      "description_for_ai": "Use Groq with function calling for agents. Fast tool execution on LPU hardware.",
       "intent": [
-        "groq models",
-        "available models groq",
-        "модели groq"
+        "Groq tools",
+        "function calling",
+        "agent Groq",
+        "инструменты Groq"
+      ],
+      "endpoint": "POST https://api.groq.com/openai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{type: 'function', function: {name, description, parameters}}]",
+          "required": true
+        },
+        "tool_choice": {
+          "type": "string",
+          "default": "auto"
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.tool_calls[0].function.name",
+          "choices[0].message.tool_calls[0].function.arguments"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "vision",
+      "description_for_ai": "Analyze images with Llama 3.2 Vision on Groq. Fast image understanding.",
+      "intent": [
+        "Groq vision",
+        "image analysis Groq",
+        "LLaMA vision",
+        "анализ изображения Groq"
+      ],
+      "endpoint": "POST https://api.groq.com/openai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "llama-3.2-11b-vision-preview or llama-3.2-90b-vision-preview",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: 'user', content: [{type: 'image_url', image_url: {url: '...'}}, {type: 'text', text: 'question'}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List all models available on Groq with context windows and speeds.",
+      "intent": [
+        "Groq models",
+        "available models",
+        "список моделей Groq"
       ],
       "endpoint": "GET https://api.groq.com/openai/v1/models",
       "input": {},
@@ -128,37 +192,6 @@
           "data[0].id",
           "data[0].context_window",
           "data[0].owned_by"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "vision",
-      "description_for_ai": "Vision model on Groq — analyze images at Groq speed. Send image URL or base64.",
-      "intent": [
-        "groq vision",
-        "image analysis groq",
-        "fast image AI",
-        "анализ изображения groq"
-      ],
-      "endpoint": "POST https://api.groq.com/openai/v1/chat/completions",
-      "input": {
-        "model": {
-          "type": "string",
-          "description": "llama-4-scout-17b-16e-instruct or meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
-          "required": true
-        },
-        "messages": {
-          "type": "array",
-          "description": "[{role: user, content: [{type: image_url, image_url: {url: 'https://...'}}, {type: text, text: 'Describe this'}]}]",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "completion",
-        "fields": [
-          "choices[0].message.content"
         ]
       },
       "realtime": true,
