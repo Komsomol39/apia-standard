@@ -22,18 +22,18 @@
   "capabilities": [
     {
       "id": "detect_labels",
-      "description_for_ai": "Detect objects, scenes, and activities in images using AWS Rekognition.",
+      "description_for_ai": "Detect objects, scenes, and activities in images with AWS Rekognition.",
       "intent": [
-        "detect objects image",
-        "image labels",
-        "what is in image",
-        "что на изображении AWS"
+        "detect labels Rekognition",
+        "image recognition AWS",
+        "object detection",
+        "распознавание объектов AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "Image": {
           "type": "object",
-          "description": "{Bytes: 'base64'} or {S3Object: {Bucket, Name}}",
+          "description": "{S3Object: {Bucket: 'bucket', Name: 'image.jpg'}} or {Bytes: 'base64'}",
           "required": true
         },
         "MaxLabels": {
@@ -42,8 +42,7 @@
         },
         "MinConfidence": {
           "type": "float",
-          "description": "Minimum confidence 0-100",
-          "default": 55
+          "default": 55.0
         }
       },
       "output": {
@@ -51,8 +50,7 @@
         "fields": [
           "Labels[0].Name",
           "Labels[0].Confidence",
-          "Labels[0].Parents[0].Name",
-          "Labels[0].Instances (bounding boxes)"
+          "Labels[0].Categories[0].Name"
         ]
       },
       "realtime": true,
@@ -60,23 +58,22 @@
     },
     {
       "id": "detect_faces",
-      "description_for_ai": "Detect faces and analyze emotions, age range, facial features in images.",
+      "description_for_ai": "Detect and analyze faces in images: age range, emotions, gender, glasses, mask.",
       "intent": [
-        "face detection",
-        "detect emotions",
-        "facial analysis",
-        "распознавание лиц AWS"
+        "face detection Rekognition",
+        "face analysis AWS",
+        "emotions AWS",
+        "обнаружение лиц AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "Image": {
           "type": "object",
-          "description": "{Bytes: 'base64'} or {S3Object: {Bucket, Name}}",
           "required": true
         },
         "Attributes": {
           "type": "array",
-          "description": "['ALL'] for full analysis or ['DEFAULT'] for basic",
+          "description": "['DEFAULT', 'ALL', 'AGE_RANGE', 'EMOTIONS']",
           "default": [
             "DEFAULT"
           ]
@@ -85,11 +82,10 @@
       "output": {
         "type": "faces",
         "fields": [
-          "FaceDetails[0].BoundingBox",
           "FaceDetails[0].AgeRange.Low",
+          "FaceDetails[0].Gender.Value",
           "FaceDetails[0].Emotions[0].Type",
-          "FaceDetails[0].Emotions[0].Confidence",
-          "FaceDetails[0].Gender.Value"
+          "FaceDetails[0].Smile.Value"
         ]
       },
       "realtime": true,
@@ -97,12 +93,12 @@
     },
     {
       "id": "detect_text",
-      "description_for_ai": "Extract text from images and photos using Rekognition OCR.",
+      "description_for_ai": "Detect and extract text from images (OCR) with AWS Rekognition.",
       "intent": [
-        "OCR image",
-        "read text from photo",
-        "image text extraction",
-        "распознавание текста на фото AWS"
+        "OCR Rekognition",
+        "image text AWS",
+        "text detection",
+        "распознавание текста AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
@@ -115,9 +111,8 @@
         "type": "text",
         "fields": [
           "TextDetections[0].DetectedText",
-          "TextDetections[0].Confidence",
-          "TextDetections[0].Type (LINE|WORD)",
-          "TextDetections[0].Geometry.BoundingBox"
+          "TextDetections[0].Type (LINE/WORD)",
+          "TextDetections[0].Confidence"
         ]
       },
       "realtime": true,
@@ -125,29 +120,27 @@
     },
     {
       "id": "compare_faces",
-      "description_for_ai": "Compare faces in two images to check if they're the same person.",
+      "description_for_ai": "Compare a face in a source image with faces in a target image.",
       "intent": [
-        "face comparison",
+        "face comparison Rekognition",
         "face matching",
-        "same person check",
+        "person verification",
         "сравнение лиц AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
       "input": {
         "SourceImage": {
           "type": "object",
-          "description": "Image with the reference face",
           "required": true
         },
         "TargetImage": {
           "type": "object",
-          "description": "Image to compare against",
           "required": true
         },
         "SimilarityThreshold": {
           "type": "float",
           "description": "Minimum similarity 0-100",
-          "default": 80
+          "default": 80.0
         }
       },
       "output": {
@@ -163,11 +156,11 @@
     },
     {
       "id": "detect_moderation",
-      "description_for_ai": "Detect unsafe or inappropriate content in images for content moderation.",
+      "description_for_ai": "Detect inappropriate, explicit, or violent content in images.",
       "intent": [
-        "image moderation",
-        "NSFW detection",
-        "unsafe content",
+        "content moderation AWS",
+        "explicit content detection",
+        "safe image check",
         "модерация изображений AWS"
       ],
       "endpoint": "POST https://rekognition.{region}.amazonaws.com/",
@@ -178,7 +171,11 @@
         },
         "MinConfidence": {
           "type": "float",
-          "default": 50
+          "default": 50.0
+        },
+        "HumanLoopConfig": {
+          "type": "object",
+          "required": false
         }
       },
       "output": {
