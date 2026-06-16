@@ -22,65 +22,30 @@
   "capabilities": [
     {
       "id": "get_workers",
-      "description_for_ai": "Get list of workers from Workday HCM (Human Capital Management).",
+      "description_for_ai": "Get employee/worker data from Workday.",
       "intent": [
-        "workday employees",
-        "HR data workday",
+        "Workday employees",
+        "HR data Workday",
         "worker list",
-        "сотрудники workday"
+        "сотрудники Workday"
       ],
-      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/workers",
+      "endpoint": "GET https://{tenant}.workday.com/ccx/service/{tenant}/Human_Resources/v40.0/workers",
       "input": {
-        "limit": {
+        "Count": {
           "type": "integer",
           "default": 100
         },
-        "offset": {
+        "Page": {
           "type": "integer",
-          "default": 0
-        },
-        "search": {
-          "type": "string",
-          "required": false
+          "default": 1
         }
       },
       "output": {
         "type": "list<worker>",
         "fields": [
-          "data[0].id",
-          "data[0].descriptor (name)",
-          "data[0].workerType",
-          "data[0].primaryJob.location.descriptor"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_worker_profile",
-      "description_for_ai": "Get detailed worker profile from Workday HCM.",
-      "intent": [
-        "workday profile",
-        "employee details",
-        "HR profile workday",
-        "профиль сотрудника workday"
-      ],
-      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/workers/{workerId}",
-      "input": {
-        "workerId": {
-          "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "worker",
-        "fields": [
-          "descriptor",
-          "workerType",
-          "primaryJob.jobTitle",
-          "primaryJob.businessSite.descriptor",
-          "primaryJob.manager.descriptor",
-          "contactInfo.email"
+          "Worker[0].Worker_Reference.ID",
+          "Worker[0].Worker_Data.Personal_Data.Name_Data.Preferred_Name_Data.Name_Detail_Data.First_Name",
+          "Worker[0].Worker_Data.Employment_Data.Worker_Status_Data.Active"
         ]
       },
       "realtime": true,
@@ -88,93 +53,115 @@
     },
     {
       "id": "get_job_postings",
-      "description_for_ai": "Get open job requisitions from Workday Recruiting.",
+      "description_for_ai": "Get active job postings from Workday Recruiting.",
       "intent": [
-        "workday jobs",
-        "job openings workday",
-        "recruiting workday",
-        "вакансии workday"
+        "Workday jobs",
+        "job postings",
+        "open positions Workday",
+        "вакансии Workday"
       ],
-      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/jobRequisitions",
+      "endpoint": "GET https://{tenant}.workday.com/wday/authgwy/{tenant}/login?redirect_uri=.",
       "input": {
-        "status": {
-          "type": "string",
-          "description": "Open, Closed, Canceled",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 50
-        }
-      },
-      "output": {
-        "type": "list<job>",
-        "fields": [
-          "data[0].id",
-          "data[0].descriptor",
-          "data[0].status.descriptor",
-          "data[0].workerType.descriptor",
-          "data[0].hiringManager.descriptor"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_org_structure",
-      "description_for_ai": "Get organization structure and reporting hierarchy from Workday.",
-      "intent": [
-        "org chart workday",
-        "team structure",
-        "reporting hierarchy",
-        "оргструктура workday"
-      ],
-      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/organizationDefinitions",
-      "input": {
-        "type": {
-          "type": "string",
-          "description": "Supervisory, Company, Cost_Center, Pay_Group",
-          "default": "Supervisory"
-        },
-        "limit": {
-          "type": "integer",
-          "default": 50
-        }
-      },
-      "output": {
-        "type": "list<org>",
-        "fields": [
-          "data[0].id",
-          "data[0].descriptor",
-          "data[0].superOrg.descriptor",
-          "data[0].memberCount"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_time_off",
-      "description_for_ai": "Get employee time-off balance and requests from Workday.",
-      "intent": [
-        "time off workday",
-        "vacation balance",
-        "leave requests workday",
-        "отпуска workday"
-      ],
-      "endpoint": "GET https://{tenant}.myworkday.com/api/v1/workers/{workerId}/timeOffBalance",
-      "input": {
-        "workerId": {
+        "tenant": {
           "type": "string",
           "required": true
         }
       },
       "output": {
-        "type": "balance",
+        "type": "list<job>",
         "fields": [
-          "timeOffPlan.descriptor",
-          "balance",
-          "units.descriptor"
+          "[0].title",
+          "[0].location",
+          "[0].jobReqId",
+          "[0].posted_date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_organizations",
+      "description_for_ai": "Get organizational structure from Workday.",
+      "intent": [
+        "Workday org chart",
+        "departments Workday",
+        "organization structure",
+        "структура организации Workday"
+      ],
+      "endpoint": "GET https://{tenant}.workday.com/ccx/service/{tenant}/Human_Resources/v40.0/organizations",
+      "input": {
+        "Organization_Type": {
+          "type": "string",
+          "description": "Company, Cost_Center, Department",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<org>",
+        "fields": [
+          "Organization[0].Organization_Reference.ID",
+          "Organization[0].Organization_Data.Organization_Code",
+          "Organization[0].Organization_Data.Organization_Name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_absence_data",
+      "description_for_ai": "Get employee absence/time-off data from Workday.",
+      "intent": [
+        "employee absence Workday",
+        "time off Workday",
+        "vacation data HR",
+        "отпуска сотрудников Workday"
+      ],
+      "endpoint": "GET https://{tenant}.workday.com/ccx/service/{tenant}/Absence_Management/v40.0/absences",
+      "input": {
+        "Worker_Reference": {
+          "type": "string",
+          "description": "Worker reference ID",
+          "required": false
+        },
+        "Start_Date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<absence>",
+        "fields": [
+          "Absence[0].Absence_Type",
+          "Absence[0].Start_Date",
+          "Absence[0].End_Date",
+          "Absence[0].Days"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_compensation",
+      "description_for_ai": "Get compensation data for workers from Workday.",
+      "intent": [
+        "Workday compensation",
+        "salary data HR",
+        "pay data Workday",
+        "данные о зарплате Workday"
+      ],
+      "endpoint": "GET https://{tenant}.workday.com/ccx/service/{tenant}/Compensation/v40.0/workers",
+      "input": {
+        "Worker_Reference": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<comp>",
+        "fields": [
+          "Worker[0].Compensation_Data.Primary_Compensation_Basis",
+          "Worker[0].Compensation_Data.Grade_Profile_Summary_Data.Grade"
         ]
       },
       "realtime": true,
