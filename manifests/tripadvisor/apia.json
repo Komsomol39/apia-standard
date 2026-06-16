@@ -111,6 +111,118 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "search_hotels",
+      "description_for_ai": "Search hotels on TripAdvisor by location.",
+      "intent": [
+        "tripadvisor hotels",
+        "hotel search",
+        "find hotel tripadvisor",
+        "отели tripadvisor"
+      ],
+      "endpoint": "GET https://api.content.tripadvisor.com/api/v1/location/search",
+      "input": {
+        "searchQuery": {
+          "type": "string",
+          "required": true
+        },
+        "category": {
+          "type": "string",
+          "default": "hotels"
+        },
+        "language": {
+          "type": "string",
+          "default": "en"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        }
+      },
+      "output": {
+        "type": "list<location>",
+        "fields": [
+          "data[0].location_id",
+          "data[0].name",
+          "data[0].address_obj.city",
+          "data[0].rating",
+          "data[0].num_reviews",
+          "data[0].web_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_reviews",
+      "description_for_ai": "Get reviews for a TripAdvisor location (hotel, restaurant, attraction).",
+      "intent": [
+        "tripadvisor reviews",
+        "hotel reviews",
+        "restaurant reviews",
+        "отзывы tripadvisor"
+      ],
+      "endpoint": "GET https://api.content.tripadvisor.com/api/v1/location/{locationId}/reviews",
+      "input": {
+        "locationId": {
+          "type": "integer",
+          "required": true
+        },
+        "language": {
+          "type": "string",
+          "default": "en"
+        }
+      },
+      "output": {
+        "type": "list<review>",
+        "fields": [
+          "data[0].id",
+          "data[0].rating",
+          "data[0].title",
+          "data[0].text",
+          "data[0].published_date",
+          "data[0].user.username"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_restaurants",
+      "description_for_ai": "Search restaurants on TripAdvisor by location and cuisine.",
+      "intent": [
+        "tripadvisor restaurants",
+        "restaurant search",
+        "dining tripadvisor",
+        "рестораны tripadvisor"
+      ],
+      "endpoint": "GET https://api.content.tripadvisor.com/api/v1/location/search",
+      "input": {
+        "searchQuery": {
+          "type": "string",
+          "required": true
+        },
+        "category": {
+          "type": "string",
+          "default": "restaurants"
+        },
+        "language": {
+          "type": "string",
+          "default": "en"
+        }
+      },
+      "output": {
+        "type": "list<location>",
+        "fields": [
+          "data[0].location_id",
+          "data[0].name",
+          "data[0].rating",
+          "data[0].address_obj.city"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
