@@ -164,6 +164,46 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_game_details",
+      "description_for_ai": "Get Steam game details: price, description, genres, screenshots, system requirements.",
+      "intent": [
+        "steam game info",
+        "game details steam",
+        "steam price",
+        "информация об игре steam"
+      ],
+      "endpoint": "GET https://store.steampowered.com/api/appdetails",
+      "input": {
+        "appids": {
+          "type": "integer",
+          "description": "Steam App ID e.g. 570 (Dota 2), 440 (TF2)",
+          "required": true
+        },
+        "cc": {
+          "type": "string",
+          "description": "Country code for pricing: us, ru, de",
+          "default": "us"
+        },
+        "l": {
+          "type": "string",
+          "description": "Language: english, russian",
+          "default": "english"
+        }
+      },
+      "output": {
+        "type": "game",
+        "fields": [
+          "[appid].data.name",
+          "[appid].data.price_overview.final_formatted",
+          "[appid].data.genres",
+          "[appid].data.short_description",
+          "[appid].data.release_date.date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
