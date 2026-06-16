@@ -207,6 +207,28 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "list_domains",
+      "description_for_ai": "List all Mailgun sending domains in the account.",
+      "intent": [
+        "mailgun domains",
+        "sending domains",
+        "домены mailgun"
+      ],
+      "endpoint": "GET https://api.mailgun.net/v3/domains",
+      "input": {},
+      "output": {
+        "type": "list<domain>",
+        "fields": [
+          "items[0].name",
+          "items[0].state",
+          "items[0].smtp_login",
+          "items[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
