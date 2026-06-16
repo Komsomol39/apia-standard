@@ -24,23 +24,23 @@
   "capabilities": [
     {
       "id": "search_hosts",
-      "description_for_ai": "Search internet-connected devices by service, software, location, or port.",
+      "description_for_ai": "Search Shodan for internet-connected devices, servers, and services.",
       "intent": [
         "Shodan search",
-        "find devices internet",
-        "exposed services",
+        "internet search",
+        "scan devices",
         "поиск устройств Shodan"
       ],
       "endpoint": "GET https://api.shodan.io/shodan/host/search",
       "input": {
         "query": {
           "type": "string",
-          "description": "Shodan dork: apache city:Moscow, port:22 country:US, has_vuln:CVE-2021-44228",
+          "description": "Shodan query: 'port:22 country:US', 'product:Apache', 'org:Google', 'vuln:CVE-2021-44228'",
           "required": true
         },
         "facets": {
           "type": "string",
-          "description": "Statistics facets: country,org,port",
+          "description": "Comma-separated facets for stats: country,org,port",
           "required": false
         },
         "page": {
@@ -49,14 +49,14 @@
         }
       },
       "output": {
-        "type": "list<host>",
+        "type": "results",
         "fields": [
           "matches[0].ip_str",
-          "matches[0].port",
+          "matches[0].ports",
+          "matches[0].hostnames",
           "matches[0].org",
           "matches[0].country_name",
-          "matches[0].product",
-          "matches[0].data",
+          "matches[0].data (banner)",
           "total"
         ]
       },
@@ -65,23 +65,28 @@
     },
     {
       "id": "get_host_info",
-      "description_for_ai": "Get full information about a specific IP address: open ports, services, CVEs.",
+      "description_for_ai": "Get all information about a specific IP address from Shodan.",
       "intent": [
-        "IP info Shodan",
-        "host scan results",
-        "open ports",
+        "IP lookup Shodan",
+        "host info",
+        "IP scan Shodan",
         "информация об IP Shodan"
       ],
       "endpoint": "GET https://api.shodan.io/shodan/host/{ip}",
       "input": {
         "ip": {
           "type": "string",
-          "description": "IPv4 address to look up",
+          "description": "IP address to look up",
           "required": true
         },
         "history": {
           "type": "boolean",
-          "description": "Include historical scan results",
+          "description": "Include historical banners",
+          "default": false
+        },
+        "minify": {
+          "type": "boolean",
+          "description": "Return minimal host data",
           "default": false
         }
       },
@@ -91,80 +96,91 @@
           "ip_str",
           "org",
           "country_name",
-          "os",
           "ports",
+          "hostnames",
+          "os",
+          "data[0].transport",
           "data[0].port",
-          "data[0].product",
-          "vulns (CVE IDs if any)"
+          "data[0].data (banner)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_count",
-      "description_for_ai": "Count Shodan search results without using credits.",
+      "id": "dns_lookup",
+      "description_for_ai": "Look up DNS records for a domain: A, AAAA, MX, etc.",
       "intent": [
-        "count Shodan",
-        "how many devices",
-        "exposed services count",
-        "количество устройств Shodan"
+        "DNS lookup Shodan",
+        "domain DNS",
+        "IP for domain",
+        "DNS домена Shodan"
       ],
-      "endpoint": "GET https://api.shodan.io/shodan/host/count",
+      "endpoint": "GET https://api.shodan.io/dns/resolve",
       "input": {
-        "query": {
+        "hostnames": {
           "type": "string",
+          "description": "Comma-separated hostnames: google.com,github.com",
           "required": true
-        },
-        "facets": {
-          "type": "string",
-          "required": false
         }
       },
       "output": {
-        "type": "count",
+        "type": "dns",
         "fields": [
-          "total",
-          "facets"
+          "hostname → ip_address"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_protocols",
-      "description_for_ai": "Get list of protocols that Shodan crawls.",
+      "id": "get_vulnerabilities",
+      "description_for_ai": "Get known vulnerabilities for a CVE or list of CVEs.",
       "intent": [
-        "Shodan protocols",
-        "available protocols",
-        "what Shodan scans"
+        "CVE lookup Shodan",
+        "vulnerability info",
+        "exploit info",
+        "информация CVE Shodan"
       ],
-      "endpoint": "GET https://api.shodan.io/shodan/protocols",
-      "input": {},
+      "endpoint": "GET https://cvedb.shodan.io/cve/{cve_id}",
+      "input": {
+        "cve_id": {
+          "type": "string",
+          "description": "CVE ID: CVE-2021-44228",
+          "required": true
+        }
+      },
       "output": {
-        "type": "protocols",
+        "type": "cve",
         "fields": [
-          "protocol_name: description"
+          "cve_id",
+          "cvss",
+          "summary",
+          "references",
+          "published_time"
         ]
       },
-      "realtime": false,
-      "requires_auth": true
+      "realtime": true,
+      "requires_auth": false
     },
     {
-      "id": "get_my_ip",
-      "description_for_ai": "Get your current external IP address from Shodan.",
+      "id": "get_account_info",
+      "description_for_ai": "Get your Shodan account info: plan, credits remaining, scan credits.",
       "intent": [
-        "my IP address",
-        "external IP",
-        "current IP",
-        "мой IP адрес"
+        "Shodan account",
+        "API credits Shodan",
+        "scan credits",
+        "аккаунт Shodan"
       ],
-      "endpoint": "GET https://api.shodan.io/tools/myip",
+      "endpoint": "GET https://api.shodan.io/account/profile",
       "input": {},
       "output": {
-        "type": "ip",
+        "type": "account",
         "fields": [
-          "IP address string"
+          "member",
+          "credits",
+          "display_name",
+          "created"
         ]
       },
       "realtime": true,
