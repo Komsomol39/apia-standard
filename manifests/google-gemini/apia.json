@@ -24,49 +24,39 @@
   "capabilities": [
     {
       "id": "generate_content",
-      "description_for_ai": "Generate text, analyze images/video/audio, answer questions, write code. Gemini 2.0 Flash is default — fast, free 1500 req/day. Use gemini-2.5-pro for complex reasoning with 1M context window.",
+      "description_for_ai": "Generate text with Gemini 1.5 Pro/Flash. Supports text, images, audio, video, and documents in one request.",
       "intent": [
-        "generate text",
-        "AI assistant",
-        "analyze image",
-        "write code",
-        "answer question",
-        "summarize",
-        "translate",
-        "Gemini AI",
+        "ask Gemini",
+        "AI text generation",
+        "Gemini API",
         "Google AI",
-        "бесплатный ИИ"
+        "спросить Gemini"
       ],
       "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
       "input": {
         "model": {
           "type": "string",
-          "description": "gemini-2.5-flash (fast, free 1500/day), gemini-2.5-pro (best quality, 1M context), gemini-2.0-flash-exp (experimental)",
+          "description": "gemini-1.5-pro (best), gemini-1.5-flash (fast/cheap), gemini-2.0-flash (latest)",
           "required": true
         },
         "contents": {
           "type": "array",
-          "description": "Conversation: [{role: 'user'|'model', parts: [{text: 'message'}]}]. For images add: {inline_data: {mime_type: 'image/jpeg', data: 'BASE64'}}",
+          "description": "[{role: 'user', parts: [{text: 'prompt'}]}] — or include {inline_data: {mime_type, data}} for images",
           "required": true
         },
         "systemInstruction": {
           "type": "object",
-          "description": "{parts: [{text: 'system prompt'}]} — sets model behavior and persona",
+          "description": "{parts: [{text: 'System prompt'}]}",
           "required": false
         },
         "generationConfig": {
           "type": "object",
-          "description": "{temperature: 0.7, maxOutputTokens: 2048, topK: 40, topP: 0.95, candidateCount: 1, responseMimeType: 'text/plain'|'application/json'}",
+          "description": "{temperature, maxOutputTokens, responseMimeType: 'application/json'}",
           "required": false
         },
         "tools": {
           "type": "array",
-          "description": "[{functionDeclarations: [{name, description, parameters: {type: object, properties: {}}}]}] for function calling",
-          "required": false
-        },
-        "safetySettings": {
-          "type": "array",
-          "description": "[{category: HARM_CATEGORY_HARASSMENT, threshold: BLOCK_NONE}] — configure content safety",
+          "description": "Function declarations for tool calling",
           "required": false
         }
       },
@@ -74,7 +64,6 @@
         "type": "response",
         "fields": [
           "candidates[0].content.parts[0].text",
-          "candidates[0].finishReason",
           "usageMetadata.promptTokenCount",
           "usageMetadata.candidatesTokenCount"
         ]
@@ -83,32 +72,59 @@
       "requires_auth": true
     },
     {
-      "id": "embed_content",
-      "description_for_ai": "Create text embeddings using Gemini Embedding model. For semantic search and RAG.",
+      "id": "vision_analysis",
+      "description_for_ai": "Analyze images, PDFs, videos with Gemini. Describe content, extract text, answer questions. Supports URLs and base64.",
       "intent": [
-        "embeddings",
+        "analyze image Gemini",
+        "image understanding",
+        "PDF analysis Google",
+        "video understanding",
+        "анализ изображения Gemini"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "description": "[{parts: [{inline_data: {mime_type: 'image/jpeg', data: 'BASE64'}}, {text: 'Describe this'}]}] or use file_data with URI",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "embeddings",
+      "description_for_ai": "Generate text embeddings for semantic search and RAG with text-embedding-004.",
+      "intent": [
+        "Gemini embeddings",
+        "text embeddings Google",
         "semantic search",
-        "vector",
         "RAG",
-        "similarity"
+        "векторные эмбеддинги Google"
       ],
       "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent",
       "input": {
         "content": {
           "type": "object",
-          "description": "{parts: [{text: your_text}]}",
+          "description": "{parts: [{text: 'Text to embed'}]}",
           "required": true
         },
         "taskType": {
           "type": "string",
-          "description": "RETRIEVAL_QUERY, RETRIEVAL_DOCUMENT, SEMANTIC_SIMILARITY, CLASSIFICATION",
+          "description": "RETRIEVAL_DOCUMENT, RETRIEVAL_QUERY, SEMANTIC_SIMILARITY, CLASSIFICATION",
           "required": false
         }
       },
       "output": {
         "type": "embedding",
         "fields": [
-          "embedding.values"
+          "embedding.values (float array)"
         ]
       },
       "realtime": true,
@@ -116,23 +132,21 @@
     },
     {
       "id": "count_tokens",
-      "description_for_ai": "Count tokens in content before sending to estimate cost and check context limits.",
+      "description_for_ai": "Count tokens for a request before sending to estimate cost.",
       "intent": [
-        "count tokens",
+        "count tokens Gemini",
         "token count",
-        "context length check",
-        "cost estimate"
+        "estimate cost",
+        "подсчёт токенов"
       ],
       "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/{model}:countTokens",
       "input": {
         "model": {
           "type": "string",
-          "required": true,
-          "description": "AI/ML model identifier to use for this request"
+          "required": true
         },
         "contents": {
           "type": "array",
-          "description": "Same format as generateContent",
           "required": true
         }
       },
@@ -142,7 +156,70 @@
           "totalTokens"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_models",
+      "description_for_ai": "List all available Gemini models with their capabilities and limits.",
+      "intent": [
+        "Gemini models",
+        "available models",
+        "список моделей Gemini"
+      ],
+      "endpoint": "GET https://generativelanguage.googleapis.com/v1beta/models",
+      "input": {
+        "pageSize": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "models[0].name",
+          "models[0].displayName",
+          "models[0].inputTokenLimit",
+          "models[0].outputTokenLimit"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "function_calling",
+      "description_for_ai": "Use Gemini with function calling (tool use). Model decides when to call defined tools. Ideal for agents.",
+      "intent": [
+        "Gemini function calling",
+        "tool use Gemini",
+        "AI agent Gemini",
+        "вызов функций Gemini"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "required": true
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{function_declarations: [{name, description, parameters: {type: 'object', properties: {...}, required: [...]}}]}]",
+          "required": true
+        },
+        "tool_config": {
+          "type": "object",
+          "description": "{function_calling_config: {mode: 'AUTO'|'ANY'|'NONE'}}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "response",
+        "fields": [
+          "candidates[0].content.parts[0].function_call.name",
+          "candidates[0].content.parts[0].function_call.args"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
