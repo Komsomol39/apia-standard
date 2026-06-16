@@ -183,6 +183,39 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "traffic_flow",
+      "description_for_ai": "Get real-time traffic flow data for a bounding box or corridor.",
+      "intent": [
+        "traffic HERE",
+        "road congestion",
+        "traffic data",
+        "пробки HERE Maps"
+      ],
+      "endpoint": "GET https://data.traffic.hereapi.com/v7/flow",
+      "input": {
+        "in": {
+          "type": "string",
+          "description": "bbox:west,south,east,north or corridor",
+          "required": true
+        },
+        "locationReferencing": {
+          "type": "string",
+          "description": "olr or shape",
+          "default": "olr"
+        }
+      },
+      "output": {
+        "type": "traffic",
+        "fields": [
+          "results[0].location.description",
+          "results[0].currentFlow.speed",
+          "results[0].currentFlow.jamFactor"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
