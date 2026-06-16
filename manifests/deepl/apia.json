@@ -23,24 +23,23 @@
   "capabilities": [
     {
       "id": "translate_text",
-      "description_for_ai": "Translate text with DeepL — highest quality machine translation, especially for European languages. Preserves formatting.",
+      "description_for_ai": "Translate text with DeepL — the most accurate translation AI available. 33 languages.",
       "intent": [
-        "translate",
-        "translation",
-        "deepl translate",
-        "перевести текст",
-        "перевод"
+        "translate DeepL",
+        "DeepL translation",
+        "high quality translation",
+        "перевод DeepL"
       ],
       "endpoint": "POST https://api-free.deepl.com/v2/translate",
       "input": {
         "text": {
           "type": "array",
-          "description": "Array of strings to translate (batch up to 50)",
+          "description": "Text(s) to translate. Array for batch.",
           "required": true
         },
         "target_lang": {
           "type": "string",
-          "description": "Target language: EN-US, EN-GB, DE, FR, ES, IT, RU, ZH, JA, PT-BR, PT-PT, NL, PL, CS, RO, HU, BG, DA, FI, EL, SK, SL, SV, LT, LV, ET",
+          "description": "Target language: EN-US, EN-GB, DE, FR, ES, IT, JA, KO, PT-BR, PT-PT, RU, ZH, NL, PL, CS, SK, DA, FI, SV, RO, HU, BG, EL, LT, LV, ET, SL",
           "required": true
         },
         "source_lang": {
@@ -53,13 +52,9 @@
           "description": "default, more (formal), less (informal), prefer_more, prefer_less",
           "required": false
         },
-        "preserve_formatting": {
-          "type": "boolean",
-          "default": false
-        },
         "split_sentences": {
           "type": "string",
-          "description": "0 (none), 1 (punctuation), nonewlines",
+          "description": "0 (no split), 1 (split on newlines), nonewlines",
           "default": "1"
         }
       },
@@ -75,19 +70,18 @@
     },
     {
       "id": "translate_document",
-      "description_for_ai": "Translate entire documents (PDF, DOCX, PPTX, XLSX, HTML, TXT) with DeepL while preserving layout.",
+      "description_for_ai": "Translate entire documents (PDF, Word, PowerPoint) with DeepL while preserving formatting.",
       "intent": [
-        "translate document",
-        "translate PDF",
-        "translate DOCX",
-        "перевести документ",
-        "перевести файл"
+        "translate document DeepL",
+        "document translation",
+        "translate PDF DeepL",
+        "перевод документа DeepL"
       ],
       "endpoint": "POST https://api-free.deepl.com/v2/document",
       "input": {
         "file": {
           "type": "file",
-          "description": "Document to translate. Supported: .txt, .html, .docx, .pptx, .xlsx, .pdf",
+          "description": "Document file: .docx, .pptx, .xlsx, .pdf, .htm, .html, .txt, .xlf, .xliff, .srt",
           "required": true
         },
         "target_lang": {
@@ -98,8 +92,9 @@
           "type": "string",
           "required": false
         },
-        "formality": {
+        "filename": {
           "type": "string",
+          "description": "Original filename for format detection",
           "required": false
         }
       },
@@ -107,7 +102,7 @@
         "type": "document",
         "fields": [
           "document_id",
-          "document_key (needed to check status and download)"
+          "document_key (save for downloading)"
         ]
       },
       "realtime": false,
@@ -115,12 +110,12 @@
     },
     {
       "id": "get_usage",
-      "description_for_ai": "Check DeepL API usage: characters translated and character limit for current billing period.",
+      "description_for_ai": "Get DeepL API quota usage: characters translated vs limit.",
       "intent": [
-        "deepl usage",
+        "DeepL usage",
         "translation quota",
-        "API limit deepl",
-        "лимит deepl"
+        "characters remaining",
+        "квота DeepL"
       ],
       "endpoint": "GET https://api-free.deepl.com/v2/usage",
       "input": {},
@@ -136,62 +131,64 @@
     },
     {
       "id": "get_languages",
-      "description_for_ai": "Get list of all supported source and target languages.",
+      "description_for_ai": "Get all available source and target languages for DeepL.",
       "intent": [
-        "deepl languages",
+        "DeepL languages",
         "supported languages",
         "translation languages",
-        "языки deepl"
+        "языки DeepL"
       ],
       "endpoint": "GET https://api-free.deepl.com/v2/languages",
       "input": {
         "type": {
           "type": "string",
           "description": "source or target",
-          "required": false
+          "required": true
         }
       },
       "output": {
         "type": "list<language>",
         "fields": [
-          "[0].language",
+          "[0].language (code)",
           "[0].name",
           "[0].supports_formality"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "translate_batch",
-      "description_for_ai": "Translate up to 50 texts in one request for efficiency. Same API as translate, but pass array.",
+      "id": "improve_writing",
+      "description_for_ai": "Rephrase and improve text style with DeepL Write (English and German).",
       "intent": [
-        "bulk translate",
-        "batch translation deepl",
-        "multiple texts deepl",
-        "пакетный перевод deepl"
+        "DeepL Write",
+        "improve text",
+        "rephrase text",
+        "улучшить текст DeepL"
       ],
-      "endpoint": "POST https://api-free.deepl.com/v2/translate",
+      "endpoint": "POST https://api-free.deepl.com/v2/write/result",
       "input": {
         "text": {
           "type": "array",
-          "description": "Array of up to 50 strings",
+          "description": "Text(s) to improve",
           "required": true
         },
         "target_lang": {
           "type": "string",
+          "description": "EN (English), DE (German)",
           "required": true
         },
-        "source_lang": {
+        "style": {
           "type": "string",
+          "description": "default, confident, diplomatic, enthusiastic, fluent, academic",
           "required": false
         }
       },
       "output": {
-        "type": "list<translation>",
+        "type": "improvement",
         "fields": [
-          "translations[0].text",
-          "translations[0].detected_source_language"
+          "improvements[0].text",
+          "improvements[0].detected_source_language"
         ]
       },
       "realtime": true,
