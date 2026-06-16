@@ -173,6 +173,40 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "vision_with_reasoning",
+      "description_for_ai": "Analyze images with reasoning using o3 model's visual capabilities.",
+      "intent": [
+        "o3 vision",
+        "analyze image o3",
+        "visual reasoning",
+        "анализ изображения o3"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "o3"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: 'user', content: [{type: 'image_url', image_url: {url: '...'}}, {type: 'text', text: 'question'}]}]",
+          "required": true
+        },
+        "reasoning_effort": {
+          "type": "string",
+          "default": "medium"
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
