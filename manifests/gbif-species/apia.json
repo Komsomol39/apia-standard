@@ -110,6 +110,106 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_species",
+      "description_for_ai": "Get species details from GBIF taxonomy: name, rank, kingdom, vernacular names.",
+      "intent": [
+        "species info GBIF",
+        "taxonomy species",
+        "scientific name lookup"
+      ],
+      "endpoint": "GET https://api.gbif.org/v1/species/{key}",
+      "input": {
+        "key": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "species",
+        "fields": [
+          "key",
+          "scientificName",
+          "canonicalName",
+          "kingdom",
+          "phylum",
+          "class",
+          "order",
+          "family",
+          "genus",
+          "vernacularNames[0].vernacularName"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "search_species",
+      "description_for_ai": "Search GBIF species by name, kingdom, rank.",
+      "intent": [
+        "search species",
+        "find species GBIF",
+        "taxonomic search"
+      ],
+      "endpoint": "GET https://api.gbif.org/v1/species/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": false
+        },
+        "kingdom": {
+          "type": "string",
+          "description": "ANIMALIA, PLANTAE, FUNGI, BACTERIA, ARCHAEA",
+          "required": false
+        },
+        "rank": {
+          "type": "string",
+          "description": "SPECIES, GENUS, FAMILY, ORDER, CLASS, PHYLUM, KINGDOM",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<species>",
+        "fields": [
+          "results[0].key",
+          "results[0].scientificName",
+          "results[0].rank",
+          "results[0].kingdom"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_vernacular_names",
+      "description_for_ai": "Get vernacular (common) names for a species in multiple languages.",
+      "intent": [
+        "common name species",
+        "vernacular name",
+        "popular name animal"
+      ],
+      "endpoint": "GET https://api.gbif.org/v1/species/{key}/vernacularNames",
+      "input": {
+        "key": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<name>",
+        "fields": [
+          "results[0].vernacularName",
+          "results[0].language",
+          "results[0].source"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "meta": {
