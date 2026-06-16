@@ -186,6 +186,39 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_services",
+      "description_for_ai": "List PagerDuty services (monitored applications/systems).",
+      "intent": [
+        "pagerduty services",
+        "monitored systems",
+        "service list pagerduty",
+        "сервисы pagerduty"
+      ],
+      "endpoint": "GET https://api.pagerduty.com/services",
+      "input": {
+        "team_ids[]": {
+          "type": "array",
+          "required": false
+        },
+        "include[]": {
+          "type": "array",
+          "description": "escalation_policies, teams",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<service>",
+        "fields": [
+          "services[0].id",
+          "services[0].name",
+          "services[0].status",
+          "services[0].escalation_policy.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
