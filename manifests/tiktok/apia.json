@@ -21,84 +21,13 @@
   },
   "capabilities": [
     {
-      "id": "get_user_info",
-      "description_for_ai": "Get TikTok user profile: followers, following, likes count, bio.",
-      "intent": [
-        "tiktok user profile",
-        "tiktok account info",
-        "followers tiktok",
-        "профиль tiktok"
-      ],
-      "endpoint": "GET https://open.tiktokapis.com/v2/user/info/",
-      "input": {
-        "fields": {
-          "type": "string",
-          "description": "Comma-separated: open_id, union_id, avatar_url, display_name, bio_description, profile_deep_link, is_verified, follower_count, following_count, likes_count, video_count",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "user",
-        "fields": [
-          "data.user.display_name",
-          "data.user.follower_count",
-          "data.user.following_count",
-          "data.user.likes_count",
-          "data.user.bio_description",
-          "data.user.is_verified"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "list_videos",
-      "description_for_ai": "Get list of TikTok videos from the authenticated user.",
-      "intent": [
-        "tiktok videos",
-        "user tiktok posts",
-        "my tiktok videos",
-        "видео tiktok"
-      ],
-      "endpoint": "POST https://open.tiktokapis.com/v2/video/list/",
-      "input": {
-        "fields": {
-          "type": "string",
-          "description": "id, create_time, cover_image_url, share_url, video_description, duration, height, width, title, like_count, comment_count, share_count, view_count",
-          "required": true
-        },
-        "max_count": {
-          "type": "integer",
-          "description": "Max videos per page 1-20",
-          "default": 10
-        },
-        "cursor": {
-          "type": "integer",
-          "description": "Pagination cursor",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "list<video>",
-        "fields": [
-          "data.videos[0].id",
-          "data.videos[0].title",
-          "data.videos[0].view_count",
-          "data.videos[0].like_count",
-          "data.videos[0].share_url"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "search_videos",
-      "description_for_ai": "Search TikTok videos by keyword. Returns public videos with engagement data.",
+      "description_for_ai": "Search TikTok videos by keyword. Returns public videos with view counts and engagement.",
       "intent": [
-        "search tiktok",
-        "tiktok search",
-        "find tiktok video",
-        "поиск tiktok"
+        "search TikTok",
+        "find TikTok videos",
+        "TikTok search",
+        "поиск TikTok"
       ],
       "endpoint": "POST https://open.tiktokapis.com/v2/video/search/",
       "input": {
@@ -109,24 +38,90 @@
         },
         "max_count": {
           "type": "integer",
+          "description": "1-20",
           "default": 20
         },
         "cursor": {
           "type": "integer",
-          "required": false
+          "description": "Pagination cursor",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "list<video>",
+        "fields": [
+          "data.videos[0].id",
+          "data.videos[0].title",
+          "data.videos[0].author_name",
+          "data.videos[0].view_count",
+          "data.videos[0].like_count",
+          "data.videos[0].embed_link"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user_info",
+      "description_for_ai": "Get TikTok user profile: display name, bio, follower count, video count.",
+      "intent": [
+        "TikTok user",
+        "profile TikTok",
+        "follower count TikTok",
+        "профиль TikTok"
+      ],
+      "endpoint": "GET https://open.tiktokapis.com/v2/user/info/",
+      "input": {
+        "fields": {
+          "type": "string",
+          "description": "open_id,display_name,bio_description,avatar_url,follower_count,following_count,likes_count,video_count",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "user",
+        "fields": [
+          "data.user.open_id",
+          "data.user.display_name",
+          "data.user.follower_count",
+          "data.user.video_count",
+          "data.user.likes_count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_user_videos",
+      "description_for_ai": "Get TikTok videos for authenticated user.",
+      "intent": [
+        "user videos TikTok",
+        "my TikTok",
+        "user content",
+        "видео пользователя TikTok"
+      ],
+      "endpoint": "GET https://open.tiktokapis.com/v2/video/list/",
+      "input": {
+        "max_count": {
+          "type": "integer",
+          "default": 20
+        },
+        "cursor": {
+          "type": "integer",
+          "default": 0
         },
         "fields": {
           "type": "string",
-          "description": "id,create_time,cover_image_url,share_url,video_description,duration,like_count,comment_count,view_count",
+          "description": "id,title,create_time,cover_image_url,share_url,view_count,like_count,comment_count,share_count,duration,video_description",
           "required": false
         }
       },
       "output": {
         "type": "list<video>",
         "fields": [
-          "data.videos[0].video_description",
+          "data.videos[0].id",
+          "data.videos[0].title",
           "data.videos[0].view_count",
-          "data.videos[0].like_count",
           "data.videos[0].share_url"
         ]
       },
@@ -134,34 +129,66 @@
       "requires_auth": true
     },
     {
-      "id": "get_video_insights",
-      "description_for_ai": "Get detailed analytics for a TikTok video: views, likes, comments, shares, reach, impressions.",
+      "id": "upload_video",
+      "description_for_ai": "Upload a video to TikTok via direct post or chunked upload.",
       "intent": [
-        "tiktok analytics",
-        "video performance tiktok",
-        "tiktok insights",
-        "аналитика tiktok видео"
+        "upload TikTok",
+        "post video TikTok",
+        "publish TikTok",
+        "загрузить видео TikTok"
+      ],
+      "endpoint": "POST https://open.tiktokapis.com/v2/post/publish/video/init/",
+      "input": {
+        "post_info": {
+          "type": "object",
+          "description": "{title: 'Video title #hashtag', privacy_level: 'PUBLIC_TO_EVERYONE'|'MUTUAL_FOLLOW_FRIENDS'|'FOLLOWER_OF_CREATOR'|'SELF_ONLY', disable_comment: false}",
+          "required": true
+        },
+        "source_info": {
+          "type": "object",
+          "description": "{source: 'FILE_UPLOAD', video_size: 1234567, chunk_size: 10485760, total_chunk_count: 1}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "upload",
+        "fields": [
+          "data.publish_id",
+          "data.upload_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_video_insights",
+      "description_for_ai": "Get analytics for TikTok videos: views, likes, shares, comments, reach.",
+      "intent": [
+        "TikTok analytics",
+        "video stats TikTok",
+        "video performance",
+        "аналитика TikTok"
       ],
       "endpoint": "POST https://open.tiktokapis.com/v2/video/query/",
       "input": {
         "filters": {
           "type": "object",
-          "description": "{video_ids: ['7123456789012345678']}",
+          "description": "{video_ids: ['id1', 'id2']}",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "id,like_count,comment_count,share_count,view_count,reach,impressions,video_duration,average_time_watched",
+          "description": "id,title,view_count,like_count,comment_count,share_count,reach,impression_sources",
           "required": true
         }
       },
       "output": {
         "type": "list<video>",
         "fields": [
+          "data.videos[0].id",
           "data.videos[0].view_count",
           "data.videos[0].like_count",
-          "data.videos[0].reach",
-          "data.videos[0].average_time_watched"
+          "data.videos[0].reach"
         ]
       },
       "realtime": true,
