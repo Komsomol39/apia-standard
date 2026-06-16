@@ -22,33 +22,29 @@
   },
   "capabilities": [
     {
-      "id": "get_issues",
-      "description_for_ai": "Get issues from Linear workspace with filters. Returns title, status, assignee, priority, team.",
+      "id": "list_issues",
+      "description_for_ai": "List Linear issues with filters by team, status, assignee, priority. Uses GraphQL.",
       "intent": [
         "linear issues",
-        "tasks",
-        "project issues",
-        "sprint tasks",
-        "engineering tasks"
+        "tickets linear",
+        "task list linear",
+        "задачи linear"
       ],
       "endpoint": "POST https://api.linear.app/graphql",
       "input": {
         "query": {
           "type": "string",
-          "description": "GraphQL query for issues",
+          "description": "GraphQL query: {issues(filter: {state: {name: {eq: \"In Progress\"}}, assignee: {email: {eq: \"me@example.com\"}}}) {nodes {id title state {name} priority assignee {name} createdAt url}}}",
           "required": true
         }
       },
       "output": {
         "type": "list<issue>",
         "fields": [
-          "id",
-          "title",
-          "state.name",
-          "assignee.name",
-          "priority",
-          "team.name",
-          "createdAt"
+          "data.issues.nodes[0].id",
+          "data.issues.nodes[0].title",
+          "data.issues.nodes[0].state.name",
+          "data.issues.nodes[0].priority"
         ]
       },
       "realtime": true,
@@ -56,26 +52,84 @@
     },
     {
       "id": "create_issue",
-      "description_for_ai": "Create new Linear issue.",
+      "description_for_ai": "Create a new Linear issue with title, description, team, priority, and assignee.",
       "intent": [
         "create linear issue",
-        "new task",
-        "add to linear"
+        "new ticket linear",
+        "create task linear",
+        "создать задачу linear"
       ],
       "endpoint": "POST https://api.linear.app/graphql",
       "input": {
-        "mutation": {
+        "query": {
           "type": "string",
-          "description": "GraphQL mutation: mutation { issueCreate(input: {title, teamId, description, priority}) { issue { id title } } }",
+          "description": "GraphQL mutation: mutation { issueCreate(input: {title: \"Bug title\", description: \"Details\", teamId: \"TEAM_ID\", priority: 2, assigneeId: \"USER_ID\", labelIds: [\"LABEL_ID\"]}) { success issue { id url } } }",
           "required": true
         }
       },
       "output": {
         "type": "issue",
         "fields": [
-          "id",
-          "title",
-          "url"
+          "data.issueCreate.success",
+          "data.issueCreate.issue.id",
+          "data.issueCreate.issue.url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_teams",
+      "description_for_ai": "Get all Linear teams in the workspace with their states and members.",
+      "intent": [
+        "linear teams",
+        "team list linear",
+        "workspace teams",
+        "команды linear"
+      ],
+      "endpoint": "POST https://api.linear.app/graphql",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "GraphQL query: {teams {nodes {id name key states {nodes {id name type}} members {nodes {id name email}}}}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<team>",
+        "fields": [
+          "data.teams.nodes[0].id",
+          "data.teams.nodes[0].name",
+          "data.teams.nodes[0].key",
+          "data.teams.nodes[0].states.nodes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_issue",
+      "description_for_ai": "Update a Linear issue: change status, priority, assignee, or add comment.",
+      "intent": [
+        "update linear issue",
+        "change status linear",
+        "assign issue linear",
+        "обновить задачу linear"
+      ],
+      "endpoint": "POST https://api.linear.app/graphql",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "GraphQL mutation: mutation { issueUpdate(id: \"ISSUE_ID\", input: {stateId: \"STATE_ID\", priority: 1, assigneeId: \"USER_ID\"}) { success issue { id state { name } } } }",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "issue",
+        "fields": [
+          "data.issueUpdate.success",
+          "data.issueUpdate.issue.id",
+          "data.issueUpdate.issue.state.name"
         ]
       },
       "realtime": true,
