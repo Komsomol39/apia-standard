@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": "1.0",
-    "generated": "2026-06-14",
+    "generated": "2026-06-16",
     "total": 257,
     "categories": {
       "ai": 25,
@@ -129,7 +129,8 @@
         }
       ],
       "manifest_path": "manifests/2gis/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/2gis/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/2gis/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "2gis-cis",
@@ -190,7 +191,8 @@
         }
       ],
       "manifest_path": "manifests/2gis-cis/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/2gis-cis/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/2gis-cis/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "abstract-api",
@@ -254,7 +256,8 @@
         }
       ],
       "manifest_path": "manifests/abstract-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/abstract-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/abstract-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "adyen",
@@ -292,7 +295,8 @@
         }
       ],
       "manifest_path": "manifests/adyen/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/adyen/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/adyen/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "airbnb",
@@ -329,7 +333,8 @@
         }
       ],
       "manifest_path": "manifests/airbnb/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/airbnb/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/airbnb/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "airtable",
@@ -383,7 +388,8 @@
         }
       ],
       "manifest_path": "manifests/airtable/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/airtable/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/airtable/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "alpha-vantage",
@@ -432,7 +438,8 @@
         }
       ],
       "manifest_path": "manifests/alpha-vantage/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/alpha-vantage/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/alpha-vantage/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "amadeus",
@@ -503,7 +510,8 @@
         }
       ],
       "manifest_path": "manifests/amadeus/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/amadeus/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/amadeus/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "amazon-sp-api",
@@ -556,7 +564,8 @@
         }
       ],
       "manifest_path": "manifests/amazon-sp-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/amazon-sp-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/amazon-sp-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "amocrm",
@@ -612,7 +621,8 @@
         }
       ],
       "manifest_path": "manifests/amocrm/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/amocrm/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/amocrm/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "anthropic",
@@ -681,7 +691,8 @@
         }
       ],
       "manifest_path": "manifests/anthropic/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/anthropic/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/anthropic/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "anthropic-claude-haiku",
@@ -721,7 +732,8 @@
         }
       ],
       "manifest_path": "manifests/anthropic-claude-haiku/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/anthropic-claude-haiku/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/anthropic-claude-haiku/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "anthropic-claude-haiku-free",
@@ -757,7 +769,8 @@
         }
       ],
       "manifest_path": "manifests/anthropic-claude-haiku-free/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/anthropic-claude-haiku-free/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/anthropic-claude-haiku-free/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "apollo-io",
@@ -810,7 +823,8 @@
         }
       ],
       "manifest_path": "manifests/apollo-io/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/apollo-io/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/apollo-io/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "arxiv",
@@ -851,7 +865,8 @@
         }
       ],
       "manifest_path": "manifests/arxiv/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/arxiv/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/arxiv/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "assemblyai",
@@ -900,7 +915,8 @@
         }
       ],
       "manifest_path": "manifests/assemblyai/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/assemblyai/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/assemblyai/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "attom",
@@ -941,7 +957,8 @@
         }
       ],
       "manifest_path": "manifests/attom/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/attom/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/attom/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "auth0",
@@ -994,7 +1011,8 @@
         }
       ],
       "manifest_path": "manifests/auth0/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/auth0/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/auth0/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "aviationstack",
@@ -1028,7 +1046,8 @@
         }
       ],
       "manifest_path": "manifests/aviationstack/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aviationstack/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aviationstack/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "avito",
@@ -1087,7 +1106,8 @@
         }
       ],
       "manifest_path": "manifests/avito/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/avito/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/avito/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "avito-jobs",
@@ -1131,7 +1151,8 @@
         }
       ],
       "manifest_path": "manifests/avito-jobs/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/avito-jobs/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/avito-jobs/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "aws-comprehend",
@@ -1181,7 +1202,8 @@
         }
       ],
       "manifest_path": "manifests/aws-comprehend/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-comprehend/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-comprehend/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "aws-iot",
@@ -1233,7 +1255,8 @@
         }
       ],
       "manifest_path": "manifests/aws-iot/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-iot/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-iot/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "aws-lambda",
@@ -1272,7 +1295,8 @@
         }
       ],
       "manifest_path": "manifests/aws-lambda/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-lambda/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-lambda/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "aws-rekognition",
@@ -1340,7 +1364,8 @@
         }
       ],
       "manifest_path": "manifests/aws-rekognition/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-rekognition/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-rekognition/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "aws-s3",
@@ -1392,7 +1417,8 @@
         }
       ],
       "manifest_path": "manifests/aws-s3/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-s3/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/aws-s3/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "bamboohr",
@@ -1447,7 +1473,8 @@
         }
       ],
       "manifest_path": "manifests/bamboohr/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/bamboohr/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/bamboohr/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "binance",
@@ -1496,7 +1523,8 @@
         }
       ],
       "manifest_path": "manifests/binance/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/binance/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/binance/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "bitrix24",
@@ -1552,7 +1580,8 @@
         }
       ],
       "manifest_path": "manifests/bitrix24/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/bitrix24/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/bitrix24/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "booking-com",
@@ -1594,7 +1623,8 @@
         }
       ],
       "manifest_path": "manifests/booking-com/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/booking-com/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/booking-com/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "brevo",
@@ -1647,7 +1677,8 @@
         }
       ],
       "manifest_path": "manifests/brevo/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/brevo/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/brevo/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "carbon-interface",
@@ -1696,7 +1727,8 @@
         }
       ],
       "manifest_path": "manifests/carbon-interface/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/carbon-interface/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/carbon-interface/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "cbrf",
@@ -1748,7 +1780,8 @@
         }
       ],
       "manifest_path": "manifests/cbrf/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cbrf/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cbrf/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "cdek",
@@ -1817,7 +1850,8 @@
         }
       ],
       "manifest_path": "manifests/cdek/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cdek/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cdek/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "cian",
@@ -1860,7 +1894,8 @@
         }
       ],
       "manifest_path": "manifests/cian/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cian/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cian/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "clearbit",
@@ -1911,7 +1946,8 @@
         }
       ],
       "manifest_path": "manifests/clearbit/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/clearbit/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/clearbit/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "cloudflare-workers",
@@ -1958,7 +1994,8 @@
         }
       ],
       "manifest_path": "manifests/cloudflare-workers/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cloudflare-workers/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cloudflare-workers/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "cloudinary",
@@ -2013,7 +2050,8 @@
         }
       ],
       "manifest_path": "manifests/cloudinary/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cloudinary/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cloudinary/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "cohere",
@@ -2074,7 +2112,8 @@
         }
       ],
       "manifest_path": "manifests/cohere/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cohere/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cohere/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "cohere-command-r",
@@ -2114,7 +2153,8 @@
         }
       ],
       "manifest_path": "manifests/cohere-command-r/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cohere-command-r/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/cohere-command-r/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "coinbase",
@@ -2166,7 +2206,8 @@
         }
       ],
       "manifest_path": "manifests/coinbase/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/coinbase/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/coinbase/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "coingecko",
@@ -2232,7 +2273,8 @@
         }
       ],
       "manifest_path": "manifests/coingecko/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/coingecko/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/coingecko/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "coingecko-defi",
@@ -2285,7 +2327,8 @@
         }
       ],
       "manifest_path": "manifests/coingecko-defi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/coingecko-defi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/coingecko-defi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "companies-house",
@@ -2334,7 +2377,8 @@
         }
       ],
       "manifest_path": "manifests/companies-house/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/companies-house/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/companies-house/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "courtlistener",
@@ -2375,7 +2419,8 @@
         }
       ],
       "manifest_path": "manifests/courtlistener/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/courtlistener/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/courtlistener/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "dadata",
@@ -2443,7 +2488,8 @@
         }
       ],
       "manifest_path": "manifests/dadata/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/dadata/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/dadata/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "data-mos-ru",
@@ -2511,7 +2557,8 @@
         }
       ],
       "manifest_path": "manifests/data-mos-ru/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/data-mos-ru/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/data-mos-ru/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "datadog",
@@ -2578,7 +2625,8 @@
         }
       ],
       "manifest_path": "manifests/datadog/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/datadog/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/datadog/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "deepgram",
@@ -2618,7 +2666,8 @@
         }
       ],
       "manifest_path": "manifests/deepgram/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepgram/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepgram/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "deepl",
@@ -2671,7 +2720,8 @@
         }
       ],
       "manifest_path": "manifests/deepl/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepl/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepl/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "deepseek",
@@ -2714,7 +2764,8 @@
         }
       ],
       "manifest_path": "manifests/deepseek/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepseek/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepseek/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "deepseek-r1",
@@ -2755,7 +2806,8 @@
         }
       ],
       "manifest_path": "manifests/deepseek-r1/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepseek-r1/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/deepseek-r1/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "dhl-api",
@@ -2807,7 +2859,8 @@
         }
       ],
       "manifest_path": "manifests/dhl-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/dhl-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/dhl-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "digitalocean",
@@ -2860,7 +2913,8 @@
         }
       ],
       "manifest_path": "manifests/digitalocean/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/digitalocean/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/digitalocean/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "discord",
@@ -2930,7 +2984,8 @@
         }
       ],
       "manifest_path": "manifests/discord/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/discord/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/discord/apia.json",
+      "capabilities_count": 7
     },
     {
       "id": "docusign",
@@ -2990,7 +3045,8 @@
         }
       ],
       "manifest_path": "manifests/docusign/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/docusign/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/docusign/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "doordash",
@@ -3027,7 +3083,8 @@
         }
       ],
       "manifest_path": "manifests/doordash/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/doordash/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/doordash/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "duolingo",
@@ -3065,7 +3122,8 @@
         }
       ],
       "manifest_path": "manifests/duolingo/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/duolingo/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/duolingo/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "easypost",
@@ -3144,7 +3202,8 @@
         }
       ],
       "manifest_path": "manifests/easypost/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/easypost/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/easypost/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "ebay",
@@ -3181,7 +3240,8 @@
         }
       ],
       "manifest_path": "manifests/ebay/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ebay/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ebay/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "edamam",
@@ -3237,7 +3297,8 @@
         }
       ],
       "manifest_path": "manifests/edamam/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/edamam/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/edamam/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "egrul-fns",
@@ -3291,7 +3352,8 @@
         }
       ],
       "manifest_path": "manifests/egrul-fns/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/egrul-fns/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/egrul-fns/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "elevenlabs",
@@ -3350,7 +3412,8 @@
         }
       ],
       "manifest_path": "manifests/elevenlabs/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/elevenlabs/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/elevenlabs/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "elsevier-scopus",
@@ -3386,7 +3449,8 @@
         }
       ],
       "manifest_path": "manifests/elsevier-scopus/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/elsevier-scopus/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/elsevier-scopus/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "ergast-f1",
@@ -3436,7 +3500,8 @@
         }
       ],
       "manifest_path": "manifests/ergast-f1/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ergast-f1/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ergast-f1/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "etherscan",
@@ -3487,7 +3552,8 @@
         }
       ],
       "manifest_path": "manifests/etherscan/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/etherscan/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/etherscan/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "etsy",
@@ -3529,7 +3595,8 @@
         }
       ],
       "manifest_path": "manifests/etsy/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/etsy/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/etsy/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "exchangerate-api",
@@ -3584,7 +3651,8 @@
         }
       ],
       "manifest_path": "manifests/exchangerate-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/exchangerate-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/exchangerate-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "facebook-ads",
@@ -3620,7 +3688,8 @@
         }
       ],
       "manifest_path": "manifests/facebook-ads/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/facebook-ads/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/facebook-ads/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "facebook-graph",
@@ -3672,7 +3741,8 @@
         }
       ],
       "manifest_path": "manifests/facebook-graph/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/facebook-graph/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/facebook-graph/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "fias",
@@ -3724,7 +3794,8 @@
         }
       ],
       "manifest_path": "manifests/fias/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/fias/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/fias/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "firebase",
@@ -3771,7 +3842,8 @@
         }
       ],
       "manifest_path": "manifests/firebase/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/firebase/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/firebase/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "fitbit",
@@ -3843,7 +3915,8 @@
         }
       ],
       "manifest_path": "manifests/fitbit/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/fitbit/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/fitbit/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "flightaware",
@@ -3899,7 +3972,8 @@
         }
       ],
       "manifest_path": "manifests/flightaware/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/flightaware/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/flightaware/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "football-data",
@@ -3954,7 +4028,8 @@
         }
       ],
       "manifest_path": "manifests/football-data/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/football-data/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/football-data/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "foursquare",
@@ -3989,7 +4064,8 @@
         }
       ],
       "manifest_path": "manifests/foursquare/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/foursquare/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/foursquare/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "freshdesk",
@@ -4042,7 +4118,8 @@
         }
       ],
       "manifest_path": "manifests/freshdesk/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/freshdesk/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/freshdesk/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "gbif",
@@ -4092,7 +4169,8 @@
         }
       ],
       "manifest_path": "manifests/gbif/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gbif/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gbif/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "gbif-species",
@@ -4150,7 +4228,8 @@
         }
       ],
       "manifest_path": "manifests/gbif-species/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gbif-species/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gbif-species/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "github",
@@ -4230,7 +4309,8 @@
         }
       ],
       "manifest_path": "manifests/github/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/github/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/github/apia.json",
+      "capabilities_count": 10
     },
     {
       "id": "gitlab",
@@ -4295,7 +4375,8 @@
         }
       ],
       "manifest_path": "manifests/gitlab/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gitlab/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gitlab/apia.json",
+      "capabilities_count": 7
     },
     {
       "id": "google-ads",
@@ -4349,7 +4430,8 @@
         }
       ],
       "manifest_path": "manifests/google-ads/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-ads/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-ads/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-analytics",
@@ -4386,7 +4468,8 @@
         }
       ],
       "manifest_path": "manifests/google-analytics/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-analytics/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-analytics/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "google-books",
@@ -4437,7 +4520,8 @@
         }
       ],
       "manifest_path": "manifests/google-books/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-books/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-books/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-calendar",
@@ -4493,7 +4577,8 @@
         }
       ],
       "manifest_path": "manifests/google-calendar/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-calendar/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-calendar/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "google-gemini",
@@ -4566,7 +4651,8 @@
         }
       ],
       "manifest_path": "manifests/google-gemini/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "google-gemini-flash",
@@ -4606,7 +4692,8 @@
         }
       ],
       "manifest_path": "manifests/google-gemini-flash/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini-flash/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini-flash/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-gemini-pro",
@@ -4645,7 +4732,8 @@
         }
       ],
       "manifest_path": "manifests/google-gemini-pro/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini-pro/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini-pro/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-gemini-vision",
@@ -4704,7 +4792,8 @@
         }
       ],
       "manifest_path": "manifests/google-gemini-vision/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini-vision/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-gemini-vision/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-hotels",
@@ -4754,7 +4843,8 @@
         }
       ],
       "manifest_path": "manifests/google-hotels/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-hotels/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-hotels/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-maps",
@@ -4824,7 +4914,8 @@
         }
       ],
       "manifest_path": "manifests/google-maps/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-maps/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-maps/apia.json",
+      "capabilities_count": 7
     },
     {
       "id": "google-natural-language",
@@ -4889,7 +4980,8 @@
         }
       ],
       "manifest_path": "manifests/google-natural-language/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-natural-language/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-natural-language/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-search-console",
@@ -4931,7 +5023,8 @@
         }
       ],
       "manifest_path": "manifests/google-search-console/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-search-console/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-search-console/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-translate",
@@ -4967,7 +5060,8 @@
         }
       ],
       "manifest_path": "manifests/google-translate/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-translate/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-translate/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "google-vision",
@@ -5008,7 +5102,8 @@
         }
       ],
       "manifest_path": "manifests/google-vision/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-vision/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/google-vision/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "gosuslugi",
@@ -5042,7 +5137,8 @@
         }
       ],
       "manifest_path": "manifests/gosuslugi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gosuslugi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gosuslugi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "greenhouse",
@@ -5092,7 +5188,8 @@
         }
       ],
       "manifest_path": "manifests/greenhouse/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/greenhouse/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/greenhouse/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "groq",
@@ -5131,7 +5228,8 @@
         }
       ],
       "manifest_path": "manifests/groq/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/groq/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/groq/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "gtfs",
@@ -5180,7 +5278,8 @@
         }
       ],
       "manifest_path": "manifests/gtfs/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gtfs/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/gtfs/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "have-i-been-pwned",
@@ -5233,7 +5332,8 @@
         }
       ],
       "manifest_path": "manifests/have-i-been-pwned/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/have-i-been-pwned/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/have-i-been-pwned/apia.json",
+      "capabilities_count": 8
     },
     {
       "id": "here-maps",
@@ -5283,7 +5383,8 @@
         }
       ],
       "manifest_path": "manifests/here-maps/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/here-maps/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/here-maps/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "hflabs",
@@ -5330,7 +5431,8 @@
         }
       ],
       "manifest_path": "manifests/hflabs/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hflabs/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hflabs/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "hh-by",
@@ -5394,7 +5496,8 @@
         }
       ],
       "manifest_path": "manifests/hh-by/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-by/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-by/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "hh-kz",
@@ -5460,7 +5563,8 @@
         }
       ],
       "manifest_path": "manifests/hh-kz/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-kz/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-kz/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "hh-ru",
@@ -5558,7 +5662,8 @@
         }
       ],
       "manifest_path": "manifests/hh-ru/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-ru/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-ru/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "hh-uz",
@@ -5592,7 +5697,8 @@
         }
       ],
       "manifest_path": "manifests/hh-uz/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-uz/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hh-uz/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "home-assistant",
@@ -5660,7 +5766,8 @@
         }
       ],
       "manifest_path": "manifests/home-assistant/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/home-assistant/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/home-assistant/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "html2pdf",
@@ -5709,7 +5816,8 @@
         }
       ],
       "manifest_path": "manifests/html2pdf/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/html2pdf/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/html2pdf/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "hubspot",
@@ -5778,7 +5886,8 @@
         }
       ],
       "manifest_path": "manifests/hubspot/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hubspot/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hubspot/apia.json",
+      "capabilities_count": 8
     },
     {
       "id": "huggingface",
@@ -5815,7 +5924,8 @@
         }
       ],
       "manifest_path": "manifests/huggingface/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/huggingface/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/huggingface/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "hunter-io",
@@ -5878,7 +5988,8 @@
         }
       ],
       "manifest_path": "manifests/hunter-io/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hunter-io/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/hunter-io/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "idealista",
@@ -5930,7 +6041,8 @@
         }
       ],
       "manifest_path": "manifests/idealista/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/idealista/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/idealista/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "imgix",
@@ -5966,7 +6078,8 @@
         }
       ],
       "manifest_path": "manifests/imgix/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/imgix/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/imgix/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "inaturalist",
@@ -6016,7 +6129,8 @@
         }
       ],
       "manifest_path": "manifests/inaturalist/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/inaturalist/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/inaturalist/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "infermedica",
@@ -6070,7 +6184,8 @@
         }
       ],
       "manifest_path": "manifests/infermedica/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/infermedica/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/infermedica/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "instagram",
@@ -6120,7 +6235,8 @@
         }
       ],
       "manifest_path": "manifests/instagram/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/instagram/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/instagram/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "intercom",
@@ -6174,7 +6290,8 @@
         }
       ],
       "manifest_path": "manifests/intercom/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/intercom/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/intercom/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "ipapi",
@@ -6214,7 +6331,8 @@
         }
       ],
       "manifest_path": "manifests/ipapi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ipapi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ipapi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "ipgeolocation",
@@ -6252,7 +6370,8 @@
         }
       ],
       "manifest_path": "manifests/ipgeolocation/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ipgeolocation/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ipgeolocation/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "jira",
@@ -6307,7 +6426,8 @@
         }
       ],
       "manifest_path": "manifests/jira/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/jira/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/jira/apia.json",
+      "capabilities_count": 7
     },
     {
       "id": "jokeapi",
@@ -6343,7 +6463,8 @@
         }
       ],
       "manifest_path": "manifests/jokeapi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/jokeapi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/jokeapi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "khan-academy",
@@ -6395,7 +6516,8 @@
         }
       ],
       "manifest_path": "manifests/khan-academy/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/khan-academy/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/khan-academy/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "klaviyo",
@@ -6458,7 +6580,8 @@
         }
       ],
       "manifest_path": "manifests/klaviyo/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/klaviyo/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/klaviyo/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "kontur-focus",
@@ -6507,7 +6630,8 @@
         }
       ],
       "manifest_path": "manifests/kontur-focus/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/kontur-focus/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/kontur-focus/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "languagetool",
@@ -6549,7 +6673,8 @@
         }
       ],
       "manifest_path": "manifests/languagetool/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/languagetool/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/languagetool/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "linear",
@@ -6599,7 +6724,8 @@
         }
       ],
       "manifest_path": "manifests/linear/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/linear/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/linear/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "linkedin",
@@ -6652,7 +6778,8 @@
         }
       ],
       "manifest_path": "manifests/linkedin/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/linkedin/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/linkedin/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "lottie-files",
@@ -6692,7 +6819,8 @@
         }
       ],
       "manifest_path": "manifests/lottie-files/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/lottie-files/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/lottie-files/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "luma-ai",
@@ -6744,7 +6872,8 @@
         }
       ],
       "manifest_path": "manifests/luma-ai/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/luma-ai/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/luma-ai/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "mailchimp",
@@ -6797,7 +6926,8 @@
         }
       ],
       "manifest_path": "manifests/mailchimp/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mailchimp/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mailchimp/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "mailgun",
@@ -6846,7 +6976,8 @@
         }
       ],
       "manifest_path": "manifests/mailgun/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mailgun/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mailgun/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "mapbox",
@@ -6894,7 +7025,8 @@
         }
       ],
       "manifest_path": "manifests/mapbox/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mapbox/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mapbox/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "mapillary",
@@ -6929,7 +7061,8 @@
         }
       ],
       "manifest_path": "manifests/mapillary/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mapillary/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mapillary/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "mistral",
@@ -6984,7 +7117,8 @@
         }
       ],
       "manifest_path": "manifests/mistral/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mistral/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mistral/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "mistral-codestral",
@@ -7034,7 +7168,8 @@
         }
       ],
       "manifest_path": "manifests/mistral-codestral/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mistral-codestral/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mistral-codestral/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "mixpanel",
@@ -7082,7 +7217,8 @@
         }
       ],
       "manifest_path": "manifests/mixpanel/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mixpanel/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mixpanel/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "mos-ru-api",
@@ -7122,7 +7258,8 @@
         }
       ],
       "manifest_path": "manifests/mos-ru-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mos-ru-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/mos-ru-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "nager-date",
@@ -7193,7 +7330,8 @@
         }
       ],
       "manifest_path": "manifests/nager-date/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/nager-date/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/nager-date/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "nasa",
@@ -7260,7 +7398,8 @@
         }
       ],
       "manifest_path": "manifests/nasa/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/nasa/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/nasa/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "netlify",
@@ -7312,7 +7451,8 @@
         }
       ],
       "manifest_path": "manifests/netlify/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/netlify/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/netlify/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "newsapi",
@@ -7367,7 +7507,8 @@
         }
       ],
       "manifest_path": "manifests/newsapi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/newsapi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/newsapi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "notion-api",
@@ -7431,7 +7572,8 @@
         }
       ],
       "manifest_path": "manifests/notion-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/notion-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/notion-api/apia.json",
+      "capabilities_count": 7
     },
     {
       "id": "nutritionix",
@@ -7483,7 +7625,8 @@
         }
       ],
       "manifest_path": "manifests/nutritionix/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/nutritionix/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/nutritionix/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "o3-mini",
@@ -7525,7 +7668,8 @@
         }
       ],
       "manifest_path": "manifests/o3-mini/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/o3-mini/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/o3-mini/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "odds-api",
@@ -7562,7 +7706,8 @@
         }
       ],
       "manifest_path": "manifests/odds-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/odds-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/odds-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "open-alex",
@@ -7614,7 +7759,8 @@
         }
       ],
       "manifest_path": "manifests/open-alex/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-alex/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-alex/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "open-fda",
@@ -7679,7 +7825,8 @@
         }
       ],
       "manifest_path": "manifests/open-fda/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-fda/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-fda/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "open-food-facts",
@@ -7732,7 +7879,8 @@
         }
       ],
       "manifest_path": "manifests/open-food-facts/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-food-facts/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-food-facts/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "open-meteo",
@@ -7772,7 +7920,8 @@
         }
       ],
       "manifest_path": "manifests/open-meteo/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-meteo/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-meteo/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "open-trivia",
@@ -7810,7 +7959,8 @@
         }
       ],
       "manifest_path": "manifests/open-trivia/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-trivia/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/open-trivia/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openai",
@@ -7894,7 +8044,8 @@
         }
       ],
       "manifest_path": "manifests/openai/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai/apia.json",
+      "capabilities_count": 8
     },
     {
       "id": "openai-assistants",
@@ -7946,7 +8097,8 @@
         }
       ],
       "manifest_path": "manifests/openai-assistants/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-assistants/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-assistants/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "openai-batch",
@@ -7985,7 +8137,8 @@
         }
       ],
       "manifest_path": "manifests/openai-batch/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-batch/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-batch/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openai-fine-tuning",
@@ -8024,7 +8177,8 @@
         }
       ],
       "manifest_path": "manifests/openai-fine-tuning/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-fine-tuning/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-fine-tuning/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openai-images",
@@ -8078,7 +8232,8 @@
         }
       ],
       "manifest_path": "manifests/openai-images/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-images/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-images/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "openai-moderation",
@@ -8118,7 +8273,8 @@
         }
       ],
       "manifest_path": "manifests/openai-moderation/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-moderation/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-moderation/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openai-tts",
@@ -8159,7 +8315,8 @@
         }
       ],
       "manifest_path": "manifests/openai-tts/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-tts/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-tts/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openai-whisper",
@@ -8209,7 +8366,8 @@
         }
       ],
       "manifest_path": "manifests/openai-whisper/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-whisper/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openai-whisper/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openaq",
@@ -8261,7 +8419,8 @@
         }
       ],
       "manifest_path": "manifests/openaq/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openaq/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openaq/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "opencorporates",
@@ -8296,7 +8455,8 @@
         }
       ],
       "manifest_path": "manifests/opencorporates/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/opencorporates/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/opencorporates/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "opensky-network",
@@ -8335,7 +8495,8 @@
         }
       ],
       "manifest_path": "manifests/opensky-network/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/opensky-network/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/opensky-network/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openstreetmap-nominatim",
@@ -8384,7 +8545,8 @@
         }
       ],
       "manifest_path": "manifests/openstreetmap-nominatim/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openstreetmap-nominatim/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openstreetmap-nominatim/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openstreetmap-overpass",
@@ -8427,7 +8589,8 @@
         }
       ],
       "manifest_path": "manifests/openstreetmap-overpass/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openstreetmap-overpass/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openstreetmap-overpass/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "openweathermap",
@@ -8497,7 +8660,8 @@
         }
       ],
       "manifest_path": "manifests/openweathermap/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openweathermap/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openweathermap/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "ozon",
@@ -8551,7 +8715,8 @@
         }
       ],
       "manifest_path": "manifests/ozon/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ozon/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ozon/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "pagerduty",
@@ -8600,7 +8765,8 @@
         }
       ],
       "manifest_path": "manifests/pagerduty/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pagerduty/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pagerduty/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "particle",
@@ -8649,7 +8815,8 @@
         }
       ],
       "manifest_path": "manifests/particle/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/particle/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/particle/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "paypal",
@@ -8698,7 +8865,8 @@
         }
       ],
       "manifest_path": "manifests/paypal/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/paypal/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/paypal/apia.json",
+      "capabilities_count": 7
     },
     {
       "id": "perplexity",
@@ -8736,7 +8904,8 @@
         }
       ],
       "manifest_path": "manifests/perplexity/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/perplexity/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/perplexity/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "perspective-api",
@@ -8780,7 +8949,8 @@
         }
       ],
       "manifest_path": "manifests/perspective-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/perspective-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/perspective-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "pexels",
@@ -8834,7 +9004,8 @@
         }
       ],
       "manifest_path": "manifests/pexels/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pexels/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pexels/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "philips-hue",
@@ -8889,7 +9060,8 @@
         }
       ],
       "manifest_path": "manifests/philips-hue/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/philips-hue/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/philips-hue/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "pinecone",
@@ -8940,7 +9112,8 @@
         }
       ],
       "manifest_path": "manifests/pinecone/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pinecone/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pinecone/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "pipedrive",
@@ -8993,7 +9166,8 @@
         }
       ],
       "manifest_path": "manifests/pipedrive/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pipedrive/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pipedrive/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "plaid",
@@ -9052,7 +9226,8 @@
         }
       ],
       "manifest_path": "manifests/plaid/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/plaid/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/plaid/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "planet-labs",
@@ -9092,7 +9267,8 @@
         }
       ],
       "manifest_path": "manifests/planet-labs/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/planet-labs/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/planet-labs/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "pochta-russia",
@@ -9146,7 +9322,8 @@
         }
       ],
       "manifest_path": "manifests/pochta-russia/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pochta-russia/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pochta-russia/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "pokeapi",
@@ -9195,7 +9372,8 @@
         }
       ],
       "manifest_path": "manifests/pokeapi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pokeapi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pokeapi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "polygon-io",
@@ -9246,7 +9424,8 @@
         }
       ],
       "manifest_path": "manifests/polygon-io/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/polygon-io/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/polygon-io/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "posthog",
@@ -9295,7 +9474,8 @@
         }
       ],
       "manifest_path": "manifests/posthog/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/posthog/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/posthog/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "pubmed",
@@ -9355,7 +9535,8 @@
         }
       ],
       "manifest_path": "manifests/pubmed/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pubmed/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/pubmed/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "qr-code-api",
@@ -9395,7 +9576,8 @@
         }
       ],
       "manifest_path": "manifests/qr-code-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/qr-code-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/qr-code-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "rapidapi",
@@ -9435,7 +9617,8 @@
         }
       ],
       "manifest_path": "manifests/rapidapi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rapidapi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rapidapi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "reddit",
@@ -9503,7 +9686,8 @@
         }
       ],
       "manifest_path": "manifests/reddit/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/reddit/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/reddit/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "replicate",
@@ -9540,7 +9724,8 @@
         }
       ],
       "manifest_path": "manifests/replicate/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/replicate/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/replicate/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "rest-countries",
@@ -9595,7 +9780,8 @@
         }
       ],
       "manifest_path": "manifests/rest-countries/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rest-countries/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rest-countries/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "rightmove",
@@ -9634,7 +9820,8 @@
         }
       ],
       "manifest_path": "manifests/rightmove/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rightmove/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rightmove/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "rosreestr",
@@ -9673,7 +9860,8 @@
         }
       ],
       "manifest_path": "manifests/rosreestr/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rosreestr/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/rosreestr/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "runway",
@@ -9724,7 +9912,8 @@
         }
       ],
       "manifest_path": "manifests/runway/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/runway/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/runway/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "salesforce",
@@ -9774,7 +9963,8 @@
         }
       ],
       "manifest_path": "manifests/salesforce/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/salesforce/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/salesforce/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "sber-api",
@@ -9822,7 +10012,8 @@
         }
       ],
       "manifest_path": "manifests/sber-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sber-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sber-api/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "screenshotapi",
@@ -9858,7 +10049,8 @@
         }
       ],
       "manifest_path": "manifests/screenshotapi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/screenshotapi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/screenshotapi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "sec-edgar",
@@ -9915,7 +10107,8 @@
         }
       ],
       "manifest_path": "manifests/sec-edgar/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sec-edgar/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sec-edgar/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "segment",
@@ -9963,7 +10156,8 @@
         }
       ],
       "manifest_path": "manifests/segment/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/segment/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/segment/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "semantic-scholar",
@@ -10012,7 +10206,8 @@
         }
       ],
       "manifest_path": "manifests/semantic-scholar/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/semantic-scholar/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/semantic-scholar/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "sendbird",
@@ -10065,7 +10260,8 @@
         }
       ],
       "manifest_path": "manifests/sendbird/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sendbird/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sendbird/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "sendgrid",
@@ -10107,7 +10303,8 @@
         }
       ],
       "manifest_path": "manifests/sendgrid/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sendgrid/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sendgrid/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "sentry",
@@ -10161,7 +10358,8 @@
         }
       ],
       "manifest_path": "manifests/sentry/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sentry/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sentry/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "serpapi",
@@ -10216,7 +10414,8 @@
         }
       ],
       "manifest_path": "manifests/serpapi/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/serpapi/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/serpapi/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "shippo",
@@ -10254,7 +10453,8 @@
         }
       ],
       "manifest_path": "manifests/shippo/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/shippo/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/shippo/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "shodan",
@@ -10308,7 +10508,8 @@
         }
       ],
       "manifest_path": "manifests/shodan/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/shodan/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/shodan/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "shopify",
@@ -10355,7 +10556,8 @@
         }
       ],
       "manifest_path": "manifests/shopify/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/shopify/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/shopify/apia.json",
+      "capabilities_count": 10
     },
     {
       "id": "skyscanner",
@@ -10395,7 +10597,8 @@
         }
       ],
       "manifest_path": "manifests/skyscanner/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/skyscanner/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/skyscanner/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "slack-api",
@@ -10449,7 +10652,8 @@
         }
       ],
       "manifest_path": "manifests/slack-api/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/slack-api/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/slack-api/apia.json",
+      "capabilities_count": 8
     },
     {
       "id": "spoonacular",
@@ -10500,7 +10704,8 @@
         }
       ],
       "manifest_path": "manifests/spoonacular/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/spoonacular/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/spoonacular/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "sportsdata-io",
@@ -10551,7 +10756,8 @@
         }
       ],
       "manifest_path": "manifests/sportsdata-io/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sportsdata-io/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/sportsdata-io/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "spotify",
@@ -10624,7 +10830,8 @@
         }
       ],
       "manifest_path": "manifests/spotify/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/spotify/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/spotify/apia.json",
+      "capabilities_count": 8
     },
     {
       "id": "stability-ai",
@@ -10666,7 +10873,8 @@
         }
       ],
       "manifest_path": "manifests/stability-ai/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/stability-ai/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/stability-ai/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "steam",
@@ -10748,7 +10956,8 @@
         }
       ],
       "manifest_path": "manifests/steam/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/steam/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/steam/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "strava",
@@ -10813,7 +11022,8 @@
         }
       ],
       "manifest_path": "manifests/strava/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/strava/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/strava/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "stripe",
@@ -10881,7 +11091,8 @@
         }
       ],
       "manifest_path": "manifests/stripe/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/stripe/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/stripe/apia.json",
+      "capabilities_count": 8
     },
     {
       "id": "supabase",
@@ -10948,7 +11159,8 @@
         }
       ],
       "manifest_path": "manifests/supabase/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/supabase/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/supabase/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "superjob",
@@ -11031,7 +11243,8 @@
         }
       ],
       "manifest_path": "manifests/superjob/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/superjob/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/superjob/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "superjob-resumes",
@@ -11085,7 +11298,8 @@
         }
       ],
       "manifest_path": "manifests/superjob-resumes/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/superjob-resumes/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/superjob-resumes/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "telegram-bot",
@@ -11151,7 +11365,8 @@
         }
       ],
       "manifest_path": "manifests/telegram-bot/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/telegram-bot/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/telegram-bot/apia.json",
+      "capabilities_count": 8
     },
     {
       "id": "tesla",
@@ -11207,7 +11422,8 @@
         }
       ],
       "manifest_path": "manifests/tesla/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tesla/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tesla/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "textrazor",
@@ -11243,7 +11459,8 @@
         }
       ],
       "manifest_path": "manifests/textrazor/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/textrazor/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/textrazor/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "themealdb",
@@ -11311,7 +11528,8 @@
         }
       ],
       "manifest_path": "manifests/themealdb/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/themealdb/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/themealdb/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "tiktok",
@@ -11346,7 +11564,8 @@
         }
       ],
       "manifest_path": "manifests/tiktok/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tiktok/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tiktok/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "tinkoff-acquiring",
@@ -11393,7 +11612,8 @@
         }
       ],
       "manifest_path": "manifests/tinkoff-acquiring/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tinkoff-acquiring/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tinkoff-acquiring/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "tmdb",
@@ -11462,7 +11682,8 @@
         }
       ],
       "manifest_path": "manifests/tmdb/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tmdb/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tmdb/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "together-ai",
@@ -11499,7 +11720,8 @@
         }
       ],
       "manifest_path": "manifests/together-ai/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/together-ai/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/together-ai/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "tripadvisor",
@@ -11553,7 +11775,8 @@
         }
       ],
       "manifest_path": "manifests/tripadvisor/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tripadvisor/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/tripadvisor/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "trudvsem",
@@ -11634,7 +11857,8 @@
         }
       ],
       "manifest_path": "manifests/trudvsem/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/trudvsem/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/trudvsem/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "twilio",
@@ -11687,7 +11911,8 @@
         }
       ],
       "manifest_path": "manifests/twilio/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twilio/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twilio/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "twilio-studio",
@@ -11723,7 +11948,8 @@
         }
       ],
       "manifest_path": "manifests/twilio-studio/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twilio-studio/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twilio-studio/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "twilio-verify",
@@ -11774,7 +12000,8 @@
         }
       ],
       "manifest_path": "manifests/twilio-verify/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twilio-verify/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twilio-verify/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "twitch",
@@ -11830,7 +12057,8 @@
         }
       ],
       "manifest_path": "manifests/twitch/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twitch/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twitch/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "twitter-x",
@@ -11885,7 +12113,8 @@
         }
       ],
       "manifest_path": "manifests/twitter-x/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twitter-x/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/twitter-x/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "typeform",
@@ -11937,7 +12166,8 @@
         }
       ],
       "manifest_path": "manifests/typeform/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/typeform/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/typeform/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "uber",
@@ -11985,7 +12215,8 @@
         }
       ],
       "manifest_path": "manifests/uber/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/uber/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/uber/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "unsplash",
@@ -12037,7 +12268,8 @@
         }
       ],
       "manifest_path": "manifests/unsplash/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/unsplash/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/unsplash/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "vercel",
@@ -12089,7 +12321,8 @@
         }
       ],
       "manifest_path": "manifests/vercel/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/vercel/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/vercel/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "virustotal",
@@ -12155,7 +12388,8 @@
         }
       ],
       "manifest_path": "manifests/virustotal/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/virustotal/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/virustotal/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "vk",
@@ -12230,7 +12464,8 @@
         }
       ],
       "manifest_path": "manifests/vk/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/vk/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/vk/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "who",
@@ -12286,7 +12521,8 @@
         }
       ],
       "manifest_path": "manifests/who/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/who/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/who/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "wikidata",
@@ -12339,7 +12575,8 @@
         }
       ],
       "manifest_path": "manifests/wikidata/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wikidata/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wikidata/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "wikipedia",
@@ -12410,7 +12647,8 @@
         }
       ],
       "manifest_path": "manifests/wikipedia/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wikipedia/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wikipedia/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "wildberries",
@@ -12464,7 +12702,8 @@
         }
       ],
       "manifest_path": "manifests/wildberries/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wildberries/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wildberries/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "wise",
@@ -12513,7 +12752,8 @@
         }
       ],
       "manifest_path": "manifests/wise/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wise/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wise/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "wolfram-alpha",
@@ -12575,7 +12815,8 @@
         }
       ],
       "manifest_path": "manifests/wolfram-alpha/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wolfram-alpha/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wolfram-alpha/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "woocommerce",
@@ -12626,7 +12867,8 @@
         }
       ],
       "manifest_path": "manifests/woocommerce/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/woocommerce/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/woocommerce/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "workday",
@@ -12662,7 +12904,8 @@
         }
       ],
       "manifest_path": "manifests/workday/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/workday/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/workday/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "world-bank",
@@ -12714,7 +12957,8 @@
         }
       ],
       "manifest_path": "manifests/world-bank/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/world-bank/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/world-bank/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "xai-grok",
@@ -12770,7 +13014,8 @@
         }
       ],
       "manifest_path": "manifests/xai-grok/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/xai-grok/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/xai-grok/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "yandex-disk",
@@ -12833,7 +13078,8 @@
         }
       ],
       "manifest_path": "manifests/yandex-disk/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-disk/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-disk/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "yandex-gpt",
@@ -12882,7 +13128,8 @@
         }
       ],
       "manifest_path": "manifests/yandex-gpt/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-gpt/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-gpt/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "yandex-maps",
@@ -12961,7 +13208,8 @@
         }
       ],
       "manifest_path": "manifests/yandex-maps/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-maps/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-maps/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "yandex-rasp",
@@ -13058,7 +13306,8 @@
         }
       ],
       "manifest_path": "manifests/yandex-rasp/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-rasp/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yandex-rasp/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "yelp",
@@ -13098,7 +13347,8 @@
         }
       ],
       "manifest_path": "manifests/yelp/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yelp/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yelp/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "yookassa",
@@ -13153,7 +13403,8 @@
         }
       ],
       "manifest_path": "manifests/yookassa/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yookassa/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/yookassa/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "youtube",
@@ -13204,7 +13455,8 @@
         }
       ],
       "manifest_path": "manifests/youtube/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/youtube/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/youtube/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "youtube-analytics",
@@ -13247,7 +13499,8 @@
         }
       ],
       "manifest_path": "manifests/youtube-analytics/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/youtube-analytics/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/youtube-analytics/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "zapier",
@@ -13300,7 +13553,8 @@
         }
       ],
       "manifest_path": "manifests/zapier/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zapier/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zapier/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "zendesk",
@@ -13349,7 +13603,8 @@
         }
       ],
       "manifest_path": "manifests/zendesk/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zendesk/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zendesk/apia.json",
+      "capabilities_count": 6
     },
     {
       "id": "zillow",
@@ -13391,7 +13646,8 @@
         }
       ],
       "manifest_path": "manifests/zillow/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zillow/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zillow/apia.json",
+      "capabilities_count": 5
     },
     {
       "id": "zoominfo",
@@ -13428,7 +13684,8 @@
         }
       ],
       "manifest_path": "manifests/zoominfo/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zoominfo/apia.json"
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/zoominfo/apia.json",
+      "capabilities_count": 5
     }
   ]
 }
