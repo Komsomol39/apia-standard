@@ -22,54 +22,47 @@
   "capabilities": [
     {
       "id": "get_users",
-      "description_for_ai": "Get users from Auth0 tenant with profile, login stats, and custom metadata. Filter by email, connection, or custom query.",
+      "description_for_ai": "Search and list Auth0 users with filters.",
       "intent": [
-        "get users",
-        "user list",
-        "auth users",
-        "registered users",
-        "user management"
+        "auth0 users",
+        "list users",
+        "user management",
+        "пользователи auth0"
       ],
       "endpoint": "GET https://{tenant}.auth0.com/api/v2/users",
       "input": {
-        "page": {
-          "type": "integer",
-          "description": "Page number (0-indexed)",
-          "default": 0
+        "q": {
+          "type": "string",
+          "description": "Lucene query: email:john@* OR user_metadata.plan:pro",
+          "required": false
         },
         "per_page": {
           "type": "integer",
-          "description": "Results per page, max 100",
           "default": 50
         },
-        "q": {
-          "type": "string",
-          "description": "Lucene query syntax: 'email:user@example.com', 'logins_count:[5 TO *]', 'app_metadata.role:admin'",
-          "required": false
-        },
-        "fields": {
-          "type": "string",
-          "description": "Comma-separated fields to return: user_id,email,name,last_login,logins_count,app_metadata,user_metadata",
-          "required": false
+        "page": {
+          "type": "integer",
+          "default": 0
         },
         "sort": {
           "type": "string",
-          "description": "Sort by field:order e.g. 'last_login:-1' (newest first), 'email:1' (A-Z)",
+          "description": "field:order e.g. created_at:-1",
           "required": false
+        },
+        "include_totals": {
+          "type": "boolean",
+          "default": false
         }
       },
       "output": {
         "type": "list<user>",
         "fields": [
-          "user_id",
-          "email",
-          "name",
-          "picture",
-          "last_login",
-          "logins_count",
-          "created_at",
-          "user_metadata (custom user data)",
-          "app_metadata (roles, permissions)"
+          "[0].user_id",
+          "[0].email",
+          "[0].name",
+          "[0].created_at",
+          "[0].last_login",
+          "[0].login_count"
         ]
       },
       "realtime": true,
@@ -77,63 +70,147 @@
     },
     {
       "id": "create_user",
-      "description_for_ai": "Create a new user in Auth0 database connection. Set email, password, and custom metadata.",
+      "description_for_ai": "Create a new Auth0 user with email, password, and metadata.",
       "intent": [
-        "create user",
+        "create user auth0",
         "register user",
-        "add user",
-        "new account"
+        "new auth0 account",
+        "создать пользователя auth0"
       ],
       "endpoint": "POST https://{tenant}.auth0.com/api/v2/users",
       "input": {
         "connection": {
           "type": "string",
-          "description": "Database connection name: 'Username-Password-Authentication' (default), or custom connection name",
+          "description": "Connection name e.g. Username-Password-Authentication",
           "required": true
         },
         "email": {
           "type": "string",
-          "description": "User's email address (must be unique)",
           "required": true
         },
         "password": {
           "type": "string",
-          "description": "Password — must meet connection's password policy (min length, complexity)",
-          "required": true
-        },
-        "email_verified": {
-          "type": "boolean",
-          "description": "Skip email verification if true",
-          "default": false
+          "required": false
         },
         "name": {
           "type": "string",
-          "description": "User's display name",
-          "required": false
-        },
-        "user_metadata": {
-          "type": "object",
-          "description": "Custom data editable by user: {preferences: {theme: 'dark'}, onboarding: {step: 1}}",
           "required": false
         },
         "app_metadata": {
           "type": "object",
-          "description": "App-managed data (not user-editable): {roles: ['admin'], plan: 'pro', tenant_id: 'abc123'}",
+          "description": "App-specific data: {plan: 'pro', role: 'admin'}",
+          "required": false
+        },
+        "user_metadata": {
+          "type": "object",
+          "description": "User preferences: {theme: 'dark', language: 'en'}",
+          "required": false
+        },
+        "email_verified": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "user",
+        "fields": [
+          "user_id",
+          "email",
+          "created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_user",
+      "description_for_ai": "Update Auth0 user metadata, roles, or blocked status.",
+      "intent": [
+        "update user auth0",
+        "block user",
+        "change role auth0",
+        "обновить пользователя auth0"
+      ],
+      "endpoint": "PATCH https://{tenant}.auth0.com/api/v2/users/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Auth0 user ID (auth0|xxxxx)",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "app_metadata": {
+          "type": "object",
+          "required": false
+        },
+        "user_metadata": {
+          "type": "object",
+          "required": false
+        },
+        "blocked": {
+          "type": "boolean",
+          "description": "Block user from logging in",
+          "required": false
+        },
+        "email_verified": {
+          "type": "boolean",
           "required": false
         }
       },
       "output": {
         "type": "user",
         "fields": [
-          "user_id (format: 'auth0|123456')",
+          "user_id",
           "email",
-          "name",
-          "created_at",
-          "identities"
+          "updated_at",
+          "blocked"
         ]
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_token",
+      "description_for_ai": "Get a Management API access token using client credentials flow.",
+      "intent": [
+        "auth0 access token",
+        "management API token",
+        "client credentials",
+        "токен auth0"
+      ],
+      "endpoint": "POST https://{tenant}.auth0.com/oauth/token",
+      "input": {
+        "grant_type": {
+          "type": "string",
+          "default": "client_credentials"
+        },
+        "client_id": {
+          "type": "string",
+          "required": true
+        },
+        "client_secret": {
+          "type": "string",
+          "required": true
+        },
+        "audience": {
+          "type": "string",
+          "description": "https://{tenant}.auth0.com/api/v2/",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "token",
+        "fields": [
+          "access_token",
+          "expires_in",
+          "token_type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "meta": {
