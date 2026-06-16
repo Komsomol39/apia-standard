@@ -22,36 +22,85 @@
   },
   "capabilities": [
     {
-      "id": "search_contacts",
-      "description_for_ai": "Search Intercom contacts (leads and users) by email, name, or custom attributes.",
+      "id": "list_conversations",
+      "description_for_ai": "List customer conversations in Intercom.",
       "intent": [
-        "find contact intercom",
-        "search user intercom",
-        "customer lookup intercom",
-        "поиск контакта intercom"
+        "Intercom conversations",
+        "customer chats",
+        "support conversations",
+        "разговоры Intercom"
       ],
-      "endpoint": "POST https://api.intercom.io/contacts/search",
+      "endpoint": "GET https://api.intercom.io/conversations",
       "input": {
-        "query": {
-          "type": "object",
-          "description": "{field: 'email', operator: '=', value: 'user@example.com'} or {operator: 'AND', value: [{...}, {...}]}",
-          "required": true
-        },
-        "pagination": {
-          "type": "object",
-          "description": "{per_page: 20}",
+        "open": {
+          "type": "boolean",
+          "description": "Filter open/closed",
           "required": false
+        },
+        "assigned_to": {
+          "type": "string",
+          "description": "Admin ID",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
-        "type": "list<contact>",
+        "type": "list<conversation>",
         "fields": [
-          "data[0].id",
-          "data[0].email",
-          "data[0].name",
-          "data[0].external_id",
-          "data[0].created_at",
-          "total_count"
+          "conversations[0].id",
+          "conversations[0].title",
+          "conversations[0].state",
+          "conversations[0].read",
+          "conversations[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_message",
+      "description_for_ai": "Send a message to a user via Intercom.",
+      "intent": [
+        "send Intercom message",
+        "message user Intercom",
+        "outbound message",
+        "отправить сообщение Intercom"
+      ],
+      "endpoint": "POST https://api.intercom.io/messages",
+      "input": {
+        "message_type": {
+          "type": "string",
+          "description": "inapp or email",
+          "required": true
+        },
+        "subject": {
+          "type": "string",
+          "description": "Email subject",
+          "required": false
+        },
+        "body": {
+          "type": "string",
+          "required": true
+        },
+        "from": {
+          "type": "object",
+          "description": "{type: 'admin', id: 'admin_id'}",
+          "required": true
+        },
+        "to": {
+          "type": "object",
+          "description": "{type: 'user', id: 'user_id'} or {type: 'contact', id: 'contact_id'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "id",
+          "created_at"
         ]
       },
       "realtime": true,
@@ -59,12 +108,12 @@
     },
     {
       "id": "create_contact",
-      "description_for_ai": "Create a new Intercom user or lead.",
+      "description_for_ai": "Create or update a user/lead contact in Intercom.",
       "intent": [
-        "create contact intercom",
-        "add user intercom",
-        "new lead intercom",
-        "добавить контакт intercom"
+        "create contact Intercom",
+        "new user Intercom",
+        "add lead Intercom",
+        "контакт Intercom"
       ],
       "endpoint": "POST https://api.intercom.io/contacts",
       "input": {
@@ -88,7 +137,6 @@
         },
         "custom_attributes": {
           "type": "object",
-          "description": "{plan: 'pro', company: 'Acme'}",
           "required": false
         }
       },
@@ -96,6 +144,7 @@
         "type": "contact",
         "fields": [
           "id",
+          "external_id",
           "email",
           "name",
           "role",
@@ -106,110 +155,46 @@
       "requires_auth": true
     },
     {
-      "id": "send_message",
-      "description_for_ai": "Send a message to a user via Intercom (email or in-app).",
+      "id": "list_contacts",
+      "description_for_ai": "List contacts (users/leads) in Intercom.",
       "intent": [
-        "intercom message",
-        "send in-app message",
-        "customer message intercom",
-        "написать пользователю intercom"
+        "Intercom contacts",
+        "users list Intercom",
+        "leads Intercom",
+        "контакты Intercom"
       ],
-      "endpoint": "POST https://api.intercom.io/messages",
+      "endpoint": "GET https://api.intercom.io/contacts",
       "input": {
-        "message_type": {
-          "type": "string",
-          "description": "email or inapp",
-          "required": true
-        },
-        "subject": {
-          "type": "string",
-          "description": "Email subject",
-          "required": false
-        },
-        "body": {
-          "type": "string",
-          "description": "Message content (HTML for email)",
-          "required": true
-        },
-        "from": {
-          "type": "object",
-          "description": "{type: admin, id: 'admin_id'}",
-          "required": true
-        },
-        "to": {
-          "type": "object",
-          "description": "{type: user, id: 'contact_id'}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "message",
-        "fields": [
-          "id",
-          "message_type",
-          "subject",
-          "body",
-          "created_at"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "list_conversations",
-      "description_for_ai": "List Intercom conversations with filters by status and assignee.",
-      "intent": [
-        "intercom conversations",
-        "support chats",
-        "customer conversations",
-        "разговоры intercom"
-      ],
-      "endpoint": "GET https://api.intercom.io/conversations",
-      "input": {
-        "open": {
-          "type": "boolean",
-          "description": "true for open, false for closed",
-          "required": false
-        },
-        "assigned": {
-          "type": "boolean",
-          "required": false
-        },
-        "display_as": {
-          "type": "string",
-          "description": "plaintext or html",
-          "default": "plaintext"
-        },
         "per_page": {
           "type": "integer",
-          "default": 20
+          "default": 50
         }
       },
       "output": {
-        "type": "list<conversation>",
+        "type": "list<contact>",
         "fields": [
-          "conversations[0].id",
-          "conversations[0].title",
-          "conversations[0].state",
-          "conversations[0].contact.contacts[0].id",
-          "conversations[0].statistics"
+          "data[0].id",
+          "data[0].email",
+          "data[0].name",
+          "data[0].role",
+          "data[0].last_seen_at"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_note",
-      "description_for_ai": "Add an internal note to an Intercom conversation.",
+      "id": "reply_conversation",
+      "description_for_ai": "Reply to an Intercom conversation as admin.",
       "intent": [
-        "intercom note",
-        "internal note",
-        "add comment intercom",
-        "заметка intercom"
+        "reply Intercom",
+        "respond conversation",
+        "admin reply",
+        "ответить в Intercom"
       ],
-      "endpoint": "POST https://api.intercom.io/conversations/{conversation_id}/reply",
+      "endpoint": "POST https://api.intercom.io/conversations/{id}/reply",
       "input": {
-        "conversation_id": {
+        "id": {
           "type": "string",
           "required": true
         },
@@ -223,7 +208,8 @@
         },
         "message_type": {
           "type": "string",
-          "default": "note"
+          "description": "comment or note",
+          "default": "comment"
         },
         "body": {
           "type": "string",
@@ -231,12 +217,47 @@
         }
       },
       "output": {
+        "type": "conversation",
+        "fields": [
+          "id",
+          "state",
+          "updated_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_note",
+      "description_for_ai": "Create an internal note on a contact in Intercom.",
+      "intent": [
+        "note Intercom",
+        "internal note",
+        "contact note",
+        "заметка в Intercom"
+      ],
+      "endpoint": "POST https://api.intercom.io/notes",
+      "input": {
+        "body": {
+          "type": "string",
+          "required": true
+        },
+        "contact_id": {
+          "type": "string",
+          "required": true
+        },
+        "admin_id": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
         "type": "note",
         "fields": [
-          "type",
           "id",
           "body",
-          "created_at"
+          "created_at",
+          "contact.id"
         ]
       },
       "realtime": true,
