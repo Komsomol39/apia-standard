@@ -94,6 +94,109 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_health_data",
+      "description_for_ai": "Get WHO global health statistics by indicator and country.",
+      "intent": [
+        "WHO health data",
+        "global health statistics",
+        "world health indicators",
+        "данные ВОЗ"
+      ],
+      "endpoint": "GET https://ghoapi.azureedge.net/api/{indicator_code}",
+      "input": {
+        "indicator_code": {
+          "type": "string",
+          "description": "WHO GHO indicator: WHOSIS_000001 (life expectancy), NCD_BMI_30A (obesity), SA_0000001400 (alcohol), RSUD_560 (road traffic deaths)",
+          "required": true
+        },
+        "$filter": {
+          "type": "string",
+          "description": "OData filter: SpatialDim eq 'USA' and TimeDim eq 2020",
+          "required": false
+        },
+        "$top": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "list<record>",
+        "fields": [
+          "value[0].SpatialDim (country)",
+          "value[0].TimeDim (year)",
+          "value[0].NumericValue",
+          "value[0].Value"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "list_indicators",
+      "description_for_ai": "List all WHO GHO health indicators.",
+      "intent": [
+        "WHO indicators",
+        "health metrics list",
+        "GHO data WHO",
+        "показатели ВОЗ"
+      ],
+      "endpoint": "GET https://ghoapi.azureedge.net/api/Indicator",
+      "input": {
+        "$filter": {
+          "type": "string",
+          "description": "IndicatorName eq 'Life expectancy at birth'",
+          "required": false
+        },
+        "$search": {
+          "type": "string",
+          "description": "Text search",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<indicator>",
+        "fields": [
+          "value[0].IndicatorCode",
+          "value[0].IndicatorName",
+          "value[0].Language"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_disease_data",
+      "description_for_ai": "Get WHO data on specific diseases: malaria, tuberculosis, HIV, COVID-19.",
+      "intent": [
+        "WHO disease data",
+        "malaria statistics",
+        "tuberculosis WHO",
+        "данные болезней ВОЗ"
+      ],
+      "endpoint": "GET https://ghoapi.azureedge.net/api/{indicator_code}",
+      "input": {
+        "indicator_code": {
+          "type": "string",
+          "description": "MALARIA_EST_CASES (malaria cases), TB_e_mort_100k (TB mortality), HIV_0000000001 (HIV prevalence)",
+          "required": true
+        },
+        "$filter": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<record>",
+        "fields": [
+          "value[0].SpatialDim",
+          "value[0].TimeDim",
+          "value[0].NumericValue"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
