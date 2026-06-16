@@ -114,6 +114,63 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "search_by_ingredient",
+      "description_for_ai": "Search recipes by main ingredient.",
+      "intent": [
+        "recipe by ingredient",
+        "meal by ingredient",
+        "что приготовить из"
+      ],
+      "endpoint": "GET https://www.themealdb.com/api/json/v1/1/filter.php",
+      "input": {
+        "i": {
+          "type": "string",
+          "description": "Ingredient name e.g. chicken",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<meal>",
+        "fields": [
+          "meals[0].idMeal",
+          "meals[0].strMeal",
+          "meals[0].strMealThumb"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_meal_details",
+      "description_for_ai": "Get full recipe details by meal ID: ingredients, measurements, instructions.",
+      "intent": [
+        "recipe details",
+        "meal instructions",
+        "полный рецепт",
+        "recipe ingredients"
+      ],
+      "endpoint": "GET https://www.themealdb.com/api/json/v1/1/lookup.php",
+      "input": {
+        "i": {
+          "type": "string",
+          "description": "Meal ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "meal",
+        "fields": [
+          "meals[0].strMeal",
+          "meals[0].strInstructions",
+          "meals[0].strIngredient1..20",
+          "meals[0].strMeasure1..20",
+          "meals[0].strYoutube"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "meta": {
