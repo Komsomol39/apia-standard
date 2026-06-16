@@ -93,6 +93,84 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "analyze_image",
+      "description_for_ai": "Analyze images, PDFs, video frames with Gemini Vision. Describe, extract, or answer questions.",
+      "intent": [
+        "gemini vision",
+        "analyze image google",
+        "OCR google AI",
+        "анализ изображения gemini"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "description": "[{parts: [{inline_data: {mime_type: 'image/jpeg', data: 'base64'}}, {text: 'Describe this image'}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "text",
+        "fields": [
+          "candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "extract_text_ocr",
+      "description_for_ai": "Extract text from images and documents using Gemini Vision OCR.",
+      "intent": [
+        "OCR gemini",
+        "extract text from image",
+        "image text extraction",
+        "OCR google"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "description": "[{parts: [{inline_data: {mime_type: 'image/jpeg', data: 'base64'}}, {text: 'Extract all text from this image. Return just the text.'}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "text",
+        "fields": [
+          "candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "compare_images",
+      "description_for_ai": "Compare multiple images and describe similarities or differences with Gemini Vision.",
+      "intent": [
+        "compare images",
+        "image comparison",
+        "difference images",
+        "сравнить изображения"
+      ],
+      "endpoint": "POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+      "input": {
+        "contents": {
+          "type": "array",
+          "description": "[{parts: [{inline_data: img1}, {inline_data: img2}, {text: 'Compare these images'}]}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "text",
+        "fields": [
+          "candidates[0].content.parts[0].text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
