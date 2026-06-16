@@ -181,6 +181,41 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_post_comments",
+      "description_for_ai": "Get comments on a Facebook post or page post.",
+      "intent": [
+        "facebook comments",
+        "post comments",
+        "комментарии facebook"
+      ],
+      "endpoint": "GET https://graph.facebook.com/v19.0/{post_id}/comments",
+      "input": {
+        "post_id": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 25
+        },
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<comment>",
+        "fields": [
+          "data[0].id",
+          "data[0].message",
+          "data[0].from.name",
+          "data[0].created_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
