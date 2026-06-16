@@ -22,32 +22,142 @@
   },
   "capabilities": [
     {
-      "id": "create_search",
-      "description_for_ai": "Flight price search across 1200+ airlines. Live prices, price calendars, route suggestions. Used by millions of travelers. Requires partnership for full access. Use for flight price comparison, cheapest dates, route search. Create a flight search session and get live prices from airlines. Returns session ID for polling results.",
+      "id": "search_flights",
+      "description_for_ai": "Search flights on Skyscanner by origin, destination, and dates.",
       "intent": [
-        "find flights",
-        "flight prices",
-        "cheapest flight",
-        "compare airlines",
+        "skyscanner flights",
         "flight search",
-        "авиабилеты",
-        "дешевые рейсы"
+        "cheap flights",
+        "поиск рейсов skyscanner"
       ],
       "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/create",
       "input": {
         "query": {
           "type": "object",
-          "description": "{market: UK, locale: en-GB, currency: GBP, queryLegs: [{originPlaceId: {iata: LHR}, destinationPlaceId: {iata: JFK}, date: {year, month, day}}], adults: 1, cabinClass: CABIN_CLASS_ECONOMY}",
-          "required": true,
-          "note": "See description for full object structure"
+          "description": "{market: 'US', locale: 'en-US', currency: 'USD', queryLegs: [{originPlaceId: {iata: 'JFK'}, destinationPlaceId: {iata: 'LHR'}, date: {year: 2024, month: 7, day: 15}}], adults: 1, cabinClass: 'CABIN_CLASS_ECONOMY'}",
+          "required": true
         }
       },
       "output": {
-        "type": "session",
+        "type": "search",
         "fields": [
-          "sessionToken",
-          "status",
-          "content.results.itineraries"
+          "sessionToken (for polling results)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_flight_results",
+      "description_for_ai": "Poll Skyscanner search results by session token.",
+      "intent": [
+        "skyscanner results",
+        "flight prices",
+        "best flights",
+        "результаты skyscanner"
+      ],
+      "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/poll/{sessionToken}",
+      "input": {
+        "sessionToken": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "flights",
+        "fields": [
+          "content.results.itineraries (list of options)",
+          "content.results.pricingOptions[0].price.amount",
+          "content.sortingOptions.cheapest[0].itineraryId"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_hotels",
+      "description_for_ai": "Search hotels on Skyscanner.",
+      "intent": [
+        "skyscanner hotels",
+        "hotel booking skyscanner",
+        "accommodation search",
+        "отели skyscanner"
+      ],
+      "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/hotels/live/search/create",
+      "input": {
+        "query": {
+          "type": "object",
+          "description": "{market: 'US', locale: 'en-US', currency: 'USD', entityId: 'eyJlIjoiMjcxMDU0NjkiLCJzIjoiQ2l0eSIsImwiOiJlbi1VUyJ9', checkin: {year: 2024, month: 7, day: 15}, checkout: {year: 2024, month: 7, day: 18}, rooms: 1, adults: 2}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "search",
+        "fields": [
+          "sessionToken"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_autosuggest",
+      "description_for_ai": "Get airport/city autocomplete suggestions for Skyscanner search.",
+      "intent": [
+        "airport autocomplete",
+        "city search skyscanner",
+        "flight origin suggestions",
+        "автодополнение аэропорты skyscanner"
+      ],
+      "endpoint": "GET https://partners.api.skyscanner.net/apiservices/v3/autosuggest/flights",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "City or airport name",
+          "required": true
+        },
+        "market": {
+          "type": "string",
+          "default": "US"
+        },
+        "locale": {
+          "type": "string",
+          "default": "en-US"
+        }
+      },
+      "output": {
+        "type": "list<place>",
+        "fields": [
+          "places[0].entityId",
+          "places[0].iata",
+          "places[0].name",
+          "places[0].type (PLACE_TYPE_CITY, PLACE_TYPE_AIRPORT)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "flight_insights",
+      "description_for_ai": "Get cheapest prices for a route over many dates (price calendar).",
+      "intent": [
+        "price calendar skyscanner",
+        "cheapest flight dates",
+        "best dates to fly",
+        "календарь цен skyscanner"
+      ],
+      "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/flights/indicative/search",
+      "input": {
+        "query": {
+          "type": "object",
+          "description": "{market: 'US', locale: 'en-US', currency: 'USD', queryLegs: [{originPlace: {queryPlace: {iata: 'JFK'}}, destinationPlace: {queryPlace: {iata: 'LHR'}}, dateRange: {startDate: {year: 2024, month: 7, day: 1}, endDate: {year: 2024, month: 7, day: 31}}}], adults: 1}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "prices",
+        "fields": [
+          "content.results.quotes (prices by date)"
         ]
       },
       "realtime": true,
