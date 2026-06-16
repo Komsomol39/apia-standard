@@ -21,50 +21,44 @@
   },
   "capabilities": [
     {
-      "id": "generate_image",
-      "description_for_ai": "Generate images with DALL-E 3 from text descriptions. HD quality available.",
+      "id": "generate_image_dalle3",
+      "description_for_ai": "Generate high-quality images with DALL-E 3. Photorealistic or artistic, $0.04-$0.12/image.",
       "intent": [
-        "generate image openai",
+        "generate image DALL-E",
+        "AI art",
+        "text to image OpenAI",
         "DALL-E 3",
-        "text to image",
-        "создать изображение dall-e",
-        "нарисовать"
+        "создать изображение DALL-E"
       ],
       "endpoint": "POST https://api.openai.com/v1/images/generations",
       "input": {
         "model": {
           "type": "string",
-          "description": "dall-e-3 (best quality) or dall-e-2",
-          "required": true
+          "default": "dall-e-3"
         },
         "prompt": {
           "type": "string",
-          "description": "Detailed image description. DALL-E 3 auto-rewrites for safety.",
+          "description": "Detailed image prompt. DALL-E 3 enhances prompts automatically.",
           "required": true
         },
         "size": {
           "type": "string",
-          "description": "1024x1024, 1792x1024 (landscape), 1024x1792 (portrait) for DALL-E 3. 256x256, 512x512, 1024x1024 for DALL-E 2",
+          "description": "1024x1024, 1792x1024 (wide), 1024x1792 (tall)",
           "default": "1024x1024"
         },
         "quality": {
           "type": "string",
-          "description": "standard or hd (DALL-E 3 only)",
+          "description": "standard or hd (2x price, more detail)",
           "default": "standard"
         },
         "style": {
           "type": "string",
-          "description": "vivid (dramatic) or natural (realistic) — DALL-E 3 only",
+          "description": "vivid (dramatic) or natural (realistic photos)",
           "default": "vivid"
-        },
-        "n": {
-          "type": "integer",
-          "description": "DALL-E 3: always 1. DALL-E 2: 1-10",
-          "default": 1
         },
         "response_format": {
           "type": "string",
-          "description": "url (expires in 1h) or b64_json",
+          "description": "url (link expires in 1h) or b64_json",
           "default": "url"
         }
       },
@@ -72,7 +66,6 @@
         "type": "image",
         "fields": [
           "data[0].url",
-          "data[0].b64_json",
           "data[0].revised_prompt"
         ]
       },
@@ -80,47 +73,41 @@
       "requires_auth": true
     },
     {
-      "id": "edit_image",
-      "description_for_ai": "Edit an existing image using inpainting — provide original image and mask to replace areas. DALL-E 2 only.",
+      "id": "generate_image_dalle2",
+      "description_for_ai": "Generate images with DALL-E 2. Supports multiple images per call and multiple sizes.",
       "intent": [
-        "edit image",
-        "inpaint image",
-        "image editing AI",
-        "редактировать изображение dall-e"
+        "DALL-E 2",
+        "multiple images",
+        "batch image generation",
+        "генерация изображений DALL-E 2"
       ],
-      "endpoint": "POST https://api.openai.com/v1/images/edits",
+      "endpoint": "POST https://api.openai.com/v1/images/generations",
       "input": {
-        "image": {
-          "type": "file",
-          "description": "PNG file ≤4MB, square format",
-          "required": true
-        },
-        "mask": {
-          "type": "file",
-          "description": "PNG mask — transparent areas will be replaced",
-          "required": false
-        },
-        "prompt": {
-          "type": "string",
-          "description": "Description of changes",
-          "required": true
-        },
         "model": {
           "type": "string",
           "default": "dall-e-2"
         },
+        "prompt": {
+          "type": "string",
+          "required": true
+        },
         "n": {
           "type": "integer",
+          "description": "Number of images 1-10",
           "default": 1
         },
         "size": {
           "type": "string",
-          "description": "256x256, 512x512, or 1024x1024",
+          "description": "256x256, 512x512, 1024x1024",
           "default": "1024x1024"
+        },
+        "response_format": {
+          "type": "string",
+          "default": "url"
         }
       },
       "output": {
-        "type": "image",
+        "type": "list<image>",
         "fields": [
           "data[0].url",
           "data[0].b64_json"
@@ -130,24 +117,68 @@
       "requires_auth": true
     },
     {
-      "id": "create_variation",
-      "description_for_ai": "Create variations of an existing image. DALL-E 2 generates similar but different versions.",
+      "id": "edit_image",
+      "description_for_ai": "Edit an image by describing changes. Requires original image and mask (transparent area = edit zone).",
       "intent": [
-        "image variation",
-        "image alternatives",
-        "similar images",
-        "варианты изображения"
+        "edit image AI",
+        "image inpainting",
+        "modify image",
+        "редактирование изображения AI"
       ],
-      "endpoint": "POST https://api.openai.com/v1/images/variations",
+      "endpoint": "POST https://api.openai.com/v1/images/edits",
       "input": {
         "image": {
           "type": "file",
-          "description": "PNG file ≤4MB, square format",
+          "description": "Original image (PNG, max 4MB, square)",
+          "required": true
+        },
+        "mask": {
+          "type": "file",
+          "description": "Mask PNG — transparent pixels are edited (optional)",
+          "required": false
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Description of desired edit",
           "required": true
         },
         "model": {
           "type": "string",
           "default": "dall-e-2"
+        },
+        "n": {
+          "type": "integer",
+          "default": 1
+        },
+        "size": {
+          "type": "string",
+          "default": "1024x1024"
+        }
+      },
+      "output": {
+        "type": "list<image>",
+        "fields": [
+          "data[0].url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_variation",
+      "description_for_ai": "Create variations of an existing image with DALL-E 2.",
+      "intent": [
+        "image variation",
+        "similar images",
+        "remix image",
+        "вариации изображения"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/images/variations",
+      "input": {
+        "image": {
+          "type": "file",
+          "description": "Source image (PNG, max 4MB, square)",
+          "required": true
         },
         "n": {
           "type": "integer",
@@ -164,7 +195,7 @@
         }
       },
       "output": {
-        "type": "image",
+        "type": "list<image>",
         "fields": [
           "data[0].url"
         ]
@@ -173,13 +204,13 @@
       "requires_auth": true
     },
     {
-      "id": "generate_with_gpt4o",
-      "description_for_ai": "Generate or edit images using GPT-4o's native image generation (gpt-image-1 model). Higher quality than DALL-E for photo-realistic results.",
+      "id": "generate_image_gpt4o",
+      "description_for_ai": "Generate and edit images using GPT-Image-1 (GPT-4o native image generation). Follows complex instructions better than DALL-E.",
       "intent": [
-        "gpt4o image",
-        "gpt image",
-        "native image generation",
-        "генерация gpt-4o"
+        "GPT image",
+        "GPT-4o image",
+        "best image AI OpenAI",
+        "изображение GPT-4o"
       ],
       "endpoint": "POST https://api.openai.com/v1/images/generations",
       "input": {
@@ -201,9 +232,10 @@
           "description": "low, medium, high, auto",
           "default": "auto"
         },
-        "n": {
-          "type": "integer",
-          "default": 1
+        "background": {
+          "type": "string",
+          "description": "transparent, opaque, auto",
+          "default": "auto"
         }
       },
       "output": {
@@ -214,6 +246,28 @@
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "describe_image_cost",
+      "description_for_ai": "Reference for DALL-E pricing. 1024x1024 standard=$0.040, HD=$0.080; 1792x1024=$0.080/$0.120.",
+      "intent": [
+        "DALL-E price",
+        "image generation cost",
+        "OpenAI image pricing",
+        "стоимость генерации изображений"
+      ],
+      "endpoint": "GET https://api.openai.com/v1/models",
+      "input": {},
+      "output": {
+        "type": "reference",
+        "fields": [
+          "dall-e-3: $0.04-$0.12/image",
+          "dall-e-2: $0.016-$0.020/image",
+          "gpt-image-1: $0.011-$0.19/image"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
