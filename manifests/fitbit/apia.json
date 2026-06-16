@@ -113,6 +113,65 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_sleep",
+      "description_for_ai": "Get Fitbit sleep logs: duration, stages (deep/light/REM/awake), efficiency.",
+      "intent": [
+        "fitbit sleep",
+        "sleep data",
+        "sleep quality",
+        "сон fitbit"
+      ],
+      "endpoint": "GET https://api.fitbit.com/1.2/user/-/sleep/date/{date}.json",
+      "input": {
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD or 'today'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "sleep",
+        "fields": [
+          "summary.totalMinutesAsleep",
+          "summary.totalSleepRecords",
+          "sleep[0].efficiency",
+          "sleep[0].levels.summary.deep.minutes",
+          "sleep[0].levels.summary.rem.minutes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_body_measurements",
+      "description_for_ai": "Get Fitbit body measurements: weight, BMI, body fat.",
+      "intent": [
+        "fitbit weight",
+        "body measurements",
+        "BMI fitbit",
+        "вес fitbit"
+      ],
+      "endpoint": "GET https://api.fitbit.com/1/user/-/body/log/weight/date/{date}.json",
+      "input": {
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "body",
+        "fields": [
+          "weight[0].weight",
+          "weight[0].bmi",
+          "weight[0].fat",
+          "weight[0].time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
