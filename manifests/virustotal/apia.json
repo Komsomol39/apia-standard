@@ -23,13 +23,12 @@
   "capabilities": [
     {
       "id": "scan_url",
-      "description_for_ai": "Scan a URL for malware, phishing, and suspicious content using 70+ antivirus engines.",
+      "description_for_ai": "Scan a URL for malware and phishing with 70+ antivirus engines.",
       "intent": [
+        "scan URL",
         "check URL malware",
-        "virustotal scan",
-        "phishing check",
         "is URL safe",
-        "проверить URL virustotal"
+        "проверить URL VirusTotal"
       ],
       "endpoint": "POST https://www.virustotal.com/api/v3/urls",
       "input": {
@@ -40,106 +39,122 @@
         }
       },
       "output": {
-        "type": "scan",
+        "type": "analysis",
         "fields": [
-          "data.id (scan ID to check results)",
+          "data.id (analysis ID for polling)",
           "data.type"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_url_report",
+      "description_for_ai": "Get VirusTotal report for a URL (scan results from 70+ engines).",
+      "intent": [
+        "URL report VirusTotal",
+        "malware check URL",
+        "URL safety report",
+        "отчёт URL VirusTotal"
+      ],
+      "endpoint": "GET https://www.virustotal.com/api/v3/urls/{url_id}",
+      "input": {
+        "url_id": {
+          "type": "string",
+          "description": "Base64 URL-encoded URL or ID from scan_url",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "report",
+        "fields": [
+          "data.attributes.last_analysis_stats.malicious",
+          "data.attributes.last_analysis_stats.harmless",
+          "data.attributes.last_analysis_results"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_url_report",
-      "description_for_ai": "Get analysis results for a scanned URL. Check malicious/suspicious verdicts from 70+ vendors.",
+      "id": "scan_file",
+      "description_for_ai": "Upload and scan a file for malware with 70+ antivirus engines.",
       "intent": [
-        "url scan results",
-        "malware verdict",
-        "virustotal report",
-        "результат проверки virustotal"
+        "scan file",
+        "check file malware",
+        "file virus scan",
+        "проверить файл VirusTotal"
       ],
-      "endpoint": "GET https://www.virustotal.com/api/v3/analyses/{id}",
+      "endpoint": "POST https://www.virustotal.com/api/v3/files",
       "input": {
-        "id": {
-          "type": "string",
-          "description": "Analysis ID from scan_url response (base64url of url)",
+        "file": {
+          "type": "file",
+          "description": "File to scan, max 32MB (use large file upload for >32MB)",
           "required": true
         }
       },
       "output": {
         "type": "analysis",
         "fields": [
-          "data.attributes.status",
-          "data.attributes.stats.malicious",
-          "data.attributes.stats.suspicious",
-          "data.attributes.stats.undetected",
-          "data.attributes.results.{engine}.result"
+          "data.id (analysis ID for polling)"
         ]
       },
-      "realtime": true,
+      "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "scan_file_hash",
-      "description_for_ai": "Check if a file hash (MD5/SHA1/SHA256) is known malware.",
+      "id": "get_file_report",
+      "description_for_ai": "Get VirusTotal scan report for a file by hash (MD5, SHA1, SHA256).",
       "intent": [
         "file hash check",
-        "malware hash",
-        "virustotal hash",
-        "хэш файла virustotal"
+        "malware hash lookup",
+        "hash reputation",
+        "проверить хэш файла VirusTotal"
       ],
       "endpoint": "GET https://www.virustotal.com/api/v3/files/{hash}",
       "input": {
         "hash": {
           "type": "string",
-          "description": "MD5, SHA-1, or SHA-256 hash of the file",
+          "description": "MD5, SHA1, or SHA256 hash of the file",
           "required": true
         }
       },
       "output": {
-        "type": "file",
+        "type": "report",
         "fields": [
-          "data.attributes.meaningful_name",
-          "data.attributes.type_description",
           "data.attributes.last_analysis_stats.malicious",
-          "data.attributes.last_analysis_stats.undetected",
-          "data.attributes.names"
+          "data.attributes.last_analysis_stats.harmless",
+          "data.attributes.names[0]",
+          "data.attributes.type_description"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search",
-      "description_for_ai": "Search VirusTotal for IPs, domains, URLs, files using intelligence queries.",
+      "id": "get_ip_report",
+      "description_for_ai": "Get reputation report for an IP address.",
       "intent": [
-        "virustotal search",
-        "threat intelligence",
         "IP reputation",
-        "репутация IP virustotal"
+        "check IP address",
+        "malicious IP",
+        "репутация IP VirusTotal"
       ],
-      "endpoint": "GET https://www.virustotal.com/api/v3/search",
+      "endpoint": "GET https://www.virustotal.com/api/v3/ip_addresses/{ip}",
       "input": {
-        "query": {
+        "ip": {
           "type": "string",
-          "description": "entity: IP (1.2.3.4), domain (evil.com), hash, or VTI query: entity:ip country:RU malicious-votes:>=10",
+          "description": "IPv4 address to check",
           "required": true
-        },
-        "limit": {
-          "type": "integer",
-          "default": 20
-        },
-        "cursor": {
-          "type": "string",
-          "required": false
         }
       },
       "output": {
-        "type": "results",
+        "type": "report",
         "fields": [
-          "data[0].id",
-          "data[0].type",
-          "data[0].attributes.last_analysis_stats"
+          "data.attributes.last_analysis_stats.malicious",
+          "data.attributes.country",
+          "data.attributes.as_owner",
+          "data.attributes.reputation"
         ]
       },
       "realtime": true,
