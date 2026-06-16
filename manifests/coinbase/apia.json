@@ -25,49 +25,24 @@
   },
   "capabilities": [
     {
-      "id": "get_exchange_rates",
-      "description_for_ai": "Get exchange rates for any cryptocurrency vs all major currencies. Free, no API key needed. Use for crypto price lookup.",
+      "id": "get_price",
+      "description_for_ai": "Get current buy/sell/spot price for any crypto in any currency.",
       "intent": [
-        "bitcoin price",
-        "crypto price",
-        "BTC to USD",
-        "ETH price",
-        "cryptocurrency rate",
-        "курс биткоина"
+        "coinbase price",
+        "crypto price USD",
+        "bitcoin price coinbase",
+        "цена bitcoin coinbase"
       ],
-      "endpoint": "GET https://api.coinbase.com/v2/exchange-rates",
-      "input": {
-        "currency": {
-          "type": "string",
-          "description": "Crypto code: BTC, ETH, SOL, USDT, BNB, XRP",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "exchange_rates",
-        "fields": [
-          "data.currency",
-          "data.rates.USD",
-          "data.rates.EUR",
-          "data.rates.RUB"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "get_spot_price",
-      "description_for_ai": "Get current spot price of a crypto currency pair e.g. BTC-USD, ETH-EUR. Returns price as string.",
-      "intent": [
-        "spot price",
-        "current price",
-        "crypto value"
-      ],
-      "endpoint": "GET https://api.coinbase.com/v2/prices/{currency_pair}/spot",
+      "endpoint": "GET https://api.coinbase.com/v2/prices/{currency_pair}/{price_type}",
       "input": {
         "currency_pair": {
           "type": "string",
-          "description": "E.g. BTC-USD, ETH-EUR, SOL-USDT",
+          "description": "e.g. BTC-USD, ETH-EUR, SOL-RUB",
+          "required": true
+        },
+        "price_type": {
+          "type": "string",
+          "description": "buy, sell, or spot",
           "required": true
         }
       },
@@ -77,6 +52,78 @@
           "data.amount",
           "data.currency",
           "data.base"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "list_exchange_rates",
+      "description_for_ai": "Get exchange rates from a base currency to all others. Includes 170+ fiat and crypto.",
+      "intent": [
+        "exchange rates",
+        "currency rates",
+        "coinbase rates",
+        "курсы валют coinbase"
+      ],
+      "endpoint": "GET https://api.coinbase.com/v2/exchange-rates",
+      "input": {
+        "currency": {
+          "type": "string",
+          "description": "Base currency e.g. USD, EUR, BTC",
+          "default": "USD"
+        }
+      },
+      "output": {
+        "type": "rates",
+        "fields": [
+          "data.currency",
+          "data.rates.BTC",
+          "data.rates.ETH",
+          "data.rates.EUR"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "list_cryptocurrencies",
+      "description_for_ai": "List all cryptocurrencies supported by Coinbase with names and min sizes.",
+      "intent": [
+        "list crypto coinbase",
+        "supported cryptocurrencies",
+        "coinbase assets",
+        "монеты coinbase"
+      ],
+      "endpoint": "GET https://api.coinbase.com/v2/currencies/crypto",
+      "input": {},
+      "output": {
+        "type": "list<currency>",
+        "fields": [
+          "data[0].code",
+          "data[0].name",
+          "data[0].color",
+          "data[0].sort_index"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_time",
+      "description_for_ai": "Get Coinbase server time. Use for timestamping authenticated requests.",
+      "intent": [
+        "coinbase server time",
+        "api time",
+        "timestamp coinbase"
+      ],
+      "endpoint": "GET https://api.coinbase.com/v2/time",
+      "input": {},
+      "output": {
+        "type": "time",
+        "fields": [
+          "data.iso",
+          "data.epoch"
         ]
       },
       "realtime": true,
