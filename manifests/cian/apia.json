@@ -21,99 +21,154 @@
   },
   "capabilities": [
     {
-      "id": "search_offers",
-      "description_for_ai": "Поиск объявлений о продаже и аренде недвижимости в России. Фильтры по цене, площади, количеству комнат, метро, типу недвижимости.",
+      "id": "search_listings",
+      "description_for_ai": "Search real estate listings on CIAN by city and parameters.",
       "intent": [
-        "квартира купить",
-        "снять квартиру",
-        "недвижимость Москва",
-        "аренда жилья",
-        "продажа квартиры",
-        "найти квартиру",
-        "цена квартиры",
-        "real estate Russia"
+        "CIAN недвижимость",
+        "cian аренда",
+        "cian купить квартиру",
+        "cian search"
       ],
-      "endpoint": "GET https://public-api.cian.ru/v1/offers/search",
+      "endpoint": "POST https://api.cian.ru/search-offers/v1/search-offers-desktop/",
       "input": {
-        "deal_type": {
-          "type": "string",
-          "description": "Тип сделки: sale (продажа) или rent (аренда)",
+        "jsonQuery": {
+          "type": "object",
+          "description": "{_type: 'flatsale', engine_version: {type: 'term', value: 2}, region: {type: 'terms', value: [1]}, room: {type: 'terms', value: [1,2,3]}}",
           "required": true
-        },
-        "offer_type": {
-          "type": "string",
-          "description": "Тип недвижимости: flat (квартира), house (дом/дача), commercial (коммерческая), garage",
-          "default": "flat"
-        },
-        "region_id": {
-          "type": "integer",
-          "description": "ID региона: 1=Москва, 2=Санкт-Петербург, 4593=Московская область, 4608=Ленобласть",
-          "required": false
-        },
-        "rooms_count": {
-          "type": "array",
-          "description": "Количество комнат: [1] для однушек, [2,3] для 2-3 комнатных, [0] для студий, [9] для многокомнатных",
-          "required": false
-        },
-        "price_min": {
-          "type": "integer",
-          "description": "Минимальная цена в рублях (для продажи) или руб/мес (для аренды)",
-          "required": false
-        },
-        "price_max": {
-          "type": "integer",
-          "description": "Максимальная цена в рублях",
-          "required": false
-        },
-        "total_area_min": {
-          "type": "float",
-          "description": "Минимальная общая площадь в кв.м.",
-          "required": false
-        },
-        "total_area_max": {
-          "type": "float",
-          "description": "Максимальная общая площадь в кв.м.",
-          "required": false
-        },
-        "floor_min": {
-          "type": "integer",
-          "description": "Минимальный этаж (не первый = 2)",
-          "required": false
-        },
-        "floor_max": {
-          "type": "integer",
-          "description": "Максимальный этаж",
-          "required": false
-        },
-        "metro_id": {
-          "type": "integer",
-          "description": "ID станции метро для поиска рядом",
-          "required": false
-        },
-        "page": {
-          "type": "integer",
-          "description": "Номер страницы (1-indexed)",
-          "default": 1
-        },
-        "page_size": {
-          "type": "integer",
-          "description": "Объявлений на странице",
-          "default": 20
         }
       },
       "output": {
         "type": "list<offer>",
         "fields": [
           "offersSerialized[0].id",
-          "offersSerialized[0].fullPrice",
-          "offersSerialized[0].roomsCount",
+          "offersSerialized[0].fullUrl",
+          "offersSerialized[0].bargainTerms.price",
           "offersSerialized[0].totalArea",
-          "offersSerialized[0].floorNumber",
-          "offersSerialized[0].floorsCount",
-          "offersSerialized[0].address",
-          "offersSerialized[0].photos[0].fullUrl",
-          "offersSerialized[0].description",
-          "offersSerialized[0].publishedUserId"
+          "offersSerialized[0].floorsCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_listing",
+      "description_for_ai": "Get full CIAN listing details by offer ID.",
+      "intent": [
+        "объявление CIAN",
+        "cian offer details",
+        "квартира cian"
+      ],
+      "endpoint": "GET https://api.cian.ru/offer-card/v1/get-offer-data-by-id/",
+      "input": {
+        "offerId": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "offer",
+        "fields": [
+          "offerData.offer.id",
+          "offerData.offer.totalArea",
+          "offerData.offer.bargainTerms.price",
+          "offerData.offer.phones[0].number",
+          "offerData.offer.description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_price_map",
+      "description_for_ai": "Get average price per sqm heatmap for an area on CIAN.",
+      "intent": [
+        "цена CIAN карта",
+        "средняя цена CIAN",
+        "heatmap cian"
+      ],
+      "endpoint": "POST https://api.cian.ru/price-map/v1/get-price-map/",
+      "input": {
+        "region": {
+          "type": "integer",
+          "description": "Region ID: 1=Moscow",
+          "required": true
+        },
+        "dealType": {
+          "type": "string",
+          "description": "sale or rent",
+          "required": true
+        },
+        "objectType": {
+          "type": "string",
+          "description": "flat, house",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "price_map",
+        "fields": [
+          "items[0].pricePerMeter",
+          "items[0].location"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_building_info",
+      "description_for_ai": "Get building information for a CIAN address.",
+      "intent": [
+        "дом CIAN",
+        "здание CIAN",
+        "building info cian"
+      ],
+      "endpoint": "GET https://api.cian.ru/building/v1/get-building-summary/",
+      "input": {
+        "buildingId": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "building",
+        "fields": [
+          "name",
+          "address",
+          "floors",
+          "material",
+          "buildYear",
+          "heatingType"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "similar_offers",
+      "description_for_ai": "Get similar listings to a CIAN offer.",
+      "intent": [
+        "похожие CIAN",
+        "similar cian",
+        "аналоги CIAN"
+      ],
+      "endpoint": "GET https://api.cian.ru/recommendation/v1/get-similar-offers/",
+      "input": {
+        "offerId": {
+          "type": "integer",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 5
+        }
+      },
+      "output": {
+        "type": "list<offer>",
+        "fields": [
+          "offers[0].id",
+          "offers[0].bargainTerms.price",
+          "offers[0].totalArea",
+          "offers[0].fullUrl"
         ]
       },
       "realtime": true,
