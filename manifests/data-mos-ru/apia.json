@@ -141,6 +141,77 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "search_datasets",
+      "description_for_ai": "Search open datasets on data.mos.ru (Moscow Open Data).",
+      "intent": [
+        "data moscow",
+        "открытые данные москва",
+        "датасеты москва"
+      ],
+      "endpoint": "GET https://apidata.mos.ru/v1/datasets",
+      "input": {
+        "search": {
+          "type": "string",
+          "required": false
+        },
+        "categoryId": {
+          "type": "integer",
+          "required": false
+        },
+        "$top": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<dataset>",
+        "fields": [
+          "value[0].Id",
+          "value[0].Caption",
+          "value[0].CategoryId",
+          "value[0].ContainsGeodata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_dataset_rows",
+      "description_for_ai": "Get rows from a Moscow Open Data dataset.",
+      "intent": [
+        "получить данные москва",
+        "moscow open data rows",
+        "data rows mos"
+      ],
+      "endpoint": "GET https://apidata.mos.ru/v1/datasets/{datasetId}/rows",
+      "input": {
+        "datasetId": {
+          "type": "integer",
+          "required": true
+        },
+        "$top": {
+          "type": "integer",
+          "default": 100
+        },
+        "$skip": {
+          "type": "integer",
+          "default": 0
+        },
+        "$filter": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<row>",
+        "fields": [
+          "Cells (dict of field values)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "popular_datasets": {
