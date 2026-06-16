@@ -22,25 +22,24 @@
   },
   "capabilities": [
     {
-      "id": "send_email",
-      "description_for_ai": "Send transactional or marketing email via Brevo. Supports templates, HTML content, attachments.",
+      "id": "send_transactional_email",
+      "description_for_ai": "Send a transactional email (order confirmation, password reset, notification) via Brevo SMTP API.",
       "intent": [
-        "send email",
+        "send email brevo",
         "transactional email",
-        "email notification",
-        "email campaign",
-        "brevo email"
+        "smtp email",
+        "отправить письмо brevo"
       ],
       "endpoint": "POST https://api.brevo.com/v3/smtp/email",
       "input": {
         "sender": {
           "type": "object",
-          "description": "{name, email}",
+          "description": "{name: 'My App', email: 'no-reply@myapp.com'}",
           "required": true
         },
         "to": {
           "type": "array",
-          "description": "[{email, name}]",
+          "description": "[{email: 'user@example.com', name: 'User'}]",
           "required": true
         },
         "subject": {
@@ -54,6 +53,7 @@
         },
         "textContent": {
           "type": "string",
+          "description": "Plain text fallback",
           "required": false
         },
         "templateId": {
@@ -63,12 +63,12 @@
         },
         "params": {
           "type": "object",
-          "description": "Template variables",
+          "description": "Template variables {FIRSTNAME: 'John'}",
           "required": false
         }
       },
       "output": {
-        "type": "email",
+        "type": "send_result",
         "fields": [
           "messageId"
         ]
@@ -77,41 +77,124 @@
       "requires_auth": true
     },
     {
-      "id": "send_sms",
-      "description_for_ai": "Send transactional SMS message via Brevo to any phone number worldwide. Supports 180+ countries.",
+      "id": "create_contact",
+      "description_for_ai": "Create or update a contact in Brevo CRM. Subscribe to lists, set attributes.",
       "intent": [
-        "send SMS Brevo",
-        "SMS marketing",
-        "text message",
-        "bulk SMS"
+        "add contact brevo",
+        "subscribe email",
+        "create subscriber",
+        "добавить контакт brevo"
+      ],
+      "endpoint": "POST https://api.brevo.com/v3/contacts",
+      "input": {
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "attributes": {
+          "type": "object",
+          "description": "{FIRSTNAME: 'John', LASTNAME: 'Doe', SMS: '+79001234567'}",
+          "required": false
+        },
+        "listIds": {
+          "type": "array",
+          "description": "List IDs to add contact to",
+          "required": false
+        },
+        "updateEnabled": {
+          "type": "boolean",
+          "description": "Update if exists",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "contact",
+        "fields": [
+          "id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_sms",
+      "description_for_ai": "Send SMS via Brevo. Supports international numbers.",
+      "intent": [
+        "sms brevo",
+        "send SMS brevo",
+        "text message brevo",
+        "смс через brevo"
       ],
       "endpoint": "POST https://api.brevo.com/v3/transactionalSMS/sms",
       "input": {
         "sender": {
           "type": "string",
-          "description": "Sender name (max 11 chars)",
+          "description": "Sender name max 11 chars alphanumeric",
           "required": true
         },
         "recipient": {
           "type": "string",
-          "description": "Phone in E.164 format",
+          "description": "Phone in E.164 format e.g. +79001234567",
           "required": true
         },
         "content": {
           "type": "string",
-          "description": "SMS text max 160 chars",
+          "description": "SMS text max 160 chars per segment",
           "required": true
         }
       },
       "output": {
-        "type": "sms",
+        "type": "sms_result",
         "fields": [
           "messageId",
           "smsCount",
-          "creditUsed"
+          "usedCredits"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_email_stats",
+      "description_for_ai": "Get email campaign statistics: delivered, opened, clicked, bounced, unsubscribed.",
+      "intent": [
+        "email stats brevo",
+        "campaign analytics",
+        "email performance",
+        "статистика email brevo"
+      ],
+      "endpoint": "GET https://api.brevo.com/v3/smtp/statistics/events",
+      "input": {
+        "startDate": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        },
+        "endDate": {
+          "type": "string",
+          "required": false
+        },
+        "event": {
+          "type": "string",
+          "description": "delivered, opened, clicked, bounced, unsubscribed, softBounced",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<event>",
+        "fields": [
+          "events[0].email",
+          "events[0].event",
+          "events[0].date",
+          "events[0].subject",
+          "events[0].messageId"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
