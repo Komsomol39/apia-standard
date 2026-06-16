@@ -28,23 +28,23 @@
   "capabilities": [
     {
       "id": "create_link_token",
-      "description_for_ai": "Create a Plaid Link token to initialize the account connection flow. First step to link a bank account.",
+      "description_for_ai": "Create a link token to initialize Plaid Link UI for connecting a bank account.",
       "intent": [
-        "plaid link",
         "connect bank account",
-        "bank integration plaid",
-        "подключить банк plaid"
+        "Plaid Link",
+        "bank connection",
+        "подключить банк Plaid"
       ],
-      "endpoint": "POST https://sandbox.plaid.com/link/token/create",
+      "endpoint": "POST https://production.plaid.com/link/token/create",
       "input": {
         "user": {
           "type": "object",
-          "description": "{client_user_id: 'user-unique-id'}",
+          "description": "{client_user_id: 'unique_user_id'}",
           "required": true
         },
         "client_name": {
           "type": "string",
-          "description": "Your app name shown to user in Plaid Link UI",
+          "description": "Your app name shown in Plaid UI",
           "required": true
         },
         "products": {
@@ -54,21 +54,19 @@
         },
         "country_codes": {
           "type": "array",
-          "description": "['US', 'GB', 'CA', 'DE', 'FR', 'ES', 'NL', 'IE', 'SE']",
+          "description": "['US', 'GB', 'CA', 'DE', 'FR', 'ES', 'NL', 'IT']",
           "required": true
         },
         "language": {
           "type": "string",
-          "description": "en, fr, es, de, nl, ru",
-          "required": true
+          "default": "en"
         }
       },
       "output": {
-        "type": "link_token",
+        "type": "link",
         "fields": [
           "link_token",
-          "expiration",
-          "request_id"
+          "expiration"
         ]
       },
       "realtime": true,
@@ -76,27 +74,26 @@
     },
     {
       "id": "exchange_public_token",
-      "description_for_ai": "Exchange the public_token from Plaid Link for a permanent access_token. Second step after user connects account.",
+      "description_for_ai": "Exchange the public_token from Plaid Link for a reusable access_token.",
       "intent": [
-        "plaid token exchange",
-        "get access token plaid",
-        "finalize plaid connection",
-        "обмен токена plaid"
+        "Plaid access token",
+        "bank token exchange",
+        "Plaid auth",
+        "токен Plaid"
       ],
-      "endpoint": "POST https://sandbox.plaid.com/item/public_token/exchange",
+      "endpoint": "POST https://production.plaid.com/item/public_token/exchange",
       "input": {
         "public_token": {
           "type": "string",
-          "description": "Public token received after user completes Plaid Link flow",
+          "description": "public_token from Plaid Link onSuccess callback",
           "required": true
         }
       },
       "output": {
-        "type": "tokens",
+        "type": "token",
         "fields": [
-          "access_token",
-          "item_id",
-          "request_id"
+          "access_token (save securely)",
+          "item_id"
         ]
       },
       "realtime": true,
@@ -104,18 +101,17 @@
     },
     {
       "id": "get_transactions",
-      "description_for_ai": "Get transaction history for a linked bank account. Categorized transactions with merchant info.",
+      "description_for_ai": "Get bank account transactions for a connected account.",
       "intent": [
-        "bank transactions plaid",
-        "transaction history",
-        "spending data plaid",
-        "история транзакций plaid"
+        "bank transactions",
+        "spending history",
+        "account transactions Plaid",
+        "транзакции банка Plaid"
       ],
-      "endpoint": "POST https://sandbox.plaid.com/transactions/get",
+      "endpoint": "POST https://production.plaid.com/transactions/get",
       "input": {
         "access_token": {
           "type": "string",
-          "description": "Access token from exchange_public_token",
           "required": true
         },
         "start_date": {
@@ -130,58 +126,102 @@
         },
         "count": {
           "type": "integer",
-          "description": "Number of transactions",
           "default": 100
-        },
-        "offset": {
-          "type": "integer",
-          "default": 0
         }
       },
       "output": {
-        "type": "transactions",
+        "type": "list<transaction>",
         "fields": [
           "transactions[0].transaction_id",
+          "transactions[0].name",
           "transactions[0].amount",
           "transactions[0].date",
-          "transactions[0].merchant_name",
-          "transactions[0].category[0]",
-          "accounts[0].balances.available"
+          "transactions[0].category",
+          "transactions[0].merchant_name"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "get_balance",
-      "description_for_ai": "Get real-time bank account balances for all linked accounts.",
+      "description_for_ai": "Get real-time account balances for connected bank accounts.",
       "intent": [
-        "bank balance plaid",
-        "account balance",
-        "checking balance plaid",
-        "баланс счёта plaid"
+        "bank balance",
+        "account balance Plaid",
+        "checking balance",
+        "баланс счёта Plaid"
       ],
-      "endpoint": "POST https://sandbox.plaid.com/accounts/balance/get",
+      "endpoint": "POST https://production.plaid.com/accounts/balance/get",
       "input": {
         "access_token": {
           "type": "string",
           "required": true
-        },
-        "options": {
-          "type": "object",
-          "description": "{account_ids: ['specific_account_id']} to filter accounts",
-          "required": false
         }
       },
       "output": {
         "type": "accounts",
         "fields": [
-          "accounts[0].account_id",
           "accounts[0].name",
           "accounts[0].type",
-          "accounts[0].balances.available",
           "accounts[0].balances.current",
+          "accounts[0].balances.available",
           "accounts[0].balances.iso_currency_code"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_auth",
+      "description_for_ai": "Get bank account routing and account numbers for ACH transfers.",
+      "intent": [
+        "routing number",
+        "account number",
+        "ACH Plaid",
+        "реквизиты счёта Plaid"
+      ],
+      "endpoint": "POST https://production.plaid.com/auth/get",
+      "input": {
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "auth",
+        "fields": [
+          "accounts[0].account_id",
+          "numbers.ach[0].account",
+          "numbers.ach[0].routing",
+          "numbers.ach[0].wire_routing"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_identity",
+      "description_for_ai": "Get account holder identity info: name, address, email, phone from bank.",
+      "intent": [
+        "bank account owner",
+        "identity Plaid",
+        "account holder info",
+        "владелец счёта Plaid"
+      ],
+      "endpoint": "POST https://production.plaid.com/identity/get",
+      "input": {
+        "access_token": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "identity",
+        "fields": [
+          "accounts[0].owners[0].names[0]",
+          "accounts[0].owners[0].emails[0].data",
+          "accounts[0].owners[0].addresses[0].data.street"
         ]
       },
       "realtime": true,
