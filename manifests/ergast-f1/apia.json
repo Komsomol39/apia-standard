@@ -83,6 +83,101 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_race_results",
+      "description_for_ai": "Get F1 race results for a season and round.",
+      "intent": [
+        "F1 race results",
+        "formula 1 results",
+        "гонка формула 1",
+        "результаты гонки F1"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}/{round}/results.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year or 'current'",
+          "required": true
+        },
+        "round": {
+          "type": "string",
+          "description": "Round number or 'last'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<result>",
+        "fields": [
+          "MRData.RaceTable.Races[0].Results[0].position",
+          "MRData.RaceTable.Races[0].Results[0].Driver.familyName",
+          "MRData.RaceTable.Races[0].Results[0].Constructor.name",
+          "MRData.RaceTable.Races[0].Results[0].Time.time"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_standings",
+      "description_for_ai": "Get F1 driver or constructor championship standings.",
+      "intent": [
+        "F1 standings",
+        "championship table F1",
+        "таблица чемпионата F1"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}/driverStandings.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year or 'current'",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "driverStandings or constructorStandings",
+          "default": "driverStandings"
+        }
+      },
+      "output": {
+        "type": "standings",
+        "fields": [
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].position",
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].Driver.familyName",
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].points"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_schedule",
+      "description_for_ai": "Get F1 race calendar/schedule for a season.",
+      "intent": [
+        "F1 calendar",
+        "F1 schedule",
+        "расписание F1",
+        "этапы F1"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year or 'current'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "schedule",
+        "fields": [
+          "MRData.RaceTable.Races[0].raceName",
+          "MRData.RaceTable.Races[0].date",
+          "MRData.RaceTable.Races[0].Circuit.circuitName",
+          "MRData.RaceTable.Races[0].Circuit.Location.country"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "meta": {
