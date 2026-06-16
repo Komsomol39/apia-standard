@@ -92,6 +92,107 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "generate_video",
+      "description_for_ai": "Generate a video from text prompt or image with Luma AI Dream Machine.",
+      "intent": [
+        "Luma AI video",
+        "AI video generation",
+        "Dream Machine",
+        "генерация видео Luma"
+      ],
+      "endpoint": "POST https://api.lumalabs.ai/dream-machine/v1/generations",
+      "input": {
+        "prompt": {
+          "type": "string",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "description": "dream-machine (text), photon-flash (image to video)",
+          "default": "dream-machine"
+        },
+        "loop": {
+          "type": "boolean",
+          "default": false
+        },
+        "aspect_ratio": {
+          "type": "string",
+          "description": "16:9, 9:16, 1:1, 4:3, 3:4, 21:9, 9:21",
+          "default": "16:9"
+        }
+      },
+      "output": {
+        "type": "generation",
+        "fields": [
+          "id",
+          "state (queued, dreaming, completed)",
+          "assets.video (URL when done)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "image_to_video",
+      "description_for_ai": "Animate a still image into video with Luma AI.",
+      "intent": [
+        "animate image Luma",
+        "image to video Luma",
+        "photo animation AI",
+        "анимация фото Luma"
+      ],
+      "endpoint": "POST https://api.lumalabs.ai/dream-machine/v1/generations/image",
+      "input": {
+        "prompt": {
+          "type": "string",
+          "required": false
+        },
+        "keyframes": {
+          "type": "object",
+          "description": "{frame0: {type: 'image', url: 'https://...'}, frame1: {type: 'image', url: 'https://...'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "generation",
+        "fields": [
+          "id",
+          "state",
+          "assets.video"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_generation",
+      "description_for_ai": "Check status of a Luma AI video generation.",
+      "intent": [
+        "generation status Luma",
+        "video status AI",
+        "check video Luma",
+        "статус генерации Luma"
+      ],
+      "endpoint": "GET https://api.lumalabs.ai/dream-machine/v1/generations/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "generation",
+        "fields": [
+          "id",
+          "state",
+          "failure_reason",
+          "assets.video"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
