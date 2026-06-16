@@ -23,7 +23,7 @@
   "capabilities": [
     {
       "id": "submit_metrics",
-      "description_for_ai": "Send custom metrics to Datadog for monitoring and dashboards.",
+      "description_for_ai": "Send custom metrics to Datadog for monitoring dashboards and alerts.",
       "intent": [
         "send metrics datadog",
         "custom metrics",
@@ -34,7 +34,7 @@
       "input": {
         "series": {
           "type": "array",
-          "description": "[{metric: 'myapp.requests', type: 0 (unspecified)|1 (count)|2 (rate)|3 (gauge), points: [{timestamp: 1234567890, value: 42.0}], tags: ['env:prod', 'service:api']}]",
+          "description": "[{metric: 'app.requests', points: [{timestamp: 1609459200, value: 42.0}], type: 1, tags: ['env:prod', 'service:api'], unit: 'request', host: 'server-01'}]. Types: 0=unspecified, 1=count, 2=rate, 3=gauge",
           "required": true
         }
       },
@@ -49,132 +49,120 @@
     },
     {
       "id": "query_metrics",
-      "description_for_ai": "Query metric time series data with aggregation functions.",
+      "description_for_ai": "Query Datadog metrics for dashboards, analysis, or alerting.",
       "intent": [
-        "query datadog metrics",
-        "metric data",
-        "graph data",
-        "данные метрик datadog"
+        "query metrics datadog",
+        "get metrics",
+        "datadog data",
+        "данные мониторинга datadog"
       ],
       "endpoint": "GET https://api.datadoghq.com/api/v1/query",
       "input": {
         "from": {
           "type": "integer",
-          "description": "Unix timestamp for start",
+          "description": "Unix timestamp start",
           "required": true
         },
         "to": {
           "type": "integer",
-          "description": "Unix timestamp for end",
+          "description": "Unix timestamp end",
           "required": true
         },
         "query": {
           "type": "string",
-          "description": "Datadog metric query: avg:system.cpu.user{*}, sum:myapp.errors{env:prod}.rollup(sum, 60)",
+          "description": "Datadog query e.g. avg:system.cpu.user{*} or sum:app.requests{env:prod}",
           "required": true
         }
       },
       "output": {
-        "type": "series",
+        "type": "timeseries",
         "fields": [
           "series[0].metric",
-          "series[0].pointlist (array of [timestamp, value] pairs)",
-          "series[0].scope",
-          "status"
+          "series[0].pointlist",
+          "series[0].scope"
         ]
       },
       "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "create_monitor",
-      "description_for_ai": "Create an alert monitor that triggers when metrics cross thresholds.",
+      "id": "create_event",
+      "description_for_ai": "Create a Datadog event: deployment marker, incident note, alert.",
       "intent": [
-        "datadog alert",
-        "create monitor",
-        "metric alert",
-        "алерт datadog"
+        "datadog event",
+        "deployment event",
+        "incident datadog",
+        "событие datadog"
       ],
-      "endpoint": "POST https://api.datadoghq.com/api/v1/monitor",
+      "endpoint": "POST https://api.datadoghq.com/api/v1/events",
       "input": {
-        "type": {
+        "title": {
           "type": "string",
-          "description": "metric alert, service check, event alert, log alert, composite",
           "required": true
         },
-        "query": {
+        "text": {
           "type": "string",
-          "description": "e.g. avg(last_5m):avg:system.cpu.user{*} > 90",
           "required": true
-        },
-        "name": {
-          "type": "string",
-          "description": "Monitor name",
-          "required": true
-        },
-        "message": {
-          "type": "string",
-          "description": "Alert notification message with @mentions: @slack-channel @user@example.com",
-          "required": false
-        },
-        "thresholds": {
-          "type": "object",
-          "description": "{critical: 90, warning: 80, ok: 70}",
-          "required": false
         },
         "tags": {
           "type": "array",
-          "description": "Monitor tags",
+          "description": "['env:prod', 'version:1.2.3']",
+          "required": false
+        },
+        "alert_type": {
+          "type": "string",
+          "description": "info, warning, error, success",
+          "default": "info"
+        },
+        "source_type_name": {
+          "type": "string",
           "required": false
         }
       },
       "output": {
-        "type": "monitor",
+        "type": "event",
         "fields": [
-          "id",
-          "name",
-          "status",
-          "created",
-          "org_id"
+          "event.id",
+          "event.title",
+          "event.url"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_logs",
-      "description_for_ai": "Search and filter application logs in Datadog.",
+      "id": "get_logs",
+      "description_for_ai": "Search and retrieve logs from Datadog Log Management.",
       "intent": [
-        "datadog logs",
-        "search logs",
-        "log query",
-        "поиск логов datadog"
+        "search logs datadog",
+        "application logs",
+        "error logs",
+        "логи datadog"
       ],
       "endpoint": "POST https://api.datadoghq.com/api/v2/logs/events/search",
       "input": {
         "filter": {
           "type": "object",
-          "description": "{query: 'service:api status:error', from: '2024-01-15T00:00:00Z', to: '2024-01-15T23:59:59Z', indexes: ['main']}",
-          "required": true
+          "description": "{query: 'service:api status:error', from: '2024-01-15T00:00:00Z', to: '2024-01-15T23:59:59Z'}",
+          "required": false
         },
         "page": {
           "type": "object",
-          "description": "{limit: 25}",
+          "description": "{limit: 100}",
           "required": false
         },
         "sort": {
           "type": "string",
-          "description": "timestamp or -timestamp (newest first)",
+          "description": "timestamp or -timestamp",
           "default": "-timestamp"
         }
       },
       "output": {
-        "type": "logs",
+        "type": "list<log>",
         "fields": [
-          "data[0].id",
           "data[0].attributes.message",
-          "data[0].attributes.status",
           "data[0].attributes.service",
+          "data[0].attributes.status",
           "data[0].attributes.timestamp"
         ]
       },
