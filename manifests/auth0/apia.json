@@ -216,6 +216,36 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "assign_roles",
+      "description_for_ai": "Assign or remove roles from an Auth0 user for RBAC (role-based access control).",
+      "intent": [
+        "assign role auth0",
+        "user permissions",
+        "RBAC auth0",
+        "роли пользователя auth0"
+      ],
+      "endpoint": "POST https://{domain}.auth0.com/api/v2/users/{user_id}/roles",
+      "input": {
+        "user_id": {
+          "type": "string",
+          "required": true
+        },
+        "roles": {
+          "type": "array",
+          "description": "Array of role IDs to assign",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "empty",
+        "fields": [
+          "204 No Content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
