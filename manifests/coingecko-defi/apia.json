@@ -79,6 +79,101 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "get_defi_protocols",
+      "description_for_ai": "Get DeFi protocol list with TVL (total value locked) from CoinGecko.",
+      "intent": [
+        "DeFi protocols",
+        "TVL defi",
+        "top defi protocols",
+        "протоколы DeFi"
+      ],
+      "endpoint": "GET https://api.coingecko.com/api/v3/defi",
+      "input": {},
+      "output": {
+        "type": "defi",
+        "fields": [
+          "defi_market_cap",
+          "eth_market_cap",
+          "defi_to_eth_ratio",
+          "top_coin_name",
+          "top_coin_defi_dominance"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_protocol_tvl",
+      "description_for_ai": "Get historical TVL of a DeFi protocol.",
+      "intent": [
+        "protocol TVL",
+        "DeFi TVL history",
+        "TVL chart",
+        "исторический TVL"
+      ],
+      "endpoint": "GET https://api.llama.fi/protocol/{protocol}",
+      "input": {
+        "protocol": {
+          "type": "string",
+          "description": "Protocol slug e.g. uniswap, aave, makerdao",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "protocol",
+        "fields": [
+          "name",
+          "tvl (array of {date, totalLiquidityUSD})",
+          "mcap",
+          "currentChainTvls"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "list_defi_coins",
+      "description_for_ai": "List top DeFi coins by market cap.",
+      "intent": [
+        "top DeFi coins",
+        "DeFi token list",
+        "DeFi market",
+        "монеты DeFi"
+      ],
+      "endpoint": "GET https://api.coingecko.com/api/v3/coins/markets",
+      "input": {
+        "vs_currency": {
+          "type": "string",
+          "default": "usd"
+        },
+        "category": {
+          "type": "string",
+          "default": "decentralized-finance-defi"
+        },
+        "order": {
+          "type": "string",
+          "default": "market_cap_desc"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<coin>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].symbol",
+          "[0].current_price",
+          "[0].market_cap",
+          "[0].price_change_percentage_24h"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "meta": {
