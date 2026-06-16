@@ -26,21 +26,20 @@
   },
   "capabilities": [
     {
-      "id": "get_price",
-      "description_for_ai": "Get current price of any crypto pair. Real-time, no auth required.",
+      "id": "get_ticker_price",
+      "description_for_ai": "Get current price for one or all trading pairs on Binance.",
       "intent": [
-        "bitcoin price",
-        "crypto price",
+        "crypto price Binance",
         "BTC price",
-        "цена биткоина",
-        "курс крипты"
+        "trading pair price",
+        "цена криптовалюты Binance"
       ],
       "endpoint": "GET https://api.binance.com/api/v3/ticker/price",
       "input": {
         "symbol": {
           "type": "string",
-          "description": "Trading pair e.g. BTCUSDT, ETHUSDT, BNBUSDT",
-          "required": true
+          "description": "Trading pair e.g. BTCUSDT, ETHUSDT. Omit for all pairs.",
+          "required": false
         }
       },
       "output": {
@@ -54,47 +53,13 @@
       "requires_auth": false
     },
     {
-      "id": "get_24h_stats",
-      "description_for_ai": "Get 24h price change, high, low, volume for a trading pair.",
-      "intent": [
-        "24h stats",
-        "price change",
-        "crypto volume",
-        "daily stats",
-        "изменение цены за сутки"
-      ],
-      "endpoint": "GET https://api.binance.com/api/v3/ticker/24hr",
-      "input": {
-        "symbol": {
-          "type": "string",
-          "description": "e.g. BTCUSDT",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "stats",
-        "fields": [
-          "symbol",
-          "priceChange",
-          "priceChangePercent",
-          "highPrice",
-          "lowPrice",
-          "volume",
-          "quoteVolume"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
       "id": "get_klines",
-      "description_for_ai": "Get OHLCV candlestick data for chart analysis. Supports intervals from 1m to 1M.",
+      "description_for_ai": "Get candlestick/OHLCV data for a trading pair. Use for charts and technical analysis.",
       "intent": [
         "candlestick data",
-        "OHLCV",
-        "price history crypto",
-        "klines",
-        "исторические цены крипты"
+        "OHLCV Binance",
+        "price history",
+        "исторические данные Binance"
       ],
       "endpoint": "GET https://api.binance.com/api/v3/klines",
       "input": {
@@ -104,17 +69,17 @@
         },
         "interval": {
           "type": "string",
-          "description": "1m, 5m, 15m, 1h, 4h, 1d, 1w, 1M",
+          "description": "1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M",
           "required": true
         },
         "limit": {
           "type": "integer",
-          "description": "Number of candles, max 1000",
+          "description": "Number of candles 1-1000",
           "default": 500
         },
         "startTime": {
           "type": "integer",
-          "description": "Unix ms timestamp",
+          "description": "Start Unix timestamp ms",
           "required": false
         },
         "endTime": {
@@ -125,7 +90,12 @@
       "output": {
         "type": "list<candle>",
         "fields": [
-          "[open_time, open, high, low, close, volume, close_time]"
+          "[0][0] open_time",
+          "[0][1] open",
+          "[0][2] high",
+          "[0][3] low",
+          "[0][4] close",
+          "[0][5] volume"
         ]
       },
       "realtime": true,
@@ -133,12 +103,12 @@
     },
     {
       "id": "get_order_book",
-      "description_for_ai": "Get order book (bids and asks) for a trading pair. Shows market depth.",
+      "description_for_ai": "Get order book depth (bids and asks) for a trading pair.",
       "intent": [
-        "order book",
-        "bids asks",
+        "order book Binance",
+        "bid ask",
         "market depth",
-        "книга ордеров"
+        "стакан заявок Binance"
       ],
       "endpoint": "GET https://api.binance.com/api/v3/depth",
       "input": {
@@ -148,15 +118,129 @@
         },
         "limit": {
           "type": "integer",
-          "description": "5, 10, 20, 50, 100, 500, 1000, 5000",
+          "description": "5, 10, 20, 50, 100, 500, 1000",
           "default": 100
         }
       },
       "output": {
-        "type": "order_book",
+        "type": "orderbook",
         "fields": [
-          "bids[0] ([price, quantity])",
-          "asks[0] ([price, quantity])"
+          "bids[0] [price, qty]",
+          "asks[0] [price, qty]",
+          "lastUpdateId"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_account",
+      "description_for_ai": "Get account balances and trading permissions.",
+      "intent": [
+        "Binance account",
+        "crypto balance",
+        "wallet balance Binance",
+        "баланс Binance"
+      ],
+      "endpoint": "GET https://api.binance.com/api/v3/account",
+      "input": {},
+      "output": {
+        "type": "account",
+        "fields": [
+          "balances[0].asset",
+          "balances[0].free",
+          "balances[0].locked",
+          "canTrade",
+          "canDeposit",
+          "canWithdraw"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "place_order",
+      "description_for_ai": "Place a buy or sell order on Binance.",
+      "intent": [
+        "buy crypto",
+        "sell crypto",
+        "place order Binance",
+        "торговля Binance"
+      ],
+      "endpoint": "POST https://api.binance.com/api/v3/order",
+      "input": {
+        "symbol": {
+          "type": "string",
+          "required": true
+        },
+        "side": {
+          "type": "string",
+          "description": "BUY or SELL",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "LIMIT, MARKET, STOP_LOSS_LIMIT, TAKE_PROFIT_LIMIT",
+          "required": true
+        },
+        "quantity": {
+          "type": "string",
+          "required": true
+        },
+        "price": {
+          "type": "string",
+          "description": "Required for LIMIT orders",
+          "required": false
+        },
+        "timeInForce": {
+          "type": "string",
+          "description": "GTC, IOC, FOK (required for LIMIT)",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "order",
+        "fields": [
+          "orderId",
+          "status",
+          "symbol",
+          "side",
+          "price",
+          "executedQty",
+          "transactTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_24hr_ticker",
+      "description_for_ai": "Get 24-hour statistics: price change, volume, high, low for trading pairs.",
+      "intent": [
+        "24h stats crypto",
+        "trading volume",
+        "price change 24h",
+        "статистика за 24ч Binance"
+      ],
+      "endpoint": "GET https://api.binance.com/api/v3/ticker/24hr",
+      "input": {
+        "symbol": {
+          "type": "string",
+          "description": "Single pair or omit for all",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "stats",
+        "fields": [
+          "symbol",
+          "priceChange",
+          "priceChangePercent",
+          "weightedAvgPrice",
+          "volume",
+          "quoteVolume",
+          "highPrice",
+          "lowPrice"
         ]
       },
       "realtime": true,
