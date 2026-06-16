@@ -22,49 +22,160 @@
   },
   "capabilities": [
     {
-      "id": "get_property_detail",
-      "description_for_ai": "Get full property details: assessed value, tax info, lot size, year built, bedrooms, bathrooms, last sale price and date.",
+      "id": "get_property_details",
+      "description_for_ai": "Get full property details by APN or address: beds, baths, sqft, year built.",
       "intent": [
-        "home assessment",
-        "property tax info",
-        "house info",
-        "property history",
-        "tax assessment",
-        "home valuation",
-        "US property data",
-        "home value",
-        "real estate data",
-        "property details",
-        "property data"
+        "attom property",
+        "property data attom",
+        "home details",
+        "данные недвижимости attom"
       ],
       "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/detail",
       "input": {
         "address1": {
           "type": "string",
-          "description": "Street address",
           "required": true
         },
         "address2": {
           "type": "string",
-          "description": "City State ZIP",
           "required": true
         }
       },
       "output": {
         "type": "property",
         "fields": [
-          "identifier.attomId",
-          "address.line1",
-          "summary.proptype",
-          "building.rooms.beds",
-          "building.rooms.bathstotal",
-          "building.size.universalsize",
-          "assessment.assessed.assdttlvalue",
-          "sale.amount.saleamt",
-          "sale.salesearchdate"
+          "property[0].identifier.attomId",
+          "property[0].summary.proptype",
+          "property[0].building.rooms.beds",
+          "property[0].building.size.bldgsize",
+          "property[0].summary.yearbuilt"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_sales_history",
+      "description_for_ai": "Get property sales history: sale dates and prices.",
+      "intent": [
+        "property sales history",
+        "attom sales",
+        "home sale history",
+        "история продаж недвижимости"
+      ],
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/saleshistory/basichistory",
+      "input": {
+        "address1": {
+          "type": "string",
+          "required": true
+        },
+        "address2": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<sale>",
+        "fields": [
+          "property[0].salehistory[0].amount.saleamt",
+          "property[0].salehistory[0].saleTransDate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_avm",
+      "description_for_ai": "Get Automated Valuation Model (AVM) estimate for a property.",
+      "intent": [
+        "home value estimate",
+        "AVM attom",
+        "property value",
+        "оценка стоимости дома"
+      ],
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/valuation/detail",
+      "input": {
+        "address1": {
+          "type": "string",
+          "required": true
+        },
+        "address2": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "valuation",
+        "fields": [
+          "property[0].avm.amount.value",
+          "property[0].avm.amount.high",
+          "property[0].avm.amount.low"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_properties",
+      "description_for_ai": "Search properties by city and zip code in ATTOM.",
+      "intent": [
+        "search attom properties",
+        "find homes attom",
+        "property search by zip",
+        "поиск недвижимости attom"
+      ],
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/property/basicprofile",
+      "input": {
+        "postalcode": {
+          "type": "string",
+          "required": true
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "pagesize": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<property>",
+        "fields": [
+          "property[0].identifier.attomId",
+          "property[0].address.line1",
+          "property[0].building.rooms.beds",
+          "property[0].building.size.bldgsize"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_neighborhood_stats",
+      "description_for_ai": "Get neighborhood-level statistics from ATTOM for a ZIP code.",
+      "intent": [
+        "neighborhood data attom",
+        "area stats",
+        "zip code stats",
+        "статистика района attom"
+      ],
+      "endpoint": "GET https://api.gateway.attomdata.com/propertyapi/v1.0.0/area/full",
+      "input": {
+        "postalcode": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "neighborhood",
+        "fields": [
+          "area.community.medSalePrice",
+          "area.community.avgBldgSize",
+          "area.community.medSchoolRating"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
