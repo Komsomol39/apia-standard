@@ -20,65 +20,272 @@
   },
   "capabilities": [
     {
-      "id": "forecast",
-      "description_for_ai": "Free weather forecast API. No API key needed. Hourly and daily forecasts, historical weather, 16-day forecast. 11km resolution globally. Covers temperature, precipitation, wind, UV index, cloud cover. Best free weather API. Get weather forecast for any coordinates. Temperature, precipitation, wind, humidity. Up to 16 days. No API key needed.",
+      "id": "get_weather",
+      "description_for_ai": "Get current weather and forecast from Open-Meteo. Free, no API key required.",
       "intent": [
-        "free weather",
-        "weather forecast",
-        "no API key weather",
-        "temperature forecast",
-        "rain forecast",
-        "погода бесплатно"
+        "weather Open-Meteo",
+        "free weather API",
+        "forecast API",
+        "погода Open-Meteo"
       ],
       "endpoint": "GET https://api.open-meteo.com/v1/forecast",
       "input": {
         "latitude": {
           "type": "float",
-          "required": true,
-          "description": "Latitude in decimal degrees (-90 to 90)"
+          "required": true
         },
         "longitude": {
           "type": "float",
-          "required": true,
-          "description": "Longitude in decimal degrees (-180 to 180)"
+          "required": true
+        },
+        "current": {
+          "type": "string",
+          "description": "temperature_2m,wind_speed_10m,precipitation,weather_code,relative_humidity_2m",
+          "required": false
         },
         "hourly": {
           "type": "string",
-          "description": "Comma-separated: temperature_2m, precipitation, wind_speed_10m, relative_humidity_2m, uv_index",
+          "description": "temperature_2m,precipitation_probability,wind_speed_10m,uv_index",
           "required": false
         },
         "daily": {
           "type": "string",
-          "description": "temperature_2m_max, temperature_2m_min, precipitation_sum, wind_speed_10m_max",
+          "description": "temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max",
           "required": false
-        },
-        "current": {
-          "type": "string",
-          "description": "temperature_2m, weather_code, wind_speed_10m, relative_humidity_2m",
-          "required": false
-        },
-        "timezone": {
-          "type": "string",
-          "description": "Timezone e.g. Europe/Moscow, auto",
-          "default": "auto"
         },
         "forecast_days": {
           "type": "integer",
-          "description": "1-16 days",
+          "description": "1-16",
           "default": 7
+        },
+        "temperature_unit": {
+          "type": "string",
+          "description": "celsius or fahrenheit",
+          "default": "celsius"
+        },
+        "wind_speed_unit": {
+          "type": "string",
+          "description": "kmh, ms, mph, kn",
+          "default": "kmh"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "auto or IANA timezone: Europe/Moscow",
+          "default": "auto"
         }
       },
       "output": {
-        "type": "forecast",
+        "type": "weather",
         "fields": [
           "current.temperature_2m",
+          "current.wind_speed_10m",
           "current.weather_code",
+          "hourly.time",
           "hourly.temperature_2m",
+          "daily.temperature_2m_max"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_air_quality",
+      "description_for_ai": "Get air quality data: PM2.5, PM10, ozone, pollen levels.",
+      "intent": [
+        "air quality",
+        "AQI free",
+        "pollen forecast",
+        "качество воздуха бесплатно"
+      ],
+      "endpoint": "GET https://air-quality-api.open-meteo.com/v1/air-quality",
+      "input": {
+        "latitude": {
+          "type": "float",
+          "required": true
+        },
+        "longitude": {
+          "type": "float",
+          "required": true
+        },
+        "hourly": {
+          "type": "string",
+          "description": "pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,ozone,european_aqi,us_aqi,birch_pollen,grass_pollen",
+          "required": true
+        },
+        "forecast_days": {
+          "type": "integer",
+          "default": 5
+        }
+      },
+      "output": {
+        "type": "air_quality",
+        "fields": [
+          "hourly.time",
+          "hourly.pm2_5",
+          "hourly.pm10",
+          "hourly.european_aqi"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_climate_data",
+      "description_for_ai": "Get historical climate data going back to 1940. Free long-term weather analysis.",
+      "intent": [
+        "historical weather",
+        "climate data",
+        "past weather",
+        "исторические данные погоды"
+      ],
+      "endpoint": "GET https://archive-api.open-meteo.com/v1/archive",
+      "input": {
+        "latitude": {
+          "type": "float",
+          "required": true
+        },
+        "longitude": {
+          "type": "float",
+          "required": true
+        },
+        "start_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD, from 1940-01-01",
+          "required": true
+        },
+        "end_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "daily": {
+          "type": "string",
+          "description": "temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "historical",
+        "fields": [
+          "daily.time",
           "daily.temperature_2m_max",
           "daily.precipitation_sum"
         ]
       },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_marine_forecast",
+      "description_for_ai": "Get ocean/sea wave height, direction, and period forecast for marine applications.",
+      "intent": [
+        "wave forecast",
+        "marine weather",
+        "sea conditions",
+        "морской прогноз"
+      ],
+      "endpoint": "GET https://marine-api.open-meteo.com/v1/marine",
+      "input": {
+        "latitude": {
+          "type": "float",
+          "required": true
+        },
+        "longitude": {
+          "type": "float",
+          "required": true
+        },
+        "hourly": {
+          "type": "string",
+          "description": "wave_height,wave_direction,wave_period,wind_wave_height,swell_wave_height",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "marine",
+        "fields": [
+          "hourly.time",
+          "hourly.wave_height",
+          "hourly.wave_direction",
+          "hourly.wave_period"
+        ]
+      },
       "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "weather_code_lookup",
+      "description_for_ai": "Decode WMO weather codes (0-99) returned by Open-Meteo into human-readable descriptions.",
+      "intent": [
+        "weather code",
+        "WMO code",
+        "weather description",
+        "расшифровка кода погоды"
+      ],
+      "endpoint": "reference",
+      "input": {
+        "code": {
+          "type": "integer",
+          "description": "WMO code: 0=Clear sky, 1-3=Partly cloudy, 45-48=Fog, 51-55=Drizzle, 61-65=Rain, 71-75=Snow, 80-82=Showers, 95=Thunderstorm",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "description",
+        "fields": [
+          "description (human-readable weather condition)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "climate_change_data",
+      "description_for_ai": "Get climate change projections and ensemble models from CMIP6.",
+      "intent": [
+        "climate projections",
+        "climate change data",
+        "future temperature",
+        "изменение климата данные"
+      ],
+      "endpoint": "GET https://climate-api.open-meteo.com/v1/climate",
+      "input": {
+        "latitude": {
+          "type": "float",
+          "required": true
+        },
+        "longitude": {
+          "type": "float",
+          "required": true
+        },
+        "start_date": {
+          "type": "string",
+          "description": "From 2015-01-01",
+          "required": true
+        },
+        "end_date": {
+          "type": "string",
+          "description": "Up to 2100-12-31",
+          "required": true
+        },
+        "daily": {
+          "type": "string",
+          "description": "temperature_2m_mean,precipitation_sum,wind_speed_10m_mean",
+          "required": true
+        },
+        "models": {
+          "type": "string",
+          "description": "CMIP6 models: EC_Earth3P_HR, MPI_ESM1_2_XR, NICAM16_8S, etc.",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "climate_projection",
+        "fields": [
+          "daily.time",
+          "daily.temperature_2m_mean"
+        ]
+      },
+      "realtime": false,
       "requires_auth": false
     }
   ],
