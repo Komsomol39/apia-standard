@@ -22,19 +22,19 @@
   "capabilities": [
     {
       "id": "transcribe",
-      "description_for_ai": "Transcribe audio to text using OpenAI Whisper. 97%+ accuracy across 100+ languages. $0.006/minute.",
+      "description_for_ai": "Transcribe audio to text with Whisper. 99 languages, 97%+ accuracy. $0.006 per minute.",
       "intent": [
         "transcribe audio",
         "speech to text",
-        "voice to text",
-        "транскрибация аудио",
-        "перевод голоса в текст"
+        "audio to text",
+        "Whisper API",
+        "транскрипция аудио Whisper"
       ],
       "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
       "input": {
         "file": {
           "type": "file",
-          "description": "Audio file max 25MB. Formats: mp3, mp4, mpeg, mpga, m4a, wav, webm, ogg, flac",
+          "description": "Audio file (mp3, mp4, mpeg, mpga, m4a, wav, webm). Max 25MB.",
           "required": true
         },
         "model": {
@@ -43,58 +43,12 @@
         },
         "language": {
           "type": "string",
-          "description": "ISO 639-1 code: en, ru, de, fr, zh, etc. Auto-detected if omitted. Providing it improves accuracy.",
+          "description": "ISO 639-1 code. Auto-detected if omitted.",
           "required": false
         },
         "prompt": {
           "type": "string",
-          "description": "Vocabulary hints for domain-specific terms. Spell out proper nouns, technical terms.",
-          "required": false
-        },
-        "response_format": {
-          "type": "string",
-          "description": "json (text only), text, srt (subtitles), verbose_json (with timestamps), vtt",
-          "default": "json"
-        },
-        "temperature": {
-          "type": "float",
-          "description": "0-1. Higher=more creative, may cause hallucination. Keep at 0 for best accuracy.",
-          "default": 0
-        }
-      },
-      "output": {
-        "type": "transcription",
-        "fields": [
-          "text (json format)",
-          "segments[0].start, segments[0].end, segments[0].text (verbose_json)"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "translate",
-      "description_for_ai": "Translate audio from any language to English text using Whisper. One step: audio → English.",
-      "intent": [
-        "translate audio",
-        "audio translation",
-        "speech translation",
-        "перевод аудио на английский"
-      ],
-      "endpoint": "POST https://api.openai.com/v1/audio/translations",
-      "input": {
-        "file": {
-          "type": "file",
-          "description": "Audio file in any supported language, max 25MB",
-          "required": true
-        },
-        "model": {
-          "type": "string",
-          "default": "whisper-1"
-        },
-        "prompt": {
-          "type": "string",
-          "description": "Hint about content in English",
+          "description": "Hint for domain vocabulary e.g. 'This is a medical consultation about hypertension'",
           "required": false
         },
         "response_format": {
@@ -102,46 +56,9 @@
           "description": "json, text, srt, verbose_json, vtt",
           "default": "json"
         },
-        "temperature": {
-          "type": "float",
-          "default": 0
-        }
-      },
-      "output": {
-        "type": "translation",
-        "fields": [
-          "text (always in English)"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "transcribe_long",
-      "description_for_ai": "Split and transcribe audio files larger than 25MB by chunking them. Whisper limit is 25MB.",
-      "intent": [
-        "long audio transcription",
-        "large file transcription",
-        "transcribe long video",
-        "транскрибация длинного аудио"
-      ],
-      "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
-      "input": {
-        "file": {
-          "type": "file",
-          "description": "Audio chunk under 25MB. Split large files at silence: ffmpeg -i input.mp3 -f segment -segment_time 600 -c copy chunk_%03d.mp3",
-          "required": true
-        },
-        "model": {
-          "type": "string",
-          "default": "whisper-1"
-        },
-        "response_format": {
-          "type": "string",
-          "default": "verbose_json"
-        },
-        "language": {
-          "type": "string",
+        "timestamp_granularities": {
+          "type": "array",
+          "description": "['word', 'segment'] — add timestamps to output",
           "required": false
         }
       },
@@ -150,42 +67,164 @@
         "fields": [
           "text",
           "segments[0].start",
-          "segments[0].end"
+          "segments[0].end",
+          "words[0].word",
+          "words[0].start"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "transcribe_realtime",
-      "description_for_ai": "Real-time audio transcription using OpenAI Realtime API (WebSocket). Lower latency than file upload.",
+      "id": "translate_to_english",
+      "description_for_ai": "Transcribe and translate audio in any language to English in one step.",
       "intent": [
-        "real-time transcription",
-        "live transcription",
-        "streaming speech to text",
-        "транскрибация в реальном времени"
+        "translate audio",
+        "foreign audio to English",
+        "audio translation",
+        "перевод аудио на английский"
       ],
-      "endpoint": "WSS wss://api.openai.com/v1/realtime",
+      "endpoint": "POST https://api.openai.com/v1/audio/translations",
       "input": {
-        "model": {
-          "type": "string",
-          "default": "gpt-4o-realtime-preview"
-        },
-        "input_audio_transcription": {
-          "type": "object",
-          "description": "{model: whisper-1}",
+        "file": {
+          "type": "file",
+          "description": "Audio in any language",
           "required": true
         },
-        "turn_detection": {
-          "type": "object",
-          "description": "{type: server_vad, threshold: 0.5, prefix_padding_ms: 300, silence_duration_ms: 500}",
+        "model": {
+          "type": "string",
+          "default": "whisper-1"
+        },
+        "prompt": {
+          "type": "string",
+          "required": false
+        },
+        "response_format": {
+          "type": "string",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "translation",
+        "fields": [
+          "text (in English)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "transcribe_with_timestamps",
+      "description_for_ai": "Get transcription with word-level or segment-level timestamps for subtitles, search, or alignment.",
+      "intent": [
+        "transcribe with timestamps",
+        "word timestamps",
+        "subtitle generation",
+        "тайм-коды транскрипция"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
+      "input": {
+        "file": {
+          "type": "file",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "whisper-1"
+        },
+        "response_format": {
+          "type": "string",
+          "description": "verbose_json to get timestamps",
+          "default": "verbose_json"
+        },
+        "timestamp_granularities": {
+          "type": "array",
+          "description": "['word'] for per-word, ['segment'] for per-sentence, or both",
+          "default": [
+            "segment"
+          ]
+        }
+      },
+      "output": {
+        "type": "transcription",
+        "fields": [
+          "text",
+          "segments[0].id",
+          "segments[0].start",
+          "segments[0].end",
+          "segments[0].text",
+          "words[0].word",
+          "words[0].start",
+          "words[0].end"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "export_srt",
+      "description_for_ai": "Get transcription in SRT subtitle format, ready for video editing software.",
+      "intent": [
+        "SRT subtitles",
+        "subtitle file",
+        "generate subtitles",
+        "файл субтитров SRT"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
+      "input": {
+        "file": {
+          "type": "file",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "whisper-1"
+        },
+        "response_format": {
+          "type": "string",
+          "description": "srt or vtt for subtitle formats",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "srt",
+        "fields": [
+          "SRT formatted text with timecodes"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "large_file_transcription",
+      "description_for_ai": "Strategy for transcribing files >25MB: split into chunks, transcribe each with overlap for context.",
+      "intent": [
+        "large audio transcription",
+        "long file transcription",
+        "podcast transcription",
+        "транскрипция длинного аудио"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/audio/transcriptions",
+      "input": {
+        "file": {
+          "type": "file",
+          "description": "Split large files into <25MB chunks with ffmpeg: ffmpeg -i input.mp3 -segment_time 600 -f segment output%03d.mp3",
+          "required": true
+        },
+        "model": {
+          "type": "string",
+          "default": "whisper-1"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Last few words of previous chunk for continuity",
           "required": false
         }
       },
       "output": {
-        "type": "realtime_transcript",
+        "type": "transcription",
         "fields": [
-          "conversation.item.input_audio_transcription.completed event with transcript"
+          "text"
         ]
       },
       "realtime": true,
