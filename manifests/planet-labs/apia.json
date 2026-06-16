@@ -21,34 +21,34 @@
   },
   "capabilities": [
     {
-      "id": "search_scenes",
-      "description_for_ai": "Search Planet Labs satellite imagery by location and date.",
+      "id": "search_items",
+      "description_for_ai": "Search Planet satellite imagery catalog by area, date, and satellite type.",
       "intent": [
         "satellite imagery Planet",
-        "earth observation",
-        "satellite photos",
-        "спутниковые снимки Planet Labs"
+        "satellite search",
+        "Earth observation",
+        "поиск спутниковых снимков Planet"
       ],
       "endpoint": "POST https://api.planet.com/data/v1/quick-search",
       "input": {
         "item_types": {
           "type": "array",
-          "description": "['PSScene', 'SkySatScene', 'Landsat8L1G', 'Sentinel2L1C']",
+          "description": "PSScene (PlanetScope daily), SkySatCollect, Landsat8L1G, Sentinel2L1C",
           "required": true
         },
         "filter": {
           "type": "object",
-          "description": "{type: 'AndFilter', config: [{type: 'GeometryFilter', field_name: 'geometry', config: {type: 'Point', coordinates: [-122.4, 37.7]}}, {type: 'DateRangeFilter', field_name: 'acquired', config: {gte: '2024-01-01T00:00:00Z', lte: '2024-12-31T00:00:00Z'}}, {type: 'RangeFilter', field_name: 'cloud_cover', config: {lte: 0.1}}]}",
+          "description": "{type: 'AndFilter', config: [{type: 'GeometryFilter', field_name: 'geometry', config: {type: 'Polygon', coordinates: [[[...]]]}}]}",
           "required": true
         }
       },
       "output": {
-        "type": "list<scene>",
+        "type": "list<item>",
         "fields": [
           "features[0].id",
+          "features[0].properties.item_type",
           "features[0].properties.acquired",
           "features[0].properties.cloud_cover",
-          "features[0].properties.item_type",
           "features[0].geometry.coordinates"
         ]
       },
@@ -56,22 +56,34 @@
       "requires_auth": true
     },
     {
-      "id": "get_item_types",
-      "description_for_ai": "Get list of available Planet Labs satellite image product types.",
+      "id": "get_item",
+      "description_for_ai": "Get metadata and asset download links for a specific Planet image.",
       "intent": [
-        "planet item types",
-        "satellite types",
-        "imagery products Planet",
-        "типы снимков Planet Labs"
+        "Planet image details",
+        "satellite image metadata",
+        "download satellite",
+        "метаданные снимка Planet"
       ],
-      "endpoint": "GET https://api.planet.com/data/v1/item-types/",
-      "input": {},
+      "endpoint": "GET https://api.planet.com/data/v1/item-types/{item_type}/items/{item_id}",
+      "input": {
+        "item_type": {
+          "type": "string",
+          "required": true
+        },
+        "item_id": {
+          "type": "string",
+          "required": true
+        }
+      },
       "output": {
-        "type": "list<item_type>",
+        "type": "item",
         "fields": [
-          "item_types[0].id",
-          "item_types[0].display_name",
-          "item_types[0].description"
+          "id",
+          "properties.acquired",
+          "properties.cloud_cover",
+          "properties.sun_elevation",
+          "properties.satellite_id",
+          "_links.assets"
         ]
       },
       "realtime": true,
@@ -79,12 +91,12 @@
     },
     {
       "id": "activate_asset",
-      "description_for_ai": "Activate a Planet Labs image asset for download.",
+      "description_for_ai": "Activate a Planet satellite image asset for download.",
       "intent": [
-        "activate planet asset",
-        "download satellite image",
-        "order imagery",
-        "активировать снимок Planet Labs"
+        "activate Planet asset",
+        "prepare download",
+        "activate satellite image",
+        "активировать снимок Planet"
       ],
       "endpoint": "POST https://api.planet.com/data/v1/item-types/{item_type}/items/{item_id}/assets/{asset_type}/activate",
       "input": {
@@ -98,29 +110,29 @@
         },
         "asset_type": {
           "type": "string",
-          "description": "analytic, visual, analytic_dn, analytic_sr",
+          "description": "ortho_analytic_4b, ortho_visual, ortho_udm2",
           "required": true
         }
       },
       "output": {
         "type": "status",
         "fields": [
-          "202 Accepted — poll asset endpoint to check status"
+          "202 Accepted (activation queued)"
         ]
       },
       "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "get_asset_url",
-      "description_for_ai": "Get download URL for an activated Planet Labs satellite image.",
+      "id": "get_asset_status",
+      "description_for_ai": "Check if a Planet image asset is ready for download.",
       "intent": [
-        "download planet image",
-        "satellite image URL",
-        "get scene download",
-        "ссылка для скачивания Planet Labs"
+        "asset download status",
+        "image ready Planet",
+        "download ready?",
+        "готовность снимка Planet"
       ],
-      "endpoint": "GET https://api.planet.com/data/v1/item-types/{item_type}/items/{item_id}/assets/{asset_type}",
+      "endpoint": "GET https://api.planet.com/data/v1/item-types/{item_type}/items/{item_id}/assets",
       "input": {
         "item_type": {
           "type": "string",
@@ -129,18 +141,14 @@
         "item_id": {
           "type": "string",
           "required": true
-        },
-        "asset_type": {
-          "type": "string",
-          "required": true
         }
       },
       "output": {
-        "type": "asset",
+        "type": "assets",
         "fields": [
-          "status (activating/active)",
-          "location (download URL when active)",
-          "expires_at"
+          "ortho_analytic_4b.status (inactive/activating/active)",
+          "ortho_analytic_4b.location (download URL when active)",
+          "ortho_analytic_4b.expires_at"
         ]
       },
       "realtime": true,
@@ -148,12 +156,12 @@
     },
     {
       "id": "create_order",
-      "description_for_ai": "Create a Planet Labs order for bulk imagery delivery.",
+      "description_for_ai": "Order Planet imagery: clip, reproject, and bundle for download.",
       "intent": [
-        "planet order",
-        "bulk satellite imagery",
-        "image order Planet Labs",
-        "заказ снимков Planet Labs"
+        "order Planet imagery",
+        "satellite data order",
+        "image processing Planet",
+        "заказ снимков Planet"
       ],
       "endpoint": "POST https://api.planet.com/compute/ops/orders/v2",
       "input": {
@@ -163,12 +171,12 @@
         },
         "products": {
           "type": "array",
-          "description": "[{item_ids: ['item_id'], item_type: 'PSScene', product_bundle: 'analytic_sr_udm2'}]",
+          "description": "[{item_ids: ['...'], item_type: 'PSScene', product_bundle: 'analytic_sr_udm2'}]",
           "required": true
         },
-        "delivery": {
-          "type": "object",
-          "description": "{google_cloud_storage: {bucket: 'bucket', credentials: 'key'}} or archive",
+        "tools": {
+          "type": "array",
+          "description": "Processing tools: [{type: 'clip', parameters: {aoi: {...geojson}}}, {type: 'reproject', parameters: {projection: 'EPSG:4326'}}]",
           "required": false
         }
       },
