@@ -179,6 +179,32 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_categories",
+      "description_for_ai": "Get Avito listing categories and subcategories for search filtering.",
+      "intent": [
+        "avito categories",
+        "категории avito",
+        "разделы avito"
+      ],
+      "endpoint": "GET https://api.avito.ru/core/v1/categories",
+      "input": {
+        "region_id": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<category>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].children"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
