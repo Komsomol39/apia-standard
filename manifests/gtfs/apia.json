@@ -117,6 +117,94 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "get_stops",
+      "description_for_ai": "Get public transit stops from a GTFS feed.",
+      "intent": [
+        "transit stops",
+        "bus stops GTFS",
+        "transit data",
+        "остановки GTFS"
+      ],
+      "endpoint": "GET {gtfs_feed_url}/stops.txt",
+      "input": {
+        "feed_url": {
+          "type": "string",
+          "description": "GTFS feed URL (city transit agency)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<stop>",
+        "fields": [
+          "stop_id",
+          "stop_name",
+          "stop_lat",
+          "stop_lon",
+          "stop_code",
+          "wheelchair_boarding"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_routes",
+      "description_for_ai": "Get transit routes (bus/metro/tram lines) from a GTFS feed.",
+      "intent": [
+        "transit routes",
+        "bus routes",
+        "metro lines GTFS",
+        "маршруты GTFS"
+      ],
+      "endpoint": "GET {gtfs_feed_url}/routes.txt",
+      "input": {
+        "feed_url": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<route>",
+        "fields": [
+          "route_id",
+          "route_short_name",
+          "route_long_name",
+          "route_type (0=tram, 1=subway, 2=rail, 3=bus)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_realtime_positions",
+      "description_for_ai": "Get real-time vehicle positions from GTFS-RT feed.",
+      "intent": [
+        "live transit",
+        "bus position",
+        "real-time GTFS",
+        "реалтайм транспорт"
+      ],
+      "endpoint": "GET {gtfs_rt_url}/VehiclePositions",
+      "input": {
+        "feed_url": {
+          "type": "string",
+          "description": "GTFS-RT vehicle positions URL",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<vehicle>",
+        "fields": [
+          "entity[0].vehicle.vehicle.id",
+          "entity[0].vehicle.position.latitude",
+          "entity[0].vehicle.position.longitude",
+          "entity[0].vehicle.trip.route_id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "meta": {
