@@ -120,6 +120,132 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "search_recipes",
+      "description_for_ai": "Search recipes by ingredients, diet, cuisine, and nutrients.",
+      "intent": [
+        "search recipes spoonacular",
+        "find recipe",
+        "meal search",
+        "поиск рецептов spoonacular"
+      ],
+      "endpoint": "GET https://api.spoonacular.com/recipes/complexSearch",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": false
+        },
+        "diet": {
+          "type": "string",
+          "description": "vegetarian, vegan, gluten free, ketogenic, paleo",
+          "required": false
+        },
+        "cuisine": {
+          "type": "string",
+          "description": "italian, mexican, asian, french, american",
+          "required": false
+        },
+        "maxCalories": {
+          "type": "integer",
+          "required": false
+        },
+        "includeIngredients": {
+          "type": "string",
+          "description": "Comma-separated ingredients",
+          "required": false
+        },
+        "number": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<recipe>",
+        "fields": [
+          "results[0].id",
+          "results[0].title",
+          "results[0].image",
+          "results[0].readyInMinutes",
+          "results[0].servings"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_recipe",
+      "description_for_ai": "Get full recipe details: ingredients, instructions, nutrition.",
+      "intent": [
+        "recipe details spoonacular",
+        "recipe ingredients",
+        "cooking instructions",
+        "рецепт spoonacular"
+      ],
+      "endpoint": "GET https://api.spoonacular.com/recipes/{id}/information",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        },
+        "includeNutrition": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "recipe",
+        "fields": [
+          "id",
+          "title",
+          "readyInMinutes",
+          "servings",
+          "extendedIngredients[0].original",
+          "analyzedInstructions[0].steps[0].step",
+          "nutrition.nutrients[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "analyze_nutrition",
+      "description_for_ai": "Analyze nutrition content from a recipe URL or text.",
+      "intent": [
+        "nutrition analysis",
+        "recipe nutrition",
+        "calories recipe",
+        "анализ питания spoonacular"
+      ],
+      "endpoint": "POST https://api.spoonacular.com/recipes/analyze",
+      "input": {
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "servings": {
+          "type": "integer",
+          "required": true
+        },
+        "ingredientList": {
+          "type": "string",
+          "description": "One ingredient per line",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "nutrition",
+        "fields": [
+          "calories",
+          "carbs",
+          "fat",
+          "protein",
+          "nutrients[0].name",
+          "nutrients[0].amount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
