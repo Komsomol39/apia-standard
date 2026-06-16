@@ -22,47 +22,51 @@
   "capabilities": [
     {
       "id": "get_users",
-      "description_for_ai": "Search and list Auth0 users with filters.",
+      "description_for_ai": "List or search users in Auth0 by email, name, or query.",
       "intent": [
         "auth0 users",
-        "list users",
-        "user management",
+        "list users auth0",
+        "find user auth0",
         "пользователи auth0"
       ],
-      "endpoint": "GET https://{tenant}.auth0.com/api/v2/users",
+      "endpoint": "GET https://{domain}.auth0.com/api/v2/users",
       "input": {
         "q": {
           "type": "string",
-          "description": "Lucene query: email:john@* OR user_metadata.plan:pro",
+          "description": "Lucene query: email:user@example.com, name:*john*, logins_count:[100 TO *]",
           "required": false
         },
-        "per_page": {
-          "type": "integer",
-          "default": 50
+        "search_engine": {
+          "type": "string",
+          "default": "v3"
         },
         "page": {
           "type": "integer",
           "default": 0
         },
-        "sort": {
-          "type": "string",
-          "description": "field:order e.g. created_at:-1",
-          "required": false
+        "per_page": {
+          "type": "integer",
+          "default": 50
         },
         "include_totals": {
           "type": "boolean",
-          "default": false
+          "default": true
+        },
+        "fields": {
+          "type": "string",
+          "description": "Comma-separated: user_id,email,name,app_metadata",
+          "required": false
         }
       },
       "output": {
         "type": "list<user>",
         "fields": [
-          "[0].user_id",
-          "[0].email",
-          "[0].name",
-          "[0].created_at",
-          "[0].last_login",
-          "[0].login_count"
+          "users[0].user_id",
+          "users[0].email",
+          "users[0].name",
+          "users[0].last_login",
+          "users[0].logins_count",
+          "total"
         ]
       },
       "realtime": true,
@@ -70,14 +74,14 @@
     },
     {
       "id": "create_user",
-      "description_for_ai": "Create a new Auth0 user with email, password, and metadata.",
+      "description_for_ai": "Create a new user in Auth0 with email, password, and metadata.",
       "intent": [
         "create user auth0",
         "register user",
-        "new auth0 account",
+        "add user auth0",
         "создать пользователя auth0"
       ],
-      "endpoint": "POST https://{tenant}.auth0.com/api/v2/users",
+      "endpoint": "POST https://{domain}.auth0.com/api/v2/users",
       "input": {
         "connection": {
           "type": "string",
@@ -90,7 +94,8 @@
         },
         "password": {
           "type": "string",
-          "required": false
+          "description": "Must meet connection's password policy",
+          "required": true
         },
         "name": {
           "type": "string",
@@ -98,12 +103,12 @@
         },
         "app_metadata": {
           "type": "object",
-          "description": "App-specific data: {plan: 'pro', role: 'admin'}",
+          "description": "Role/permission data: {role: 'admin', tenant: 'acme'}",
           "required": false
         },
         "user_metadata": {
           "type": "object",
-          "description": "User preferences: {theme: 'dark', language: 'en'}",
+          "description": "Non-sensitive user preferences",
           "required": false
         },
         "email_verified": {
@@ -116,7 +121,8 @@
         "fields": [
           "user_id",
           "email",
-          "created_at"
+          "created_at",
+          "identities[0].connection"
         ]
       },
       "realtime": true,
@@ -124,18 +130,17 @@
     },
     {
       "id": "update_user",
-      "description_for_ai": "Update Auth0 user metadata, roles, or blocked status.",
+      "description_for_ai": "Update user profile, metadata, or block/unblock a user.",
       "intent": [
         "update user auth0",
         "block user",
-        "change role auth0",
+        "update role auth0",
         "обновить пользователя auth0"
       ],
-      "endpoint": "PATCH https://{tenant}.auth0.com/api/v2/users/{id}",
+      "endpoint": "PATCH https://{domain}.auth0.com/api/v2/users/{user_id}",
       "input": {
-        "id": {
+        "user_id": {
           "type": "string",
-          "description": "Auth0 user ID (auth0|xxxxx)",
           "required": true
         },
         "name": {
@@ -152,7 +157,7 @@
         },
         "blocked": {
           "type": "boolean",
-          "description": "Block user from logging in",
+          "description": "Block/unblock user login",
           "required": false
         },
         "email_verified": {
@@ -165,8 +170,8 @@
         "fields": [
           "user_id",
           "email",
-          "updated_at",
-          "blocked"
+          "blocked",
+          "updated_at"
         ]
       },
       "realtime": true,
@@ -174,19 +179,15 @@
     },
     {
       "id": "get_token",
-      "description_for_ai": "Get a Management API access token using client credentials flow.",
+      "description_for_ai": "Get Management API access token using client credentials. Required before calling other Auth0 API endpoints.",
       "intent": [
+        "auth0 token",
+        "management api token",
         "auth0 access token",
-        "management API token",
-        "client credentials",
         "токен auth0"
       ],
-      "endpoint": "POST https://{tenant}.auth0.com/oauth/token",
+      "endpoint": "POST https://{domain}.auth0.com/oauth/token",
       "input": {
-        "grant_type": {
-          "type": "string",
-          "default": "client_credentials"
-        },
         "client_id": {
           "type": "string",
           "required": true
@@ -197,16 +198,20 @@
         },
         "audience": {
           "type": "string",
-          "description": "https://{tenant}.auth0.com/api/v2/",
+          "description": "https://{domain}.auth0.com/api/v2/",
           "required": true
+        },
+        "grant_type": {
+          "type": "string",
+          "default": "client_credentials"
         }
       },
       "output": {
         "type": "token",
         "fields": [
           "access_token",
-          "expires_in",
-          "token_type"
+          "token_type",
+          "expires_in"
         ]
       },
       "realtime": true,
