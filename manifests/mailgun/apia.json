@@ -23,48 +23,60 @@
   "capabilities": [
     {
       "id": "send_email",
-      "description_for_ai": "Send email with high deliverability. Supports HTML, attachments, tracking, tags, custom headers.",
+      "description_for_ai": "Send email via Mailgun. Supports HTML, attachments, templates, tags, and scheduled delivery.",
       "intent": [
-        "send email",
+        "send email mailgun",
         "transactional email",
-        "email delivery",
-        "mailgun send",
-        "developer email"
+        "email delivery mailgun",
+        "отправить email mailgun"
       ],
       "endpoint": "POST https://api.mailgun.net/v3/{domain}/messages",
       "input": {
         "from": {
           "type": "string",
-          "description": "sender@yourdomain.com",
+          "description": "Sender: Name <email@domain.com>",
           "required": true
         },
         "to": {
           "type": "string",
-          "description": "recipient@example.com",
+          "description": "Comma-separated recipients",
           "required": true
         },
         "subject": {
           "type": "string",
           "required": true
         },
-        "html": {
-          "type": "string",
-          "description": "HTML email body",
-          "required": false
-        },
         "text": {
           "type": "string",
           "description": "Plain text body",
           "required": false
         },
-        "o:tracking": {
-          "type": "boolean",
-          "description": "Enable open/click tracking",
-          "default": true
+        "html": {
+          "type": "string",
+          "description": "HTML body",
+          "required": false
+        },
+        "cc": {
+          "type": "string",
+          "required": false
+        },
+        "bcc": {
+          "type": "string",
+          "required": false
+        },
+        "o:tag": {
+          "type": "string",
+          "description": "Tag for tracking (max 3)",
+          "required": false
+        },
+        "o:deliverytime": {
+          "type": "string",
+          "description": "RFC 2822 future time for scheduled send",
+          "required": false
         }
       },
       "output": {
-        "type": "message",
+        "type": "result",
         "fields": [
           "id",
           "message"
@@ -74,14 +86,101 @@
       "requires_auth": true
     },
     {
-      "id": "validate_email",
-      "description_for_ai": "Validate email address deliverability. Returns risk score, mailbox exists check, catch-all detection.",
+      "id": "get_events",
+      "description_for_ai": "Get email event log: delivered, opened, clicked, bounced, complained.",
       "intent": [
-        "validate email",
-        "email verification",
-        "check email",
-        "email deliverability",
-        "bounce prevention"
+        "mailgun events",
+        "email tracking",
+        "delivery events",
+        "события mailgun"
+      ],
+      "endpoint": "GET https://api.mailgun.net/v3/{domain}/events",
+      "input": {
+        "domain": {
+          "type": "string",
+          "required": true
+        },
+        "event": {
+          "type": "string",
+          "description": "accepted, rejected, delivered, failed, opened, clicked, unsubscribed, complained",
+          "required": false
+        },
+        "recipient": {
+          "type": "string",
+          "description": "Filter by recipient email",
+          "required": false
+        },
+        "begin": {
+          "type": "string",
+          "description": "Start time",
+          "required": false
+        },
+        "end": {
+          "type": "string",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100
+        }
+      },
+      "output": {
+        "type": "events",
+        "fields": [
+          "items[0].event",
+          "items[0].recipient",
+          "items[0].timestamp",
+          "items[0].message.headers.subject"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "manage_mailing_list",
+      "description_for_ai": "Create or get a Mailgun mailing list for bulk email management.",
+      "intent": [
+        "mailing list mailgun",
+        "email list",
+        "bulk email group",
+        "список рассылки mailgun"
+      ],
+      "endpoint": "POST https://api.mailgun.net/v3/lists",
+      "input": {
+        "address": {
+          "type": "string",
+          "description": "List email address: devs@mg.yourdomain.com",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "access_level": {
+          "type": "string",
+          "description": "readonly (members only), members (anyone can post), everyone",
+          "default": "readonly"
+        }
+      },
+      "output": {
+        "type": "list",
+        "fields": [
+          "list.address",
+          "list.members_count",
+          "list.access_level"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "validate_email",
+      "description_for_ai": "Validate email address: check MX records, syntax, catch-all, and mailbox existence.",
+      "intent": [
+        "validate email mailgun",
+        "email validation",
+        "check email exists",
+        "проверить email mailgun"
       ],
       "endpoint": "GET https://api.mailgun.net/v4/address/validate",
       "input": {
@@ -89,6 +188,11 @@
           "type": "string",
           "description": "Email address to validate",
           "required": true
+        },
+        "provider_lookup": {
+          "type": "boolean",
+          "description": "Check actual mailbox existence (slower)",
+          "default": false
         }
       },
       "output": {
@@ -98,8 +202,7 @@
           "is_disposable_address",
           "is_role_address",
           "reason",
-          "result",
-          "risk"
+          "result (deliverable|undeliverable|catch_all|unknown)"
         ]
       },
       "realtime": true,
