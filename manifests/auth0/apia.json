@@ -22,51 +22,39 @@
   "capabilities": [
     {
       "id": "get_users",
-      "description_for_ai": "List or search users in Auth0 by email, name, or query.",
+      "description_for_ai": "List users from Auth0 with filtering, sorting, and search.",
       "intent": [
-        "auth0 users",
-        "list users auth0",
-        "find user auth0",
-        "пользователи auth0"
+        "Auth0 users",
+        "list users",
+        "user management Auth0",
+        "пользователи Auth0"
       ],
-      "endpoint": "GET https://{domain}.auth0.com/api/v2/users",
+      "endpoint": "GET https://{domain}/api/v2/users",
       "input": {
         "q": {
           "type": "string",
-          "description": "Lucene query: email:user@example.com, name:*john*, logins_count:[100 TO *]",
+          "description": "Lucene query: email:*@gmail.com or name:John",
           "required": false
         },
-        "search_engine": {
+        "sort": {
           "type": "string",
-          "default": "v3"
-        },
-        "page": {
-          "type": "integer",
-          "default": 0
+          "description": "Field:order e.g. created_at:1 (asc) or created_at:-1 (desc)",
+          "required": false
         },
         "per_page": {
           "type": "integer",
           "default": 50
-        },
-        "include_totals": {
-          "type": "boolean",
-          "default": true
-        },
-        "fields": {
-          "type": "string",
-          "description": "Comma-separated: user_id,email,name,app_metadata",
-          "required": false
         }
       },
       "output": {
         "type": "list<user>",
         "fields": [
-          "users[0].user_id",
-          "users[0].email",
-          "users[0].name",
-          "users[0].last_login",
-          "users[0].logins_count",
-          "total"
+          "[0].user_id",
+          "[0].email",
+          "[0].name",
+          "[0].created_at",
+          "[0].last_login",
+          "[0].app_metadata"
         ]
       },
       "realtime": true,
@@ -74,46 +62,44 @@
     },
     {
       "id": "create_user",
-      "description_for_ai": "Create a new user in Auth0 with email, password, and metadata.",
+      "description_for_ai": "Create a new user in Auth0.",
       "intent": [
-        "create user auth0",
+        "create user Auth0",
         "register user",
-        "add user auth0",
-        "создать пользователя auth0"
+        "add user Auth0",
+        "создать пользователя Auth0"
       ],
-      "endpoint": "POST https://{domain}.auth0.com/api/v2/users",
+      "endpoint": "POST https://{domain}/api/v2/users",
       "input": {
         "connection": {
           "type": "string",
-          "description": "Connection name e.g. Username-Password-Authentication",
+          "description": "Connection name: Username-Password-Authentication, email, sms",
           "required": true
         },
         "email": {
           "type": "string",
-          "required": true
+          "required": false
         },
         "password": {
           "type": "string",
-          "description": "Must meet connection's password policy",
-          "required": true
+          "required": false
         },
-        "name": {
+        "given_name": {
+          "type": "string",
+          "required": false
+        },
+        "family_name": {
           "type": "string",
           "required": false
         },
         "app_metadata": {
           "type": "object",
-          "description": "Role/permission data: {role: 'admin', tenant: 'acme'}",
+          "description": "Application-specific metadata",
           "required": false
         },
         "user_metadata": {
           "type": "object",
-          "description": "Non-sensitive user preferences",
           "required": false
-        },
-        "email_verified": {
-          "type": "boolean",
-          "default": false
         }
       },
       "output": {
@@ -122,7 +108,7 @@
           "user_id",
           "email",
           "created_at",
-          "identities[0].connection"
+          "app_metadata"
         ]
       },
       "realtime": true,
@@ -130,18 +116,28 @@
     },
     {
       "id": "update_user",
-      "description_for_ai": "Update user profile, metadata, or block/unblock a user.",
+      "description_for_ai": "Update user attributes: name, email, password, metadata, blocked status.",
       "intent": [
-        "update user auth0",
+        "update user Auth0",
         "block user",
-        "update role auth0",
-        "обновить пользователя auth0"
+        "change password Auth0",
+        "обновить пользователя Auth0"
       ],
-      "endpoint": "PATCH https://{domain}.auth0.com/api/v2/users/{user_id}",
+      "endpoint": "PATCH https://{domain}/api/v2/users/{id}",
       "input": {
-        "user_id": {
+        "id": {
           "type": "string",
+          "description": "User ID: auth0|xxx",
           "required": true
+        },
+        "blocked": {
+          "type": "boolean",
+          "description": "Block/unblock user",
+          "required": false
+        },
+        "email": {
+          "type": "string",
+          "required": false
         },
         "name": {
           "type": "string",
@@ -149,19 +145,6 @@
         },
         "app_metadata": {
           "type": "object",
-          "required": false
-        },
-        "user_metadata": {
-          "type": "object",
-          "required": false
-        },
-        "blocked": {
-          "type": "boolean",
-          "description": "Block/unblock user login",
-          "required": false
-        },
-        "email_verified": {
-          "type": "boolean",
           "required": false
         }
       },
@@ -178,15 +161,15 @@
       "requires_auth": true
     },
     {
-      "id": "get_token",
-      "description_for_ai": "Get Management API access token using client credentials. Required before calling other Auth0 API endpoints.",
+      "id": "get_tokens",
+      "description_for_ai": "Exchange credentials for Auth0 access tokens (client credentials flow).",
       "intent": [
-        "auth0 token",
-        "management api token",
-        "auth0 access token",
-        "токен auth0"
+        "Auth0 token",
+        "access token",
+        "OAuth token",
+        "токен Auth0"
       ],
-      "endpoint": "POST https://{domain}.auth0.com/oauth/token",
+      "endpoint": "POST https://{domain}/oauth/token",
       "input": {
         "client_id": {
           "type": "string",
@@ -198,12 +181,18 @@
         },
         "audience": {
           "type": "string",
-          "description": "https://{domain}.auth0.com/api/v2/",
+          "description": "API identifier",
           "required": true
         },
         "grant_type": {
           "type": "string",
-          "default": "client_credentials"
+          "description": "client_credentials or authorization_code or refresh_token",
+          "required": true
+        },
+        "code": {
+          "type": "string",
+          "description": "Auth code for authorization_code flow",
+          "required": false
         }
       },
       "output": {
@@ -211,37 +200,70 @@
         "fields": [
           "access_token",
           "token_type",
-          "expires_in"
+          "expires_in",
+          "scope"
         ]
       },
       "realtime": true,
-      "requires_auth": false
+      "requires_auth": true
+    },
+    {
+      "id": "get_roles",
+      "description_for_ai": "Get all roles defined in Auth0 for RBAC.",
+      "intent": [
+        "Auth0 roles",
+        "RBAC",
+        "user roles",
+        "роли Auth0"
+      ],
+      "endpoint": "GET https://{domain}/api/v2/roles",
+      "input": {
+        "name_filter": {
+          "type": "string",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<role>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     },
     {
       "id": "assign_roles",
-      "description_for_ai": "Assign or remove roles from an Auth0 user for RBAC (role-based access control).",
+      "description_for_ai": "Assign RBAC roles to a user.",
       "intent": [
-        "assign role auth0",
+        "assign role Auth0",
         "user permissions",
-        "RBAC auth0",
-        "роли пользователя auth0"
+        "role assignment",
+        "назначить роль Auth0"
       ],
-      "endpoint": "POST https://{domain}.auth0.com/api/v2/users/{user_id}/roles",
+      "endpoint": "POST https://{domain}/api/v2/users/{id}/roles",
       "input": {
-        "user_id": {
+        "id": {
           "type": "string",
+          "description": "User ID",
           "required": true
         },
         "roles": {
           "type": "array",
-          "description": "Array of role IDs to assign",
+          "description": "Role IDs to assign",
           "required": true
         }
       },
       "output": {
-        "type": "empty",
+        "type": "status",
         "fields": [
-          "204 No Content"
+          "204 No Content on success"
         ]
       },
       "realtime": true,
