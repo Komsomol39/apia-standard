@@ -23,27 +23,28 @@
   "capabilities": [
     {
       "id": "get_employee",
-      "description_for_ai": "Get employee profile with personal info, job details, salary, and custom fields.",
+      "description_for_ai": "Get employee profile from BambooHR by ID or list all employees.",
       "intent": [
-        "employee info bamboohr",
-        "HR employee data",
-        "employee profile",
-        "данные сотрудника bamboohr"
+        "employee info BambooHR",
+        "HR profile",
+        "employee data",
+        "данные сотрудника BambooHR"
       ],
-      "endpoint": "GET https://api.bamboohr.com/api/gateway.php/{company}/v1/employees/{id}",
+      "endpoint": "GET https://api.bamboohr.com/api/gateway.php/{companyDomain}/v1/employees/{id}",
       "input": {
-        "company": {
+        "companyDomain": {
           "type": "string",
+          "description": "Your BambooHR company domain subdomain",
           "required": true
         },
         "id": {
           "type": "string",
-          "description": "Employee ID or 'directory' for all",
+          "description": "Employee ID or 'directory' for full list",
           "required": true
         },
         "fields": {
           "type": "string",
-          "description": "Comma-separated: firstName,lastName,workEmail,department,jobTitle,salary,startDate,status",
+          "description": "firstName,lastName,workEmail,department,jobTitle,hireDate,employmentHistoryStatus",
           "required": false
         }
       },
@@ -56,36 +57,40 @@
           "workEmail",
           "department",
           "jobTitle",
-          "status"
+          "hireDate"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "list_employees",
-      "description_for_ai": "List all active employees with basic info. Use for directory or reporting.",
+      "id": "update_employee",
+      "description_for_ai": "Update employee information in BambooHR.",
       "intent": [
-        "list employees",
-        "employee directory",
-        "all staff bamboohr",
-        "список сотрудников"
+        "update employee",
+        "change employee data",
+        "обновить данные сотрудника BambooHR"
       ],
-      "endpoint": "GET https://api.bamboohr.com/api/gateway.php/{company}/v1/employees/directory",
+      "endpoint": "POST https://api.bamboohr.com/api/gateway.php/{companyDomain}/v1/employees/{id}",
       "input": {
-        "company": {
+        "companyDomain": {
           "type": "string",
+          "required": true
+        },
+        "id": {
+          "type": "integer",
+          "required": true
+        },
+        "fields": {
+          "type": "object",
+          "description": "{department: 'Engineering', jobTitle: 'Senior Engineer', workEmail: 'new@company.com'}",
           "required": true
         }
       },
       "output": {
-        "type": "list<employee>",
+        "type": "empty",
         "fields": [
-          "employees[0].id",
-          "employees[0].displayName",
-          "employees[0].workEmail",
-          "employees[0].department",
-          "employees[0].jobTitle"
+          "200 OK on success"
         ]
       },
       "realtime": true,
@@ -95,30 +100,25 @@
       "id": "get_time_off",
       "description_for_ai": "Get employee time-off requests and balances.",
       "intent": [
-        "time off bamboohr",
+        "time off BambooHR",
         "vacation requests",
-        "leave management",
-        "отпуск bamboohr"
+        "PTO balance",
+        "отпуск BambooHR"
       ],
-      "endpoint": "GET https://api.bamboohr.com/api/gateway.php/{company}/v1/time_off/requests",
+      "endpoint": "GET https://api.bamboohr.com/api/gateway.php/{companyDomain}/v1/time_off/requests",
       "input": {
-        "company": {
+        "companyDomain": {
           "type": "string",
           "required": true
-        },
-        "employeeId": {
-          "type": "integer",
-          "required": false
         },
         "start": {
           "type": "string",
           "description": "YYYY-MM-DD",
-          "required": false
+          "required": true
         },
         "end": {
           "type": "string",
-          "description": "YYYY-MM-DD",
-          "required": false
+          "required": true
         },
         "status": {
           "type": "string",
@@ -127,48 +127,104 @@
         }
       },
       "output": {
-        "type": "list<request>",
+        "type": "list<time_off>",
         "fields": [
           "[0].id",
-          "[0].employeeId",
-          "[0].status.status",
-          "[0].start.date",
-          "[0].end.date",
-          "[0].type.name"
+          "[0].employee.id",
+          "[0].employee.displayName",
+          "[0].type.name",
+          "[0].start",
+          "[0].end",
+          "[0].status.status"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "update_employee",
-      "description_for_ai": "Update employee fields: department, job title, manager, status.",
+      "id": "get_whos_out",
+      "description_for_ai": "Get a list of employees who are out of office in a date range.",
       "intent": [
-        "update employee bamboohr",
-        "change department HR",
-        "edit employee info",
-        "обновить сотрудника bamboohr"
+        "who is out BambooHR",
+        "time off calendar",
+        "absent employees",
+        "кто отсутствует BambooHR"
       ],
-      "endpoint": "POST https://api.bamboohr.com/api/gateway.php/{company}/v1/employees/{id}",
+      "endpoint": "GET https://api.bamboohr.com/api/gateway.php/{companyDomain}/v1/time_off/whos_out",
       "input": {
-        "company": {
+        "companyDomain": {
           "type": "string",
           "required": true
         },
-        "id": {
+        "start": {
           "type": "string",
+          "description": "YYYY-MM-DD",
           "required": true
         },
-        "fields": {
-          "type": "object",
-          "description": "{department: 'Engineering', jobTitle: 'Senior Developer', supervisorId: '123'}",
+        "end": {
+          "type": "string",
           "required": true
         }
       },
       "output": {
-        "type": "empty",
+        "type": "list<absence>",
         "fields": [
-          "200 OK on success"
+          "[0].id",
+          "[0].type",
+          "[0].employee.id",
+          "[0].employee.displayName",
+          "[0].start",
+          "[0].end"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "add_employee",
+      "description_for_ai": "Create a new employee record in BambooHR.",
+      "intent": [
+        "add employee BambooHR",
+        "new hire",
+        "onboard employee",
+        "добавить сотрудника BambooHR"
+      ],
+      "endpoint": "POST https://api.bamboohr.com/api/gateway.php/{companyDomain}/v1/employees",
+      "input": {
+        "companyDomain": {
+          "type": "string",
+          "required": true
+        },
+        "firstName": {
+          "type": "string",
+          "required": true
+        },
+        "lastName": {
+          "type": "string",
+          "required": true
+        },
+        "hireDate": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "department": {
+          "type": "string",
+          "required": false
+        },
+        "jobTitle": {
+          "type": "string",
+          "required": false
+        },
+        "workEmail": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "employee",
+        "fields": [
+          "id (new employee ID)"
         ]
       },
       "realtime": true,
