@@ -89,6 +89,84 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "list_topics",
+      "description_for_ai": "List Khan Academy topics and subject areas.",
+      "intent": [
+        "Khan Academy topics",
+        "learning topics",
+        "education subjects",
+        "темы Khan Academy"
+      ],
+      "endpoint": "GET https://www.khanacademy.org/api/v1/topictree",
+      "input": {},
+      "output": {
+        "type": "topic_tree",
+        "fields": [
+          "children[0].slug",
+          "children[0].title",
+          "children[0].kind",
+          "children[0].children"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_exercises",
+      "description_for_ai": "Get exercises for a specific Khan Academy topic.",
+      "intent": [
+        "Khan Academy exercises",
+        "practice problems",
+        "задания Khan Academy"
+      ],
+      "endpoint": "GET https://www.khanacademy.org/api/v1/exercises",
+      "input": {
+        "topic_slug": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<exercise>",
+        "fields": [
+          "[0].id",
+          "[0].title",
+          "[0].problem_types",
+          "[0].related_videos"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_videos",
+      "description_for_ai": "Get Khan Academy videos for a topic.",
+      "intent": [
+        "Khan Academy videos",
+        "educational videos",
+        "видео Khan Academy"
+      ],
+      "endpoint": "GET https://www.khanacademy.org/api/v1/topic/{topic_slug}/videos",
+      "input": {
+        "topic_slug": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<video>",
+        "fields": [
+          "[0].id",
+          "[0].title",
+          "[0].youtube_id",
+          "[0].duration",
+          "[0].description"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "meta": {
