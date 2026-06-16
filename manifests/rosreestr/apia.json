@@ -21,41 +21,148 @@
   },
   "capabilities": [
     {
-      "id": "search_object",
-      "description_for_ai": "Поиск объекта недвижимости по кадастровому номеру или адресу. Возвращает кадастровый номер, площадь, адрес, кадастровую стоимость.",
+      "id": "get_property_info",
+      "description_for_ai": "Get real estate information from Rosreestr (Russian property registry) by cadastral number.",
       "intent": [
-        "кадастровый номер",
+        "росреестр кадастровый номер",
         "данные о недвижимости",
-        "проверить квартиру",
-        "кадастровая стоимость",
-        "ЕГРН",
-        "объект недвижимости"
+        "rosreestr property",
+        "кадастровая информация"
       ],
-      "endpoint": "GET https://pkk.rosreestr.ru/api/features/1",
+      "endpoint": "https://pkk.rosreestr.ru/api/features/5",
       "input": {
         "text": {
           "type": "string",
-          "description": "Кадастровый номер (77:01:0001001:1) или адрес",
+          "description": "Cadastral number: 77:01:0001001:1234",
+          "required": true
+        },
+        "tolerance": {
+          "type": "integer",
+          "default": 2
+        }
+      },
+      "output": {
+        "type": "property",
+        "fields": [
+          "features[0].attrs.cn (cadastral number)",
+          "features[0].attrs.area_value",
+          "features[0].attrs.cad_cost",
+          "features[0].attrs.util_code_desc"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_by_address",
+      "description_for_ai": "Search Rosreestr cadastral objects by address.",
+      "intent": [
+        "поиск росреестр адрес",
+        "кадастровый номер по адресу",
+        "cadastral search"
+      ],
+      "endpoint": "https://pkk.rosreestr.ru/api/suggestions",
+      "input": {
+        "text": {
+          "type": "string",
+          "description": "Russian address to find cadastral objects",
           "required": true
         },
         "limit": {
           "type": "integer",
-          "default": 5,
-          "description": "Maximum number of results to return"
+          "default": 10
         }
       },
       "output": {
-        "type": "list<object>",
+        "type": "list<suggestion>",
         "fields": [
-          "feature.attrs.cn",
-          "feature.attrs.address",
-          "feature.attrs.area_value",
-          "feature.attrs.cad_cost",
-          "feature.attrs.category_type"
+          "suggestions[0].value",
+          "suggestions[0].data.cn",
+          "suggestions[0].data.type"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "get_encumbrances",
+      "description_for_ai": "Get encumbrances (mortgages, liens) on a property from Rosreestr.",
+      "intent": [
+        "обременения росреестр",
+        "ипотека недвижимость",
+        "encumbrances property Russia"
+      ],
+      "endpoint": "https://rosreestr.gov.ru/api/online/fir_objects/{objectId}/encumbrances",
+      "input": {
+        "objectId": {
+          "type": "string",
+          "description": "Rosreestr object ID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<encumbrance>",
+        "fields": [
+          "encumbrances[0].type",
+          "encumbrances[0].startDate",
+          "encumbrances[0].duration"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_owners",
+      "description_for_ai": "Get ownership information for a cadastral object from Rosreestr.",
+      "intent": [
+        "владелец недвижимости",
+        "собственник росреестр",
+        "property owner Russia"
+      ],
+      "endpoint": "https://rosreestr.gov.ru/api/online/fir_objects/{objectId}",
+      "input": {
+        "objectId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "object",
+        "fields": [
+          "objectData.cadNumber",
+          "objectData.address",
+          "objectData.area",
+          "objectData.rightsList[0].rightType"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_cadastral_value",
+      "description_for_ai": "Get cadastral (assessed) value of a property from Rosreestr.",
+      "intent": [
+        "кадастровая стоимость",
+        "оценка недвижимости росреестр",
+        "cadastral value Russia"
+      ],
+      "endpoint": "https://rosreestr.gov.ru/api/online/fir_objects/{objectId}/cost",
+      "input": {
+        "objectId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "value",
+        "fields": [
+          "cadastralCost",
+          "determinationDate",
+          "applicationDate"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
