@@ -23,35 +23,153 @@
   "capabilities": [
     {
       "id": "search_animations",
-      "description_for_ai": "Animation platform. Access 200K+ free Lottie animations (JSON-based vector animations). Search animations by keyword. Used to add beautiful animations to apps and websites. Animations are lightweight, scalable, and work everywhere. Search LottieFiles for animations by keyword. Returns JSON animation files ready to embed.",
+      "description_for_ai": "Search Lottie animations by keyword on LottieFiles.",
       "intent": [
-        "animation",
         "lottie animation",
-        "loading spinner",
-        "success animation",
-        "error animation",
-        "UI animation",
-        "motion design"
+        "lottiefiles search",
+        "animated icons",
+        "анимации lottie"
       ],
-      "endpoint": "POST https://graphql.lottiefiles.com",
+      "endpoint": "GET https://api.lottiefiles.com/api/animations/public",
       "input": {
-        "query": {
+        "search": {
           "type": "string",
-          "description": "GraphQL query: {featured(first: 10) {edges {node {id, title, lottieUrl, gifUrl, speed, frameRate}}}}",
+          "required": false
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        },
+        "category": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<animation>",
+        "fields": [
+          "data[0].id",
+          "data[0].title",
+          "data[0].lottie_url",
+          "data[0].preview_url",
+          "data[0].tags"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_animation",
+      "description_for_ai": "Get a specific Lottie animation by ID with download URL.",
+      "intent": [
+        "get lottie",
+        "download animation",
+        "animation details",
+        "получить анимацию lottie"
+      ],
+      "endpoint": "GET https://api.lottiefiles.com/api/animations/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
           "required": true
         }
       },
       "output": {
-        "type": "animations",
+        "type": "animation",
         "fields": [
           "id",
           "title",
-          "lottieUrl",
-          "gifUrl",
-          "speed"
+          "lottie_url",
+          "preview_url",
+          "tags",
+          "description"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_categories",
+      "description_for_ai": "Get list of LottieFiles animation categories.",
+      "intent": [
+        "lottie categories",
+        "animation types",
+        "categories lottiefiles"
+      ],
+      "endpoint": "GET https://api.lottiefiles.com/api/categories",
+      "input": {},
+      "output": {
+        "type": "list<category>",
+        "fields": [
+          "data[0].id",
+          "data[0].title",
+          "data[0].slug"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "featured_animations",
+      "description_for_ai": "Get featured/popular Lottie animations from LottieFiles.",
+      "intent": [
+        "popular animations",
+        "featured lottie",
+        "trending animations",
+        "популярные анимации lottie"
+      ],
+      "endpoint": "GET https://api.lottiefiles.com/api/animations/featured",
+      "input": {
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<animation>",
+        "fields": [
+          "data[0].id",
+          "data[0].title",
+          "data[0].lottie_url",
+          "data[0].preview_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "user_animations",
+      "description_for_ai": "Get animations uploaded by a specific LottieFiles user.",
+      "intent": [
+        "user animations lottie",
+        "creator animations",
+        "my lottie files",
+        "анимации пользователя lottie"
+      ],
+      "endpoint": "GET https://api.lottiefiles.com/api/users/{username}/animations",
+      "input": {
+        "username": {
+          "type": "string",
+          "required": true
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<animation>",
+        "fields": [
+          "data[0].id",
+          "data[0].title",
+          "data[0].lottie_url"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
