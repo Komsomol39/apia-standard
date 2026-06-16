@@ -23,39 +23,32 @@
   "capabilities": [
     {
       "id": "chat",
-      "description_for_ai": "Chat with Cohere Command models. Optional web search connector, document grounding, and citations.",
+      "description_for_ai": "Chat with Command R+ for reasoning and tool use, or Command R for efficient RAG.",
       "intent": [
-        "cohere chat",
-        "command R",
-        "enterprise LLM",
-        "cohere AI",
-        "чат cohere"
+        "Cohere chat",
+        "Command R",
+        "enterprise AI",
+        "Cohere API",
+        "чат Cohere"
       ],
-      "endpoint": "POST https://api.cohere.ai/v2/chat",
+      "endpoint": "POST https://api.cohere.com/v2/chat",
       "input": {
         "model": {
           "type": "string",
-          "description": "command-r-plus-08-2024 (best), command-r-08-2024 (balanced), command-light (fast)",
+          "description": "command-r-plus-08-2024 (best), command-r-08-2024 (RAG-optimized), command-r7b-12-2024 (fast)",
           "required": true
         },
         "messages": {
           "type": "array",
-          "description": "[{role: user|assistant|system, content: string}]",
+          "description": "[{role: 'user'|'assistant'|'system', content: string}]",
           "required": true
         },
-        "documents": {
-          "type": "array",
-          "description": "[{id, data: {text: '...', title: '...'}}] for RAG grounding",
-          "required": false
+        "temperature": {
+          "type": "float",
+          "default": 0.3
         },
-        "tools": {
-          "type": "array",
-          "description": "Tool definitions for function calling",
-          "required": false
-        },
-        "connectors": {
-          "type": "array",
-          "description": "[{id: web-search}] for live web search",
+        "max_tokens": {
+          "type": "integer",
           "required": false
         }
       },
@@ -63,55 +56,79 @@
         "type": "completion",
         "fields": [
           "message.content[0].text",
-          "citations",
-          "usage.tokens.input_tokens"
+          "usage.tokens.input_tokens",
+          "usage.tokens.output_tokens"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "embed",
-      "description_for_ai": "Create text embeddings for semantic search, clustering, RAG. Multilingual support.",
+      "id": "tool_use",
+      "description_for_ai": "Use Cohere with tools/functions. Command R+ excels at multi-step tool use.",
       "intent": [
-        "cohere embeddings",
-        "embed text",
-        "semantic search cohere",
-        "эмбеддинги cohere"
+        "Cohere tools",
+        "function calling Cohere",
+        "agent Cohere",
+        "инструменты Cohere"
       ],
-      "endpoint": "POST https://api.cohere.ai/v2/embed",
+      "endpoint": "POST https://api.cohere.com/v2/chat",
       "input": {
-        "texts": {
-          "type": "array",
-          "description": "Array of strings to embed (max 96)",
-          "required": true
-        },
         "model": {
           "type": "string",
-          "description": "embed-v4.0, embed-multilingual-v3.0",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{type: 'function', function: {name, description, parameters: {type, properties, required}}}]",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "message.tool_calls[0].function.name",
+          "message.tool_calls[0].function.arguments"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "embeddings",
+      "description_for_ai": "Generate multilingual embeddings with Cohere Embed v3. State-of-art for RAG.",
+      "intent": [
+        "Cohere embeddings",
+        "multilingual embeddings",
+        "RAG Cohere",
+        "эмбеддинги Cohere"
+      ],
+      "endpoint": "POST https://api.cohere.com/v2/embed",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "embed-multilingual-v3.0 (100+ languages), embed-english-v3.0 (best for English)",
+          "required": true
+        },
+        "texts": {
+          "type": "array",
+          "description": "Array of strings to embed",
           "required": true
         },
         "input_type": {
           "type": "string",
-          "description": "search_document, search_query, classification, clustering",
+          "description": "search_document (for storing), search_query (for querying), classification, clustering",
           "required": true
-        },
-        "embedding_types": {
-          "type": "array",
-          "description": "['float', 'int8', 'uint8', 'binary', 'ubinary']",
-          "required": false
-        },
-        "truncate": {
-          "type": "string",
-          "description": "NONE, START, END",
-          "default": "END"
         }
       },
       "output": {
         "type": "embeddings",
         "fields": [
-          "embeddings.float[0]",
-          "meta.billed_units.input_tokens"
+          "embeddings.float[0] (float array)"
         ]
       },
       "realtime": true,
@@ -119,44 +136,37 @@
     },
     {
       "id": "rerank",
-      "description_for_ai": "Rerank a list of documents by relevance to a query. Essential for RAG pipelines to improve retrieval quality.",
+      "description_for_ai": "Rerank a list of documents by relevance to a query. Improves RAG retrieval quality significantly.",
       "intent": [
-        "rerank documents",
-        "relevance ranking",
+        "rerank results",
         "RAG reranking",
-        "improve search results",
-        "перерасположить документы cohere"
+        "improve search",
+        "ранжирование Cohere"
       ],
-      "endpoint": "POST https://api.cohere.ai/v2/rerank",
+      "endpoint": "POST https://api.cohere.com/v2/rerank",
       "input": {
         "model": {
           "type": "string",
-          "description": "rerank-v3.5 or rerank-multilingual-v3.0",
+          "description": "rerank-english-v3.0 or rerank-multilingual-v3.0",
           "required": true
         },
         "query": {
           "type": "string",
-          "description": "The search query",
           "required": true
         },
         "documents": {
           "type": "array",
-          "description": "List of strings or objects {text: '...'} to rerank. Max 1000.",
+          "description": "List of strings or {text} objects to rerank",
           "required": true
         },
         "top_n": {
           "type": "integer",
-          "description": "Number of top results to return. Default returns all.",
+          "description": "Return only top N documents",
           "required": false
-        },
-        "return_documents": {
-          "type": "boolean",
-          "description": "Include document text in response",
-          "default": false
         }
       },
       "output": {
-        "type": "reranked",
+        "type": "rerank",
         "fields": [
           "results[0].index",
           "results[0].relevance_score",
@@ -168,38 +178,73 @@
     },
     {
       "id": "classify",
-      "description_for_ai": "Classify text into custom categories using few-shot examples. No model training needed.",
+      "description_for_ai": "Classify text into categories using few-shot examples. No model training needed.",
       "intent": [
-        "classify text cohere",
         "text classification",
-        "sentiment categories",
-        "content categorization",
-        "классификация текста cohere"
+        "classify Cohere",
+        "categorize text",
+        "классификация текста Cohere"
       ],
-      "endpoint": "POST https://api.cohere.ai/v1/classify",
+      "endpoint": "POST https://api.cohere.com/v1/classify",
       "input": {
         "inputs": {
           "type": "array",
-          "description": "List of texts to classify",
+          "description": "Texts to classify",
           "required": true
         },
         "examples": {
           "type": "array",
-          "description": "[{text: 'example text', label: 'category'}] — at least 2 per category",
+          "description": "[{text: 'example text', label: 'category'}] — provide 2-5 examples per class",
           "required": true
         },
         "model": {
           "type": "string",
-          "description": "embed-multilingual-v2.0",
-          "required": false
+          "default": "embed-multilingual-v3.0"
         }
       },
       "output": {
         "type": "classifications",
         "fields": [
-          "classifications[0].input",
           "classifications[0].prediction",
-          "classifications[0].confidence"
+          "classifications[0].confidence",
+          "classifications[0].labels"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "generate_text",
+      "description_for_ai": "Use Cohere Generate for simple text completion (legacy, use chat for new projects).",
+      "intent": [
+        "text completion Cohere",
+        "generate text",
+        "completion API",
+        "генерация текста Cohere"
+      ],
+      "endpoint": "POST https://api.cohere.com/v1/generate",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "command"
+        },
+        "prompt": {
+          "type": "string",
+          "required": true
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 300
+        },
+        "temperature": {
+          "type": "float",
+          "default": 0.9
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "generations[0].text"
         ]
       },
       "realtime": true,
