@@ -21,54 +21,13 @@
   },
   "capabilities": [
     {
-      "id": "list_forms",
-      "description_for_ai": "List all Typeform forms in the workspace.",
-      "intent": [
-        "typeform forms",
-        "list forms",
-        "my forms typeform",
-        "формы typeform"
-      ],
-      "endpoint": "GET https://api.typeform.com/forms",
-      "input": {
-        "page": {
-          "type": "integer",
-          "default": 1
-        },
-        "page_size": {
-          "type": "integer",
-          "default": 10
-        },
-        "search": {
-          "type": "string",
-          "required": false
-        },
-        "workspace_id": {
-          "type": "string",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "list<form>",
-        "fields": [
-          "items[0].id",
-          "items[0].title",
-          "items[0].type",
-          "items[0]._links.display",
-          "items[0].settings.is_public"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "get_responses",
-      "description_for_ai": "Get form responses with answers, submission time, and metadata.",
+      "description_for_ai": "Get form responses from a Typeform form.",
       "intent": [
-        "typeform responses",
-        "form answers",
-        "survey results typeform",
-        "ответы typeform"
+        "Typeform responses",
+        "form submissions",
+        "survey answers",
+        "ответы Typeform"
       ],
       "endpoint": "GET https://api.typeform.com/forms/{form_id}/responses",
       "input": {
@@ -78,8 +37,12 @@
         },
         "page_size": {
           "type": "integer",
-          "description": "Max 1000",
           "default": 25
+        },
+        "sort": {
+          "type": "string",
+          "description": "submitted_at,desc or submitted_at,asc",
+          "default": "submitted_at,desc"
         },
         "since": {
           "type": "string",
@@ -89,21 +52,88 @@
         "until": {
           "type": "string",
           "required": false
-        },
-        "completed": {
-          "type": "boolean",
-          "description": "Only completed submissions",
-          "required": false
         }
       },
       "output": {
-        "type": "list<response>",
+        "type": "responses",
         "fields": [
           "items[0].response_id",
-          "items[0].answers[0].field.title",
-          "items[0].answers[0].text",
           "items[0].submitted_at",
-          "items[0].score"
+          "items[0].answers[0].field.ref",
+          "items[0].answers[0].text",
+          "total_items"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_forms",
+      "description_for_ai": "List all Typeform forms in your account.",
+      "intent": [
+        "Typeform forms",
+        "my forms",
+        "list surveys",
+        "список форм Typeform"
+      ],
+      "endpoint": "GET https://api.typeform.com/forms",
+      "input": {
+        "search": {
+          "type": "string",
+          "description": "Filter by form title",
+          "required": false
+        },
+        "page": {
+          "type": "integer",
+          "default": 1
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<form>",
+        "fields": [
+          "items[0].id",
+          "items[0].title",
+          "items[0].type",
+          "items[0].created_at",
+          "items[0].total_visits",
+          "items[0].submitted"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_form",
+      "description_for_ai": "Get a Typeform form structure with all fields and settings.",
+      "intent": [
+        "form structure Typeform",
+        "form fields",
+        "survey questions",
+        "структура формы Typeform"
+      ],
+      "endpoint": "GET https://api.typeform.com/forms/{form_id}",
+      "input": {
+        "form_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "form",
+        "fields": [
+          "id",
+          "title",
+          "fields[0].id",
+          "fields[0].type",
+          "fields[0].title",
+          "fields[0].properties",
+          "settings",
+          "total_visits",
+          "submitted"
         ]
       },
       "realtime": true,
@@ -111,12 +141,12 @@
     },
     {
       "id": "create_form",
-      "description_for_ai": "Create a Typeform form programmatically with questions and logic.",
+      "description_for_ai": "Create a new Typeform form with fields.",
       "intent": [
-        "create form typeform",
-        "build form",
-        "new survey typeform",
-        "создать форму typeform"
+        "create form Typeform",
+        "new survey",
+        "build form Typeform",
+        "создать форму Typeform"
       ],
       "endpoint": "POST https://api.typeform.com/forms",
       "input": {
@@ -126,12 +156,12 @@
         },
         "fields": {
           "type": "array",
-          "description": "[{type: short_text, title: 'Your name'}, {type: multiple_choice, title: 'How did you hear?', properties: {choices: [{label: 'Google'}, {label: 'Friend'}]}}]",
+          "description": "[{type: 'short_text', title: 'Your name?', ref: 'name_field'}, {type: 'multiple_choice', title: 'Choose:', choices: [{label: 'A'}, {label: 'B'}]}]",
           "required": true
         },
         "settings": {
           "type": "object",
-          "description": "{is_public: true, language: 'en', progress_bar: 'percentage'}",
+          "description": "{language: 'en', redirect_after_submit_url: 'https://...'}",
           "required": false
         }
       },
@@ -147,42 +177,13 @@
       "requires_auth": true
     },
     {
-      "id": "get_form",
-      "description_for_ai": "Get a Typeform form definition including all fields, logic, and settings.",
+      "id": "delete_response",
+      "description_for_ai": "Delete specific responses from a Typeform form by response IDs.",
       "intent": [
-        "get form typeform",
-        "form definition",
-        "form schema typeform",
-        "структура формы typeform"
-      ],
-      "endpoint": "GET https://api.typeform.com/forms/{form_id}",
-      "input": {
-        "form_id": {
-          "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "form",
-        "fields": [
-          "id",
-          "title",
-          "fields",
-          "logic",
-          "settings",
-          "_links.display"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "delete_responses",
-      "description_for_ai": "Delete specific response submissions from a Typeform form.",
-      "intent": [
-        "delete response typeform",
+        "delete response Typeform",
         "remove submission",
-        "удалить ответ typeform"
+        "GDPR delete",
+        "удалить ответ Typeform"
       ],
       "endpoint": "DELETE https://api.typeform.com/forms/{form_id}/responses",
       "input": {
@@ -192,12 +193,12 @@
         },
         "included_response_ids": {
           "type": "string",
-          "description": "Comma-separated response IDs to delete",
+          "description": "Comma-separated response IDs",
           "required": true
         }
       },
       "output": {
-        "type": "empty",
+        "type": "status",
         "fields": [
           "204 No Content on success"
         ]
