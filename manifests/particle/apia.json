@@ -91,6 +91,99 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_devices",
+      "description_for_ai": "List all Particle IoT devices in an account.",
+      "intent": [
+        "particle devices",
+        "IoT device list",
+        "particle photon",
+        "устройства particle IoT"
+      ],
+      "endpoint": "GET https://api.particle.io/v1/devices",
+      "input": {},
+      "output": {
+        "type": "list<device>",
+        "fields": [
+          "[0].id",
+          "[0].name",
+          "[0].last_heard",
+          "[0].connected",
+          "[0].platform_id",
+          "[0].firmware_version"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "call_function",
+      "description_for_ai": "Call a function on a Particle device (runs code on the device).",
+      "intent": [
+        "particle function",
+        "control IoT device",
+        "run command device",
+        "вызов функции particle"
+      ],
+      "endpoint": "POST https://api.particle.io/v1/devices/{device_id}/{function_name}",
+      "input": {
+        "device_id": {
+          "type": "string",
+          "required": true
+        },
+        "function_name": {
+          "type": "string",
+          "required": true
+        },
+        "arg": {
+          "type": "string",
+          "description": "Function argument (string)",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "id",
+          "connected",
+          "return_value (0=success)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_variable",
+      "description_for_ai": "Read a variable value from a Particle device.",
+      "intent": [
+        "read sensor particle",
+        "device variable",
+        "sensor data particle",
+        "данные сенсора particle"
+      ],
+      "endpoint": "GET https://api.particle.io/v1/devices/{device_id}/{variable_name}",
+      "input": {
+        "device_id": {
+          "type": "string",
+          "required": true
+        },
+        "variable_name": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "variable",
+        "fields": [
+          "cmd",
+          "name",
+          "result (sensor value)",
+          "coreInfo.connected"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
