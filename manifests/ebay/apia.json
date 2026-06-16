@@ -22,48 +22,190 @@
   "capabilities": [
     {
       "id": "search_items",
-      "description_for_ai": "eBay marketplace API. Search 1.4B+ listings, manage seller inventory, process orders. Browse API for searching items, Sell API for merchants, Buy API for buyers. Global marketplace with strong used/collectibles market. Search eBay listings by keyword, category, price range. Returns item title, price, condition, seller rating.",
+      "description_for_ai": "Search eBay marketplace listings by keyword, category, and filters.",
       "intent": [
         "eBay search",
-        "find on eBay",
-        "buy second hand",
-        "marketplace search",
-        "collectibles",
-        "used items",
-        "auction"
+        "find item eBay",
+        "eBay listings",
+        "поиск eBay"
       ],
       "endpoint": "GET https://api.ebay.com/buy/browse/v1/item_summary/search",
       "input": {
         "q": {
           "type": "string",
-          "description": "Search query or filter expression",
+          "description": "Search keywords",
           "required": true
+        },
+        "category_ids": {
+          "type": "string",
+          "description": "Category ID filter",
+          "required": false
         },
         "filter": {
           "type": "string",
-          "description": "price:[10..100], conditions:{NEW|USED}, buyingOptions:{FIXED_PRICE|AUCTION}",
+          "description": "price:[10..100], conditions:{NEW}, itemLocationCountry:US",
           "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 20,
-          "description": "Maximum number of results to return"
         },
         "sort": {
           "type": "string",
           "description": "price, -price, newlyListed, endingSoonest",
           "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
         }
       },
       "output": {
         "type": "list<item>",
         "fields": [
+          "itemSummaries[0].itemId",
           "itemSummaries[0].title",
           "itemSummaries[0].price.value",
           "itemSummaries[0].condition",
-          "itemSummaries[0].itemWebUrl",
-          "itemSummaries[0].seller.feedbackScore",
-          "itemSummaries[0].image.imageUrl"
+          "itemSummaries[0].itemWebUrl"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_item",
+      "description_for_ai": "Get detailed information about a specific eBay item.",
+      "intent": [
+        "eBay item details",
+        "product details eBay",
+        "item info eBay",
+        "товар eBay"
+      ],
+      "endpoint": "GET https://api.ebay.com/buy/browse/v1/item/{item_id}",
+      "input": {
+        "item_id": {
+          "type": "string",
+          "description": "eBay item ID e.g. v1|123456789|0",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "item",
+        "fields": [
+          "title",
+          "price.value",
+          "condition",
+          "seller.username",
+          "seller.feedbackScore",
+          "itemLocation.country",
+          "shippingOptions[0].shippingCost.value",
+          "description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_categories",
+      "description_for_ai": "Get eBay category tree for browsing or filtering.",
+      "intent": [
+        "eBay categories",
+        "browse categories",
+        "category tree eBay",
+        "категории eBay"
+      ],
+      "endpoint": "GET https://api.ebay.com/commerce/taxonomy/v1/category_tree/{category_tree_id}",
+      "input": {
+        "category_tree_id": {
+          "type": "string",
+          "description": "0 for US, 77 for Germany, 3 for UK",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "category_tree",
+        "fields": [
+          "rootCategoryNode.category.categoryName",
+          "rootCategoryNode.childCategoryTreeNodes[0].category.categoryId"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "create_listing",
+      "description_for_ai": "Create a new eBay listing (requires Sell API scopes).",
+      "intent": [
+        "sell on eBay",
+        "create listing eBay",
+        "post item eBay",
+        "продать на eBay"
+      ],
+      "endpoint": "POST https://api.ebay.com/sell/inventory/v1/inventory_item/{sku}",
+      "input": {
+        "sku": {
+          "type": "string",
+          "description": "Your unique SKU identifier",
+          "required": true
+        },
+        "condition": {
+          "type": "string",
+          "description": "NEW, LIKE_NEW, GOOD, ACCEPTABLE, FOR_PARTS_OR_NOT_WORKING",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": false
+        },
+        "price": {
+          "type": "object",
+          "description": "{value: '29.99', currency: 'USD'}",
+          "required": true
+        },
+        "quantity": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "item",
+        "fields": [
+          "sku",
+          "listingId"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_orders",
+      "description_for_ai": "Get seller orders and their fulfillment status.",
+      "intent": [
+        "eBay orders",
+        "seller orders",
+        "order management eBay",
+        "заказы eBay"
+      ],
+      "endpoint": "GET https://api.ebay.com/sell/fulfillment/v1/order",
+      "input": {
+        "filter": {
+          "type": "string",
+          "description": "orderfulfillmentstatus:{NOT_STARTED|IN_PROGRESS|FULFILLED}",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<order>",
+        "fields": [
+          "orders[0].orderId",
+          "orders[0].orderFulfillmentStatus",
+          "orders[0].buyer.username",
+          "orders[0].pricingSummary.total.value"
         ]
       },
       "realtime": true,
