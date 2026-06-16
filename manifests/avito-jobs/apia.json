@@ -93,6 +93,103 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "search_vacancies",
+      "description_for_ai": "Search job vacancies on Avito.",
+      "intent": [
+        "вакансии avito",
+        "avito jobs search",
+        "работа avito"
+      ],
+      "endpoint": "GET https://api.avito.ru/job/v1/vacancies",
+      "input": {
+        "query": {
+          "type": "string",
+          "required": false
+        },
+        "locationId": {
+          "type": "integer",
+          "required": false
+        },
+        "salary_from": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": [
+          "items[0].id",
+          "items[0].title",
+          "items[0].salary",
+          "items[0].company_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_vacancy",
+      "description_for_ai": "Get full vacancy details on Avito Jobs.",
+      "intent": [
+        "вакансия avito",
+        "детали вакансии avito jobs"
+      ],
+      "endpoint": "GET https://api.avito.ru/job/v1/vacancies/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "vacancy",
+        "fields": [
+          "id",
+          "title",
+          "description",
+          "salary",
+          "company_name",
+          "location.name",
+          "employment_type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "submit_resume",
+      "description_for_ai": "Submit a resume/CV to a vacancy on Avito Jobs.",
+      "intent": [
+        "отклик avito",
+        "подать резюме avito",
+        "apply avito jobs"
+      ],
+      "endpoint": "POST https://api.avito.ru/job/v1/vacancies/{id}/apply",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        },
+        "resume_id": {
+          "type": "integer",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "application",
+        "fields": [
+          "id",
+          "status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "contributor_notes": {
