@@ -23,28 +23,28 @@
   "capabilities": [
     {
       "id": "upsert_vectors",
-      "description_for_ai": "Insert or update vectors in a Pinecone index. Use for building semantic search, RAG, or recommendation systems.",
+      "description_for_ai": "Store vectors in Pinecone index. Use for RAG — store embedded documents with metadata.",
       "intent": [
-        "pinecone upsert",
-        "store embeddings",
-        "vector store",
-        "сохранить векторы pinecone"
+        "store embeddings Pinecone",
+        "upsert vectors",
+        "RAG storage",
+        "векторное хранилище Pinecone"
       ],
       "endpoint": "POST https://{index-host}/vectors/upsert",
       "input": {
         "vectors": {
           "type": "array",
-          "description": "[{id: 'unique_id', values: [0.1, 0.2, ...], metadata: {text: 'source text', category: 'article'}}]",
+          "description": "[{id: 'doc1', values: [0.1, 0.2, ...], metadata: {text: 'source text', url: 'source url'}}]",
           "required": true
         },
         "namespace": {
           "type": "string",
-          "description": "Separate namespaces for multi-tenant isolation",
+          "description": "Logical partition for vectors",
           "required": false
         }
       },
       "output": {
-        "type": "upsert_result",
+        "type": "upsert",
         "fields": [
           "upsertedCount"
         ]
@@ -54,34 +54,28 @@
     },
     {
       "id": "query_vectors",
-      "description_for_ai": "Find most similar vectors to a query vector. Core operation for semantic search and RAG retrieval.",
+      "description_for_ai": "Find most similar vectors (semantic search) by query vector. Returns top K matches.",
       "intent": [
-        "pinecone search",
-        "semantic search",
-        "find similar",
-        "найти похожие",
-        "RAG retrieval"
+        "vector search",
+        "semantic search Pinecone",
+        "RAG retrieval",
+        "семантический поиск Pinecone"
       ],
       "endpoint": "POST https://{index-host}/query",
       "input": {
         "vector": {
           "type": "array",
-          "description": "Query embedding vector",
-          "required": false
-        },
-        "id": {
-          "type": "string",
-          "description": "Query by existing vector ID instead of providing values",
-          "required": false
+          "description": "Query embedding vector (float array)",
+          "required": true
         },
         "topK": {
           "type": "integer",
-          "description": "Number of most similar results",
-          "required": true
+          "description": "Number of results to return",
+          "default": 10
         },
         "filter": {
           "type": "object",
-          "description": "Metadata filter: {category: {$eq: 'article'}, score: {$gte: 0.9}}",
+          "description": "Metadata filter: {source: {$eq: 'docs'}}",
           "required": false
         },
         "includeMetadata": {
@@ -98,8 +92,7 @@
         "fields": [
           "matches[0].id",
           "matches[0].score",
-          "matches[0].metadata.text",
-          "matches[0].metadata"
+          "matches[0].metadata.text"
         ]
       },
       "realtime": true,
@@ -107,32 +100,32 @@
     },
     {
       "id": "delete_vectors",
-      "description_for_ai": "Delete vectors by IDs, by metadata filter, or delete all in namespace.",
+      "description_for_ai": "Delete specific vectors or all vectors in a namespace.",
       "intent": [
-        "delete vectors pinecone",
+        "delete vectors Pinecone",
         "remove embeddings",
         "clear namespace",
-        "удалить векторы pinecone"
+        "удалить векторы Pinecone"
       ],
       "endpoint": "POST https://{index-host}/vectors/delete",
       "input": {
         "ids": {
           "type": "array",
-          "description": "List of vector IDs to delete",
+          "description": "Vector IDs to delete",
           "required": false
         },
         "deleteAll": {
           "type": "boolean",
           "description": "Delete all vectors in namespace",
-          "default": false
-        },
-        "filter": {
-          "type": "object",
-          "description": "Delete by metadata filter",
           "required": false
         },
         "namespace": {
           "type": "string",
+          "required": false
+        },
+        "filter": {
+          "type": "object",
+          "description": "Delete by metadata filter",
           "required": false
         }
       },
@@ -146,42 +139,13 @@
       "requires_auth": true
     },
     {
-      "id": "describe_index_stats",
-      "description_for_ai": "Get index statistics: vector count, dimension, and per-namespace breakdown.",
-      "intent": [
-        "pinecone stats",
-        "index info",
-        "vector count pinecone",
-        "статистика pinecone"
-      ],
-      "endpoint": "POST https://{index-host}/describe_index_stats",
-      "input": {
-        "filter": {
-          "type": "object",
-          "description": "Optional metadata filter for stats",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "stats",
-        "fields": [
-          "dimension",
-          "totalVectorCount",
-          "namespaces (dict of namespace→count)",
-          "indexFullness"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "list_indexes",
-      "description_for_ai": "List all Pinecone indexes in the project.",
+      "description_for_ai": "List all Pinecone indexes in your project.",
       "intent": [
-        "pinecone indexes",
-        "vector databases",
+        "Pinecone indexes",
         "list indexes",
-        "список индексов pinecone"
+        "my Pinecone",
+        "список индексов Pinecone"
       ],
       "endpoint": "GET https://api.pinecone.io/indexes",
       "input": {},
@@ -191,11 +155,55 @@
           "indexes[0].name",
           "indexes[0].dimension",
           "indexes[0].metric",
-          "indexes[0].status.state",
+          "indexes[0].status.ready",
           "indexes[0].host"
         ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_index",
+      "description_for_ai": "Create a new Pinecone vector index with specified dimensions and similarity metric.",
+      "intent": [
+        "create Pinecone index",
+        "new vector index",
+        "setup Pinecone",
+        "создать индекс Pinecone"
+      ],
+      "endpoint": "POST https://api.pinecone.io/indexes",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "dimension": {
+          "type": "integer",
+          "description": "Vector size: 1536 for OpenAI, 768 for Cohere, 384 for MiniLM",
+          "required": true
+        },
+        "metric": {
+          "type": "string",
+          "description": "cosine, euclidean, or dotproduct",
+          "default": "cosine"
+        },
+        "spec": {
+          "type": "object",
+          "description": "{serverless: {cloud: 'aws', region: 'us-east-1'}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "index",
+        "fields": [
+          "name",
+          "dimension",
+          "metric",
+          "status.ready",
+          "host"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
