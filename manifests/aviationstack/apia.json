@@ -24,52 +24,192 @@
   "capabilities": [
     {
       "id": "get_flights",
-      "description_for_ai": "Real-time flight data, airport info, airline data. 250+ airlines, 8000+ airports. Free tier: 100 API calls/month. Track flights, get airport details, airline info. Get real-time flight data. Filter by flight number, airline, departure/arrival airport.",
+      "description_for_ai": "Get real-time flight status and tracking data.",
       "intent": [
-        "flight status",
-        "track flight",
-        "flight data",
-        "live flights"
+        "flight data aviationstack",
+        "live flight status",
+        "flight tracker",
+        "отслеживание рейса aviationstack"
       ],
       "endpoint": "GET https://api.aviationstack.com/v1/flights",
       "input": {
         "flight_iata": {
           "type": "string",
-          "description": "Flight IATA number e.g. AA100",
+          "description": "Flight IATA number e.g. BA294, AA100",
           "required": false
         },
         "dep_iata": {
           "type": "string",
-          "description": "Departure airport IATA e.g. SVO",
+          "description": "Departure airport IATA: LHR, JFK, SVO",
           "required": false
         },
         "arr_iata": {
           "type": "string",
-          "description": "Arrival airport IATA e.g. JFK",
+          "description": "Arrival airport IATA",
           "required": false
         },
         "flight_status": {
           "type": "string",
-          "description": "scheduled, active, landed, cancelled, incident, diverted",
+          "description": "scheduled, active, landed, cancelled, diverted",
           "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 100,
-          "description": "Maximum number of results to return"
         }
       },
       "output": {
         "type": "list<flight>",
         "fields": [
-          "flight.iata",
-          "departure.airport",
-          "departure.scheduled",
-          "departure.actual",
-          "arrival.airport",
-          "arrival.scheduled",
-          "flight_status",
-          "airline.name"
+          "data[0].flight.iata",
+          "data[0].flight_status",
+          "data[0].departure.airport",
+          "data[0].departure.actual",
+          "data[0].arrival.airport",
+          "data[0].arrival.estimated"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_airports",
+      "description_for_ai": "Get airport details: name, IATA/ICAO codes, coordinates, timezone.",
+      "intent": [
+        "airport info aviationstack",
+        "airport IATA",
+        "airport lookup",
+        "информация аэропорта aviationstack"
+      ],
+      "endpoint": "GET https://api.aviationstack.com/v1/airports",
+      "input": {
+        "iata_code": {
+          "type": "string",
+          "description": "Airport IATA: JFK, SVO, LHR",
+          "required": false
+        },
+        "airport_name": {
+          "type": "string",
+          "required": false
+        },
+        "country_iso2": {
+          "type": "string",
+          "description": "Country filter: US, RU, GB",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<airport>",
+        "fields": [
+          "data[0].airport_name",
+          "data[0].iata_code",
+          "data[0].icao_code",
+          "data[0].latitude",
+          "data[0].longitude",
+          "data[0].timezone"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_airlines",
+      "description_for_ai": "Look up airline information by name or IATA code.",
+      "intent": [
+        "airline info aviationstack",
+        "airline lookup",
+        "carrier IATA",
+        "информация об авиакомпании"
+      ],
+      "endpoint": "GET https://api.aviationstack.com/v1/airlines",
+      "input": {
+        "airline_name": {
+          "type": "string",
+          "required": false
+        },
+        "iata_code": {
+          "type": "string",
+          "required": false
+        },
+        "country_iso2": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<airline>",
+        "fields": [
+          "data[0].airline_name",
+          "data[0].iata_code",
+          "data[0].icao_code",
+          "data[0].country_name",
+          "data[0].fleet_size"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_flight_schedules",
+      "description_for_ai": "Get scheduled flight timetable for a route or airline.",
+      "intent": [
+        "flight schedule",
+        "timetable flights",
+        "route schedule",
+        "расписание рейсов"
+      ],
+      "endpoint": "GET https://api.aviationstack.com/v1/timetable",
+      "input": {
+        "iata_code": {
+          "type": "string",
+          "description": "Airport IATA for departures/arrivals",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "departure or arrival",
+          "default": "departure"
+        }
+      },
+      "output": {
+        "type": "list<flight>",
+        "fields": [
+          "data[0].airline.iata",
+          "data[0].flight.iata",
+          "data[0].departure.scheduled",
+          "data[0].arrival.iata"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_routes",
+      "description_for_ai": "Get route information between airports.",
+      "intent": [
+        "flight routes",
+        "route finder",
+        "direct flights",
+        "маршруты авиарейсов"
+      ],
+      "endpoint": "GET https://api.aviationstack.com/v1/routes",
+      "input": {
+        "dep_iata": {
+          "type": "string",
+          "required": false
+        },
+        "arr_iata": {
+          "type": "string",
+          "required": false
+        },
+        "airline_iata": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<route>",
+        "fields": [
+          "data[0].airline.iata",
+          "data[0].departure.iata",
+          "data[0].arrival.iata",
+          "data[0].flight.iata"
         ]
       },
       "realtime": true,
