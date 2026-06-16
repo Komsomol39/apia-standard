@@ -22,22 +22,51 @@
   },
   "capabilities": [
     {
-      "id": "enrich_company",
-      "description_for_ai": "Get company data from domain: size, industry, location, funding, tech stack, social links. Use for lead research and sales intelligence.",
+      "id": "enrich_person",
+      "description_for_ai": "Enrich a person's profile from their email address. Returns name, title, company, bio, social.",
       "intent": [
-        "company info",
-        "company data",
-        "business intelligence",
-        "company size",
-        "tech stack",
-        "company research",
-        "B2B data"
+        "enrich email",
+        "find person info",
+        "email lookup Clearbit",
+        "обогащение email Clearbit"
+      ],
+      "endpoint": "GET https://person.clearbit.com/v2/combined/find",
+      "input": {
+        "email": {
+          "type": "string",
+          "description": "Email address to look up",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "person",
+        "fields": [
+          "person.name.fullName",
+          "person.title",
+          "person.employment.name",
+          "person.linkedin.handle",
+          "person.twitter.handle",
+          "company.name",
+          "company.domain"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "enrich_company",
+      "description_for_ai": "Enrich company data from domain: size, industry, funding, tech stack.",
+      "intent": [
+        "company enrichment",
+        "company info Clearbit",
+        "domain lookup",
+        "информация о компании Clearbit"
       ],
       "endpoint": "GET https://company.clearbit.com/v2/companies/find",
       "input": {
         "domain": {
           "type": "string",
-          "description": "Company domain e.g. stripe.com",
+          "description": "Company domain: e.g. stripe.com",
           "required": true
         }
       },
@@ -46,54 +75,108 @@
         "fields": [
           "name",
           "domain",
-          "description",
-          "industry",
-          "sector",
-          "employeesRange",
-          "annualRevenue",
-          "raised",
-          "tech",
-          "location.country",
+          "category.industry",
           "metrics.employees",
-          "metrics.marketCap",
-          "identifiers.usEIN"
+          "metrics.estimatedAnnualRevenue",
+          "tech",
+          "location",
+          "description"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "enrich_person",
-      "description_for_ai": "Get professional data from email: name, title, company, LinkedIn, Twitter, location.",
+      "id": "reveal_visitor",
+      "description_for_ai": "Identify anonymous website visitors and their company from their IP address.",
       "intent": [
-        "email lookup",
-        "person data",
-        "lead research",
-        "professional profile",
-        "contact enrichment"
+        "identify visitor",
+        "IP to company",
+        "website visitor identification",
+        "идентификация посетителя Clearbit"
       ],
-      "endpoint": "GET https://person.clearbit.com/v2/people/find",
+      "endpoint": "GET https://reveal.clearbit.com/v1/companies/find",
       "input": {
-        "email": {
+        "ip": {
+          "type": "string",
+          "description": "Visitor's IP address",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "company.name",
+          "company.domain",
+          "company.category.industry",
+          "company.metrics.employees"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "email_lookup",
+      "description_for_ai": "Find email addresses for a person at a company.",
+      "intent": [
+        "find email address",
+        "email finder",
+        "contact email Clearbit",
+        "найти email Clearbit"
+      ],
+      "endpoint": "GET https://prospector.clearbit.com/v2/people/find",
+      "input": {
+        "domain": {
+          "type": "string",
+          "required": true
+        },
+        "role": {
+          "type": "string",
+          "description": "Role category: sales, marketing, engineering",
+          "required": false
+        },
+        "seniority": {
+          "type": "string",
+          "description": "executive, director, manager",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<person>",
+        "fields": [
+          "results[0].name.fullName",
+          "results[0].email",
+          "results[0].title"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "autocomplete_company",
+      "description_for_ai": "Autocomplete company names for search inputs.",
+      "intent": [
+        "company autocomplete",
+        "company name search",
+        "автодополнение компании Clearbit"
+      ],
+      "endpoint": "GET https://autocomplete.clearbit.com/v1/companies/suggest",
+      "input": {
+        "query": {
           "type": "string",
           "required": true
         }
       },
       "output": {
-        "type": "person",
+        "type": "list<company>",
         "fields": [
-          "name.fullName",
-          "title",
-          "employment.name",
-          "employment.title",
-          "linkedin.handle",
-          "twitter.handle",
-          "location",
-          "employment.seniority"
+          "[0].name",
+          "[0].domain",
+          "[0].logo"
         ]
       },
       "realtime": true,
-      "requires_auth": true
+      "requires_auth": false
     }
   ],
   "meta": {
