@@ -183,6 +183,44 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "vector_store",
+      "description_for_ai": "Create a vector store and attach files for knowledge retrieval in Assistants.",
+      "intent": [
+        "vector store assistants",
+        "knowledge base AI",
+        "file search",
+        "база знаний ассистент"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/vector_stores",
+      "input": {
+        "name": {
+          "type": "string",
+          "required": false
+        },
+        "file_ids": {
+          "type": "array",
+          "description": "List of uploaded file IDs to include",
+          "required": false
+        },
+        "expires_after": {
+          "type": "object",
+          "description": "{anchor: 'last_active_at', days: 7}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "vector_store",
+        "fields": [
+          "id",
+          "name",
+          "status",
+          "file_counts.completed"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
