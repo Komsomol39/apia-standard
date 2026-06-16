@@ -23,46 +23,46 @@
   "capabilities": [
     {
       "id": "list_records",
-      "description_for_ai": "List records from an Airtable table with filters, sort, and field selection.",
+      "description_for_ai": "List records from an Airtable table with filters, sorts, and field selection.",
       "intent": [
         "airtable records",
-        "get data airtable",
-        "list rows",
+        "get table data",
+        "list rows airtable",
         "данные airtable"
       ],
-      "endpoint": "GET https://api.airtable.com/v0/{baseId}/{tableId}",
+      "endpoint": "GET https://api.airtable.com/v0/{baseId}/{tableName}",
       "input": {
         "baseId": {
           "type": "string",
           "required": true
         },
-        "tableId": {
+        "tableName": {
           "type": "string",
-          "description": "Table ID or name",
           "required": true
         },
         "filterByFormula": {
           "type": "string",
-          "description": "Airtable formula: {Status}='Done', AND({Priority}='High',NOT({Done}))",
+          "description": "Airtable formula e.g. AND({Status}='Done', {Priority}='High')",
           "required": false
         },
         "sort": {
           "type": "array",
-          "description": "[{field: 'Created', direction: 'desc'}]",
+          "description": "[{field: 'Name', direction: 'asc'}]",
           "required": false
         },
         "fields": {
           "type": "array",
-          "description": "Field names to return. Omit for all.",
+          "description": "Field names to return",
           "required": false
         },
         "maxRecords": {
           "type": "integer",
           "required": false
         },
-        "pageSize": {
-          "type": "integer",
-          "default": 100
+        "view": {
+          "type": "string",
+          "description": "View name to use",
+          "required": false
         }
       },
       "output": {
@@ -70,40 +70,36 @@
         "fields": [
           "records[0].id",
           "records[0].fields",
-          "offset (for next page)"
+          "records[0].createdTime",
+          "offset"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_record",
-      "description_for_ai": "Create one or multiple records in an Airtable table.",
+      "id": "create_records",
+      "description_for_ai": "Create one or more records in an Airtable table (up to 10 per request).",
       "intent": [
         "create airtable record",
         "add row airtable",
-        "new entry airtable",
+        "insert record",
         "добавить запись airtable"
       ],
-      "endpoint": "POST https://api.airtable.com/v0/{baseId}/{tableId}",
+      "endpoint": "POST https://api.airtable.com/v0/{baseId}/{tableName}",
       "input": {
         "baseId": {
           "type": "string",
           "required": true
         },
-        "tableId": {
+        "tableName": {
           "type": "string",
           "required": true
         },
         "records": {
           "type": "array",
-          "description": "[{fields: {Name: 'Task', Status: 'Todo', Priority: 'High'}}]",
+          "description": "[{fields: {Name: 'John', Status: 'Active', Score: 95}}]",
           "required": true
-        },
-        "typecast": {
-          "type": "boolean",
-          "description": "Auto-convert values to field types",
-          "default": false
         }
       },
       "output": {
@@ -118,27 +114,27 @@
       "requires_auth": true
     },
     {
-      "id": "update_record",
-      "description_for_ai": "Update specific fields of existing Airtable records by ID.",
+      "id": "update_records",
+      "description_for_ai": "Update fields of existing records by ID. Use PATCH to update only specified fields.",
       "intent": [
-        "update airtable",
-        "edit record airtable",
-        "patch airtable",
-        "обновить airtable"
+        "update airtable record",
+        "edit row airtable",
+        "change field airtable",
+        "обновить запись airtable"
       ],
-      "endpoint": "PATCH https://api.airtable.com/v0/{baseId}/{tableId}",
+      "endpoint": "PATCH https://api.airtable.com/v0/{baseId}/{tableName}",
       "input": {
         "baseId": {
           "type": "string",
           "required": true
         },
-        "tableId": {
+        "tableName": {
           "type": "string",
           "required": true
         },
         "records": {
           "type": "array",
-          "description": "[{id: 'recXXXX', fields: {Status: 'Done'}}]",
+          "description": "[{id: 'recXXXXXXXX', fields: {Status: 'Done'}}]",
           "required": true
         }
       },
@@ -153,31 +149,31 @@
       "requires_auth": true
     },
     {
-      "id": "delete_record",
-      "description_for_ai": "Delete one or multiple Airtable records by ID.",
+      "id": "delete_records",
+      "description_for_ai": "Delete records from an Airtable table by ID (up to 10 per request).",
       "intent": [
         "delete airtable record",
         "remove row airtable",
         "удалить запись airtable"
       ],
-      "endpoint": "DELETE https://api.airtable.com/v0/{baseId}/{tableId}",
+      "endpoint": "DELETE https://api.airtable.com/v0/{baseId}/{tableName}",
       "input": {
         "baseId": {
           "type": "string",
           "required": true
         },
-        "tableId": {
+        "tableName": {
           "type": "string",
           "required": true
         },
         "records": {
           "type": "array",
-          "description": "['recXXXX', 'recYYYY'] — up to 10 IDs",
+          "description": "['recXXX', 'recYYY'] — record IDs to delete",
           "required": true
         }
       },
       "output": {
-        "type": "result",
+        "type": "list<deleted>",
         "fields": [
           "records[0].id",
           "records[0].deleted"
