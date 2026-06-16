@@ -23,23 +23,23 @@
   "capabilities": [
     {
       "id": "search_articles",
-      "description_for_ai": "Search Scopus academic database for scientific articles.",
+      "description_for_ai": "Search academic articles in Scopus by keyword, author, journal, or year.",
       "intent": [
-        "scopus search",
-        "academic paper search",
-        "scientific article scopus",
-        "поиск научных статей scopus"
+        "academic search Scopus",
+        "research papers",
+        "scientific articles",
+        "поиск статей Scopus"
       ],
       "endpoint": "GET https://api.elsevier.com/content/search/scopus",
       "input": {
         "query": {
           "type": "string",
-          "description": "Scopus search: TITLE-ABS-KEY(machine learning) AND PUBYEAR > 2020",
+          "description": "Scopus query: TITLE(neural networks) AND PUBYEAR>2020 AND AUTH(LeCun)",
           "required": true
         },
         "count": {
           "type": "integer",
-          "default": 25
+          "default": 10
         },
         "start": {
           "type": "integer",
@@ -47,18 +47,24 @@
         },
         "field": {
           "type": "string",
-          "description": "Comma-separated fields to return",
+          "description": "Return fields: dc:title,prism:doi,dc:creator,prism:coverDate",
+          "required": false
+        },
+        "sort": {
+          "type": "string",
+          "description": "-pubyear (newest first), citedby-count (most cited)",
           "required": false
         }
       },
       "output": {
         "type": "list<article>",
         "fields": [
-          "search-results.entry[0].dc:title",
-          "search-results.entry[0].dc:creator",
-          "search-results.entry[0].prism:publicationName",
-          "search-results.entry[0].prism:coverDate",
-          "search-results.entry[0].citedby-count"
+          "entry[0].dc:title",
+          "entry[0].prism:doi",
+          "entry[0].dc:creator",
+          "entry[0].prism:coverDate",
+          "entry[0].citedby-count",
+          "entry[0].prism:publicationName"
         ]
       },
       "realtime": true,
@@ -66,61 +72,61 @@
     },
     {
       "id": "get_article_abstract",
-      "description_for_ai": "Get abstract and metadata for a Scopus article by DOI or EID.",
+      "description_for_ai": "Get abstract and full metadata for a Scopus article by DOI or Scopus ID.",
       "intent": [
-        "scopus abstract",
-        "article details scopus",
-        "paper abstract",
-        "аннотация статьи scopus"
+        "article abstract",
+        "paper details Scopus",
+        "DOI lookup",
+        "аннотация статьи Scopus"
       ],
-      "endpoint": "GET https://api.elsevier.com/content/abstract/eid/{eid}",
+      "endpoint": "GET https://api.elsevier.com/content/abstract/doi/{doi}",
       "input": {
-        "eid": {
+        "doi": {
           "type": "string",
-          "description": "Scopus EID: 2-s2.0-XXXXXXXX or DOI",
+          "description": "Article DOI: 10.1016/j.neunet.2021.01.001",
           "required": true
         }
       },
       "output": {
         "type": "article",
         "fields": [
-          "abstracts-retrieval-response.coredata.dc:title",
-          "abstracts-retrieval-response.coredata.dc:description",
-          "abstracts-retrieval-response.coredata.citedby-count",
-          "abstracts-retrieval-response.authors.author[0].ce:indexed-name"
+          "dc:title",
+          "dc:description (abstract)",
+          "dc:creator",
+          "prism:coverDate",
+          "citedby-count",
+          "prism:publicationName"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_author",
-      "description_for_ai": "Get Scopus author profile: publications count, h-index, citation count.",
+      "id": "get_author_profile",
+      "description_for_ai": "Get Scopus author profile: publications count, h-index, affiliations.",
       "intent": [
-        "scopus author",
-        "researcher profile",
-        "author h-index",
-        "профиль автора scopus"
+        "author profile Scopus",
+        "researcher stats",
+        "h-index",
+        "профиль автора Scopus"
       ],
-      "endpoint": "GET https://api.elsevier.com/content/author/author_id/{authorId}",
+      "endpoint": "GET https://api.elsevier.com/content/author/author_id/{author_id}",
       "input": {
-        "authorId": {
+        "author_id": {
           "type": "string",
+          "description": "Scopus Author ID",
           "required": true
-        },
-        "field": {
-          "type": "string",
-          "description": "h-index,document-count,citation-count",
-          "required": false
         }
       },
       "output": {
         "type": "author",
         "fields": [
-          "author-retrieval-response[0].coredata.h-index",
-          "author-retrieval-response[0].coredata.document-count",
-          "author-retrieval-response[0].coredata.citation-count",
-          "author-retrieval-response[0].author-profile.preferred-name.indexed-name"
+          "author-profile.preferred-name.given-name",
+          "author-profile.preferred-name.surname",
+          "author-profile.publication-range",
+          "h-index",
+          "document-count",
+          "cited-by-count"
         ]
       },
       "realtime": true,
@@ -128,67 +134,61 @@
     },
     {
       "id": "get_citations",
-      "description_for_ai": "Get citation count and citing articles for a Scopus paper.",
+      "description_for_ai": "Get all articles that cite a given Scopus article.",
       "intent": [
-        "citation count scopus",
-        "citing papers",
-        "scopus citations",
-        "цитирования scopus"
+        "citations Scopus",
+        "cited by",
+        "paper citations",
+        "цитирования статьи Scopus"
       ],
       "endpoint": "GET https://api.elsevier.com/content/search/scopus",
       "input": {
         "query": {
           "type": "string",
-          "description": "REFEID(2-s2.0-XXXXXXXX) to get citing papers",
+          "description": "REFEID(SCOPUS_ID) to find citing articles",
           "required": true
         },
         "count": {
           "type": "integer",
-          "default": 25
+          "default": 10
         }
       },
       "output": {
-        "type": "list<citation>",
+        "type": "list<article>",
         "fields": [
-          "search-results.entry[0].dc:title",
-          "search-results.entry[0].prism:coverDate"
+          "entry[0].dc:title",
+          "entry[0].prism:doi",
+          "entry[0].prism:coverDate"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "search_journal",
-      "description_for_ai": "Search Scopus for publications in a specific journal.",
+      "id": "get_journal_metrics",
+      "description_for_ai": "Get journal metrics: CiteScore, SJR, SNIP, h-index.",
       "intent": [
-        "journal search scopus",
-        "publications in journal",
-        "journal articles",
-        "статьи в журнале scopus"
+        "journal metrics Scopus",
+        "CiteScore",
+        "SJR journal",
+        "метрики журнала Scopus"
       ],
-      "endpoint": "GET https://api.elsevier.com/content/search/scopus",
+      "endpoint": "GET https://api.elsevier.com/content/serial/title/issn/{issn}",
       "input": {
-        "query": {
+        "issn": {
           "type": "string",
-          "description": "SRCTITLE(Nature) or ISSN(0028-0836)",
+          "description": "Journal ISSN: 0169-2070",
           "required": true
-        },
-        "count": {
-          "type": "integer",
-          "default": 25
-        },
-        "sort": {
-          "type": "string",
-          "description": "citedby-count, pubyear, relevancy",
-          "default": "relevancy"
         }
       },
       "output": {
-        "type": "list<article>",
+        "type": "journal",
         "fields": [
-          "search-results.entry[0].dc:title",
-          "search-results.entry[0].dc:creator",
-          "search-results.entry[0].prism:coverDate"
+          "dc:title",
+          "citeScoreYearInfoList.citeScoreCurrentMetric",
+          "SJRList.SJR[0].@_fa",
+          "SNIPList.SNIP[0].@_fa",
+          "citescoreYearInfoList.citeScoreYearInfo[0].$"
         ]
       },
       "realtime": true,
