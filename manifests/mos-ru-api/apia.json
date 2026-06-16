@@ -21,165 +21,154 @@
   },
   "capabilities": [
     {
-      "id": "search_services",
-      "description_for_ai": "Search Moscow city services (mos.ru) by keyword.",
+      "id": "get_services",
+      "description_for_ai": "Get list of Moscow city government services available through mos.ru.",
       "intent": [
-        "mos.ru услуги",
-        "московские госуслуги",
-        "городские услуги Москва"
+        "услуги mos.ru",
+        "госуслуги Москва",
+        "московские услуги",
+        "moscow city services"
       ],
-      "endpoint": "GET https://api.mos.ru/v1/services/search",
+      "endpoint": "GET https://api.mos.ru/v1/datasets",
       "input": {
-        "query": {
+        "rows": {
+          "type": "integer",
+          "default": 20
+        },
+        "number": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<dataset>",
+        "fields": [
+          "[0].ID",
+          "[0].Caption",
+          "[0].ShortDescription",
+          "[0].Count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_dataset",
+      "description_for_ai": "Get open data from Moscow city datasets (transport, ecology, health, etc.).",
+      "intent": [
+        "открытые данные Москва",
+        "данные mos.ru",
+        "датасет Москва",
+        "moscow open data"
+      ],
+      "endpoint": "GET https://api.mos.ru/v1/datasets/{dataset_id}/rows",
+      "input": {
+        "dataset_id": {
           "type": "string",
           "required": true
         },
-        "limit": {
+        "rows": {
           "type": "integer",
           "default": 20
+        },
+        "number": {
+          "type": "integer",
+          "default": 1
         }
       },
       "output": {
-        "type": "list<service>",
+        "type": "list<record>",
         "fields": [
-          "services[0].id",
-          "services[0].name",
-          "services[0].shortDescription",
-          "services[0].url"
+          "Cells[0].Name",
+          "Cells[0].Value"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_events",
-      "description_for_ai": "Get Moscow city events from mos.ru.",
+      "id": "search_datasets",
+      "description_for_ai": "Search Moscow open data catalog by keyword.",
       "intent": [
-        "события москва mos.ru",
-        "городские мероприятия",
-        "moscow events"
+        "поиск данных Москва",
+        "каталог mos.ru",
+        "датасет поиск",
+        "search moscow data"
       ],
-      "endpoint": "GET https://api.mos.ru/v1/events",
+      "endpoint": "GET https://data.mos.ru/api/v1/opendata/search",
       "input": {
-        "category": {
+        "q": {
           "type": "string",
-          "required": false
+          "required": true
         },
-        "date_from": {
-          "type": "string",
-          "required": false
-        },
-        "date_to": {
-          "type": "string",
-          "required": false
-        },
-        "limit": {
+        "pageSize": {
           "type": "integer",
-          "default": 20
+          "default": 10
         }
       },
       "output": {
-        "type": "list<event>",
+        "type": "list<dataset>",
         "fields": [
-          "events[0].id",
-          "events[0].title",
-          "events[0].date",
-          "events[0].place",
-          "events[0].description"
+          "[0].id",
+          "[0].title",
+          "[0].category",
+          "[0].count"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_transport_stops",
+      "description_for_ai": "Get public transport stops data in Moscow.",
+      "intent": [
+        "остановки транспорта Москва",
+        "маршруты Москва",
+        "транспорт mos.ru",
+        "moscow transport stops"
+      ],
+      "endpoint": "GET https://api.mos.ru/v1/datasets/752/rows",
+      "input": {
+        "rows": {
+          "type": "integer",
+          "default": 50
+        },
+        "number": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<stop>",
+        "fields": [
+          "Cells[0].Name (stop name)",
+          "Cells[0].Value"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_news",
-      "description_for_ai": "Get official Moscow city news from mos.ru.",
+      "id": "get_moscow_districts",
+      "description_for_ai": "Get Moscow administrative districts and regions data.",
       "intent": [
-        "новости москва mos.ru",
-        "moscow city news",
-        "официальные новости москвы"
+        "районы Москвы",
+        "округа Москвы",
+        "административные районы",
+        "moscow districts"
       ],
-      "endpoint": "GET https://api.mos.ru/v1/news",
+      "endpoint": "GET https://api.mos.ru/v1/datasets/737/rows",
       "input": {
-        "category": {
-          "type": "string",
-          "required": false
-        },
-        "limit": {
+        "rows": {
           "type": "integer",
-          "default": 20
+          "default": 50
         }
       },
       "output": {
-        "type": "list<news>",
+        "type": "list<district>",
         "fields": [
-          "news[0].id",
-          "news[0].title",
-          "news[0].publishDate",
-          "news[0].brief",
-          "news[0].url"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_organizations",
-      "description_for_ai": "Get Moscow city organizations and departments from mos.ru.",
-      "intent": [
-        "организации москва",
-        "московские департаменты",
-        "city organizations Moscow"
-      ],
-      "endpoint": "GET https://api.mos.ru/v1/organizations",
-      "input": {
-        "type": {
-          "type": "string",
-          "required": false
-        },
-        "limit": {
-          "type": "integer",
-          "default": 20
-        }
-      },
-      "output": {
-        "type": "list<org>",
-        "fields": [
-          "organizations[0].id",
-          "organizations[0].name",
-          "organizations[0].address",
-          "organizations[0].phone",
-          "organizations[0].url"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_transport",
-      "description_for_ai": "Get Moscow public transport data (buses, metro, trams) from mos.ru.",
-      "intent": [
-        "транспорт москва",
-        "mos.ru транспорт",
-        "metro moscow api"
-      ],
-      "endpoint": "GET https://api.mos.ru/v1/transport",
-      "input": {
-        "type": {
-          "type": "string",
-          "description": "metro, bus, tram, trolleybus",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "transport",
-        "fields": [
-          "routes[0].number",
-          "routes[0].name",
-          "routes[0].type",
-          "stops[0].name",
-          "stops[0].lat",
-          "stops[0].lon"
+          "Cells[0].Name",
+          "Cells[0].Value"
         ]
       },
       "realtime": true,
