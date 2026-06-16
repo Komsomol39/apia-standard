@@ -22,20 +22,18 @@
   "capabilities": [
     {
       "id": "get_states",
-      "description_for_ai": "Get real-time state vectors of all aircraft in a bounding box. Returns position, altitude, speed, heading for each aircraft.",
+      "description_for_ai": "Get real-time states of all aircraft in a geographic bounding box.",
       "intent": [
-        "aircraft positions",
-        "planes in sky",
-        "ADS-B data",
-        "air traffic",
-        "track planes",
-        "aviation radar"
+        "live aircraft",
+        "plane tracker",
+        "OpenSky flights",
+        "отслеживание самолётов OpenSky"
       ],
       "endpoint": "GET https://opensky-network.org/api/states/all",
       "input": {
         "lamin": {
           "type": "float",
-          "description": "Min latitude of bounding box",
+          "description": "Min latitude",
           "required": false
         },
         "lomin": {
@@ -52,18 +50,172 @@
           "type": "float",
           "description": "Max longitude",
           "required": false
+        },
+        "icao24": {
+          "type": "string",
+          "description": "Filter by aircraft ICAO24 hex address",
+          "required": false
         }
       },
       "output": {
-        "type": "aircraft_states",
+        "type": "list<state>",
         "fields": [
-          "states[][0]=icao24",
-          "states[][1]=callsign",
-          "states[][5]=longitude",
-          "states[][6]=latitude",
-          "states[][7]=baro_altitude",
-          "states[][9]=velocity",
-          "states[][10]=heading"
+          "states[0][0] (icao24)",
+          "states[0][1] (callsign)",
+          "states[0][2] (origin_country)",
+          "states[0][6] (altitude m)",
+          "states[0][9] (velocity m/s)",
+          "states[0][10] (heading degrees)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_aircraft_flights",
+      "description_for_ai": "Get flight history for a specific aircraft by ICAO24 address.",
+      "intent": [
+        "aircraft flights history",
+        "plane history OpenSky",
+        "ICAO24 lookup",
+        "история рейсов самолёта OpenSky"
+      ],
+      "endpoint": "GET https://opensky-network.org/api/flights/aircraft",
+      "input": {
+        "icao24": {
+          "type": "string",
+          "description": "Aircraft ICAO24 hex (6 chars): a0b1c2",
+          "required": true
+        },
+        "begin": {
+          "type": "integer",
+          "description": "Unix timestamp start",
+          "required": true
+        },
+        "end": {
+          "type": "integer",
+          "description": "Unix timestamp end (max 30 days range)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<flight>",
+        "fields": [
+          "[0].icao24",
+          "[0].callsign",
+          "[0].estDepartureAirport",
+          "[0].estArrivalAirport",
+          "[0].firstSeen",
+          "[0].lastSeen"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_airport_arrivals",
+      "description_for_ai": "Get flights arriving at an airport in a time window.",
+      "intent": [
+        "airport arrivals OpenSky",
+        "arriving flights",
+        "flight arrivals tracker",
+        "прилёты аэропорт OpenSky"
+      ],
+      "endpoint": "GET https://opensky-network.org/api/flights/arrival",
+      "input": {
+        "airport": {
+          "type": "string",
+          "description": "ICAO airport code: EGLL (Heathrow), KJFK, UUEE (Sheremetyevo)",
+          "required": true
+        },
+        "begin": {
+          "type": "integer",
+          "description": "Unix timestamp",
+          "required": true
+        },
+        "end": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<flight>",
+        "fields": [
+          "[0].icao24",
+          "[0].callsign",
+          "[0].estDepartureAirport",
+          "[0].firstSeen"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_airport_departures",
+      "description_for_ai": "Get flights departing from an airport.",
+      "intent": [
+        "airport departures OpenSky",
+        "departing flights",
+        "flights from airport",
+        "вылеты аэропорт OpenSky"
+      ],
+      "endpoint": "GET https://opensky-network.org/api/flights/departure",
+      "input": {
+        "airport": {
+          "type": "string",
+          "required": true
+        },
+        "begin": {
+          "type": "integer",
+          "required": true
+        },
+        "end": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<flight>",
+        "fields": [
+          "[0].icao24",
+          "[0].callsign",
+          "[0].estArrivalAirport",
+          "[0].lastSeen"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_track",
+      "description_for_ai": "Get flight track (waypoints) for an aircraft for a specific time.",
+      "intent": [
+        "flight track OpenSky",
+        "plane path",
+        "flight route track",
+        "маршрут самолёта OpenSky"
+      ],
+      "endpoint": "GET https://opensky-network.org/api/tracks/all",
+      "input": {
+        "icao24": {
+          "type": "string",
+          "required": true
+        },
+        "time": {
+          "type": "integer",
+          "description": "Unix timestamp (0 for last known track)",
+          "default": 0
+        }
+      },
+      "output": {
+        "type": "track",
+        "fields": [
+          "icao24",
+          "callsign",
+          "path[0][0] (timestamp)",
+          "path[0][1] (lat)",
+          "path[0][2] (lon)",
+          "path[0][3] (altitude)"
         ]
       },
       "realtime": true,
