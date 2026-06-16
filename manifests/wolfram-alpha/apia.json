@@ -103,6 +103,102 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "short_answer",
+      "description_for_ai": "Get a short factual answer from Wolfram Alpha (fastest endpoint).",
+      "intent": [
+        "wolfram alpha answer",
+        "quick calculation",
+        "factual query",
+        "ответ wolfram alpha"
+      ],
+      "endpoint": "GET https://api.wolframalpha.com/v1/result",
+      "input": {
+        "i": {
+          "type": "string",
+          "description": "Natural language query: 'population of France', 'sqrt(144)', 'distance from NYC to London'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "text",
+        "fields": [
+          "Plain text answer string"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "full_results",
+      "description_for_ai": "Get full structured Wolfram Alpha results with multiple pods (charts, formulas, related info).",
+      "intent": [
+        "wolfram full results",
+        "computational knowledge",
+        "detailed answer wolfram",
+        "подробный ответ wolfram alpha"
+      ],
+      "endpoint": "GET https://api.wolframalpha.com/v2/query",
+      "input": {
+        "input": {
+          "type": "string",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "description": "plaintext, image, MathML, Sound",
+          "default": "plaintext"
+        },
+        "podstate": {
+          "type": "string",
+          "description": "Show additional pod states: 'Step-by-step solution'",
+          "required": false
+        },
+        "units": {
+          "type": "string",
+          "description": "metric or nonmetric",
+          "default": "metric"
+        }
+      },
+      "output": {
+        "type": "pods",
+        "fields": [
+          "queryresult.pods[0].title",
+          "queryresult.pods[0].subpods[0].plaintext"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "spoken_result",
+      "description_for_ai": "Get a spoken-language answer from Wolfram Alpha, suitable for voice assistants.",
+      "intent": [
+        "wolfram spoken",
+        "voice answer",
+        "verbal result",
+        "голосовой ответ wolfram"
+      ],
+      "endpoint": "GET https://api.wolframalpha.com/v1/spoken",
+      "input": {
+        "i": {
+          "type": "string",
+          "required": true
+        },
+        "units": {
+          "type": "string",
+          "default": "metric"
+        }
+      },
+      "output": {
+        "type": "text",
+        "fields": [
+          "Natural language spoken sentence"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
