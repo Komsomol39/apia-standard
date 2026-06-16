@@ -23,11 +23,11 @@
   "capabilities": [
     {
       "id": "scan_url",
-      "description_for_ai": "Scan a URL for malware and phishing with 70+ antivirus engines.",
+      "description_for_ai": "Submit a URL to VirusTotal for malware and phishing scanning.",
       "intent": [
-        "scan URL",
+        "scan URL VirusTotal",
         "check URL malware",
-        "is URL safe",
+        "phishing check",
         "проверить URL VirusTotal"
       ],
       "endpoint": "POST https://www.virustotal.com/api/v3/urls",
@@ -41,27 +41,27 @@
       "output": {
         "type": "analysis",
         "fields": [
-          "data.id (analysis ID for polling)",
+          "data.id (analysis ID for results)",
           "data.type"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "get_url_report",
-      "description_for_ai": "Get VirusTotal report for a URL (scan results from 70+ engines).",
+      "description_for_ai": "Get VirusTotal scan results for a URL. Returns verdicts from 90+ security engines.",
       "intent": [
         "URL report VirusTotal",
-        "malware check URL",
-        "URL safety report",
+        "malware results",
+        "security check URL",
         "отчёт URL VirusTotal"
       ],
-      "endpoint": "GET https://www.virustotal.com/api/v3/urls/{url_id}",
+      "endpoint": "GET https://www.virustotal.com/api/v3/urls/{id}",
       "input": {
-        "url_id": {
+        "id": {
           "type": "string",
-          "description": "Base64 URL-encoded URL or ID from scan_url",
+          "description": "URL ID (base64url of URL) or analysis ID",
           "required": true
         }
       },
@@ -69,92 +69,96 @@
         "type": "report",
         "fields": [
           "data.attributes.last_analysis_stats.malicious",
+          "data.attributes.last_analysis_stats.suspicious",
           "data.attributes.last_analysis_stats.harmless",
-          "data.attributes.last_analysis_results"
+          "data.attributes.reputation"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "scan_file",
-      "description_for_ai": "Upload and scan a file for malware with 70+ antivirus engines.",
+      "id": "scan_file_hash",
+      "description_for_ai": "Get VirusTotal report for a file by its MD5, SHA1, or SHA256 hash.",
       "intent": [
-        "scan file",
-        "check file malware",
-        "file virus scan",
-        "проверить файл VirusTotal"
-      ],
-      "endpoint": "POST https://www.virustotal.com/api/v3/files",
-      "input": {
-        "file": {
-          "type": "file",
-          "description": "File to scan, max 32MB (use large file upload for >32MB)",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "analysis",
-        "fields": [
-          "data.id (analysis ID for polling)"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "get_file_report",
-      "description_for_ai": "Get VirusTotal scan report for a file by hash (MD5, SHA1, SHA256).",
-      "intent": [
-        "file hash check",
+        "file hash VirusTotal",
+        "check file hash",
         "malware hash lookup",
-        "hash reputation",
         "проверить хэш файла VirusTotal"
       ],
-      "endpoint": "GET https://www.virustotal.com/api/v3/files/{hash}",
+      "endpoint": "GET https://www.virustotal.com/api/v3/files/{id}",
       "input": {
-        "hash": {
+        "id": {
           "type": "string",
-          "description": "MD5, SHA1, or SHA256 hash of the file",
+          "description": "MD5, SHA1, or SHA256 hash",
           "required": true
         }
       },
       "output": {
         "type": "report",
         "fields": [
+          "data.attributes.meaningful_name",
           "data.attributes.last_analysis_stats.malicious",
-          "data.attributes.last_analysis_stats.harmless",
-          "data.attributes.names[0]",
-          "data.attributes.type_description"
+          "data.attributes.type_description",
+          "data.attributes.names"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_ip_report",
-      "description_for_ai": "Get reputation report for an IP address.",
+      "id": "scan_ip",
+      "description_for_ai": "Get VirusTotal report for an IP address — reputation, malware hosting, etc.",
       "intent": [
-        "IP reputation",
-        "check IP address",
-        "malicious IP",
-        "репутация IP VirusTotal"
+        "IP reputation VirusTotal",
+        "check IP malware",
+        "IP security check",
+        "проверить IP VirusTotal"
       ],
       "endpoint": "GET https://www.virustotal.com/api/v3/ip_addresses/{ip}",
       "input": {
         "ip": {
           "type": "string",
-          "description": "IPv4 address to check",
+          "description": "IPv4 or IPv6 address",
           "required": true
         }
       },
       "output": {
         "type": "report",
         "fields": [
-          "data.attributes.last_analysis_stats.malicious",
           "data.attributes.country",
-          "data.attributes.as_owner",
-          "data.attributes.reputation"
+          "data.attributes.last_analysis_stats.malicious",
+          "data.attributes.reputation",
+          "data.attributes.as_owner"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_domain_report",
+      "description_for_ai": "Get VirusTotal security report for a domain.",
+      "intent": [
+        "domain reputation",
+        "domain malware check",
+        "domain VirusTotal",
+        "репутация домена VirusTotal"
+      ],
+      "endpoint": "GET https://www.virustotal.com/api/v3/domains/{domain}",
+      "input": {
+        "domain": {
+          "type": "string",
+          "description": "Domain name: example.com",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "report",
+        "fields": [
+          "data.attributes.reputation",
+          "data.attributes.last_analysis_stats.malicious",
+          "data.attributes.categories",
+          "data.attributes.registrar"
         ]
       },
       "realtime": true,
