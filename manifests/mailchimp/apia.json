@@ -22,18 +22,18 @@
   "capabilities": [
     {
       "id": "add_subscriber",
-      "description_for_ai": "Add or update email subscriber in a list. Use for newsletter signup, lead capture.",
+      "description_for_ai": "Add or update an email subscriber in a Mailchimp audience list.",
       "intent": [
-        "add subscriber",
-        "newsletter signup",
-        "email list",
-        "subscribe",
-        "добавить в рассылку"
+        "add subscriber mailchimp",
+        "email list mailchimp",
+        "subscribe email",
+        "подписчик mailchimp"
       ],
       "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/lists/{list_id}/members",
       "input": {
         "list_id": {
           "type": "string",
+          "description": "Audience/List ID from Mailchimp dashboard",
           "required": true
         },
         "email_address": {
@@ -42,18 +42,22 @@
         },
         "status": {
           "type": "string",
-          "description": "subscribed, pending, unsubscribed",
-          "default": "subscribed"
+          "description": "subscribed, unsubscribed, cleaned, pending, transactional",
+          "required": true
         },
         "merge_fields": {
           "type": "object",
-          "description": "Subscriber merge fields matching your audience schema: {FNAME: 'John', LNAME: 'Doe', PHONE: '+1234567890', COMPANY: 'Acme', BIRTHDAY: '01/15'}. Field names depend on your audience configuration.",
+          "description": "{FNAME: 'John', LNAME: 'Doe', PHONE: '+1234567890'}",
           "required": false
         },
         "tags": {
           "type": "array",
-          "required": false,
-          "description": "Comma-separated or array of tag names"
+          "description": "Tags to apply to subscriber",
+          "required": false
+        },
+        "language": {
+          "type": "string",
+          "required": false
         }
       },
       "output": {
@@ -62,7 +66,8 @@
           "id",
           "email_address",
           "status",
-          "list_id"
+          "merge_fields",
+          "timestamp_signup"
         ]
       },
       "realtime": true,
@@ -70,26 +75,97 @@
     },
     {
       "id": "send_campaign",
-      "description_for_ai": "Send a previously created and scheduled email campaign to all subscribers. Campaign must be in 'save' or 'schedule' status.",
+      "description_for_ai": "Send a Mailchimp email campaign to a list.",
       "intent": [
-        "send newsletter",
-        "email campaign",
-        "bulk email",
-        "рассылка"
+        "send campaign mailchimp",
+        "email blast",
+        "newsletter mailchimp",
+        "рассылка mailchimp"
       ],
       "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/campaigns/{campaign_id}/actions/send",
       "input": {
         "campaign_id": {
           "type": "string",
-          "description": "Campaign ID from list_campaigns or create_campaign. Must be status=save.",
+          "description": "Campaign ID — create first via POST /3.0/campaigns",
           "required": true
         }
       },
       "output": {
         "type": "empty",
-        "fields": []
+        "fields": [
+          "204 No Content on success"
+        ]
       },
       "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_campaign",
+      "description_for_ai": "Create a new email campaign with subject, from name, and audience.",
+      "intent": [
+        "create campaign mailchimp",
+        "new email campaign",
+        "design newsletter",
+        "создать кампанию mailchimp"
+      ],
+      "endpoint": "POST https://{dc}.api.mailchimp.com/3.0/campaigns",
+      "input": {
+        "type": {
+          "type": "string",
+          "description": "regular, plaintext, absplit, rss, variate",
+          "required": true
+        },
+        "recipients": {
+          "type": "object",
+          "description": "{list_id: 'audience_id', segment_opts: {saved_segment_id: 123}}",
+          "required": true
+        },
+        "settings": {
+          "type": "object",
+          "description": "{subject_line: 'Newsletter', title: 'May 2024', from_name: 'Company', reply_to: 'hello@company.com'}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "campaign",
+        "fields": [
+          "id",
+          "type",
+          "status",
+          "create_time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_reports",
+      "description_for_ai": "Get campaign performance report: opens, clicks, bounces, unsubscribes.",
+      "intent": [
+        "mailchimp report",
+        "campaign stats",
+        "email analytics",
+        "аналитика mailchimp"
+      ],
+      "endpoint": "GET https://{dc}.api.mailchimp.com/3.0/reports/{campaign_id}",
+      "input": {
+        "campaign_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "report",
+        "fields": [
+          "emails_sent",
+          "opens.open_rate",
+          "clicks.click_rate",
+          "bounces.hard_bounces",
+          "unsubscribed",
+          "forwards.forwards_count"
+        ]
+      },
+      "realtime": false,
       "requires_auth": true
     }
   ],
