@@ -23,55 +23,50 @@
   "capabilities": [
     {
       "id": "send_email",
-      "description_for_ai": "Send transactional email with HTML/text content, attachments, tracking, and custom headers.",
+      "description_for_ai": "Send transactional email via SendGrid. Supports HTML, templates, and attachments.",
       "intent": [
-        "send email sendgrid",
+        "send email SendGrid",
         "transactional email",
-        "email delivery",
-        "отправить email sendgrid"
+        "email API SendGrid",
+        "отправить письмо SendGrid"
       ],
       "endpoint": "POST https://api.sendgrid.com/v3/mail/send",
       "input": {
-        "personalizations": {
-          "type": "array",
-          "description": "[{to: [{email: 'user@example.com', name: 'John'}], dynamic_template_data: {name: 'John'}}]",
-          "required": true
-        },
         "from": {
           "type": "object",
-          "description": "{email: 'sender@domain.com', name: 'Company'}",
+          "description": "{email: 'sender@example.com', name: 'Sender Name'}",
+          "required": true
+        },
+        "to": {
+          "type": "array",
+          "description": "Array in personalizations: [{to: [{email, name}], subject: '...'}]",
           "required": true
         },
         "subject": {
           "type": "string",
-          "description": "Email subject (not needed if using template)",
           "required": false
         },
         "content": {
           "type": "array",
-          "description": "[{type: 'text/plain', value: 'text body'}, {type: 'text/html', value: '<p>html body</p>'}]",
+          "description": "[{type: 'text/plain', value: '...'}, {type: 'text/html', value: '<p>...</p>'}]",
           "required": false
         },
         "template_id": {
           "type": "string",
-          "description": "Dynamic template ID (d-xxxxxxxxxx)",
+          "description": "Dynamic template ID from SendGrid",
           "required": false
         },
-        "attachments": {
-          "type": "array",
-          "description": "[{content: BASE64, type: 'application/pdf', filename: 'file.pdf'}]",
-          "required": false
-        },
-        "tracking_settings": {
+        "dynamic_template_data": {
           "type": "object",
-          "description": "{click_tracking: {enable: true}, open_tracking: {enable: true}}",
+          "description": "Template variables: {first_name: 'John', order_id: '12345'}",
           "required": false
         }
       },
       "output": {
-        "type": "empty",
+        "type": "status",
         "fields": [
-          "202 Accepted — check X-Message-Id response header"
+          "202 Accepted on success",
+          "X-Message-Id header"
         ]
       },
       "realtime": true,
@@ -79,12 +74,12 @@
     },
     {
       "id": "get_stats",
-      "description_for_ai": "Get email delivery statistics: delivered, opened, clicked, bounced, unsubscribed.",
+      "description_for_ai": "Get email delivery statistics: requests, deliveries, opens, clicks, bounces.",
       "intent": [
-        "sendgrid stats",
-        "email metrics",
+        "SendGrid stats",
+        "email analytics",
         "delivery stats",
-        "статистика email sendgrid"
+        "статистика SendGrid"
       ],
       "endpoint": "GET https://api.sendgrid.com/v3/stats",
       "input": {
@@ -95,22 +90,16 @@
         },
         "end_date": {
           "type": "string",
-          "description": "YYYY-MM-DD. Default today.",
           "required": false
         },
         "aggregated_by": {
           "type": "string",
           "description": "day, week, month",
           "default": "day"
-        },
-        "categories": {
-          "type": "string",
-          "description": "Filter by category name",
-          "required": false
         }
       },
       "output": {
-        "type": "stats",
+        "type": "list<stats>",
         "fields": [
           "[0].date",
           "[0].stats[0].metrics.requests",
@@ -120,17 +109,17 @@
           "[0].stats[0].metrics.bounces"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "manage_contacts",
-      "description_for_ai": "Add or update email contacts in marketing lists for campaign targeting.",
+      "description_for_ai": "Add or update email contacts in SendGrid marketing lists.",
       "intent": [
-        "add contacts sendgrid",
-        "email list",
-        "marketing list",
-        "список рассылки sendgrid"
+        "SendGrid contacts",
+        "email list SendGrid",
+        "add subscriber SendGrid",
+        "контакты SendGrid"
       ],
       "endpoint": "PUT https://api.sendgrid.com/v3/marketing/contacts",
       "input": {
@@ -141,38 +130,40 @@
         },
         "list_ids": {
           "type": "array",
-          "description": "Add contacts to these list IDs",
+          "description": "List IDs to add contacts to",
           "required": false
         }
       },
       "output": {
         "type": "job",
         "fields": [
-          "job_id"
+          "job_id",
+          "created_count",
+          "updated_count",
+          "errored_count"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "create_template",
-      "description_for_ai": "Create a transactional email template with Handlebars variables for personalization.",
+      "description_for_ai": "Create a transactional email template in SendGrid.",
       "intent": [
-        "email template sendgrid",
+        "email template SendGrid",
         "create template",
-        "dynamic template",
-        "шаблон email sendgrid"
+        "email design",
+        "шаблон письма SendGrid"
       ],
       "endpoint": "POST https://api.sendgrid.com/v3/templates",
       "input": {
         "name": {
           "type": "string",
-          "description": "Template name",
           "required": true
         },
         "generation": {
           "type": "string",
-          "description": "dynamic (recommended) or legacy",
+          "description": "dynamic (use Handlebars) or legacy",
           "default": "dynamic"
         }
       },
@@ -181,50 +172,76 @@
         "fields": [
           "id",
           "name",
-          "generation",
-          "updated_at"
+          "generation"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_stats",
-      "description_for_ai": "Get SendGrid email sending statistics: delivered, opened, clicked, bounced.",
+      "id": "validate_email",
+      "description_for_ai": "Validate an email address for syntax and deliverability.",
       "intent": [
-        "sendgrid stats",
-        "email statistics",
-        "email performance",
-        "статистика sendgrid"
+        "validate email SendGrid",
+        "email check",
+        "deliverability check",
+        "проверка email SendGrid"
       ],
-      "endpoint": "GET https://api.sendgrid.com/v3/stats",
+      "endpoint": "POST https://api.sendgrid.com/v3/validations/email",
       "input": {
-        "start_date": {
+        "email": {
           "type": "string",
-          "description": "YYYY-MM-DD",
           "required": true
         },
-        "end_date": {
+        "source": {
           "type": "string",
+          "description": "Source label for tracking",
           "required": false
-        },
-        "aggregated_by": {
-          "type": "string",
-          "description": "day, week, month",
-          "default": "day"
         }
       },
       "output": {
-        "type": "stats",
+        "type": "validation",
         "fields": [
-          "[0].date",
-          "[0].stats[0].metrics.delivered",
-          "[0].stats[0].metrics.open_rate",
-          "[0].stats[0].metrics.click_rate",
-          "[0].stats[0].metrics.bounce_rate"
+          "result.email",
+          "result.verdict",
+          "result.score",
+          "result.suggestion"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_bounces",
+      "description_for_ai": "Get list of bounced email addresses to clean your list.",
+      "intent": [
+        "bounce list SendGrid",
+        "email bounces",
+        "invalid emails",
+        "отказы доставки SendGrid"
+      ],
+      "endpoint": "GET https://api.sendgrid.com/v3/suppression/bounces",
+      "input": {
+        "start_time": {
+          "type": "integer",
+          "description": "Unix timestamp",
+          "required": false
+        },
+        "end_time": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<bounce>",
+        "fields": [
+          "[0].email",
+          "[0].status",
+          "[0].reason",
+          "[0].created"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
