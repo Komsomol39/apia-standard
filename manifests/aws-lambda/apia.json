@@ -22,12 +22,12 @@
   "capabilities": [
     {
       "id": "invoke_function",
-      "description_for_ai": "Invoke a Lambda function synchronously or asynchronously. Returns execution result.",
+      "description_for_ai": "Invoke an AWS Lambda function synchronously or asynchronously.",
       "intent": [
-        "run lambda",
-        "invoke function AWS",
-        "execute serverless",
-        "запустить lambda AWS"
+        "invoke Lambda",
+        "call function AWS",
+        "run serverless function",
+        "вызов Lambda функции"
       ],
       "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/invocations",
       "input": {
@@ -38,32 +38,27 @@
         },
         "Payload": {
           "type": "object",
-          "description": "Event payload as JSON object passed to function handler",
+          "description": "JSON payload passed to the function",
           "required": false
         },
         "InvocationType": {
           "type": "string",
-          "description": "RequestResponse (sync, default), Event (async fire-and-forget), DryRun (validate only)",
+          "description": "RequestResponse (sync), Event (async), DryRun",
           "default": "RequestResponse"
         },
         "LogType": {
           "type": "string",
-          "description": "None or Tail (include last 4KB of logs in response)",
-          "default": "None"
-        },
-        "ClientContext": {
-          "type": "string",
-          "description": "Base64-encoded client context passed to function",
+          "description": "Tail to get logs in response",
           "required": false
         }
       },
       "output": {
-        "type": "response",
+        "type": "invocation",
         "fields": [
           "StatusCode",
-          "Payload (JSON)",
-          "FunctionError",
-          "LogResult (base64 tail log)"
+          "Payload (function return value)",
+          "LogResult (base64 logs if requested)",
+          "FunctionError"
         ]
       },
       "realtime": true,
@@ -71,28 +66,22 @@
     },
     {
       "id": "list_functions",
-      "description_for_ai": "List all Lambda functions in your account with runtime, memory, and last modified date.",
+      "description_for_ai": "List all Lambda functions in an account/region.",
       "intent": [
-        "list lambda functions",
+        "list Lambda functions",
         "AWS functions",
         "serverless functions list",
-        "список функций lambda"
+        "список Lambda функций"
       ],
-      "endpoint": "GET https://lambda.{region}.amazonaws.com/2015-03-31/functions/",
+      "endpoint": "GET https://lambda.{region}.amazonaws.com/2015-03-31/functions",
       "input": {
         "MaxItems": {
           "type": "integer",
-          "description": "Max functions to return",
           "default": 50
         },
         "Marker": {
           "type": "string",
-          "description": "Pagination token from previous response",
-          "required": false
-        },
-        "FunctionVersion": {
-          "type": "string",
-          "description": "ALL to include all versions",
+          "description": "Pagination token",
           "required": false
         }
       },
@@ -101,10 +90,9 @@
         "fields": [
           "Functions[0].FunctionName",
           "Functions[0].Runtime",
-          "Functions[0].MemorySize",
-          "Functions[0].Timeout",
+          "Functions[0].Handler",
           "Functions[0].LastModified",
-          "Functions[0].FunctionArn"
+          "Functions[0].MemorySize"
         ]
       },
       "realtime": true,
@@ -112,12 +100,12 @@
     },
     {
       "id": "create_function",
-      "description_for_ai": "Deploy a new Lambda function from a ZIP file in S3. Specify runtime, handler, and memory.",
+      "description_for_ai": "Create a new Lambda function from a ZIP file or container image.",
       "intent": [
-        "create lambda function",
-        "deploy function AWS",
-        "new serverless function",
-        "создать lambda функцию"
+        "create Lambda function",
+        "deploy serverless",
+        "new function AWS",
+        "создать Lambda функцию"
       ],
       "endpoint": "POST https://lambda.{region}.amazonaws.com/2015-03-31/functions",
       "input": {
@@ -127,61 +115,55 @@
         },
         "Runtime": {
           "type": "string",
-          "description": "nodejs20.x, python3.12, java21, go1.x, dotnet8, ruby3.3",
+          "description": "python3.12, nodejs20.x, java21, go1.x, dotnet8",
           "required": true
         },
         "Role": {
           "type": "string",
-          "description": "IAM role ARN with AWSLambdaBasicExecutionRole",
+          "description": "IAM role ARN",
           "required": true
         },
         "Handler": {
           "type": "string",
-          "description": "Module.function e.g. index.handler or main.handler",
+          "description": "Function handler e.g. index.handler",
           "required": true
         },
         "Code": {
           "type": "object",
-          "description": "{S3Bucket, S3Key} or {ZipFile: BASE64}",
+          "description": "{ZipFile: 'base64'} or {S3Bucket, S3Key} or {ImageUri}",
           "required": true
         },
         "MemorySize": {
           "type": "integer",
-          "description": "Memory in MB (128-10240). More memory = more CPU too.",
+          "description": "128-10240 MB",
           "default": 128
         },
         "Timeout": {
           "type": "integer",
-          "description": "Max execution seconds (1-900)",
+          "description": "Seconds 1-900",
           "default": 3
-        },
-        "Environment": {
-          "type": "object",
-          "description": "{Variables: {KEY: 'value'}}",
-          "required": false
         }
       },
       "output": {
         "type": "function",
         "fields": [
-          "FunctionName",
           "FunctionArn",
-          "Runtime",
+          "FunctionName",
           "State",
-          "LastModified"
+          "Runtime"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "update_function_code",
-      "description_for_ai": "Deploy new code to an existing Lambda function.",
+      "description_for_ai": "Update Lambda function code by uploading new ZIP or pointing to S3.",
       "intent": [
-        "update lambda code",
-        "redeploy function",
-        "push new lambda code",
-        "обновить код lambda"
+        "update Lambda code",
+        "deploy new version",
+        "redeploy Lambda",
+        "обновить код Lambda"
       ],
       "endpoint": "PUT https://lambda.{region}.amazonaws.com/2015-03-31/functions/{FunctionName}/code",
       "input": {
@@ -189,37 +171,71 @@
           "type": "string",
           "required": true
         },
+        "ZipFile": {
+          "type": "string",
+          "description": "Base64-encoded ZIP file",
+          "required": false
+        },
         "S3Bucket": {
           "type": "string",
-          "description": "S3 bucket with ZIP package",
           "required": false
         },
         "S3Key": {
           "type": "string",
-          "description": "S3 object key",
           "required": false
-        },
-        "ZipFile": {
-          "type": "string",
-          "description": "Base64-encoded ZIP content (max 50MB)",
-          "required": false
-        },
-        "Publish": {
-          "type": "boolean",
-          "description": "Create new version after update",
-          "default": false
         }
       },
       "output": {
         "type": "function",
         "fields": [
-          "FunctionName",
+          "FunctionArn",
           "CodeSize",
           "LastModified",
-          "State"
+          "Version"
         ]
       },
-      "realtime": false,
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_function_logs",
+      "description_for_ai": "Get recent execution logs for a Lambda function from CloudWatch.",
+      "intent": [
+        "Lambda logs",
+        "function errors",
+        "execution log Lambda",
+        "логи Lambda функции"
+      ],
+      "endpoint": "GET https://logs.{region}.amazonaws.com/?Action=FilterLogEvents",
+      "input": {
+        "logGroupName": {
+          "type": "string",
+          "description": "/aws/lambda/{FunctionName}",
+          "required": true
+        },
+        "startTime": {
+          "type": "integer",
+          "description": "Unix timestamp ms",
+          "required": false
+        },
+        "filterPattern": {
+          "type": "string",
+          "description": "Filter: ERROR, REPORT, or custom pattern",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "logs",
+        "fields": [
+          "events[0].message",
+          "events[0].timestamp"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
