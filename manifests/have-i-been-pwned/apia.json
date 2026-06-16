@@ -177,6 +177,95 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "check_email",
+      "description_for_ai": "Check if an email address has been involved in a data breach.",
+      "intent": [
+        "breached email",
+        "data breach check",
+        "pwned email",
+        "утечка данных email"
+      ],
+      "endpoint": "GET https://haveibeenpwned.com/api/v3/breachedaccount/{account}",
+      "input": {
+        "account": {
+          "type": "string",
+          "description": "Email address to check",
+          "required": true
+        },
+        "truncateResponse": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "list<breach>",
+        "fields": [
+          "[0].Name",
+          "[0].BreachDate",
+          "[0].DataClasses",
+          "[0].PwnCount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "check_password",
+      "description_for_ai": "Check if a password appears in known breach databases using k-Anonymity (only first 5 chars of SHA-1 hash sent).",
+      "intent": [
+        "pwned password",
+        "check password breach",
+        "password security",
+        "проверить пароль утечка"
+      ],
+      "endpoint": "GET https://api.pwnedpasswords.com/range/{first5HashChars}",
+      "input": {
+        "first5HashChars": {
+          "type": "string",
+          "description": "First 5 chars of SHA-1 hash of password. Hash password locally first.",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "hash_list",
+        "fields": [
+          "HASH_SUFFIX:COUNT for each matching hash"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "list_breaches",
+      "description_for_ai": "Get list of all recorded data breaches in HIBP database.",
+      "intent": [
+        "all breaches",
+        "data breaches list",
+        "breach database",
+        "список утечек"
+      ],
+      "endpoint": "GET https://haveibeenpwned.com/api/v3/breaches",
+      "input": {
+        "domain": {
+          "type": "string",
+          "description": "Filter by breached domain",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<breach>",
+        "fields": [
+          "[0].Name",
+          "[0].Domain",
+          "[0].BreachDate",
+          "[0].PwnCount",
+          "[0].DataClasses"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
