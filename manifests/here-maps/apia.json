@@ -23,30 +23,29 @@
   },
   "capabilities": [
     {
-      "id": "geocode",
-      "description_for_ai": "Convert address to coordinates using HERE Maps. Accurate for 200+ countries.",
+      "id": "geocoding",
+      "description_for_ai": "Convert addresses to coordinates with HERE Geocoding API.",
       "intent": [
-        "geocode here",
-        "address coordinates here",
-        "here maps geocoding",
-        "координаты адреса here"
+        "geocode HERE",
+        "address to coordinates",
+        "location coordinates HERE",
+        "геокодирование HERE"
       ],
       "endpoint": "GET https://geocode.search.hereapi.com/v1/geocode",
       "input": {
         "q": {
           "type": "string",
-          "description": "Free-text address",
+          "description": "Address to geocode",
           "required": true
         },
         "lang": {
           "type": "string",
-          "description": "Language code: en-US, ru-RU, de-DE",
+          "description": "Response language: en-US, ru-RU",
           "required": false
         },
-        "in": {
-          "type": "string",
-          "description": "Geographic filter: countryCode:RUS to restrict to Russia",
-          "required": false
+        "limit": {
+          "type": "integer",
+          "default": 5
         }
       },
       "output": {
@@ -55,25 +54,27 @@
           "items[0].position.lat",
           "items[0].position.lng",
           "items[0].address.label",
-          "items[0].id"
+          "items[0].address.city",
+          "items[0].address.countryName"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "reverse_geocode",
-      "description_for_ai": "Convert coordinates to address using HERE Maps.",
+      "id": "reverse_geocoding",
+      "description_for_ai": "Convert coordinates to an address with HERE Reverse Geocoding.",
       "intent": [
-        "reverse geocode here",
-        "coordinates to address here",
-        "what address at location"
+        "reverse geocode HERE",
+        "coordinates to address",
+        "what address is here",
+        "обратное геокодирование HERE"
       ],
       "endpoint": "GET https://revgeocode.search.hereapi.com/v1/revgeocode",
       "input": {
         "at": {
           "type": "string",
-          "description": "lat,lng e.g. 55.7558,37.6173",
+          "description": "lat,lng e.g. 52.5308,13.3847",
           "required": true
         },
         "lang": {
@@ -87,7 +88,7 @@
           "items[0].address.label",
           "items[0].address.street",
           "items[0].address.city",
-          "items[0].address.countryCode"
+          "items[0].address.countryName"
         ]
       },
       "realtime": true,
@@ -95,39 +96,34 @@
     },
     {
       "id": "routing",
-      "description_for_ai": "Calculate route between points with traffic-aware travel times. Supports car, truck, pedestrian, bicycle.",
+      "description_for_ai": "Get routes with turn-by-turn directions. Supports car, truck, pedestrian, bicycle.",
       "intent": [
-        "here routing",
-        "directions here",
-        "route here maps",
-        "маршрут here"
+        "route HERE",
+        "directions HERE maps",
+        "navigation route",
+        "маршрут HERE Maps"
       ],
       "endpoint": "GET https://router.hereapi.com/v8/routes",
       "input": {
+        "transportMode": {
+          "type": "string",
+          "description": "car, truck, pedestrian, bicycle, scooter, taxi",
+          "default": "car"
+        },
         "origin": {
           "type": "string",
-          "description": "lat,lng of start",
+          "description": "lat,lng",
           "required": true
         },
         "destination": {
           "type": "string",
-          "description": "lat,lng of end",
+          "description": "lat,lng",
           "required": true
-        },
-        "transportMode": {
-          "type": "string",
-          "description": "car, truck, pedestrian, bicycle, scooter",
-          "default": "car"
         },
         "return": {
           "type": "string",
-          "description": "summary,actions,instructions,polyline",
-          "required": false
-        },
-        "departureTime": {
-          "type": "string",
-          "description": "ISO 8601 for traffic-aware routing",
-          "required": false
+          "description": "polyline,actions,instructions,summary",
+          "default": "summary"
         }
       },
       "output": {
@@ -135,40 +131,36 @@
         "fields": [
           "routes[0].sections[0].summary.duration",
           "routes[0].sections[0].summary.length",
-          "routes[0].sections[0].actions"
+          "routes[0].sections[0].actions[0].instruction"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "places_search",
-      "description_for_ai": "Discover places (restaurants, POIs, services) near a location with HERE Places.",
+      "id": "search_places",
+      "description_for_ai": "Search for places and POIs near a location with HERE.",
       "intent": [
-        "find places here",
-        "nearby search here",
-        "POI here maps",
-        "места here"
+        "places HERE",
+        "POI search HERE",
+        "nearby places",
+        "поиск мест HERE"
       ],
       "endpoint": "GET https://discover.search.hereapi.com/v1/discover",
       "input": {
         "at": {
           "type": "string",
-          "description": "lat,lng center point",
+          "description": "lat,lng of search center",
           "required": true
         },
         "q": {
           "type": "string",
-          "description": "Search term: restaurant, hospital, ATM",
+          "description": "Search query: restaurant, pharmacy, gas station",
           "required": true
         },
         "limit": {
           "type": "integer",
-          "default": 20
-        },
-        "lang": {
-          "type": "string",
-          "required": false
+          "default": 10
         }
       },
       "output": {
@@ -176,42 +168,49 @@
         "fields": [
           "items[0].title",
           "items[0].address.label",
+          "items[0].position.lat",
           "items[0].distance",
-          "items[0].categories[0].name",
-          "items[0].position"
+          "items[0].categories[0].name"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "traffic_flow",
-      "description_for_ai": "Get real-time traffic flow data for a bounding box or corridor.",
+      "id": "isoline_routing",
+      "description_for_ai": "Calculate isoline (reachable area polygon) within time or distance limit.",
       "intent": [
-        "traffic HERE",
-        "road congestion",
-        "traffic data",
-        "пробки HERE Maps"
+        "isoline HERE",
+        "reachable zone",
+        "service area",
+        "зона доступности HERE"
       ],
-      "endpoint": "GET https://data.traffic.hereapi.com/v7/flow",
+      "endpoint": "GET https://isoline.router.hereapi.com/v8/isolines",
       "input": {
-        "in": {
+        "transportMode": {
           "type": "string",
-          "description": "bbox:west,south,east,north or corridor",
+          "default": "car"
+        },
+        "origin": {
+          "type": "string",
+          "description": "lat,lng",
           "required": true
         },
-        "locationReferencing": {
+        "range[type]": {
           "type": "string",
-          "description": "olr or shape",
-          "default": "olr"
+          "description": "time or distance",
+          "required": true
+        },
+        "range[values]": {
+          "type": "string",
+          "description": "Seconds or meters: 1800 (30 min)",
+          "required": true
         }
       },
       "output": {
-        "type": "traffic",
+        "type": "isoline",
         "fields": [
-          "results[0].location.description",
-          "results[0].currentFlow.speed",
-          "results[0].currentFlow.jamFactor"
+          "isolines[0].polygons[0].outer (polygon coordinates)"
         ]
       },
       "realtime": true,
