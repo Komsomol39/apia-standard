@@ -23,25 +23,24 @@
   },
   "capabilities": [
     {
-      "id": "search",
-      "description_for_ai": "Search Shodan for internet-exposed devices by port, service, country, or vulnerability.",
+      "id": "search_hosts",
+      "description_for_ai": "Search internet-connected devices by service, software, location, or port.",
       "intent": [
-        "shodan search",
-        "exposed devices",
-        "internet scan",
-        "IoT security",
-        "поиск shodan"
+        "Shodan search",
+        "find devices internet",
+        "exposed services",
+        "поиск устройств Shodan"
       ],
       "endpoint": "GET https://api.shodan.io/shodan/host/search",
       "input": {
         "query": {
           "type": "string",
-          "description": "Shodan query: port:22 country:RU, product:nginx vuln:CVE-2021-44228, org:'Google'",
+          "description": "Shodan dork: apache city:Moscow, port:22 country:US, has_vuln:CVE-2021-44228",
           "required": true
         },
         "facets": {
           "type": "string",
-          "description": "Comma-separated facets: country, port, org",
+          "description": "Statistics facets: country,org,port",
           "required": false
         },
         "page": {
@@ -50,14 +49,14 @@
         }
       },
       "output": {
-        "type": "results",
+        "type": "list<host>",
         "fields": [
           "matches[0].ip_str",
           "matches[0].port",
           "matches[0].org",
-          "matches[0].country_code",
+          "matches[0].country_name",
           "matches[0].product",
-          "matches[0].version",
+          "matches[0].data",
           "total"
         ]
       },
@@ -65,24 +64,24 @@
       "requires_auth": true
     },
     {
-      "id": "get_host",
-      "description_for_ai": "Get all open ports and services for a specific IP address.",
+      "id": "get_host_info",
+      "description_for_ai": "Get full information about a specific IP address: open ports, services, CVEs.",
       "intent": [
-        "ip lookup shodan",
-        "host info shodan",
-        "open ports IP",
-        "порты IP shodan"
+        "IP info Shodan",
+        "host scan results",
+        "open ports",
+        "информация об IP Shodan"
       ],
       "endpoint": "GET https://api.shodan.io/shodan/host/{ip}",
       "input": {
         "ip": {
           "type": "string",
-          "description": "IP address to look up",
+          "description": "IPv4 address to look up",
           "required": true
         },
         "history": {
           "type": "boolean",
-          "description": "Include historical data",
+          "description": "Include historical scan results",
           "default": false
         }
       },
@@ -90,46 +89,26 @@
         "type": "host",
         "fields": [
           "ip_str",
-          "ports",
           "org",
           "country_name",
+          "os",
+          "ports",
           "data[0].port",
           "data[0].product",
-          "data[0].version",
-          "vulns"
+          "vulns (CVE IDs if any)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_myip",
-      "description_for_ai": "Get your own public IP address and info as seen from Shodan.",
+      "id": "search_count",
+      "description_for_ai": "Count Shodan search results without using credits.",
       "intent": [
-        "my IP address",
-        "public IP",
-        "what is my IP",
-        "мой IP адрес shodan"
-      ],
-      "endpoint": "GET https://api.shodan.io/tools/myip",
-      "input": {},
-      "output": {
-        "type": "ip",
-        "fields": [
-          "IP address string"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_facets",
-      "description_for_ai": "Get aggregated stats for a search: top countries, ports, organizations, products.",
-      "intent": [
-        "shodan stats",
-        "search facets",
-        "internet stats",
-        "статистика shodan"
+        "count Shodan",
+        "how many devices",
+        "exposed services count",
+        "количество устройств Shodan"
       ],
       "endpoint": "GET https://api.shodan.io/shodan/host/count",
       "input": {
@@ -139,17 +118,53 @@
         },
         "facets": {
           "type": "string",
-          "description": "country:10, port:10, org:10, product:10",
           "required": false
         }
       },
       "output": {
-        "type": "facets",
+        "type": "count",
         "fields": [
           "total",
-          "facets.country[0].value",
-          "facets.country[0].count",
-          "facets.port[0].value"
+          "facets"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_protocols",
+      "description_for_ai": "Get list of protocols that Shodan crawls.",
+      "intent": [
+        "Shodan protocols",
+        "available protocols",
+        "what Shodan scans"
+      ],
+      "endpoint": "GET https://api.shodan.io/shodan/protocols",
+      "input": {},
+      "output": {
+        "type": "protocols",
+        "fields": [
+          "protocol_name: description"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "get_my_ip",
+      "description_for_ai": "Get your current external IP address from Shodan.",
+      "intent": [
+        "my IP address",
+        "external IP",
+        "current IP",
+        "мой IP адрес"
+      ],
+      "endpoint": "GET https://api.shodan.io/tools/myip",
+      "input": {},
+      "output": {
+        "type": "ip",
+        "fields": [
+          "IP address string"
         ]
       },
       "realtime": true,
