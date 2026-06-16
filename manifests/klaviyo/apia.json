@@ -22,54 +22,53 @@
   },
   "capabilities": [
     {
-      "id": "get_metrics",
-      "description_for_ai": "Get email performance metrics: opens, clicks, revenue per email, unsubscribes for campaigns.",
+      "id": "get_profiles",
+      "description_for_ai": "Get customer profiles from Klaviyo CRM.",
       "intent": [
-        "email metrics",
-        "campaign performance",
-        "email open rate",
-        "email marketing stats",
-        "klaviyo analytics"
+        "Klaviyo profiles",
+        "email subscribers",
+        "customer profiles Klaviyo",
+        "профили Klaviyo"
       ],
-      "endpoint": "GET https://a.klaviyo.com/api/metrics/",
+      "endpoint": "GET https://a.klaviyo.com/api/profiles/",
       "input": {
-        "filter": {
-          "type": "string",
-          "description": "filter[equals(type,email)]",
-          "required": false
-        },
-        "page_size": {
+        "page[size]": {
           "type": "integer",
           "default": 20
+        },
+        "filter": {
+          "type": "string",
+          "description": "Filter: equals(email,'user@example.com') or greater-than(created,'2024-01-01T00:00:00+00:00')",
+          "required": false
         }
       },
       "output": {
-        "type": "list<metric>",
+        "type": "list<profile>",
         "fields": [
-          "id",
-          "attributes.name",
-          "attributes.created",
-          "attributes.updated"
+          "data[0].id",
+          "data[0].attributes.email",
+          "data[0].attributes.first_name",
+          "data[0].attributes.last_name",
+          "data[0].attributes.properties"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
       "id": "create_profile",
-      "description_for_ai": "Create or update a customer profile in Klaviyo with email, custom properties for segmentation.",
+      "description_for_ai": "Create or update a Klaviyo profile.",
       "intent": [
-        "add to klaviyo",
-        "create contact",
-        "email subscriber",
-        "marketing profile",
-        "customer segment"
+        "create profile Klaviyo",
+        "add subscriber Klaviyo",
+        "upsert contact Klaviyo",
+        "добавить профиль Klaviyo"
       ],
-      "endpoint": "POST https://a.klaviyo.com/api/profiles/",
+      "endpoint": "POST https://a.klaviyo.com/api/profile-import/",
       "input": {
         "data": {
           "type": "object",
-          "description": "{type: profile, attributes: {email, first_name, last_name, phone_number, properties: {}}}",
+          "description": "{type: 'profile', attributes: {email: 'user@example.com', first_name: 'John', properties: {plan: 'pro'}}}",
           "required": true
         }
       },
@@ -86,85 +85,80 @@
     },
     {
       "id": "track_event",
-      "description_for_ai": "Track a customer event in Klaviyo to trigger automations. E.g. Placed Order, Viewed Product, Added to Cart.",
+      "description_for_ai": "Track a custom event for a profile in Klaviyo for automation triggers.",
       "intent": [
-        "track purchase",
-        "klaviyo event",
-        "trigger automation",
-        "ecommerce tracking",
-        "order event"
+        "track event Klaviyo",
+        "trigger automation Klaviyo",
+        "event Klaviyo",
+        "событие Klaviyo"
       ],
       "endpoint": "POST https://a.klaviyo.com/api/events/",
       "input": {
         "data": {
           "type": "object",
-          "description": "{type: event, attributes: {profile: {email}, metric: {name: Placed Order}, properties: {value: 99.99}}}",
+          "description": "{type: 'event', attributes: {profile: {email: 'user@example.com'}, metric: {name: 'Purchase'}, properties: {value: 29.99, product: 'Pro Plan'}}}",
           "required": true
         }
       },
       "output": {
-        "type": "event",
+        "type": "status",
         "fields": [
-          "data.id"
+          "202 Accepted"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_profiles",
-      "description_for_ai": "Get subscriber profiles from Klaviyo with their properties and email.",
+      "id": "get_lists",
+      "description_for_ai": "Get all email lists and segments in Klaviyo.",
       "intent": [
-        "klaviyo profiles",
-        "subscribers list",
-        "email profiles klaviyo",
-        "профили klaviyo"
+        "Klaviyo lists",
+        "email segments",
+        "subscriber lists Klaviyo",
+        "списки Klaviyo"
       ],
-      "endpoint": "GET https://a.klaviyo.com/api/profiles/",
+      "endpoint": "GET https://a.klaviyo.com/api/lists/",
       "input": {
-        "filter": {
-          "type": "string",
-          "description": "filter=equals(email,'user@example.com')",
-          "required": false
-        },
         "page[size]": {
           "type": "integer",
-          "default": 20
+          "default": 10
         }
       },
       "output": {
-        "type": "list<profile>",
+        "type": "list<list>",
         "fields": [
           "data[0].id",
-          "data[0].attributes.email",
-          "data[0].attributes.first_name",
-          "data[0].attributes.properties"
+          "data[0].attributes.name",
+          "data[0].attributes.created",
+          "data[0].attributes.profile_count"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "send_event",
-      "description_for_ai": "Send a custom event to Klaviyo for triggering flows (e.g., Placed Order, Viewed Product).",
+      "id": "send_email_campaign",
+      "description_for_ai": "Create and send an email campaign via Klaviyo.",
       "intent": [
-        "klaviyo event",
-        "trigger flow klaviyo",
-        "email automation event",
-        "событие klaviyo"
+        "send campaign Klaviyo",
+        "email campaign",
+        "newsletter Klaviyo",
+        "рассылка Klaviyo"
       ],
-      "endpoint": "POST https://a.klaviyo.com/api/events/",
+      "endpoint": "POST https://a.klaviyo.com/api/campaign-send-jobs/",
       "input": {
         "data": {
           "type": "object",
-          "description": "{type: 'event', attributes: {profile: {email: 'user@example.com'}, metric: {name: 'Placed Order'}, properties: {value: 99.99}, time: '2024-01-01T00:00:00Z'}}",
+          "description": "{type: 'campaign-send-job', relationships: {campaign: {data: {type: 'campaign', id: 'campaign_id'}}}}",
           "required": true
         }
       },
       "output": {
-        "type": "event",
+        "type": "send_job",
         "fields": [
-          "202 Accepted on success"
+          "data.id",
+          "data.attributes.status"
         ]
       },
       "realtime": true,
