@@ -23,23 +23,18 @@
   "capabilities": [
     {
       "id": "create_payment",
-      "description_for_ai": "Create a payment with any payment method. Enterprise-grade: cards, SEPA, iDEAL, SOFORT, Klarna, PayPal, 200+ methods.",
+      "description_for_ai": "Process a payment with Adyen. Supports cards, wallets, BNPL, and local payment methods.",
       "intent": [
-        "adyen payment",
-        "enterprise payment",
-        "accept payment adyen",
-        "процессинг adyen"
+        "Adyen payment",
+        "process payment",
+        "charge card Adyen",
+        "платёж Adyen"
       ],
       "endpoint": "POST https://checkout-test.adyen.com/v71/payments",
       "input": {
-        "merchantAccount": {
-          "type": "string",
-          "description": "Your Adyen merchant account code",
-          "required": true
-        },
         "amount": {
           "type": "object",
-          "description": "{value: 1000, currency: 'EUR'} — value in minor units (cents)",
+          "description": "{currency: 'EUR', value: 1000} (value in minor units, 1000 = €10.00)",
           "required": true
         },
         "reference": {
@@ -49,17 +44,21 @@
         },
         "paymentMethod": {
           "type": "object",
-          "description": "{type: 'scheme', encryptedCardNumber, encryptedExpiryMonth, encryptedExpiryYear, encryptedSecurityCode} for cards. Or {type: 'ideal', issuer: 'INGBNL2A'}",
+          "description": "{type: 'scheme', encryptedCardNumber, encryptedExpiryMonth, encryptedExpiryYear, encryptedSecurityCode, holderName} or {type: 'googlepay', googlePayToken}",
+          "required": true
+        },
+        "merchantAccount": {
+          "type": "string",
           "required": true
         },
         "returnUrl": {
           "type": "string",
-          "description": "3DS redirect URL",
+          "description": "For redirect-based payment methods",
           "required": true
         },
-        "browserInfo": {
-          "type": "object",
-          "description": "Browser fingerprint for 3DS2 — required for card payments",
+        "shopperReference": {
+          "type": "string",
+          "description": "Customer ID for recurring payments",
           "required": false
         }
       },
@@ -67,9 +66,9 @@
         "type": "payment",
         "fields": [
           "pspReference",
-          "resultCode (Authorised|Refused|RedirectShopper|Pending)",
-          "action.url (for redirects)",
-          "refusalReason"
+          "resultCode (Authorised/Refused/Pending)",
+          "amount.value",
+          "paymentMethod.brand"
         ]
       },
       "realtime": true,
@@ -77,31 +76,32 @@
     },
     {
       "id": "create_refund",
-      "description_for_ai": "Refund a captured Adyen payment fully or partially.",
+      "description_for_ai": "Refund a payment fully or partially.",
       "intent": [
-        "adyen refund",
-        "refund payment adyen",
-        "возврат adyen"
+        "Adyen refund",
+        "payment refund",
+        "charge refund",
+        "возврат средств Adyen"
       ],
       "endpoint": "POST https://pal-test.adyen.com/pal/servlet/Payment/v68/refund",
       "input": {
-        "merchantAccount": {
-          "type": "string",
+        "modificationAmount": {
+          "type": "object",
+          "description": "{currency: 'EUR', value: 500} — partial or full refund amount",
           "required": true
         },
         "originalReference": {
           "type": "string",
-          "description": "PSP reference from original payment",
+          "description": "PSP reference of original payment",
           "required": true
         },
-        "modificationAmount": {
-          "type": "object",
-          "description": "{value: 500, currency: 'EUR'} — partial amount or same as original for full refund",
+        "merchantAccount": {
+          "type": "string",
           "required": true
         },
         "reference": {
           "type": "string",
-          "description": "Your unique refund reference",
+          "description": "Your refund reference",
           "required": false
         }
       },
@@ -117,11 +117,12 @@
     },
     {
       "id": "get_payment_methods",
-      "description_for_ai": "Get available payment methods for a specific country and currency. Show correct methods based on shopper location.",
+      "description_for_ai": "Get available payment methods for a shopper's country and device.",
       "intent": [
         "available payment methods",
-        "which payments for country",
-        "методы оплаты adyen"
+        "payment options",
+        "local payments Adyen",
+        "доступные методы оплаты Adyen"
       ],
       "endpoint": "POST https://checkout-test.adyen.com/v71/paymentMethods",
       "input": {
@@ -131,12 +132,17 @@
         },
         "countryCode": {
           "type": "string",
-          "description": "ISO 3166-1 alpha-2: NL, DE, FR, GB, US, RU",
+          "description": "ISO 3166-1 country code: NL, US, DE",
           "required": true
+        },
+        "shopperLocale": {
+          "type": "string",
+          "description": "Locale: en-US, nl-NL, de-DE",
+          "required": false
         },
         "amount": {
           "type": "object",
-          "description": "{value: 1000, currency: 'EUR'}",
+          "description": "{currency, value}",
           "required": false
         },
         "channel": {
@@ -148,58 +154,93 @@
       "output": {
         "type": "payment_methods",
         "fields": [
-          "paymentMethods[0].name",
           "paymentMethods[0].type",
-          "storedPaymentMethods[0].id"
+          "paymentMethods[0].name",
+          "paymentMethods[0].brands"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_session",
-      "description_for_ai": "Create a Drop-In or Components checkout session. Easiest integration — Adyen handles UI and PCI compliance.",
+      "id": "capture_payment",
+      "description_for_ai": "Capture a previously authorised payment (for two-step payment flows).",
       "intent": [
-        "adyen drop-in",
-        "adyen session",
-        "checkout session adyen",
-        "сессия оплаты adyen"
+        "capture payment Adyen",
+        "authorize and capture",
+        "финализировать платёж Adyen"
       ],
-      "endpoint": "POST https://checkout-test.adyen.com/v71/sessions",
+      "endpoint": "POST https://pal-test.adyen.com/pal/servlet/Payment/v68/capture",
       "input": {
+        "originalReference": {
+          "type": "string",
+          "required": true
+        },
+        "modificationAmount": {
+          "type": "object",
+          "description": "{currency, value}",
+          "required": true
+        },
+        "merchantAccount": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "capture",
+        "fields": [
+          "pspReference",
+          "response ([capture-received])"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_token",
+      "description_for_ai": "Tokenize payment details for future recurring charges (one-click payments).",
+      "intent": [
+        "payment token Adyen",
+        "save card",
+        "recurring payment setup",
+        "сохранить карту Adyen"
+      ],
+      "endpoint": "POST https://checkout-test.adyen.com/v71/payments",
+      "input": {
+        "amount": {
+          "type": "object",
+          "required": true
+        },
+        "paymentMethod": {
+          "type": "object",
+          "required": true
+        },
         "merchantAccount": {
           "type": "string",
           "required": true
         },
-        "amount": {
-          "type": "object",
-          "description": "{value: 1000, currency: 'EUR'}",
+        "shopperReference": {
+          "type": "string",
+          "description": "Customer ID",
           "required": true
         },
-        "reference": {
-          "type": "string",
-          "required": true
+        "storePaymentMethod": {
+          "type": "boolean",
+          "description": "Set to true to tokenize",
+          "default": true
         },
-        "returnUrl": {
+        "recurringProcessingModel": {
           "type": "string",
+          "description": "CardOnFile or Subscription",
           "required": true
-        },
-        "countryCode": {
-          "type": "string",
-          "required": true
-        },
-        "shopperLocale": {
-          "type": "string",
-          "description": "en-US, ru-RU, de-DE for UI language",
-          "required": false
         }
       },
       "output": {
-        "type": "session",
+        "type": "payment",
         "fields": [
-          "id",
-          "sessionData",
-          "expiresAt"
+          "pspReference",
+          "resultCode",
+          "additionalData.recurring.recurringDetailReference (token)"
         ]
       },
       "realtime": true,
