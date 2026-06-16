@@ -115,6 +115,90 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "nutrition_data",
+      "description_for_ai": "Get nutrition data for a food or recipe.",
+      "intent": [
+        "nutrition data",
+        "calories food",
+        "food nutrients",
+        "калории еды"
+      ],
+      "endpoint": "GET https://api.edamam.com/api/nutrition-data",
+      "input": {
+        "ingr": {
+          "type": "string",
+          "description": "Ingredient + amount: '2 cups coffee with milk'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "nutrition",
+        "fields": [
+          "calories",
+          "totalNutrients.PROCNT.quantity (protein)",
+          "totalNutrients.FAT.quantity",
+          "totalNutrients.CHOCDF.quantity (carbs)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "food_database",
+      "description_for_ai": "Search Edamam food database for nutritional info.",
+      "intent": [
+        "food search edamam",
+        "nutrition database",
+        "калории продукт"
+      ],
+      "endpoint": "GET https://api.edamam.com/api/food-database/v2/parser",
+      "input": {
+        "ingr": {
+          "type": "string",
+          "description": "Food name to search",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<food>",
+        "fields": [
+          "parsed[0].food.label",
+          "parsed[0].food.nutrients.ENERC_KCAL",
+          "parsed[0].food.nutrients.PROCNT",
+          "parsed[0].food.category"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "meal_planner",
+      "description_for_ai": "Get meal plan suggestions based on dietary preferences.",
+      "intent": [
+        "meal plan edamam",
+        "weekly menu",
+        "diet plan",
+        "план питания edamam"
+      ],
+      "endpoint": "POST https://api.edamam.com/api/meal-planner/v1/{app_id}/select",
+      "input": {
+        "plan": {
+          "type": "object",
+          "description": "{accept: {all: [{health: ['DAIRY_FREE'], diet: ['BALANCED']}]}, fit: {ENERC_KCAL: {min: 1800, max: 2200}}, sections: {Breakfast: {accept: {all: [{meal: ['breakfast']}]}}}, size: 7}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "plan",
+        "fields": [
+          "selection[0].sections.Breakfast.assigned",
+          "selection[0].sections.Lunch.assigned"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
