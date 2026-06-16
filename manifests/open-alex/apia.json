@@ -22,93 +22,152 @@
   "capabilities": [
     {
       "id": "search_works",
-      "description_for_ai": "Search research works: papers, books, datasets, dissertations. Filter by year, institution, topic, citations count.",
+      "description_for_ai": "Search 250M+ academic papers, articles, books, datasets. Free alternative to Semantic Scholar.",
       "intent": [
-        "academic papers",
-        "research works",
-        "citations",
-        "scholarly articles",
+        "search papers openalex",
         "academic search",
-        "open access papers"
+        "research works",
+        "научные статьи openalex"
       ],
       "endpoint": "GET https://api.openalex.org/works",
       "input": {
         "search": {
           "type": "string",
-          "description": "Full-text search query",
+          "description": "Keyword search across title, abstract, full text",
           "required": false
         },
         "filter": {
           "type": "string",
-          "description": "publication_year:2023, type:journal-article, open_access.is_oa:true, cited_by_count:>100",
+          "description": "Pipe-separated: publication_year:2024, type:article, open_access.is_oa:true, cited_by_count:>100, authorships.institutions.country_code:US",
           "required": false
         },
         "sort": {
           "type": "string",
-          "description": "cited_by_count:desc, publication_date:desc",
-          "required": false
+          "description": "cited_by_count:desc, publication_date:desc, relevance_score:desc",
+          "default": "relevance_score:desc"
         },
         "per_page": {
           "type": "integer",
-          "default": 25,
-          "description": "Results per page. Check API docs for maximum allowed."
+          "default": 25
         },
         "page": {
           "type": "integer",
-          "default": 1,
-          "description": "Page number for pagination (1-indexed)"
+          "default": 1
         }
       },
       "output": {
         "type": "list<work>",
         "fields": [
-          "id",
-          "title",
-          "publication_year",
-          "cited_by_count",
-          "open_access.is_oa",
-          "open_access.oa_url",
-          "authorships[0].author.display_name"
+          "results[0].id",
+          "results[0].title",
+          "results[0].doi",
+          "results[0].publication_year",
+          "results[0].cited_by_count",
+          "results[0].open_access.oa_url"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_institution",
-      "description_for_ai": "Get information about a research institution: papers count, citation metrics, top researchers.",
+      "id": "get_work",
+      "description_for_ai": "Get full metadata for a paper: abstract, authors, citations, open access URL.",
       "intent": [
+        "paper details openalex",
+        "article metadata",
+        "doi lookup",
+        "детали статьи openalex"
+      ],
+      "endpoint": "GET https://api.openalex.org/works/{id}",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "OpenAlex ID (W...) or DOI: doi:10.1038/nature12373",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "work",
+        "fields": [
+          "id",
+          "title",
+          "abstract",
+          "doi",
+          "publication_year",
+          "cited_by_count",
+          "authorships[0].author.display_name",
+          "open_access.oa_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_authors",
+      "description_for_ai": "Search researchers and authors by name. Get their h-index, citations, affiliations.",
+      "intent": [
+        "find researcher",
+        "author search openalex",
+        "scientist profile",
+        "поиск автора openalex"
+      ],
+      "endpoint": "GET https://api.openalex.org/authors",
+      "input": {
+        "search": {
+          "type": "string",
+          "required": true
+        },
+        "filter": {
+          "type": "string",
+          "description": "last_known_institution.country_code:US, works_count:>50",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<author>",
+        "fields": [
+          "results[0].id",
+          "results[0].display_name",
+          "results[0].works_count",
+          "results[0].cited_by_count",
+          "results[0].h_index",
+          "results[0].last_known_institution.display_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search_institutions",
+      "description_for_ai": "Search universities and research institutions.",
+      "intent": [
+        "institution search openalex",
         "university research",
-        "institution papers",
-        "MIT research",
-        "academic institution"
+        "поиск университет openalex"
       ],
       "endpoint": "GET https://api.openalex.org/institutions",
       "input": {
         "search": {
           "type": "string",
-          "description": "Institution name",
-          "required": false
+          "required": true
         },
         "filter": {
           "type": "string",
-          "description": "country_code:RU for Russian institutions",
+          "description": "country_code:RU, type:education",
           "required": false
         }
       },
       "output": {
         "type": "list<institution>",
         "fields": [
-          "id",
-          "display_name",
-          "country_code",
-          "type",
-          "works_count",
-          "cited_by_count",
-          "homepage_url"
+          "results[0].id",
+          "results[0].display_name",
+          "results[0].country_code",
+          "results[0].works_count",
+          "results[0].cited_by_count"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": false
     }
   ],
