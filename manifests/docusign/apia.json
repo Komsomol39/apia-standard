@@ -106,6 +106,120 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "create_envelope",
+      "description_for_ai": "Create and send a DocuSign envelope for e-signature.",
+      "intent": [
+        "docusign envelope",
+        "send for signature",
+        "e-sign document",
+        "электронная подпись docusign"
+      ],
+      "endpoint": "POST https://demo.docusign.net/restapi/v2.1/accounts/{accountId}/envelopes",
+      "input": {
+        "accountId": {
+          "type": "string",
+          "required": true
+        },
+        "emailSubject": {
+          "type": "string",
+          "required": true
+        },
+        "documents": {
+          "type": "array",
+          "description": "[{documentBase64: 'base64', name: 'Contract.pdf', documentId: '1'}]",
+          "required": true
+        },
+        "recipients": {
+          "type": "object",
+          "description": "{signers: [{email, name, recipientId: '1', routingOrder: '1', tabs: {signHereTabs: [{xPosition: 100, yPosition: 100, documentId: '1', pageNumber: '1'}]}}]}",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "sent or created (draft)",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "envelope",
+        "fields": [
+          "envelopeId",
+          "status",
+          "statusDateTime",
+          "uri"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_envelope_status",
+      "description_for_ai": "Get status of a DocuSign envelope: sent, delivered, completed, declined.",
+      "intent": [
+        "docusign status",
+        "signature status",
+        "envelope status",
+        "статус подписи docusign"
+      ],
+      "endpoint": "GET https://demo.docusign.net/restapi/v2.1/accounts/{accountId}/envelopes/{envelopeId}",
+      "input": {
+        "accountId": {
+          "type": "string",
+          "required": true
+        },
+        "envelopeId": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "envelope",
+        "fields": [
+          "envelopeId",
+          "status",
+          "emailSubject",
+          "sentDateTime",
+          "completedDateTime",
+          "recipients.signers[0].status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "download_document",
+      "description_for_ai": "Download a signed document from a completed DocuSign envelope.",
+      "intent": [
+        "download signed document",
+        "get signed PDF",
+        "скачать подписанный документ"
+      ],
+      "endpoint": "GET https://demo.docusign.net/restapi/v2.1/accounts/{accountId}/envelopes/{envelopeId}/documents/{documentId}",
+      "input": {
+        "accountId": {
+          "type": "string",
+          "required": true
+        },
+        "envelopeId": {
+          "type": "string",
+          "required": true
+        },
+        "documentId": {
+          "type": "string",
+          "description": "Document ID or 'combined' for all docs",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "file",
+        "fields": [
+          "PDF binary content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
