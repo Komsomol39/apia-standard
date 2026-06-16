@@ -77,6 +77,104 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "trigger_zap",
+      "description_for_ai": "Trigger a Zapier webhook to start an automation (Zap).",
+      "intent": [
+        "trigger zap",
+        "webhook zapier",
+        "automation trigger",
+        "триггер zapier"
+      ],
+      "endpoint": "POST https://hooks.zapier.com/hooks/catch/{hook_id}/",
+      "input": {
+        "data": {
+          "type": "object",
+          "description": "Any JSON payload — Zapier maps it to downstream actions",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "status",
+        "fields": [
+          "status: 'success'",
+          "id (webhook event ID)",
+          "attempt"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "list_zaps",
+      "description_for_ai": "List all Zaps in a Zapier account via the Partner API.",
+      "intent": [
+        "list zaps",
+        "my automations",
+        "zapier zaps",
+        "список zapier"
+      ],
+      "endpoint": "GET https://api.zapier.com/v1/zaps",
+      "input": {
+        "status": {
+          "type": "string",
+          "description": "enabled, disabled, draft, paused",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<zap>",
+        "fields": [
+          "objects[0].id",
+          "objects[0].title",
+          "objects[0].state",
+          "objects[0].steps[0].app.title"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "run_action",
+      "description_for_ai": "Run a Zapier action (e.g. send Gmail, post to Slack) via Natural Language Actions API.",
+      "intent": [
+        "zapier action",
+        "NLA run",
+        "AI automation zapier",
+        "действие zapier NLA"
+      ],
+      "endpoint": "POST https://nla.zapier.com/api/v1/dynamic/exposed/{action_id}/execute/",
+      "input": {
+        "action_id": {
+          "type": "string",
+          "required": true
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Natural language instructions for the action",
+          "required": true
+        },
+        "preview_only": {
+          "type": "boolean",
+          "description": "True to preview without executing",
+          "default": false
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "action_used",
+          "result",
+          "status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
