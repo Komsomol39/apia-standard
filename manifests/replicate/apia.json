@@ -22,30 +22,24 @@
   },
   "capabilities": [
     {
-      "id": "run_prediction",
-      "description_for_ai": "Run any Replicate model. Millions of open-source models: image generation (Flux, SDXL), video, audio, LLMs, upscaling.",
+      "id": "run_model",
+      "description_for_ai": "Run any Replicate ML model by name. Access 100,000+ models including Stable Diffusion, Llama, Whisper.",
       "intent": [
-        "replicate model",
-        "run AI model",
-        "flux replicate",
-        "video generation replicate",
-        "запустить модель replicate"
+        "run ML model",
+        "Replicate model",
+        "AI model API",
+        "запустить модель Replicate"
       ],
-      "endpoint": "POST https://api.replicate.com/v1/models/{owner}/{name}/predictions",
+      "endpoint": "POST https://api.replicate.com/v1/predictions",
       "input": {
-        "owner": {
+        "version": {
           "type": "string",
-          "description": "Model owner username e.g. black-forest-labs",
-          "required": true
-        },
-        "name": {
-          "type": "string",
-          "description": "Model name e.g. flux-schnell",
+          "description": "Model version ID from Replicate: stability-ai/sdxl:7762fd07...",
           "required": true
         },
         "input": {
           "type": "object",
-          "description": "Model-specific inputs. Check model page for schema. Flux: {prompt, aspect_ratio, num_outputs}. LLaMA: {prompt, max_tokens}",
+          "description": "Model-specific inputs (see model docs for parameters)",
           "required": true
         }
       },
@@ -54,8 +48,8 @@
         "fields": [
           "id",
           "status",
-          "output",
-          "urls.get"
+          "urls.get (poll URL)",
+          "output (when complete)"
         ]
       },
       "realtime": false,
@@ -63,18 +57,17 @@
     },
     {
       "id": "get_prediction",
-      "description_for_ai": "Check status and get output of an async Replicate prediction. Poll until status=succeeded.",
+      "description_for_ai": "Check status and get output of a Replicate prediction.",
       "intent": [
-        "check replicate prediction",
-        "get prediction result",
-        "prediction status",
-        "статус предсказания replicate"
+        "prediction status Replicate",
+        "get model output",
+        "poll prediction",
+        "статус предсказания Replicate"
       ],
-      "endpoint": "GET https://api.replicate.com/v1/predictions/{id}",
+      "endpoint": "GET https://api.replicate.com/v1/predictions/{prediction_id}",
       "input": {
-        "id": {
+        "prediction_id": {
           "type": "string",
-          "description": "Prediction ID from run_prediction",
           "required": true
         }
       },
@@ -82,7 +75,7 @@
         "type": "prediction",
         "fields": [
           "id",
-          "status (starting|processing|succeeded|failed)",
+          "status (starting/processing/succeeded/failed/canceled)",
           "output",
           "error",
           "metrics.predict_time"
@@ -92,29 +85,55 @@
       "requires_auth": true
     },
     {
-      "id": "run_sync",
-      "description_for_ai": "Run a model with version ID and wait for output (synchronous). Good for fast models.",
+      "id": "list_models",
+      "description_for_ai": "Browse and search available models on Replicate.",
       "intent": [
-        "replicate sync",
-        "wait for output",
-        "synchronous replicate",
-        "синхронный запуск replicate"
+        "Replicate models",
+        "find AI model",
+        "browse models",
+        "модели Replicate"
       ],
-      "endpoint": "POST https://api.replicate.com/v1/predictions",
+      "endpoint": "GET https://api.replicate.com/v1/models",
+      "input": {},
+      "output": {
+        "type": "list<model>",
+        "fields": [
+          "results[0].url",
+          "results[0].owner",
+          "results[0].name",
+          "results[0].description",
+          "results[0].run_count",
+          "results[0].latest_version.id"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "run_image_generation",
+      "description_for_ai": "Generate images with SDXL or FLUX on Replicate.",
+      "intent": [
+        "generate image Replicate",
+        "SDXL Replicate",
+        "FLUX image",
+        "генерация изображений Replicate"
+      ],
+      "endpoint": "POST https://api.replicate.com/v1/models/{owner}/{name}/predictions",
       "input": {
-        "version": {
+        "owner": {
           "type": "string",
-          "description": "Full model version hash from model page",
+          "description": "black-forest-labs for FLUX, stability-ai for SDXL",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "description": "flux-schnell, sdxl",
           "required": true
         },
         "input": {
           "type": "object",
+          "description": "{prompt: 'text description', num_outputs: 1, width: 1024, height: 1024}",
           "required": true
-        },
-        "webhook": {
-          "type": "string",
-          "description": "Optional webhook URL to call on completion",
-          "required": false
         }
       },
       "output": {
@@ -122,39 +141,35 @@
         "fields": [
           "id",
           "status",
-          "output"
+          "output (image URLs when complete)"
         ]
       },
       "realtime": false,
       "requires_auth": true
     },
     {
-      "id": "list_models",
-      "description_for_ai": "List Replicate models by topic/collection. Discover available models.",
+      "id": "cancel_prediction",
+      "description_for_ai": "Cancel a running prediction on Replicate.",
       "intent": [
-        "replicate models",
-        "browse models",
-        "available models replicate",
-        "поиск моделей replicate"
+        "cancel prediction",
+        "stop model run",
+        "отменить предсказание Replicate"
       ],
-      "endpoint": "GET https://api.replicate.com/v1/collections/{collection_slug}",
+      "endpoint": "POST https://api.replicate.com/v1/predictions/{prediction_id}/cancel",
       "input": {
-        "collection_slug": {
+        "prediction_id": {
           "type": "string",
-          "description": "Collection: text-to-image, image-to-text, audio-generation, video-generation, language-models, super-resolution",
           "required": true
         }
       },
       "output": {
-        "type": "list<model>",
+        "type": "prediction",
         "fields": [
-          "models[0].name",
-          "models[0].url",
-          "models[0].description",
-          "models[0].run_count"
+          "id",
+          "status (canceled)"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     }
   ],
