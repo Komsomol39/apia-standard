@@ -99,6 +99,107 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "search_filings",
+      "description_for_ai": "Search SEC EDGAR for company filings: 10-K, 10-Q, 8-K, DEF-14A.",
+      "intent": [
+        "SEC filings",
+        "10-K annual report",
+        "company SEC filing",
+        "SEC EDGAR search"
+      ],
+      "endpoint": "GET https://efts.sec.gov/LATEST/search-index?q={query}&dateRange=custom&startdt={start}&enddt={end}&forms={form}",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "Company name, CIK, or ticker",
+          "required": true
+        },
+        "forms": {
+          "type": "string",
+          "description": "10-K, 10-Q, 8-K, DEF 14A",
+          "required": false
+        },
+        "dateRange": {
+          "type": "string",
+          "required": false
+        },
+        "startdt": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<filing>",
+        "fields": [
+          "hits[0]._source.entity_name",
+          "hits[0]._source.form_type",
+          "hits[0]._source.file_date",
+          "hits[0]._source.period_of_report"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_company_facts",
+      "description_for_ai": "Get structured financial facts (revenues, assets, EPS) for a company from XBRL data.",
+      "intent": [
+        "company financials SEC",
+        "revenue history",
+        "EDGAR financials",
+        "финансы компании SEC"
+      ],
+      "endpoint": "GET https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json",
+      "input": {
+        "cik": {
+          "type": "string",
+          "description": "CIK padded to 10 digits e.g. 0000320193 for Apple",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "facts",
+        "fields": [
+          "facts.us-gaap.Revenues.units.USD[0].val",
+          "facts.us-gaap.NetIncomeLoss.units.USD[0].val",
+          "entityName"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_submissions",
+      "description_for_ai": "Get company filing history and basic info from SEC EDGAR.",
+      "intent": [
+        "company SEC history",
+        "filing history",
+        "SEC company profile"
+      ],
+      "endpoint": "GET https://data.sec.gov/submissions/CIK{cik}.json",
+      "input": {
+        "cik": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "name",
+          "tickers[0]",
+          "exchanges[0]",
+          "sic",
+          "stateOfIncorporation",
+          "filings.recent.form",
+          "filings.recent.filingDate"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
