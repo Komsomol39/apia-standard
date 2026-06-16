@@ -21,21 +21,19 @@
   },
   "capabilities": [
     {
-      "id": "transform_image",
-      "description_for_ai": "Transform images via URL parameters. Resize, crop, adjust brightness/contrast/saturation, apply blur, add watermark, convert format.",
+      "id": "resize_image",
+      "description_for_ai": "Resize and crop an image on-the-fly using imgix URL parameters.",
       "intent": [
-        "transform image",
-        "resize photo",
-        "image processing",
-        "optimize image",
-        "image CDN",
-        "image filters"
+        "imgix resize",
+        "image resize cdn",
+        "transform image url",
+        "изменить размер imgix"
       ],
       "endpoint": "GET https://{source}.imgix.net/{path}",
       "input": {
         "path": {
           "type": "string",
-          "description": "Image path in your imgix source",
+          "description": "Image path in source",
           "required": true
         },
         "w": {
@@ -51,33 +49,185 @@
         "fit": {
           "type": "string",
           "description": "crop, clip, fill, max, min, scale",
-          "required": false
+          "default": "clip"
         },
         "auto": {
           "type": "string",
-          "description": "compress, format, enhance — auto optimize",
+          "description": "format,compress for automatic optimization",
           "default": "format,compress"
-        },
-        "q": {
-          "type": "integer",
-          "description": "Search query or filter expression",
-          "default": 75
-        },
-        "fm": {
+        }
+      },
+      "output": {
+        "type": "image_url",
+        "fields": [
+          "URL with transformation parameters applied"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "apply_filters",
+      "description_for_ai": "Apply color filters and adjustments to an image via imgix.",
+      "intent": [
+        "imgix filters",
+        "image filters",
+        "color adjustment",
+        "фильтры imgix"
+      ],
+      "endpoint": "GET https://{source}.imgix.net/{path}",
+      "input": {
+        "path": {
           "type": "string",
-          "description": "jpg, png, webp, avif, gif",
+          "required": true
+        },
+        "sat": {
+          "type": "integer",
+          "description": "Saturation -100 to 100",
+          "required": false
+        },
+        "con": {
+          "type": "integer",
+          "description": "Contrast -100 to 100",
+          "required": false
+        },
+        "bri": {
+          "type": "integer",
+          "description": "Brightness -100 to 100",
           "required": false
         },
         "blur": {
           "type": "integer",
-          "description": "Blur amount 0-2000",
+          "description": "Blur 0-2000",
           "required": false
         }
       },
       "output": {
-        "type": "image",
+        "type": "image_url",
         "fields": [
-          "transformed image binary or URL"
+          "URL with filter parameters"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "convert_format",
+      "description_for_ai": "Convert image format (JPEG, PNG, WebP, AVIF) via imgix.",
+      "intent": [
+        "image format convert",
+        "webp imgix",
+        "avif conversion",
+        "конвертация формата imgix"
+      ],
+      "endpoint": "GET https://{source}.imgix.net/{path}",
+      "input": {
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "fm": {
+          "type": "string",
+          "description": "Output format: jpg, png, webp, avif, gif, mp4",
+          "required": true
+        },
+        "q": {
+          "type": "integer",
+          "description": "Quality 0-100",
+          "default": 80
+        }
+      },
+      "output": {
+        "type": "image_url",
+        "fields": [
+          "URL with format conversion"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "face_detection_crop",
+      "description_for_ai": "Smart crop using face detection to keep faces centered.",
+      "intent": [
+        "face crop imgix",
+        "smart crop",
+        "portrait crop",
+        "обрезка по лицу imgix"
+      ],
+      "endpoint": "GET https://{source}.imgix.net/{path}",
+      "input": {
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "w": {
+          "type": "integer",
+          "required": true
+        },
+        "h": {
+          "type": "integer",
+          "required": true
+        },
+        "fit": {
+          "type": "string",
+          "default": "crop"
+        },
+        "crop": {
+          "type": "string",
+          "description": "faces, entropy, focalpoint, center, top, bottom",
+          "default": "faces"
+        }
+      },
+      "output": {
+        "type": "image_url",
+        "fields": [
+          "URL with face-aware crop"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "watermark_overlay",
+      "description_for_ai": "Add watermark or overlay image via imgix blend parameters.",
+      "intent": [
+        "watermark imgix",
+        "overlay image",
+        "logo overlay",
+        "водяной знак imgix"
+      ],
+      "endpoint": "GET https://{source}.imgix.net/{path}",
+      "input": {
+        "path": {
+          "type": "string",
+          "required": true
+        },
+        "blend": {
+          "type": "string",
+          "description": "URL of overlay image",
+          "required": true
+        },
+        "blend-mode": {
+          "type": "string",
+          "description": "normal, multiply, screen, overlay, darken, lighten",
+          "default": "normal"
+        },
+        "blend-alpha": {
+          "type": "integer",
+          "description": "Opacity 0-100",
+          "default": 75
+        },
+        "blend-fit": {
+          "type": "string",
+          "description": "clamp, clip, crop, fill, max, min, scale",
+          "default": "clamp"
+        }
+      },
+      "output": {
+        "type": "image_url",
+        "fields": [
+          "URL with watermark applied"
         ]
       },
       "realtime": true,
