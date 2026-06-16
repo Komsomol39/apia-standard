@@ -22,23 +22,24 @@
   "capabilities": [
     {
       "id": "search_hotels",
-      "description_for_ai": "Search hotels on Booking.com by destination and dates.",
+      "description_for_ai": "Search hotels on Booking.com by destination, dates, and guests.",
       "intent": [
-        "booking.com hotels",
-        "hotel search booking",
-        "find accommodation",
-        "отели booking.com"
+        "search hotels Booking",
+        "Booking.com search",
+        "find hotel",
+        "поиск отелей Booking.com"
       ],
-      "endpoint": "GET https://booking-com.p.rapidapi.com/v1/hotels/search",
+      "endpoint": "GET https://booking-com.p.rapidapi.com/v2/hotels/search",
       "input": {
         "dest_id": {
           "type": "string",
-          "description": "Destination ID (get from search_location)",
+          "description": "Destination ID (get from search_destinations)",
           "required": true
         },
         "search_type": {
           "type": "string",
-          "default": "CITY"
+          "description": "city, landmark, district, airport",
+          "required": true
         },
         "checkin_date": {
           "type": "string",
@@ -51,16 +52,15 @@
         },
         "adults_number": {
           "type": "integer",
-          "default": 2
-        },
-        "order_by": {
-          "type": "string",
-          "description": "popularity, class_ascending, class_descending, price, review_score",
-          "default": "popularity"
+          "default": 1
         },
         "room_number": {
           "type": "integer",
           "default": 1
+        },
+        "filter_by_currency": {
+          "type": "string",
+          "default": "USD"
         }
       },
       "output": {
@@ -68,10 +68,9 @@
         "fields": [
           "result[0].hotel_id",
           "result[0].hotel_name",
-          "result[0].price_breakdown.gross_price",
+          "result[0].price_breakdown.all_inclusive_price",
           "result[0].review_score",
-          "result[0].class (stars)",
-          "result[0].city"
+          "result[0].class (stars)"
         ]
       },
       "realtime": true,
@@ -79,12 +78,12 @@
     },
     {
       "id": "get_hotel_details",
-      "description_for_ai": "Get full Booking.com hotel details: amenities, photos, policies.",
+      "description_for_ai": "Get detailed information about a specific hotel on Booking.com.",
       "intent": [
-        "hotel details booking",
-        "property info booking.com",
-        "hotel amenities",
-        "детали отеля booking.com"
+        "hotel details Booking",
+        "hotel info",
+        "accommodation details",
+        "детали отеля Booking.com"
       ],
       "endpoint": "GET https://booking-com.p.rapidapi.com/v1/hotels/data",
       "input": {
@@ -94,19 +93,22 @@
         },
         "locale": {
           "type": "string",
-          "default": "en-gb"
+          "default": "en-us"
         }
       },
       "output": {
         "type": "hotel",
         "fields": [
+          "hotel_id",
           "hotel_name",
           "address",
-          "hotel_include_breakfast",
-          "checkin.from",
-          "checkout.until",
-          "facilities[0].name",
-          "description.description"
+          "city",
+          "country_trans",
+          "latitude",
+          "longitude",
+          "stars",
+          "review_nr",
+          "review_score"
         ]
       },
       "realtime": true,
@@ -114,12 +116,12 @@
     },
     {
       "id": "get_hotel_reviews",
-      "description_for_ai": "Get guest reviews for a Booking.com hotel.",
+      "description_for_ai": "Get guest reviews for a hotel on Booking.com.",
       "intent": [
-        "hotel reviews booking",
-        "guest feedback",
-        "ratings booking.com",
-        "отзывы booking.com"
+        "hotel reviews Booking",
+        "guest reviews",
+        "ratings hotel",
+        "отзывы Booking.com"
       ],
       "endpoint": "GET https://booking-com.p.rapidapi.com/v1/hotels/reviews",
       "input": {
@@ -127,13 +129,17 @@
           "type": "integer",
           "required": true
         },
-        "locale": {
-          "type": "string",
-          "default": "en-gb"
+        "page_number": {
+          "type": "integer",
+          "default": 0
+        },
+        "rows": {
+          "type": "integer",
+          "default": 25
         },
         "sort_type": {
           "type": "string",
-          "description": "SORT_MOST_RELEVANT, SORT_RECENT",
+          "description": "SORT_MOST_RELEVANT, SORT_RECENT, SORT_HIGHEST_SCORE, SORT_LOWEST_SCORE",
           "default": "SORT_MOST_RELEVANT"
         }
       },
@@ -151,73 +157,61 @@
       "requires_auth": true
     },
     {
-      "id": "search_location",
-      "description_for_ai": "Search for a Booking.com destination ID by city or area name.",
+      "id": "search_destinations",
+      "description_for_ai": "Search for destination IDs for hotels search on Booking.com.",
       "intent": [
-        "booking destination id",
-        "search city booking",
-        "location ID booking",
-        "ID направления booking"
+        "Booking destination search",
+        "city ID Booking",
+        "destination lookup",
+        "поиск направления Booking.com"
       ],
       "endpoint": "GET https://booking-com.p.rapidapi.com/v1/hotels/locations",
       "input": {
         "name": {
           "type": "string",
-          "description": "City or area name: Paris, London, New York",
+          "description": "City or destination name",
           "required": true
         },
         "locale": {
           "type": "string",
-          "default": "en-gb"
+          "default": "en-us"
         }
       },
       "output": {
-        "type": "list<location>",
+        "type": "list<destination>",
         "fields": [
-          "result[0].dest_id",
-          "result[0].city_name",
-          "result[0].dest_type",
-          "result[0].label"
+          "[0].dest_id",
+          "name",
+          "[0].dest_type",
+          "[0].country"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_room_availability",
-      "description_for_ai": "Get room types and availability for a hotel.",
+      "id": "get_hotel_photos",
+      "description_for_ai": "Get photos for a Booking.com hotel.",
       "intent": [
-        "room availability booking",
-        "hotel rooms",
-        "check availability booking",
-        "наличие номеров booking.com"
+        "hotel photos Booking",
+        "accommodation images",
+        "hotel pictures",
+        "фото отеля Booking.com"
       ],
-      "endpoint": "GET https://booking-com.p.rapidapi.com/v1/hotels/room-list",
+      "endpoint": "GET https://booking-com.p.rapidapi.com/v1/hotels/photos",
       "input": {
         "hotel_id": {
           "type": "integer",
           "required": true
-        },
-        "checkin_date": {
-          "type": "string",
-          "required": true
-        },
-        "checkout_date": {
-          "type": "string",
-          "required": true
-        },
-        "adults_number": {
-          "type": "integer",
-          "default": 2
         }
       },
       "output": {
-        "type": "list<room>",
+        "type": "list<photo>",
         "fields": [
-          "block[0].name",
-          "block[0].room_count_for_display",
-          "block[0].product_price_breakdown.gross_amount.value",
-          "block[0].room_description"
+          "[0].url_1440",
+          "[0].url_max",
+          "[0].photo_id",
+          "[0].tag_name"
         ]
       },
       "realtime": true,
