@@ -184,6 +184,50 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "track_event",
+      "description_for_ai": "Track an analytics event with Segment. Routes to all connected destinations (Mixpanel, GA, etc).",
+      "intent": [
+        "segment track",
+        "analytics event segment",
+        "send event segment",
+        "трекинг segment"
+      ],
+      "endpoint": "POST https://api.segment.io/v1/track",
+      "input": {
+        "userId": {
+          "type": "string",
+          "required": false
+        },
+        "anonymousId": {
+          "type": "string",
+          "required": false
+        },
+        "event": {
+          "type": "string",
+          "description": "Event name",
+          "required": true
+        },
+        "properties": {
+          "type": "object",
+          "description": "Custom event properties",
+          "required": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "ISO 8601. Omit for now.",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "result",
+        "fields": [
+          "success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
