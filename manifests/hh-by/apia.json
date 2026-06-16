@@ -154,6 +154,76 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "search_vacancies",
+      "description_for_ai": "Search job vacancies on hh.by (Belarus job board).",
+      "intent": [
+        "hh.by вакансии",
+        "работа беларусь",
+        "вакансии hh by"
+      ],
+      "endpoint": "GET https://api.hh.by/vacancies",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": false
+        },
+        "area": {
+          "type": "integer",
+          "description": "Region: 1=Minsk",
+          "required": false
+        },
+        "salary": {
+          "type": "integer",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": [
+          "items[0].id",
+          "items[0].name",
+          "items[0].salary.from",
+          "items[0].employer.name",
+          "items[0].area.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_vacancy",
+      "description_for_ai": "Get full vacancy details from hh.by.",
+      "intent": [
+        "вакансия hh.by",
+        "детали вакансии беларусь"
+      ],
+      "endpoint": "GET https://api.hh.by/vacancies/{vacancy_id}",
+      "input": {
+        "vacancy_id": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "vacancy",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "salary",
+          "employer.name",
+          "schedule.name",
+          "experience.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
