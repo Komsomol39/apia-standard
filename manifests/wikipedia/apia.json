@@ -20,24 +20,16 @@
   },
   "capabilities": [
     {
-      "id": "search",
-      "description_for_ai": "Search Wikipedia articles by keyword. Returns titles and snippets.",
+      "id": "search_articles",
+      "description_for_ai": "Search Wikipedia articles by keyword.",
       "intent": [
         "search Wikipedia",
         "find article",
         "Wikipedia search",
-        "поиск Википедия"
+        "поиск Wikipedia"
       ],
-      "endpoint": "GET https://en.wikipedia.org/w/api.php",
+      "endpoint": "GET https://en.wikipedia.org/w/api.php?action=query&list=search",
       "input": {
-        "action": {
-          "type": "string",
-          "default": "query"
-        },
-        "list": {
-          "type": "string",
-          "default": "search"
-        },
         "srsearch": {
           "type": "string",
           "description": "Search query",
@@ -47,53 +39,46 @@
           "type": "integer",
           "default": 10
         },
-        "format": {
-          "type": "string",
-          "default": "json"
-        },
-        "utf8": {
+        "srnamespace": {
           "type": "integer",
-          "default": 1
+          "description": "0 for articles",
+          "default": 0
         }
       },
       "output": {
-        "type": "list<article>",
+        "type": "list<result>",
         "fields": [
           "query.search[0].title",
           "query.search[0].snippet",
           "query.search[0].pageid",
-          "query.searchinfo.totalhits"
+          "query.search[0].timestamp"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_summary",
-      "description_for_ai": "Get a Wikipedia page summary (intro paragraph) for any article.",
+      "id": "get_article_summary",
+      "description_for_ai": "Get a concise summary of a Wikipedia article.",
       "intent": [
-        "wikipedia summary",
-        "article intro",
-        "topic summary",
-        "краткое описание Wikipedia"
+        "Wikipedia summary",
+        "article summary",
+        "quick fact",
+        "краткое содержание Wikipedia"
       ],
       "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/summary/{title}",
       "input": {
         "title": {
           "type": "string",
-          "description": "Article title (use underscores for spaces: Albert_Einstein)",
+          "description": "Article title: Albert_Einstein, Python_(programming_language)",
           "required": true
-        },
-        "redirect": {
-          "type": "boolean",
-          "default": true
         }
       },
       "output": {
         "type": "summary",
         "fields": [
           "title",
-          "extract (plain text intro)",
+          "extract (summary text)",
           "description",
           "thumbnail.source",
           "content_urls.desktop.page"
@@ -104,48 +89,64 @@
     },
     {
       "id": "get_article_content",
-      "description_for_ai": "Get the full text content of a Wikipedia article.",
+      "description_for_ai": "Get full text content of a Wikipedia article in wikitext or HTML.",
       "intent": [
-        "wikipedia article",
-        "full article text",
-        "Wikipedia content",
-        "полный текст Wikipedia"
+        "Wikipedia article",
+        "article content",
+        "full article Wikipedia",
+        "статья Wikipedia"
       ],
-      "endpoint": "GET https://en.wikipedia.org/w/api.php",
+      "endpoint": "GET https://en.wikipedia.org/w/api.php?action=query&prop=extracts",
       "input": {
-        "action": {
-          "type": "string",
-          "default": "query"
-        },
-        "prop": {
-          "type": "string",
-          "default": "extracts"
-        },
         "titles": {
           "type": "string",
-          "description": "Article title",
           "required": true
-        },
-        "explaintext": {
-          "type": "boolean",
-          "description": "Return plain text instead of HTML",
-          "default": true
         },
         "exintro": {
           "type": "boolean",
           "description": "Only return intro section",
           "default": false
         },
-        "format": {
-          "type": "string",
-          "default": "json"
+        "explaintext": {
+          "type": "boolean",
+          "description": "Return plain text (not HTML)",
+          "default": true
         }
       },
       "output": {
         "type": "article",
         "fields": [
-          "query.pages.{pageid}.title",
-          "query.pages.{pageid}.extract (plain text)"
+          "query.pages[0].title",
+          "query.pages[0].extract (article text)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_page_images",
+      "description_for_ai": "Get images from a Wikipedia article.",
+      "intent": [
+        "Wikipedia images",
+        "article images",
+        "photo Wikipedia",
+        "изображения Wikipedia"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/w/api.php?action=query&prop=images",
+      "input": {
+        "titles": {
+          "type": "string",
+          "required": true
+        },
+        "imlimit": {
+          "type": "integer",
+          "default": 10
+        }
+      },
+      "output": {
+        "type": "list<image>",
+        "fields": [
+          "query.pages[0].images[0].title"
         ]
       },
       "realtime": true,
@@ -168,7 +169,6 @@
           "title",
           "extract",
           "description",
-          "thumbnail.source",
           "content_urls.desktop.page"
         ]
       },
@@ -176,33 +176,39 @@
       "requires_auth": false
     },
     {
-      "id": "get_in_other_languages",
-      "description_for_ai": "Get a Wikipedia article in another language.",
+      "id": "get_featured_article",
+      "description_for_ai": "Get Wikipedia's featured article and news for a specific date.",
       "intent": [
-        "Wikipedia in Russian",
-        "Wikipedia другой язык",
-        "translate Wikipedia",
-        "Википедия на русском"
+        "Wikipedia featured",
+        "article of the day",
+        "Wikipedia news",
+        "статья дня Wikipedia"
       ],
-      "endpoint": "GET https://{lang}.wikipedia.org/api/rest_v1/page/summary/{title}",
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/feed/featured/{year}/{month}/{day}",
       "input": {
-        "lang": {
+        "year": {
           "type": "string",
-          "description": "Language code: ru, de, fr, es, zh, ja, ar",
+          "description": "4-digit year",
           "required": true
         },
-        "title": {
+        "month": {
           "type": "string",
-          "description": "Article title in that language or use lang links API first",
+          "description": "2-digit month",
+          "required": true
+        },
+        "day": {
+          "type": "string",
+          "description": "2-digit day",
           "required": true
         }
       },
       "output": {
-        "type": "summary",
+        "type": "feed",
         "fields": [
-          "title",
-          "extract",
-          "content_urls.desktop.page"
+          "tfa.title (featured article)",
+          "tfa.extract",
+          "news[0].story",
+          "image.title"
         ]
       },
       "realtime": true,
