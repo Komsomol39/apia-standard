@@ -24,23 +24,24 @@
   "capabilities": [
     {
       "id": "current_weather",
-      "description_for_ai": "Get current weather conditions for any city or coordinates: temperature, humidity, wind, description.",
+      "description_for_ai": "Get current weather conditions for a city or coordinates.",
       "intent": [
         "current weather",
         "weather now",
-        "temperature today",
+        "what is weather",
         "погода сейчас",
-        "какая погода"
+        "температура"
       ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/weather",
       "input": {
         "q": {
           "type": "string",
-          "description": "City name e.g. Moscow,ru or London,uk",
+          "description": "City name: London, Moscow, New York,US",
           "required": false
         },
         "lat": {
           "type": "float",
+          "description": "Latitude (use with lon instead of q)",
           "required": false
         },
         "lon": {
@@ -49,17 +50,13 @@
         },
         "units": {
           "type": "string",
-          "description": "standard (Kelvin), metric (Celsius), imperial (Fahrenheit)",
+          "description": "metric (°C), imperial (°F), standard (K)",
           "default": "metric"
         },
         "lang": {
           "type": "string",
-          "description": "Language: en, ru, de, fr, etc.",
+          "description": "Language: en, ru, de, fr, es",
           "default": "en"
-        },
-        "appid": {
-          "type": "string",
-          "required": true
         }
       },
       "output": {
@@ -70,8 +67,8 @@
           "main.humidity",
           "weather[0].description",
           "wind.speed",
-          "name",
-          "dt"
+          "visibility",
+          "name"
         ]
       },
       "realtime": true,
@@ -79,13 +76,12 @@
     },
     {
       "id": "forecast_5day",
-      "description_for_ai": "Get 5-day weather forecast in 3-hour intervals for any city.",
+      "description_for_ai": "5-day weather forecast in 3-hour intervals.",
       "intent": [
         "weather forecast",
         "5 day forecast",
-        "weather next week",
-        "прогноз погоды",
-        "погода на неделю"
+        "weather prediction",
+        "прогноз погоды на 5 дней"
       ],
       "endpoint": "GET https://api.openweathermap.org/data/2.5/forecast",
       "input": {
@@ -107,12 +103,12 @@
         },
         "cnt": {
           "type": "integer",
-          "description": "Number of 3-hour periods, max 40",
+          "description": "Number of 3h intervals (max 40)",
           "required": false
         },
-        "appid": {
+        "lang": {
           "type": "string",
-          "required": true
+          "required": false
         }
       },
       "output": {
@@ -121,20 +117,20 @@
           "list[0].dt_txt",
           "list[0].main.temp",
           "list[0].weather[0].description",
-          "list[0].pop (precipitation probability)",
-          "city.name"
+          "list[0].pop (rain probability)",
+          "list[0].wind.speed"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "air_pollution",
-      "description_for_ai": "Get current or forecast air quality index (AQI) and pollutant concentrations: CO, NO2, PM2.5, PM10, O3.",
+      "id": "air_quality",
+      "description_for_ai": "Get air quality index (AQI) and pollutant levels for coordinates.",
       "intent": [
         "air quality",
-        "air pollution",
         "AQI",
+        "pollution level",
         "качество воздуха",
         "загрязнение воздуха"
       ],
@@ -147,20 +143,16 @@
         "lon": {
           "type": "float",
           "required": true
-        },
-        "appid": {
-          "type": "string",
-          "required": true
         }
       },
       "output": {
         "type": "air_quality",
         "fields": [
-          "list[0].main.aqi (1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor)",
+          "list[0].main.aqi (1-5 scale)",
           "list[0].components.pm2_5",
           "list[0].components.pm10",
           "list[0].components.no2",
-          "list[0].components.co"
+          "list[0].components.o3"
         ]
       },
       "realtime": true,
@@ -168,28 +160,24 @@
     },
     {
       "id": "geocoding",
-      "description_for_ai": "Convert city name to coordinates or reverse geocode coordinates to city name.",
+      "description_for_ai": "Convert city name to coordinates or reverse geocode coordinates to location name.",
       "intent": [
-        "geocode weather",
         "city coordinates",
-        "city to lat lon",
+        "geocode city",
+        "location coordinates",
         "координаты города"
       ],
       "endpoint": "GET https://api.openweathermap.org/geo/1.0/direct",
       "input": {
         "q": {
           "type": "string",
-          "description": "City name, state, country e.g. London,GB or Moscow,RU",
+          "description": "City name, state code, country code: London,GB or Moscow,RU",
           "required": true
         },
         "limit": {
           "type": "integer",
           "description": "Max results 1-5",
           "default": 5
-        },
-        "appid": {
-          "type": "string",
-          "required": true
         }
       },
       "output": {
@@ -202,7 +190,95 @@
           "[0].state"
         ]
       },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "historical_weather",
+      "description_for_ai": "Get historical weather data for a specific date (paid plan required).",
+      "intent": [
+        "historical weather",
+        "past weather",
+        "weather history",
+        "историческая погода"
+      ],
+      "endpoint": "GET https://api.openweathermap.org/data/3.0/onecall/timemachine",
+      "input": {
+        "lat": {
+          "type": "float",
+          "required": true
+        },
+        "lon": {
+          "type": "float",
+          "required": true
+        },
+        "dt": {
+          "type": "integer",
+          "description": "Unix timestamp for the historical date",
+          "required": true
+        },
+        "units": {
+          "type": "string",
+          "default": "metric"
+        }
+      },
+      "output": {
+        "type": "historical",
+        "fields": [
+          "data[0].temp",
+          "data[0].weather[0].description",
+          "data[0].wind_speed",
+          "data[0].humidity"
+        ]
+      },
       "realtime": false,
+      "requires_auth": true
+    },
+    {
+      "id": "onecall_forecast",
+      "description_for_ai": "All-in-one forecast: current, hourly (48h), daily (8 days), and alerts. One API call.",
+      "intent": [
+        "full forecast",
+        "onecall weather",
+        "8 day forecast",
+        "полный прогноз погоды"
+      ],
+      "endpoint": "GET https://api.openweathermap.org/data/3.0/onecall",
+      "input": {
+        "lat": {
+          "type": "float",
+          "required": true
+        },
+        "lon": {
+          "type": "float",
+          "required": true
+        },
+        "exclude": {
+          "type": "string",
+          "description": "current,minutely,hourly,daily,alerts — omit to exclude",
+          "required": false
+        },
+        "units": {
+          "type": "string",
+          "default": "metric"
+        },
+        "lang": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "forecast",
+        "fields": [
+          "current.temp",
+          "current.weather[0].description",
+          "hourly[0].temp",
+          "daily[0].temp.day",
+          "daily[0].summary",
+          "alerts[0].event"
+        ]
+      },
+      "realtime": true,
       "requires_auth": true
     }
   ],
