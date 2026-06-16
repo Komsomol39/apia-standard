@@ -134,6 +134,34 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "get_projects",
+      "description_for_ai": "Get Linear projects (epics/initiatives) in the workspace.",
+      "intent": [
+        "linear projects",
+        "epics linear",
+        "initiatives linear",
+        "проекты linear"
+      ],
+      "endpoint": "POST https://api.linear.app/graphql",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "{ projects { nodes { id name state progress teams { nodes { id name }} } } }",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<project>",
+        "fields": [
+          "data.projects.nodes[0].id",
+          "data.projects.nodes[0].name",
+          "data.projects.nodes[0].state"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
