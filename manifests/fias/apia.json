@@ -98,6 +98,87 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "search_address",
+      "description_for_ai": "Search Russian address in ФИАС (Federal Address Information System).",
+      "intent": [
+        "ФИАС поиск",
+        "адрес ФИАС",
+        "FIAS address Russia"
+      ],
+      "endpoint": "GET https://fias.nalog.ru/Search.aspx/SearchByAddress",
+      "input": {
+        "q": {
+          "type": "string",
+          "description": "Address string to search",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<address>",
+        "fields": [
+          "AOGUID",
+          "SHORTNAME",
+          "FORMALNAME",
+          "POSTALCODE"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_by_guid",
+      "description_for_ai": "Get ФИАС address object by GUID.",
+      "intent": [
+        "адрес по GUID ФИАС",
+        "FIAS GUID lookup"
+      ],
+      "endpoint": "GET https://fias.nalog.ru/Search.aspx/GetAdrObjects",
+      "input": {
+        "aoguid": {
+          "type": "string",
+          "description": "FIAS GUID",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "AOGUID",
+          "FORMALNAME",
+          "REGIONCODE",
+          "POSTALCODE"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_postal_code",
+      "description_for_ai": "Get postal code for a Russian address.",
+      "intent": [
+        "почтовый индекс",
+        "индекс адреса",
+        "postcode Russia"
+      ],
+      "endpoint": "GET https://fias.nalog.ru/Search.aspx/SearchByText",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "address",
+        "fields": [
+          "POSTALCODE",
+          "FORMALNAME",
+          "AOGUID"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
