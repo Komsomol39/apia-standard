@@ -24,20 +24,15 @@
   "capabilities": [
     {
       "id": "take_screenshot",
-      "description_for_ai": "Take a screenshot of any URL with customizable viewport.",
+      "description_for_ai": "Take a screenshot of any website URL.",
       "intent": [
-        "screenshot URL",
-        "web page screenshot",
-        "website screenshot API",
+        "screenshot website",
+        "capture webpage",
+        "website thumbnail",
         "скриншот сайта"
       ],
       "endpoint": "GET https://shot.screenshotapi.net/screenshot",
       "input": {
-        "token": {
-          "type": "string",
-          "description": "API token",
-          "required": true
-        },
         "url": {
           "type": "string",
           "description": "URL to screenshot",
@@ -53,86 +48,145 @@
         },
         "output": {
           "type": "string",
-          "description": "image or json",
+          "description": "image, base64, json",
           "default": "image"
         },
-        "full_page": {
+        "fresh": {
           "type": "boolean",
-          "description": "Capture full page length",
+          "description": "Force fresh capture (not cached)",
           "default": false
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Wait milliseconds after load",
+          "default": 0
         }
       },
       "output": {
-        "type": "image",
+        "type": "image or json",
         "fields": [
-          "PNG/JPEG screenshot binary or JSON with screenshot URL"
+          "Binary PNG image, or JSON with screenshot URL"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "mobile_screenshot",
-      "description_for_ai": "Take a mobile device screenshot of a URL.",
+      "id": "screenshot_full_page",
+      "description_for_ai": "Capture a full-page screenshot (including content below the fold).",
       "intent": [
-        "mobile screenshot",
-        "responsive screenshot",
-        "phone screenshot",
-        "мобильный скриншот сайта"
+        "full page screenshot",
+        "long page capture",
+        "scroll screenshot",
+        "скриншот всей страницы"
       ],
       "endpoint": "GET https://shot.screenshotapi.net/screenshot",
       "input": {
-        "token": {
+        "url": {
           "type": "string",
           "required": true
         },
+        "full_page": {
+          "type": "boolean",
+          "default": true
+        },
+        "output": {
+          "type": "string",
+          "default": "image"
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "Full-height PNG image"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "screenshot_mobile",
+      "description_for_ai": "Take a mobile viewport screenshot of a website.",
+      "intent": [
+        "mobile screenshot",
+        "phone view website",
+        "responsive check",
+        "мобильный скриншот"
+      ],
+      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
+      "input": {
         "url": {
           "type": "string",
           "required": true
         },
         "width": {
           "type": "integer",
-          "default": 390
+          "default": 375
         },
         "height": {
           "type": "integer",
-          "default": 844
+          "default": 812
         },
-        "user_agent": {
-          "type": "string",
-          "description": "Mobile UA string",
-          "required": false
-        },
-        "delay": {
-          "type": "integer",
-          "description": "Wait ms before screenshot",
-          "default": 0
+        "device_scale_factor": {
+          "type": "number",
+          "default": 2.0
         }
       },
       "output": {
         "type": "image",
         "fields": [
-          "Mobile viewport screenshot"
+          "Mobile viewport PNG image"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "pdf_from_url",
-      "description_for_ai": "Convert a web page URL to PDF.",
+      "id": "screenshot_with_wait",
+      "description_for_ai": "Take a screenshot after waiting for a specific element to load.",
       "intent": [
-        "URL to PDF",
-        "webpage PDF",
-        "print page PDF",
-        "PDF из URL"
+        "wait element screenshot",
+        "dynamic page capture",
+        "JavaScript screenshot",
+        "скриншот динамической страницы"
       ],
       "endpoint": "GET https://shot.screenshotapi.net/screenshot",
       "input": {
-        "token": {
+        "url": {
           "type": "string",
           "required": true
         },
+        "wait_for_event": {
+          "type": "string",
+          "description": "load, domcontentloaded, networkidle0, networkidle2",
+          "default": "load"
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Additional wait in ms",
+          "default": 2000
+        }
+      },
+      "output": {
+        "type": "image",
+        "fields": [
+          "PNG screenshot after rendering"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "pdf_export",
+      "description_for_ai": "Export a webpage as a PDF document.",
+      "intent": [
+        "website to PDF",
+        "webpage PDF",
+        "print website",
+        "сайт в PDF"
+      ],
+      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
+      "input": {
         "url": {
           "type": "string",
           "required": true
@@ -149,80 +203,7 @@
       "output": {
         "type": "pdf",
         "fields": [
-          "PDF binary"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "screenshot_with_delay",
-      "description_for_ai": "Take screenshot after waiting for JS rendering or animations.",
-      "intent": [
-        "delayed screenshot",
-        "wait for JS",
-        "dynamic content screenshot",
-        "скриншот с задержкой"
-      ],
-      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
-      "input": {
-        "token": {
-          "type": "string",
-          "required": true
-        },
-        "url": {
-          "type": "string",
-          "required": true
-        },
-        "delay": {
-          "type": "integer",
-          "description": "Wait in ms before capturing: 2000 for SPAs",
-          "required": true
-        },
-        "lazy_load": {
-          "type": "boolean",
-          "description": "Scroll to load lazy images",
-          "default": false
-        }
-      },
-      "output": {
-        "type": "image",
-        "fields": [
-          "Screenshot after delay"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "batch_screenshots",
-      "description_for_ai": "Take screenshots of multiple URLs efficiently.",
-      "intent": [
-        "batch screenshots",
-        "multiple URLs screenshot",
-        "bulk screenshots",
-        "скриншоты пакетом"
-      ],
-      "endpoint": "GET https://shot.screenshotapi.net/screenshot",
-      "input": {
-        "token": {
-          "type": "string",
-          "required": true
-        },
-        "url": {
-          "type": "string",
-          "description": "URL to capture (call repeatedly for batch)",
-          "required": true
-        },
-        "output": {
-          "type": "string",
-          "default": "json"
-        }
-      },
-      "output": {
-        "type": "json",
-        "fields": [
-          "screenshot (CDN URL to image)"
+          "Binary PDF document"
         ]
       },
       "realtime": true,
