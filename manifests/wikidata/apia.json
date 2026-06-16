@@ -21,26 +21,23 @@
   "capabilities": [
     {
       "id": "search_entities",
-      "description_for_ai": "Search Wikidata for entities (people, places, concepts) by label.",
+      "description_for_ai": "Search Wikidata entities (items and properties) by label.",
       "intent": [
         "Wikidata search",
-        "find entity",
-        "knowledge graph search",
+        "find entity Wikidata",
+        "knowledge base search",
         "поиск Wikidata"
       ],
-      "endpoint": "GET https://www.wikidata.org/w/api.php",
+      "endpoint": "GET https://www.wikidata.org/w/api.php?action=wbsearchentities",
       "input": {
-        "action": {
-          "type": "string",
-          "default": "wbsearchentities"
-        },
         "search": {
           "type": "string",
+          "description": "Search query",
           "required": true
         },
         "language": {
           "type": "string",
-          "description": "en, ru, de, fr, zh",
+          "description": "Language code: en, ru, de, fr",
           "default": "en"
         },
         "type": {
@@ -51,16 +48,12 @@
         "limit": {
           "type": "integer",
           "default": 10
-        },
-        "format": {
-          "type": "string",
-          "default": "json"
         }
       },
       "output": {
         "type": "list<entity>",
         "fields": [
-          "search[0].id",
+          "search[0].id (Qxxx)",
           "search[0].label",
           "search[0].description",
           "search[0].url"
@@ -71,28 +64,37 @@
     },
     {
       "id": "get_entity",
-      "description_for_ai": "Get all properties and claims for a Wikidata entity by its Q-number.",
+      "description_for_ai": "Get full Wikidata entity data by ID: labels, descriptions, claims (facts).",
       "intent": [
         "Wikidata entity",
-        "entity details",
-        "Q-number lookup",
-        "сущность Wikidata"
+        "get facts Wikidata",
+        "knowledge graph",
+        "данные Wikidata"
       ],
-      "endpoint": "GET https://www.wikidata.org/wiki/Special:EntityData/{entity_id}.json",
+      "endpoint": "GET https://www.wikidata.org/w/api.php?action=wbgetentities",
       "input": {
-        "entity_id": {
+        "ids": {
           "type": "string",
-          "description": "Q-number e.g. Q76 (Barack Obama), Q42 (Douglas Adams), Q183 (Germany)",
+          "description": "Wikidata IDs: Q42 (Douglas Adams), Q95 (Google), Q7259 (Ada Lovelace)",
           "required": true
+        },
+        "languages": {
+          "type": "string",
+          "description": "Pipe-separated: en|ru",
+          "default": "en"
+        },
+        "props": {
+          "type": "string",
+          "description": "labels|descriptions|claims|sitelinks",
+          "default": "labels|descriptions|claims"
         }
       },
       "output": {
         "type": "entity",
         "fields": [
-          "entities.{id}.labels.en.value",
-          "entities.{id}.descriptions.en.value",
-          "entities.{id}.claims (all properties)",
-          "entities.{id}.sitelinks.enwiki.title"
+          "entities.Q42.labels.en.value",
+          "entities.Q42.descriptions.en.value",
+          "entities.Q42.claims.P569 (date of birth)"
         ]
       },
       "realtime": true,
@@ -100,65 +102,19 @@
     },
     {
       "id": "sparql_query",
-      "description_for_ai": "Run SPARQL queries against the Wikidata knowledge graph. Extremely powerful for structured knowledge extraction.",
+      "description_for_ai": "Run SPARQL query against Wikidata to get structured knowledge.",
       "intent": [
-        "SPARQL query",
-        "knowledge graph query",
-        "Wikidata query",
-        "запрос Wikidata SPARQL"
+        "SPARQL query Wikidata",
+        "knowledge query",
+        "structured data Wikidata",
+        "запрос SPARQL Wikidata"
       ],
       "endpoint": "GET https://query.wikidata.org/sparql",
       "input": {
         "query": {
           "type": "string",
-          "description": "SPARQL query. Example: SELECT ?person ?personLabel WHERE { ?person wdt:P106 wd:Q33999. SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. } } LIMIT 10",
+          "description": "SPARQL query. Example: SELECT ?item ?itemLabel WHERE { ?item wdt:P31 wd:Q146. SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. } } LIMIT 10",
           "required": true
-        },
-        "format": {
-          "type": "string",
-          "description": "json, xml, csv, tsv",
-          "default": "json"
-        }
-      },
-      "output": {
-        "type": "sparql_result",
-        "fields": [
-          "results.bindings[0].person.value",
-          "results.bindings[0].personLabel.value"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": false
-    },
-    {
-      "id": "get_item_by_property",
-      "description_for_ai": "Find Wikidata items that have a specific property value.",
-      "intent": [
-        "find by property Wikidata",
-        "entity lookup",
-        "property value search",
-        "поиск по свойству Wikidata"
-      ],
-      "endpoint": "GET https://www.wikidata.org/w/api.php",
-      "input": {
-        "action": {
-          "type": "string",
-          "default": "wbgetentities"
-        },
-        "ids": {
-          "type": "string",
-          "description": "Q-numbers pipe-separated: Q76|Q42",
-          "required": true
-        },
-        "languages": {
-          "type": "string",
-          "description": "en|ru|de",
-          "default": "en"
-        },
-        "props": {
-          "type": "string",
-          "description": "labels|descriptions|claims|sitelinks",
-          "default": "labels|descriptions"
         },
         "format": {
           "type": "string",
@@ -166,46 +122,106 @@
         }
       },
       "output": {
-        "type": "entities",
+        "type": "sparql_results",
         "fields": [
-          "entities.{id}.labels.en.value",
-          "entities.{id}.descriptions.en.value"
+          "results.bindings[0].item.value",
+          "results.bindings[0].itemLabel.value"
         ]
       },
       "realtime": true,
       "requires_auth": false
     },
     {
-      "id": "get_property_info",
-      "description_for_ai": "Look up a Wikidata property by its P-number.",
+      "id": "get_property",
+      "description_for_ai": "Get a Wikidata property definition by property ID.",
       "intent": [
         "Wikidata property",
-        "P-number lookup",
         "property definition",
+        "P-number Wikidata",
         "свойство Wikidata"
       ],
-      "endpoint": "GET https://www.wikidata.org/w/api.php",
+      "endpoint": "GET https://www.wikidata.org/w/api.php?action=wbgetentities",
       "input": {
-        "action": {
-          "type": "string",
-          "default": "wbgetentities"
-        },
         "ids": {
           "type": "string",
-          "description": "P-numbers: P31 (instance of), P279 (subclass of), P580 (start time)",
+          "description": "Property ID: P31 (instance of), P569 (date of birth), P18 (image)",
           "required": true
-        },
-        "format": {
-          "type": "string",
-          "default": "json"
         }
       },
       "output": {
         "type": "property",
         "fields": [
-          "entities.{id}.labels.en.value",
-          "entities.{id}.descriptions.en.value",
-          "entities.{id}.datatype"
+          "entities.P31.labels.en.value (property name)",
+          "entities.P31.descriptions.en.value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_claim_statements",
+      "description_for_ai": "Get specific claims (facts) for a Wikidata entity.",
+      "intent": [
+        "entity claims Wikidata",
+        "facts about entity",
+        "statements Wikidata",
+        "факты Wikidata"
+      ],
+      "endpoint": "GET https://www.wikidata.org/w/api.php?action=wbgetclaims",
+      "input": {
+        "entity": {
+          "type": "string",
+          "description": "Entity ID: Q42",
+          "required": true
+        },
+        "property": {
+          "type": "string",
+          "description": "Filter by property: P31, P569, P19",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "claims",
+        "fields": [
+          "claims.P31[0].mainsnak.datavalue.value.id",
+          "claims.P569[0].mainsnak.datavalue.value.time"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_revision_history",
+      "description_for_ai": "Get edit history for a Wikidata item.",
+      "intent": [
+        "Wikidata history",
+        "edit history",
+        "revisions Wikidata",
+        "история правок Wikidata"
+      ],
+      "endpoint": "GET https://www.wikidata.org/w/api.php?action=query&prop=revisions",
+      "input": {
+        "titles": {
+          "type": "string",
+          "description": "Entity title: Q42 or Q7259",
+          "required": true
+        },
+        "rvlimit": {
+          "type": "integer",
+          "default": 10
+        },
+        "rvprop": {
+          "type": "string",
+          "description": "ids|flags|timestamp|user|size|comment",
+          "default": "ids|timestamp|user|comment"
+        }
+      },
+      "output": {
+        "type": "revisions",
+        "fields": [
+          "query.pages[0].revisions[0].timestamp",
+          "query.pages[0].revisions[0].user",
+          "query.pages[0].revisions[0].comment"
         ]
       },
       "realtime": true,
