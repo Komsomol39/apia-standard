@@ -22,146 +22,239 @@
   },
   "capabilities": [
     {
-      "id": "get_products",
-      "description_for_ai": "Get products from WooCommerce store with prices, stock status, images, categories, and attributes.",
+      "id": "list_products",
+      "description_for_ai": "List WooCommerce products with filters.",
       "intent": [
-        "woocommerce products",
-        "wordpress store products",
-        "get catalog"
+        "WooCommerce products",
+        "shop products",
+        "list products WP",
+        "товары WooCommerce"
       ],
-      "endpoint": "GET https://{domain}/wp-json/wc/v3/products",
+      "endpoint": "GET https://{site}/wp-json/wc/v3/products",
       "input": {
-        "per_page": {
-          "type": "integer",
-          "description": "Results per page, max 100",
-          "default": 20
-        },
-        "page": {
-          "type": "integer",
-          "default": 1,
-          "description": "Page number for pagination (1-indexed)"
-        },
         "status": {
           "type": "string",
-          "description": "publish, draft, pending, private, trash",
+          "description": "publish, draft, pending",
           "default": "publish"
-        },
-        "search": {
-          "type": "string",
-          "description": "Search products by name or SKU",
-          "required": false
         },
         "category": {
           "type": "string",
-          "description": "Category ID to filter by",
+          "description": "Category ID",
           "required": false
         },
-        "stock_status": {
+        "search": {
           "type": "string",
-          "description": "instock, outofstock, onbackorder",
           "required": false
         },
-        "min_price": {
-          "type": "string",
-          "description": "Minimum price filter",
-          "required": false
-        },
-        "max_price": {
-          "type": "string",
-          "description": "Maximum price filter",
-          "required": false
+        "per_page": {
+          "type": "integer",
+          "default": 20
         },
         "orderby": {
           "type": "string",
-          "description": "date, title, price, popularity, rating",
+          "description": "date, modified, id, title, price, popularity, rating",
           "default": "date"
-        },
-        "order": {
-          "type": "string",
-          "description": "Sort direction: asc (ascending) or desc (descending)",
-          "default": "desc"
         }
       },
       "output": {
         "type": "list<product>",
         "fields": [
-          "id",
-          "name",
-          "price",
-          "regular_price",
-          "stock_status",
-          "images[0].src",
-          "categories"
+          "[0].id",
+          "[0].name",
+          "[0].price",
+          "[0].stock_status",
+          "[0].permalink",
+          "[0].categories[0].name"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_order",
-      "description_for_ai": "Create a new WooCommerce order with customer info, line items, shipping, and payment method.",
+      "id": "create_product",
+      "description_for_ai": "Create a new WooCommerce product.",
       "intent": [
-        "create order",
-        "new order",
-        "place order",
-        "woocommerce order"
+        "add product WooCommerce",
+        "create product shop",
+        "новый товар WooCommerce"
       ],
-      "endpoint": "POST https://{domain}/wp-json/wc/v3/orders",
+      "endpoint": "POST https://{site}/wp-json/wc/v3/products",
       "input": {
-        "payment_method": {
+        "name": {
           "type": "string",
-          "description": "Payment method ID: bacs (bank transfer), cheque, cod (cash on delivery), stripe, paypal",
           "required": true
         },
-        "payment_method_title": {
+        "type": {
           "type": "string",
-          "description": "Human-readable payment method name",
+          "description": "simple, variable, grouped, external",
+          "default": "simple"
+        },
+        "regular_price": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
           "required": false
         },
-        "set_paid": {
+        "short_description": {
+          "type": "string",
+          "required": false
+        },
+        "categories": {
+          "type": "array",
+          "description": "[{id: 123}]",
+          "required": false
+        },
+        "images": {
+          "type": "array",
+          "description": "[{src: 'https://...'}]",
+          "required": false
+        },
+        "manage_stock": {
           "type": "boolean",
-          "description": "true to mark order as paid immediately",
           "default": false
         },
-        "billing": {
-          "type": "object",
-          "description": "{first_name, last_name, email, phone, address_1, city, state, postcode, country: 'US'}",
-          "required": true
-        },
-        "shipping": {
-          "type": "object",
-          "description": "Same structure as billing, for delivery address",
-          "required": false
-        },
-        "line_items": {
-          "type": "array",
-          "description": "[{product_id: 123, quantity: 2, variation_id: 456}]",
-          "required": true
-        },
-        "shipping_lines": {
-          "type": "array",
-          "description": "[{method_id: 'flat_rate', method_title: 'Flat Rate', total: '5.00'}]",
-          "required": false
-        },
-        "coupon_lines": {
-          "type": "array",
-          "description": "[{code: 'DISCOUNT10'}]",
-          "required": false
-        },
-        "customer_id": {
+        "stock_quantity": {
           "type": "integer",
-          "description": "Existing customer ID (0 for guest)",
-          "default": 0
+          "required": false
+        }
+      },
+      "output": {
+        "type": "product",
+        "fields": [
+          "id",
+          "name",
+          "permalink",
+          "status"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_orders",
+      "description_for_ai": "Get WooCommerce orders with status filtering.",
+      "intent": [
+        "WooCommerce orders",
+        "shop orders",
+        "заказы WooCommerce"
+      ],
+      "endpoint": "GET https://{site}/wp-json/wc/v3/orders",
+      "input": {
+        "status": {
+          "type": "string",
+          "description": "pending, processing, on-hold, completed, cancelled, refunded, failed",
+          "default": "processing"
+        },
+        "after": {
+          "type": "string",
+          "description": "ISO 8601 date",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<order>",
+        "fields": [
+          "[0].id",
+          "[0].status",
+          "[0].total",
+          "[0].billing.email",
+          "[0].line_items[0].name",
+          "[0].date_created"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "update_order_status",
+      "description_for_ai": "Update WooCommerce order status (e.g., mark as shipped/completed).",
+      "intent": [
+        "update order WooCommerce",
+        "complete order",
+        "ship order",
+        "статус заказа WooCommerce"
+      ],
+      "endpoint": "PUT https://{site}/wp-json/wc/v3/orders/{id}",
+      "input": {
+        "id": {
+          "type": "integer",
+          "required": true
+        },
+        "status": {
+          "type": "string",
+          "description": "processing, completed, cancelled, on-hold, refunded",
+          "required": true
+        },
+        "customer_note": {
+          "type": "string",
+          "required": false
         }
       },
       "output": {
         "type": "order",
         "fields": [
           "id",
-          "number",
-          "total",
           "status",
-          "order_key"
+          "date_modified"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "manage_coupons",
+      "description_for_ai": "Create discount coupons for WooCommerce store.",
+      "intent": [
+        "WooCommerce coupon",
+        "discount code",
+        "promo code WooCommerce",
+        "купон WooCommerce"
+      ],
+      "endpoint": "POST https://{site}/wp-json/wc/v3/coupons",
+      "input": {
+        "code": {
+          "type": "string",
+          "description": "Coupon code",
+          "required": true
+        },
+        "discount_type": {
+          "type": "string",
+          "description": "percent, fixed_cart, fixed_product",
+          "required": true
+        },
+        "amount": {
+          "type": "string",
+          "description": "Discount amount or percentage",
+          "required": true
+        },
+        "expiry_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": false
+        },
+        "usage_limit": {
+          "type": "integer",
+          "required": false
+        },
+        "minimum_amount": {
+          "type": "string",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "coupon",
+        "fields": [
+          "id",
+          "code",
+          "discount_type",
+          "amount",
+          "expiry_date"
         ]
       },
       "realtime": true,
