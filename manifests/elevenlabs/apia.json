@@ -23,46 +23,46 @@
   "capabilities": [
     {
       "id": "text_to_speech",
-      "description_for_ai": "Convert text to speech with any voice. 1000+ voices, 32 languages. Stream or download MP3/PCM.",
+      "description_for_ai": "Convert text to natural speech with ElevenLabs. Best quality TTS available, with 1000+ voices in 32 languages.",
       "intent": [
-        "elevenlabs TTS",
-        "voice generation",
-        "text to speech",
-        "voice cloning",
-        "синтез речи elevenlabs"
+        "text to speech elevenlabs",
+        "TTS elevenlabs",
+        "voice synthesis",
+        "озвучить текст elevenlabs",
+        "синтез речи"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
       "input": {
         "voice_id": {
           "type": "string",
-          "description": "Voice ID. Common: 21m00Tcm4TlvDq8ikWAM (Rachel), EXAVITQu4vr4xnSDxMaL (Bella). Get full list from list_voices.",
+          "description": "Voice ID from /voices list. Common: 21m00Tcm4TlvDq8ikWAM (Rachel, neutral), EXAVITQu4vr4xnSDxMaL (Bella, calm)",
           "required": true
         },
         "text": {
           "type": "string",
-          "description": "Text to synthesize, max 5000 chars per request",
+          "description": "Text to convert, max 2500 chars per request",
           "required": true
         },
         "model_id": {
           "type": "string",
-          "description": "eleven_turbo_v2 (fastest), eleven_multilingual_v2 (best quality+multilingual), eleven_flash_v2_5 (ultra-fast)",
-          "default": "eleven_multilingual_v2"
+          "description": "eleven_turbo_v2 (fast, cheap), eleven_multilingual_v2 (best quality, 32 languages)",
+          "default": "eleven_turbo_v2"
         },
         "voice_settings": {
           "type": "object",
-          "description": "{stability: 0.5, similarity_boost: 0.75, style: 0.0, use_speaker_boost: true}",
+          "description": "{stability: 0.5, similarity_boost: 0.75, style: 0.5, use_speaker_boost: true}. Stability 0=expressive, 1=monotone.",
           "required": false
         },
         "output_format": {
           "type": "string",
-          "description": "mp3_44100_128 (default), pcm_16000, pcm_44100, ulaw_8000",
-          "required": false
+          "description": "mp3_44100_128 (default), pcm_16000, ulaw_8000 (phone)",
+          "default": "mp3_44100_128"
         }
       },
       "output": {
         "type": "audio",
         "fields": [
-          "binary audio stream"
+          "binary audio stream (MP3/PCM)"
         ]
       },
       "realtime": true,
@@ -70,29 +70,24 @@
     },
     {
       "id": "list_voices",
-      "description_for_ai": "Get all available voices including pre-made, cloned, and shared community voices.",
+      "description_for_ai": "List all available ElevenLabs voices including premade and cloned voices.",
       "intent": [
         "elevenlabs voices",
+        "list voices TTS",
         "available voices",
-        "voice list",
         "список голосов elevenlabs"
       ],
       "endpoint": "GET https://api.elevenlabs.io/v1/voices",
-      "input": {
-        "show_legacy": {
-          "type": "boolean",
-          "description": "Include legacy voices",
-          "default": false
-        }
-      },
+      "input": {},
       "output": {
         "type": "list<voice>",
         "fields": [
           "voices[0].voice_id",
           "voices[0].name",
           "voices[0].category",
-          "voices[0].labels",
-          "voices[0].preview_url"
+          "voices[0].description",
+          "voices[0].preview_url",
+          "voices[0].labels.language"
         ]
       },
       "realtime": false,
@@ -100,11 +95,11 @@
     },
     {
       "id": "clone_voice",
-      "description_for_ai": "Create a cloned voice from audio samples. Upload 1-25 audio clips for best results.",
+      "description_for_ai": "Create a cloned voice from audio samples. 3-5 minutes of clean speech recommended.",
       "intent": [
-        "clone voice",
+        "clone voice elevenlabs",
         "voice cloning",
-        "create custom voice",
+        "custom voice",
         "клонировать голос elevenlabs"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/voices/add",
@@ -115,8 +110,8 @@
           "required": true
         },
         "files": {
-          "type": "array",
-          "description": "Audio file uploads (MP3/WAV, 1-25 files, 1-5 min each)",
+          "type": "file[]",
+          "description": "1-25 audio files (MP3/WAV/M4A), each 50MB max. 3-5 min total for good quality.",
           "required": true
         },
         "description": {
@@ -124,15 +119,16 @@
           "required": false
         },
         "labels": {
-          "type": "object",
-          "description": "{accent, age, gender, use_case}",
+          "type": "string",
+          "description": "JSON string: {language: 'ru', accent: 'russian'}",
           "required": false
         }
       },
       "output": {
         "type": "voice",
         "fields": [
-          "voice_id"
+          "voice_id",
+          "name"
         ]
       },
       "realtime": false,
@@ -140,13 +136,12 @@
     },
     {
       "id": "speech_to_speech",
-      "description_for_ai": "Transform voice in audio — change speaker identity while preserving content and emotion.",
+      "description_for_ai": "Transform voice style while keeping content — change speaker, accent, or style of existing audio.",
       "intent": [
         "voice conversion",
         "speech to speech",
-        "change voice",
-        "voice transform",
-        "изменить голос elevenlabs"
+        "voice transformation",
+        "преобразование голоса elevenlabs"
       ],
       "endpoint": "POST https://api.elevenlabs.io/v1/speech-to-speech/{voice_id}",
       "input": {
@@ -157,7 +152,7 @@
         },
         "audio": {
           "type": "file",
-          "description": "Audio file to transform",
+          "description": "Source audio to transform",
           "required": true
         },
         "model_id": {
@@ -166,14 +161,13 @@
         },
         "voice_settings": {
           "type": "object",
-          "description": "{stability: 0.5, similarity_boost: 0.75}",
           "required": false
         }
       },
       "output": {
         "type": "audio",
         "fields": [
-          "binary audio"
+          "binary audio stream"
         ]
       },
       "realtime": true,
