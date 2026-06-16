@@ -22,20 +22,20 @@
   },
   "capabilities": [
     {
-      "id": "chat",
-      "description_for_ai": "Chat with Mistral AI models. Strong at coding, math, multilingual including French. Open weights available.",
+      "id": "chat_completion",
+      "description_for_ai": "Generate text with Mistral models. Efficient European AI with strong multilingual support.",
       "intent": [
-        "mistral chat",
-        "ask mistral",
-        "mistral AI",
-        "european AI",
-        "спросить mistral"
+        "Mistral AI",
+        "French AI",
+        "European AI",
+        "chat completion Mistral",
+        "Mistral чат"
       ],
       "endpoint": "POST https://api.mistral.ai/v1/chat/completions",
       "input": {
         "model": {
           "type": "string",
-          "description": "mistral-large-latest (best), mistral-small-latest (fast), codestral-latest (code)",
+          "description": "mistral-large-latest (best), mistral-small-latest (cheap), open-mistral-nemo (free tier)",
           "required": true
         },
         "messages": {
@@ -54,9 +54,9 @@
           "type": "boolean",
           "default": false
         },
-        "tools": {
-          "type": "array",
-          "description": "Function calling tools",
+        "response_format": {
+          "type": "object",
+          "description": "{type: 'json_object'}",
           "required": false
         }
       },
@@ -64,7 +64,47 @@
         "type": "completion",
         "fields": [
           "choices[0].message.content",
-          "usage.total_tokens"
+          "usage"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "function_calling",
+      "description_for_ai": "Use Mistral with tool/function calling for agentic workflows.",
+      "intent": [
+        "Mistral tools",
+        "function calling Mistral",
+        "agent Mistral",
+        "инструменты Mistral"
+      ],
+      "endpoint": "POST https://api.mistral.ai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "tools": {
+          "type": "array",
+          "description": "[{type: 'function', function: {name, description, parameters}}]",
+          "required": true
+        },
+        "tool_choice": {
+          "type": "string",
+          "description": "auto, any, none",
+          "default": "auto"
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.tool_calls[0].function.name",
+          "choices[0].message.tool_calls[0].function.arguments"
         ]
       },
       "realtime": true,
@@ -72,11 +112,12 @@
     },
     {
       "id": "embeddings",
-      "description_for_ai": "Generate text embeddings with Mistral. Good multilingual support.",
+      "description_for_ai": "Generate text embeddings with Mistral Embed model.",
       "intent": [
-        "mistral embeddings",
-        "semantic search mistral",
-        "vectors mistral"
+        "Mistral embeddings",
+        "text embeddings",
+        "RAG Mistral",
+        "семантический поиск Mistral"
       ],
       "endpoint": "POST https://api.mistral.ai/v1/embeddings",
       "input": {
@@ -86,7 +127,7 @@
         },
         "input": {
           "type": "array",
-          "description": "List of strings to embed",
+          "description": "Array of strings to embed",
           "required": true
         }
       },
@@ -101,15 +142,50 @@
       "requires_auth": true
     },
     {
+      "id": "code_generation",
+      "description_for_ai": "Use Codestral or Mistral for code generation, completion, and review.",
+      "intent": [
+        "code Mistral",
+        "Codestral",
+        "write code Mistral",
+        "код Mistral"
+      ],
+      "endpoint": "POST https://api.mistral.ai/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "description": "codestral-latest for code-specific tasks",
+          "required": true
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "temperature": {
+          "type": "float",
+          "description": "Use 0.0-0.2 for code generation",
+          "default": 0.0
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
       "id": "fim_completion",
-      "description_for_ai": "Fill-in-the-middle code completion. Give prefix and suffix, Mistral fills the middle. Ideal for code editing.",
+      "description_for_ai": "Fill-in-the-middle code completion with Codestral. Provides prefix and suffix, Codestral fills the middle.",
       "intent": [
         "code completion",
-        "fill in the middle",
-        "code suggestion",
-        "автодополнение кода mistral"
+        "fill in middle",
+        "FIM Codestral",
+        "дополнение кода Mistral"
       ],
-      "endpoint": "POST https://api.mistral.ai/v1/fim/completions",
+      "endpoint": "POST https://codestral.mistral.ai/v1/fim/completions",
       "input": {
         "model": {
           "type": "string",
@@ -125,13 +201,13 @@
           "description": "Code after the cursor",
           "required": false
         },
-        "max_tokens": {
-          "type": "integer",
-          "required": false
-        },
         "temperature": {
           "type": "float",
           "default": 0.0
+        },
+        "max_tokens": {
+          "type": "integer",
+          "required": false
         }
       },
       "output": {
@@ -145,11 +221,11 @@
     },
     {
       "id": "list_models",
-      "description_for_ai": "List available Mistral models and their capabilities.",
+      "description_for_ai": "List all available Mistral models.",
       "intent": [
-        "mistral models",
+        "Mistral models",
         "available models",
-        "список моделей mistral"
+        "список моделей Mistral"
       ],
       "endpoint": "GET https://api.mistral.ai/v1/models",
       "input": {},
@@ -157,8 +233,7 @@
         "type": "list<model>",
         "fields": [
           "data[0].id",
-          "data[0].capabilities.completion_chat",
-          "data[0].capabilities.fine_tuning"
+          "data[0].created"
         ]
       },
       "realtime": true,
