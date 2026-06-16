@@ -196,6 +196,43 @@
       },
       "realtime": false,
       "requires_auth": true
+    },
+    {
+      "id": "get_contacts",
+      "description_for_ai": "Get contacts list from Brevo CRM with pagination.",
+      "intent": [
+        "brevo contacts",
+        "list contacts",
+        "email subscribers",
+        "контакты brevo"
+      ],
+      "endpoint": "GET https://api.brevo.com/v3/contacts",
+      "input": {
+        "limit": {
+          "type": "integer",
+          "default": 50
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0
+        },
+        "sort": {
+          "type": "string",
+          "description": "asc or desc",
+          "default": "desc"
+        }
+      },
+      "output": {
+        "type": "list<contact>",
+        "fields": [
+          "contacts[0].id",
+          "contacts[0].email",
+          "contacts[0].attributes",
+          "contacts[0].emailBlacklisted"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
