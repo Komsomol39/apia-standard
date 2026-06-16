@@ -105,6 +105,125 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "get_indicator_data",
+      "description_for_ai": "Get World Bank indicator data for any country/countries.",
+      "intent": [
+        "World Bank data",
+        "economic data",
+        "development indicators",
+        "данные Всемирного Банка"
+      ],
+      "endpoint": "GET https://api.worldbank.org/v2/country/{country}/indicator/{indicator}",
+      "input": {
+        "country": {
+          "type": "string",
+          "description": "ISO 2-letter code or 'all': US, RU, CN, all",
+          "required": true
+        },
+        "indicator": {
+          "type": "string",
+          "description": "NY.GDP.MKTP.CD (GDP), SP.POP.TOTL (population), SL.UEM.TOTL.ZS (unemployment), SI.POV.GINI (Gini)",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "json"
+        },
+        "mrv": {
+          "type": "integer",
+          "description": "Most recent N values",
+          "required": false
+        },
+        "date": {
+          "type": "string",
+          "description": "Year or range: 2020 or 2010:2020",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<record>",
+        "fields": [
+          "[1][0].country.value",
+          "[1][0].date",
+          "[1][0].value",
+          "[1][0].indicator.id"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "list_indicators",
+      "description_for_ai": "List World Bank indicators by topic or search by keyword.",
+      "intent": [
+        "World Bank indicators",
+        "economic indicators list",
+        "development metrics",
+        "показатели Всемирного Банка"
+      ],
+      "endpoint": "GET https://api.worldbank.org/v2/indicator",
+      "input": {
+        "topic": {
+          "type": "integer",
+          "description": "Topic ID: 1=Agriculture, 2=Aid, 3=Economy, 5=Education, 8=Health",
+          "required": false
+        },
+        "format": {
+          "type": "string",
+          "default": "json"
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<indicator>",
+        "fields": [
+          "[1][0].id",
+          "[1][0].name",
+          "[1][0].sourceNote",
+          "[1][0].topics[0].value"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_country_info",
+      "description_for_ai": "Get World Bank country metadata: region, income level, capital, coordinates.",
+      "intent": [
+        "country info World Bank",
+        "country metadata",
+        "income level country",
+        "данные страны Всемирный Банк"
+      ],
+      "endpoint": "GET https://api.worldbank.org/v2/country/{country}",
+      "input": {
+        "country": {
+          "type": "string",
+          "description": "ISO 2-letter code: US, RU, CN, DE, IN",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "default": "json"
+        }
+      },
+      "output": {
+        "type": "country",
+        "fields": [
+          "[1][0].name",
+          "[1][0].capitalCity",
+          "[1][0].region.value",
+          "[1][0].incomeLevel.value",
+          "[1][0].lendingType.value"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
