@@ -169,6 +169,32 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "download_photo",
+      "description_for_ai": "Trigger photo download and get download URL (required by Unsplash API terms).",
+      "intent": [
+        "download photo unsplash",
+        "unsplash download",
+        "get image url",
+        "скачать фото unsplash"
+      ],
+      "endpoint": "GET https://api.unsplash.com/photos/{id}/download",
+      "input": {
+        "id": {
+          "type": "string",
+          "description": "Photo ID from search results",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "download",
+        "fields": [
+          "url (CDN download URL)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
