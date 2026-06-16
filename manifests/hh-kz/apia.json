@@ -166,6 +166,74 @@
       },
       "realtime": false,
       "requires_auth": false
+    },
+    {
+      "id": "search_vacancies",
+      "description_for_ai": "Search job vacancies on hh.kz (Kazakhstan job board).",
+      "intent": [
+        "hh.kz вакансии",
+        "работа казахстан",
+        "вакансии казахстан"
+      ],
+      "endpoint": "GET https://api.hh.kz/vacancies",
+      "input": {
+        "text": {
+          "type": "string",
+          "required": false
+        },
+        "area": {
+          "type": "integer",
+          "description": "Region: 40=Almaty, 41=Astana",
+          "required": false
+        },
+        "salary": {
+          "type": "integer",
+          "required": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 20
+        }
+      },
+      "output": {
+        "type": "list<vacancy>",
+        "fields": [
+          "items[0].id",
+          "items[0].name",
+          "items[0].salary.from",
+          "items[0].employer.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_resume",
+      "description_for_ai": "Get public resume/CV details from hh.kz.",
+      "intent": [
+        "резюме hh.kz",
+        "cv казахстан",
+        "поиск кандидатов hh kz"
+      ],
+      "endpoint": "GET https://api.hh.kz/resumes/{resume_id}",
+      "input": {
+        "resume_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "resume",
+        "fields": [
+          "id",
+          "title",
+          "experience[0].company",
+          "skills[0].name",
+          "area.name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "agent_hints": {
