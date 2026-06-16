@@ -222,6 +222,44 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "pickup_request",
+      "description_for_ai": "Schedule a DHL Express pickup.",
+      "intent": [
+        "schedule pickup DHL",
+        "DHL забрать",
+        "pickup DHL"
+      ],
+      "endpoint": "POST https://api-eu.dhl.com/ship/v1/pickups",
+      "input": {
+        "plannedPickupDateAndTime": {
+          "type": "string",
+          "required": true
+        },
+        "closeTime": {
+          "type": "string",
+          "required": true
+        },
+        "location": {
+          "type": "string",
+          "description": "OFFICE, RECEPTION, MAILROOM, other",
+          "required": true
+        },
+        "accounts": {
+          "type": "array",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "pickup",
+        "fields": [
+          "dispatchConfirmationNumbers[0]",
+          "readyByTime"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
