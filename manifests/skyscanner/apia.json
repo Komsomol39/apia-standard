@@ -23,102 +23,82 @@
   "capabilities": [
     {
       "id": "search_flights",
-      "description_for_ai": "Search flights on Skyscanner by origin, destination, and dates.",
+      "description_for_ai": "Search flight prices on Skyscanner via RapidAPI.",
       "intent": [
-        "skyscanner flights",
-        "flight search",
+        "search flights Skyscanner",
         "cheap flights",
-        "поиск рейсов skyscanner"
-      ],
-      "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/create",
-      "input": {
-        "query": {
-          "type": "object",
-          "description": "{market: 'US', locale: 'en-US', currency: 'USD', queryLegs: [{originPlaceId: {iata: 'JFK'}, destinationPlaceId: {iata: 'LHR'}, date: {year: 2024, month: 7, day: 15}}], adults: 1, cabinClass: 'CABIN_CLASS_ECONOMY'}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "search",
-        "fields": [
-          "sessionToken (for polling results)"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_flight_results",
-      "description_for_ai": "Poll Skyscanner search results by session token.",
-      "intent": [
-        "skyscanner results",
         "flight prices",
-        "best flights",
-        "результаты skyscanner"
+        "поиск рейсов Skyscanner"
       ],
-      "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/flights/live/search/poll/{sessionToken}",
+      "endpoint": "GET https://skyscanner50.p.rapidapi.com/api/v1/searchFlights",
       "input": {
-        "sessionToken": {
+        "originSkyId": {
           "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "flights",
-        "fields": [
-          "content.results.itineraries (list of options)",
-          "content.results.pricingOptions[0].price.amount",
-          "content.sortingOptions.cheapest[0].itineraryId"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "search_hotels",
-      "description_for_ai": "Search hotels on Skyscanner.",
-      "intent": [
-        "skyscanner hotels",
-        "hotel booking skyscanner",
-        "accommodation search",
-        "отели skyscanner"
-      ],
-      "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/hotels/live/search/create",
-      "input": {
-        "query": {
-          "type": "object",
-          "description": "{market: 'US', locale: 'en-US', currency: 'USD', entityId: 'eyJlIjoiMjcxMDU0NjkiLCJzIjoiQ2l0eSIsImwiOiJlbi1VUyJ9', checkin: {year: 2024, month: 7, day: 15}, checkout: {year: 2024, month: 7, day: 18}, rooms: 1, adults: 2}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "search",
-        "fields": [
-          "sessionToken"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_autosuggest",
-      "description_for_ai": "Get airport/city autocomplete suggestions for Skyscanner search.",
-      "intent": [
-        "airport autocomplete",
-        "city search skyscanner",
-        "flight origin suggestions",
-        "автодополнение аэропорты skyscanner"
-      ],
-      "endpoint": "GET https://partners.api.skyscanner.net/apiservices/v3/autosuggest/flights",
-      "input": {
-        "query": {
-          "type": "string",
-          "description": "City or airport name",
+          "description": "Origin airport IATA: JFK",
           "required": true
         },
-        "market": {
+        "destinationSkyId": {
           "type": "string",
-          "default": "US"
+          "description": "Destination: LHR",
+          "required": true
+        },
+        "originEntityId": {
+          "type": "string",
+          "description": "Skyscanner entity ID",
+          "required": true
+        },
+        "destinationEntityId": {
+          "type": "string",
+          "required": true
+        },
+        "date": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "returnDate": {
+          "type": "string",
+          "description": "YYYY-MM-DD for round trip",
+          "required": false
+        },
+        "cabinClass": {
+          "type": "string",
+          "description": "economy, premium_economy, business, first",
+          "default": "economy"
+        },
+        "adults": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<itinerary>",
+        "fields": [
+          "itineraries[0].price.formatted",
+          "itineraries[0].legs[0].origin.displayCode",
+          "itineraries[0].legs[0].destination.displayCode",
+          "itineraries[0].legs[0].durationInMinutes",
+          "itineraries[0].legs[0].carriers.marketing[0].name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_locations",
+      "description_for_ai": "Search for airport/city identifiers to use in flight searches.",
+      "intent": [
+        "airport search Skyscanner",
+        "city codes flights",
+        "origin destination ID",
+        "коды аэропортов Skyscanner"
+      ],
+      "endpoint": "GET https://skyscanner50.p.rapidapi.com/api/v1/searchAirport",
+      "input": {
+        "query": {
+          "type": "string",
+          "description": "City or airport name: London, New York",
+          "required": true
         },
         "locale": {
           "type": "string",
@@ -126,38 +106,126 @@
         }
       },
       "output": {
-        "type": "list<place>",
+        "type": "list<location>",
         "fields": [
-          "places[0].entityId",
-          "places[0].iata",
-          "places[0].name",
-          "places[0].type (PLACE_TYPE_CITY, PLACE_TYPE_AIRPORT)"
+          "data[0].entityId",
+          "data[0].skyId",
+          "data[0].presentation.title",
+          "data[0].navigation.entityType (AIRPORT/CITY)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "flight_insights",
-      "description_for_ai": "Get cheapest prices for a route over many dates (price calendar).",
+      "id": "get_price_calendar",
+      "description_for_ai": "Get a month-view price calendar showing cheapest dates.",
       "intent": [
-        "price calendar skyscanner",
-        "cheapest flight dates",
-        "best dates to fly",
-        "календарь цен skyscanner"
+        "price calendar Skyscanner",
+        "cheapest date flights",
+        "flexible dates",
+        "дешевые даты рейсов"
       ],
-      "endpoint": "POST https://partners.api.skyscanner.net/apiservices/v3/flights/indicative/search",
+      "endpoint": "GET https://skyscanner50.p.rapidapi.com/api/v1/getCalendarMonthlyPrices",
       "input": {
-        "query": {
-          "type": "object",
-          "description": "{market: 'US', locale: 'en-US', currency: 'USD', queryLegs: [{originPlace: {queryPlace: {iata: 'JFK'}}, destinationPlace: {queryPlace: {iata: 'LHR'}}, dateRange: {startDate: {year: 2024, month: 7, day: 1}, endDate: {year: 2024, month: 7, day: 31}}}], adults: 1}",
+        "originSkyId": {
+          "type": "string",
+          "required": true
+        },
+        "destinationSkyId": {
+          "type": "string",
+          "required": true
+        },
+        "year": {
+          "type": "integer",
+          "required": true
+        },
+        "month": {
+          "type": "integer",
           "required": true
         }
       },
       "output": {
-        "type": "prices",
+        "type": "calendar",
         "fields": [
-          "content.results.quotes (prices by date)"
+          "Days[0].Day",
+          "Days[0].Price",
+          "Days[0].Direct"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_hotels",
+      "description_for_ai": "Search hotels via Skyscanner.",
+      "intent": [
+        "hotels Skyscanner",
+        "accommodation search",
+        "hotel prices",
+        "отели Skyscanner"
+      ],
+      "endpoint": "GET https://skyscanner50.p.rapidapi.com/api/v1/searchHotels",
+      "input": {
+        "entityId": {
+          "type": "string",
+          "description": "City entity ID",
+          "required": true
+        },
+        "checkin": {
+          "type": "string",
+          "description": "YYYY-MM-DD",
+          "required": true
+        },
+        "checkout": {
+          "type": "string",
+          "required": true
+        },
+        "adults": {
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "output": {
+        "type": "list<hotel>",
+        "fields": [
+          "results[0].name",
+          "results[0].price.amount",
+          "results[0].stars",
+          "results[0].reviewScore"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_nearby_airports",
+      "description_for_ai": "Find airports near a location by coordinates.",
+      "intent": [
+        "nearby airports",
+        "airports near me",
+        "closest airport",
+        "аэропорты рядом Skyscanner"
+      ],
+      "endpoint": "GET https://skyscanner50.p.rapidapi.com/api/v1/getNearbyAirports",
+      "input": {
+        "lat": {
+          "type": "number",
+          "required": true
+        },
+        "lng": {
+          "type": "number",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<airport>",
+        "fields": [
+          "current[0].navigation.entityId",
+          "current[0].skyId",
+          "current[0].presentation.title",
+          "nearby[0].skyId",
+          "nearby[0].presentation.title"
         ]
       },
       "realtime": true,
