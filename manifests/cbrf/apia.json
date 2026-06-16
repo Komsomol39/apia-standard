@@ -21,29 +21,62 @@
   "capabilities": [
     {
       "id": "get_daily_rates",
-      "description_for_ai": "Получить официальные курсы валют ЦБ РФ на конкретную дату. Используй для курса доллара, евро и других валют к рублю по официальному курсу.",
+      "description_for_ai": "Get official Bank of Russia exchange rates for a specific date. Returns all currencies in XML or JSON.",
       "intent": [
-        "курс доллара",
-        "курс евро",
+        "курс ЦБ",
         "официальный курс",
-        "ЦБ РФ курс",
-        "курс валют ЦБ",
-        "курс на дату"
+        "курс доллара ЦБ",
+        "курс рубля",
+        "cbr rates"
       ],
-      "endpoint": "GET https://www.cbr.ru/scripts/XML_daily.asp",
+      "endpoint": "GET https://www.cbr-xml-daily.ru/daily_json.js",
+      "input": {},
+      "output": {
+        "type": "rates",
+        "fields": [
+          "Date",
+          "Valute.USD.Value",
+          "Valute.EUR.Value",
+          "Valute.CNY.Value",
+          "Valute.USD.CharCode",
+          "Valute.USD.Name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_historical_rates",
+      "description_for_ai": "Get Bank of Russia rates for a specific past date.",
+      "intent": [
+        "исторический курс ЦБ",
+        "курс на дату",
+        "прошлый курс рубля"
+      ],
+      "endpoint": "GET https://www.cbr-xml-daily.ru/archive/{year}/{month}/{day}/daily_json.js",
       "input": {
-        "date_req": {
+        "year": {
           "type": "string",
-          "description": "Дата в формате DD/MM/YYYY. Без параметра — сегодня.",
-          "required": false
+          "description": "4-digit year e.g. 2024",
+          "required": true
+        },
+        "month": {
+          "type": "string",
+          "description": "2-digit month e.g. 01",
+          "required": true
+        },
+        "day": {
+          "type": "string",
+          "description": "2-digit day e.g. 15",
+          "required": true
         }
       },
       "output": {
-        "type": "xml",
+        "type": "historical_rates",
         "fields": [
-          "Valute[CharCode=USD].Value",
-          "Valute[CharCode=EUR].Value",
-          "Valute[CharCode=CNY].Value"
+          "Date",
+          "Valute.USD.Value",
+          "Valute.EUR.Value"
         ]
       },
       "realtime": false,
@@ -51,22 +84,65 @@
     },
     {
       "id": "get_key_rate",
-      "description_for_ai": "Получить текущую ключевую ставку ЦБ РФ и историю её изменений.",
+      "description_for_ai": "Get current Bank of Russia key rate (ключевая ставка) history.",
       "intent": [
         "ключевая ставка",
         "ставка ЦБ",
-        "процентная ставка России",
-        "ставка рефинансирования"
+        "процентная ставка ЦБ РФ",
+        "key rate CBR"
       ],
-      "endpoint": "GET https://www.cbr.ru/hd_base/KeyRate/",
-      "input": {},
+      "endpoint": "GET https://api.cbr.ru/KeyRate",
+      "input": {
+        "date": {
+          "type": "string",
+          "description": "Date in DD.MM.YYYY format. Omit for current.",
+          "required": false
+        }
+      },
       "output": {
-        "type": "html",
+        "type": "key_rate",
         "fields": [
-          "KeyRate table"
+          "KeyRate[0].Date",
+          "KeyRate[0].Rate"
         ]
       },
       "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "convert_currency",
+      "description_for_ai": "Convert an amount between any currencies using official CBR rates.",
+      "intent": [
+        "конвертация по курсу ЦБ",
+        "перевести валюту ЦБ",
+        "сколько долларов",
+        "сколько рублей"
+      ],
+      "endpoint": "GET https://www.cbr-xml-daily.ru/daily_json.js",
+      "input": {
+        "from_currency": {
+          "type": "string",
+          "description": "Currency code e.g. USD, EUR, CNY, RUB",
+          "required": true
+        },
+        "to_currency": {
+          "type": "string",
+          "description": "Target currency",
+          "required": true
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount to convert",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "conversion",
+        "fields": [
+          "Calculated client-side using Valute rates"
+        ]
+      },
+      "realtime": true,
       "requires_auth": false
     }
   ],
