@@ -24,33 +24,33 @@
   "capabilities": [
     {
       "id": "analyze_sentiment",
-      "description_for_ai": "Analyze overall and per-sentence sentiment: positive/negative/neutral score (-1 to 1) and magnitude.",
+      "description_for_ai": "Analyze sentiment of text or documents. Returns overall and per-sentence sentiment.",
       "intent": [
-        "sentiment analysis",
-        "is text positive",
-        "customer sentiment",
-        "тональность текста",
-        "анализ тональности"
+        "sentiment analysis Google",
+        "text sentiment NLP",
+        "positive negative text",
+        "анализ тональности Google NLP"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeSentiment",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: PLAIN_TEXT or HTML, content: 'text to analyze', language: 'en'}",
+          "description": "{type: 'PLAIN_TEXT'|'HTML', content: 'text', language: 'en'}",
           "required": true
         },
         "encodingType": {
           "type": "string",
+          "description": "UTF8, UTF16, UTF32",
           "default": "UTF8"
         }
       },
       "output": {
         "type": "sentiment",
         "fields": [
-          "documentSentiment.score (-1 to 1)",
-          "documentSentiment.magnitude (0 to inf)",
-          "sentences[0].sentiment.score",
-          "sentences[0].text.content"
+          "documentSentiment.score (-1.0 to 1.0)",
+          "documentSentiment.magnitude (0.0+)",
+          "sentences[0].text.content",
+          "sentences[0].sentiment.score"
         ]
       },
       "realtime": true,
@@ -58,31 +58,26 @@
     },
     {
       "id": "analyze_entities",
-      "description_for_ai": "Extract named entities: people, organizations, locations, dates, events. Returns Wikipedia links and salience scores.",
+      "description_for_ai": "Extract named entities from text with Wikipedia links and salience scores.",
       "intent": [
-        "named entity recognition",
-        "NER",
-        "extract entities",
-        "find people in text",
-        "организации в тексте"
+        "entity extraction Google",
+        "named entities NLP",
+        "NER Google Cloud",
+        "извлечение сущностей Google NLP"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeEntities",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: PLAIN_TEXT, content: text, language: 'en'}",
+          "description": "{type: 'PLAIN_TEXT', content: 'text'}",
           "required": true
-        },
-        "encodingType": {
-          "type": "string",
-          "default": "UTF8"
         }
       },
       "output": {
         "type": "entities",
         "fields": [
           "entities[0].name",
-          "entities[0].type (PERSON|ORGANIZATION|LOCATION|EVENT|DATE)",
+          "entities[0].type (PERSON|LOCATION|ORGANIZATION|EVENT|WORK_OF_ART|CONSUMER_GOOD)",
           "entities[0].salience",
           "entities[0].metadata.wikipedia_url"
         ]
@@ -92,31 +87,30 @@
     },
     {
       "id": "classify_content",
-      "description_for_ai": "Classify text into 700+ content categories (IAB taxonomy). For content routing, ad targeting, topic detection.",
+      "description_for_ai": "Classify text into 700+ content categories using Google's taxonomy.",
       "intent": [
-        "classify text",
-        "content category",
-        "topic detection",
-        "content classification",
-        "классификация контента"
+        "classify text Google",
+        "content categories",
+        "topic classification NLP",
+        "классификация контента Google NLP"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:classifyText",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: PLAIN_TEXT, content: 'text at least 20 words'}",
+          "description": "{type: 'PLAIN_TEXT', content: 'text (min 20 tokens)'}",
           "required": true
         },
         "classificationModelOptions": {
           "type": "object",
-          "description": "{v2Model: {contentCategoriesVersion: V2}} for 1000+ categories",
+          "description": "{v2Model: {contentCategoriesVersion: 'V2'}}",
           "required": false
         }
       },
       "output": {
         "type": "categories",
         "fields": [
-          "categories[0].name",
+          "categories[0].name (/Finance/Banking)",
           "categories[0].confidence"
         ]
       },
@@ -125,19 +119,18 @@
     },
     {
       "id": "analyze_syntax",
-      "description_for_ai": "Parse text syntax: tokens, part-of-speech tags, dependency tree, lemmas. For NLP pipelines.",
+      "description_for_ai": "Parse text into tokens with part-of-speech and dependency analysis.",
       "intent": [
-        "syntax analysis",
+        "syntax analysis Google",
         "POS tagging",
         "parse text",
-        "dependency parsing",
-        "синтаксический анализ"
+        "синтаксический анализ Google NLP"
       ],
       "endpoint": "POST https://language.googleapis.com/v1/documents:analyzeSyntax",
       "input": {
         "document": {
           "type": "object",
-          "description": "{type: PLAIN_TEXT, content: text, language: 'en'}",
+          "description": "{type: 'PLAIN_TEXT', content: 'text'}",
           "required": true
         },
         "encodingType": {
@@ -150,8 +143,40 @@
         "fields": [
           "tokens[0].text.content",
           "tokens[0].partOfSpeech.tag (NOUN|VERB|ADJ...)",
-          "tokens[0].lemma",
-          "tokens[0].dependencyEdge.label"
+          "tokens[0].dependencyEdge.label (NSUBJ|DOBJ...)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "annotate_text",
+      "description_for_ai": "Run all NLP analyses in one call: sentiment, entities, syntax, categories.",
+      "intent": [
+        "full NLP analysis",
+        "all annotations Google",
+        "comprehensive text analysis",
+        "полный анализ текста Google NLP"
+      ],
+      "endpoint": "POST https://language.googleapis.com/v1/documents:annotateText",
+      "input": {
+        "document": {
+          "type": "object",
+          "required": true
+        },
+        "features": {
+          "type": "object",
+          "description": "{extractSyntax: true, extractEntities: true, extractDocumentSentiment: true, classifyText: true}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "annotations",
+        "fields": [
+          "documentSentiment.score",
+          "entities[0].name",
+          "tokens[0].text.content",
+          "categories[0].name"
         ]
       },
       "realtime": true,
