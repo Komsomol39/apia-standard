@@ -144,6 +144,39 @@
       },
       "realtime": true,
       "requires_auth": false
+    },
+    {
+      "id": "get_metal_rates",
+      "description_for_ai": "Get official Bank of Russia precious metals prices (gold, silver, platinum, palladium).",
+      "intent": [
+        "цена золота ЦБ",
+        "металлы ЦБ РФ",
+        "gold price CBR",
+        "драгметаллы ЦБ"
+      ],
+      "endpoint": "https://www.cbr-xml-daily.ru/metall/getxml.aspx",
+      "input": {
+        "date_req1": {
+          "type": "string",
+          "description": "Start date DD/MM/YYYY",
+          "required": true
+        },
+        "date_req2": {
+          "type": "string",
+          "description": "End date DD/MM/YYYY",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "metals",
+        "fields": [
+          "Record.Code (1=gold, 2=silver, 3=platinum, 4=palladium)",
+          "Record.Buy (покупка)",
+          "Record.Sell (продажа)"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
