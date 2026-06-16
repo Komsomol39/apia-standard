@@ -21,14 +21,48 @@
   },
   "capabilities": [
     {
-      "id": "get_price_estimates",
-      "description_for_ai": "Get ride price estimates for Uber products between two locations.",
+      "id": "get_products",
+      "description_for_ai": "Get available Uber ride products (UberX, UberXL, Comfort, Black) for a location.",
       "intent": [
-        "uber price",
-        "ride estimate",
-        "how much uber",
-        "стоимость uber",
-        "цена uber"
+        "Uber products",
+        "available rides",
+        "ride types Uber",
+        "виды поездок Uber"
+      ],
+      "endpoint": "GET https://api.uber.com/v1.2/products",
+      "input": {
+        "latitude": {
+          "type": "float",
+          "description": "Pickup latitude",
+          "required": true
+        },
+        "longitude": {
+          "type": "float",
+          "description": "Pickup longitude",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<product>",
+        "fields": [
+          "products[0].product_id",
+          "products[0].display_name",
+          "products[0].description",
+          "products[0].capacity",
+          "products[0].image"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_price_estimate",
+      "description_for_ai": "Get price estimate for Uber rides between two locations.",
+      "intent": [
+        "Uber price",
+        "ride cost estimate",
+        "fare estimate Uber",
+        "стоимость поездки Uber"
       ],
       "endpoint": "GET https://api.uber.com/v1.2/estimates/price",
       "input": {
@@ -47,11 +81,6 @@
         "end_longitude": {
           "type": "float",
           "required": true
-        },
-        "seat_count": {
-          "type": "integer",
-          "description": "Number of seats for uberPOOL",
-          "default": 2
         }
       },
       "output": {
@@ -59,7 +88,8 @@
         "fields": [
           "prices[0].display_name",
           "prices[0].estimate",
-          "prices[0].minimum",
+          "prices[0].low_estimate",
+          "prices[0].high_estimate",
           "prices[0].duration",
           "prices[0].distance"
         ]
@@ -68,13 +98,13 @@
       "requires_auth": true
     },
     {
-      "id": "get_time_estimates",
-      "description_for_ai": "Get ETA (time until pickup) for Uber products at a location.",
+      "id": "get_time_estimate",
+      "description_for_ai": "Get ETA (pickup time estimate) for Uber rides at a location.",
       "intent": [
-        "uber ETA",
-        "uber arrival time",
-        "pickup time uber",
-        "время ожидания uber"
+        "Uber ETA",
+        "pickup time Uber",
+        "wait time Uber",
+        "время ожидания Uber"
       ],
       "endpoint": "GET https://api.uber.com/v1.2/estimates/time",
       "input": {
@@ -88,49 +118,98 @@
         },
         "product_id": {
           "type": "string",
-          "description": "Specific product UUID. Omit for all products.",
+          "description": "Filter for specific product",
           "required": false
         }
       },
       "output": {
-        "type": "list<estimate>",
+        "type": "list<time_estimate>",
         "fields": [
           "times[0].display_name",
-          "times[0].estimate (seconds)",
-          "times[0].product_id"
+          "times[0].estimate (seconds)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_products",
-      "description_for_ai": "Get available Uber products at a location (UberX, Comfort, Black, etc.).",
+      "id": "request_ride",
+      "description_for_ai": "Request an Uber ride for a user (requires rider OAuth).",
       "intent": [
-        "uber products",
-        "available rides uber",
-        "uber types",
-        "типы uber"
+        "request Uber",
+        "book ride Uber",
+        "order Uber",
+        "заказать Uber"
       ],
-      "endpoint": "GET https://api.uber.com/v1.2/products",
+      "endpoint": "POST https://api.uber.com/v1.2/requests",
       "input": {
-        "latitude": {
+        "fare_id": {
+          "type": "string",
+          "description": "Fare ID from upfront fare request",
+          "required": false
+        },
+        "product_id": {
+          "type": "string",
+          "required": true
+        },
+        "start_latitude": {
           "type": "float",
           "required": true
         },
-        "longitude": {
+        "start_longitude": {
+          "type": "float",
+          "required": true
+        },
+        "end_latitude": {
+          "type": "float",
+          "required": true
+        },
+        "end_longitude": {
           "type": "float",
           "required": true
         }
       },
       "output": {
-        "type": "list<product>",
+        "type": "request",
         "fields": [
-          "products[0].product_id",
-          "products[0].display_name",
-          "products[0].description",
-          "products[0].capacity",
-          "products[0].image"
+          "request_id",
+          "status",
+          "driver.name",
+          "driver.phone_number",
+          "vehicle.make",
+          "vehicle.model",
+          "eta"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_ride_status",
+      "description_for_ai": "Get status of a current Uber ride request.",
+      "intent": [
+        "Uber ride status",
+        "track Uber",
+        "driver location Uber",
+        "статус поездки Uber"
+      ],
+      "endpoint": "GET https://api.uber.com/v1.2/requests/{request_id}",
+      "input": {
+        "request_id": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "request",
+        "fields": [
+          "status",
+          "driver.name",
+          "driver.rating",
+          "location.latitude",
+          "location.longitude",
+          "eta",
+          "vehicle.license_plate"
         ]
       },
       "realtime": true,
@@ -138,12 +217,12 @@
     },
     {
       "id": "get_ride_history",
-      "description_for_ai": "Get authenticated user's Uber ride history.",
+      "description_for_ai": "Get the authenticated user's Uber ride history.",
       "intent": [
-        "uber history",
+        "Uber history",
         "past rides",
         "ride receipts",
-        "история uber"
+        "история поездок Uber"
       ],
       "endpoint": "GET https://api.uber.com/v1.2/history",
       "input": {
@@ -153,18 +232,17 @@
         },
         "limit": {
           "type": "integer",
-          "description": "Max 50",
           "default": 5
         }
       },
       "output": {
         "type": "list<trip>",
         "fields": [
-          "history[0].status",
           "history[0].start_city.display_name",
           "history[0].distance",
           "history[0].start_time",
-          "history[0].end_time"
+          "history[0].end_time",
+          "history[0].status"
         ]
       },
       "realtime": true,
