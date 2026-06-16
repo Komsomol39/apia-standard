@@ -22,41 +22,37 @@
   "capabilities": [
     {
       "id": "create_assistant",
-      "description_for_ai": "Create an OpenAI Assistant with instructions, tools (code_interpreter, file_search, custom functions), and knowledge files.",
+      "description_for_ai": "Create an OpenAI Assistant with custom instructions, tools, and knowledge files.",
       "intent": [
-        "create assistant openai",
-        "build AI agent",
+        "create assistant OpenAI",
+        "AI assistant setup",
         "custom GPT API",
-        "создать ассистента openai"
+        "создать ассистента OpenAI"
       ],
       "endpoint": "POST https://api.openai.com/v1/assistants",
       "input": {
-        "model": {
-          "type": "string",
-          "description": "gpt-4o, gpt-4o-mini",
-          "required": true
-        },
         "name": {
           "type": "string",
-          "required": false
+          "required": true
         },
         "instructions": {
           "type": "string",
-          "description": "System prompt / role for the assistant",
+          "description": "System prompt for the assistant",
           "required": false
+        },
+        "model": {
+          "type": "string",
+          "description": "gpt-4o, gpt-4o-mini, gpt-4-turbo, gpt-3.5-turbo",
+          "required": true
         },
         "tools": {
           "type": "array",
-          "description": "[{type: code_interpreter}, {type: file_search}, {type: function, function: {name, description, parameters}}]",
+          "description": "[{type: 'code_interpreter'}, {type: 'file_search'}, {type: 'function', function: {name, description, parameters}}]",
           "required": false
         },
         "tool_resources": {
           "type": "object",
-          "description": "{file_search: {vector_store_ids: ['vs_xxx']}} to add knowledge base",
-          "required": false
-        },
-        "temperature": {
-          "type": "float",
+          "description": "{file_search: {vector_store_ids: [...]}, code_interpreter: {file_ids: [...]}}",
           "required": false
         }
       },
@@ -67,7 +63,34 @@
           "name",
           "model",
           "instructions",
-          "tools",
+          "tools"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_thread",
+      "description_for_ai": "Create a conversation thread for an OpenAI Assistant. Threads hold messages.",
+      "intent": [
+        "create thread OpenAI",
+        "start conversation",
+        "new thread",
+        "новый тред OpenAI"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/threads",
+      "input": {
+        "messages": {
+          "type": "array",
+          "description": "Optional initial messages: [{role: 'user', content: 'Hello'}]",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "thread",
+        "fields": [
+          "id",
+          "object",
           "created_at"
         ]
       },
@@ -75,28 +98,68 @@
       "requires_auth": true
     },
     {
-      "id": "create_thread_and_run",
-      "description_for_ai": "Create a thread and run an assistant in one call. The simplest way to get a response from an assistant.",
+      "id": "add_message",
+      "description_for_ai": "Add a user message to an OpenAI Assistants thread.",
       "intent": [
-        "run assistant openai",
-        "assistant response",
-        "chat with assistant",
-        "запустить ассистента openai"
+        "add message thread",
+        "send message assistant",
+        "user message thread",
+        "добавить сообщение OpenAI"
       ],
-      "endpoint": "POST https://api.openai.com/v1/threads/runs",
+      "endpoint": "POST https://api.openai.com/v1/threads/{thread_id}/messages",
       "input": {
-        "assistant_id": {
+        "thread_id": {
           "type": "string",
           "required": true
         },
-        "thread": {
-          "type": "object",
-          "description": "{messages: [{role: user, content: 'Your question here'}]}",
+        "role": {
+          "type": "string",
+          "default": "user"
+        },
+        "content": {
+          "type": "string or array",
+          "description": "Text or array of content blocks with file attachments",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "message",
+        "fields": [
+          "id",
+          "thread_id",
+          "role",
+          "content[0].text.value"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "run_thread",
+      "description_for_ai": "Run an assistant on a thread to generate a response.",
+      "intent": [
+        "run assistant",
+        "generate response",
+        "execute assistant",
+        "запустить ассистента OpenAI"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/threads/{thread_id}/runs",
+      "input": {
+        "thread_id": {
+          "type": "string",
+          "required": true
+        },
+        "assistant_id": {
+          "type": "string",
           "required": true
         },
         "instructions": {
           "type": "string",
           "description": "Override assistant instructions for this run",
+          "required": false
+        },
+        "additional_messages": {
+          "type": "array",
           "required": false
         }
       },
@@ -104,8 +167,8 @@
         "type": "run",
         "fields": [
           "id",
+          "status (queued/in_progress/completed/failed)",
           "thread_id",
-          "status",
           "assistant_id"
         ]
       },
@@ -114,12 +177,12 @@
     },
     {
       "id": "get_messages",
-      "description_for_ai": "Get messages from a thread after a run completes. Poll run status first.",
+      "description_for_ai": "Get all messages from an OpenAI Assistants thread.",
       "intent": [
-        "get assistant messages",
-        "assistant reply",
-        "thread messages openai",
-        "ответ ассистента"
+        "get messages thread",
+        "conversation history",
+        "thread messages",
+        "сообщения треда OpenAI"
       ],
       "endpoint": "GET https://api.openai.com/v1/threads/{thread_id}/messages",
       "input": {
@@ -140,10 +203,10 @@
       "output": {
         "type": "list<message>",
         "fields": [
+          "data[0].id",
           "data[0].role",
           "data[0].content[0].text.value",
-          "data[0].created_at",
-          "data[0].run_id"
+          "data[0].created_at"
         ]
       },
       "realtime": true,
@@ -151,24 +214,24 @@
     },
     {
       "id": "upload_file",
-      "description_for_ai": "Upload a file to use as knowledge base for an assistant via file_search.",
+      "description_for_ai": "Upload a file to use with OpenAI Assistants for file_search or code_interpreter.",
       "intent": [
-        "upload file assistant",
-        "assistant knowledge",
-        "file search openai",
-        "загрузить файл ассистенту"
+        "upload file OpenAI",
+        "assistant file",
+        "document assistant",
+        "файл ассистента OpenAI"
       ],
       "endpoint": "POST https://api.openai.com/v1/files",
       "input": {
         "file": {
           "type": "file",
-          "description": "File to upload: PDF, DOCX, TXT, CSV, MD, etc.",
+          "description": "Document, code, or data file",
           "required": true
         },
         "purpose": {
           "type": "string",
-          "description": "assistants (for knowledge base) or fine-tune",
-          "required": true
+          "description": "assistants or fine-tune or vision",
+          "default": "assistants"
         }
       },
       "output": {
@@ -177,46 +240,8 @@
           "id",
           "filename",
           "bytes",
-          "purpose",
-          "status"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "vector_store",
-      "description_for_ai": "Create a vector store and attach files for knowledge retrieval in Assistants.",
-      "intent": [
-        "vector store assistants",
-        "knowledge base AI",
-        "file search",
-        "база знаний ассистент"
-      ],
-      "endpoint": "POST https://api.openai.com/v1/vector_stores",
-      "input": {
-        "name": {
-          "type": "string",
-          "required": false
-        },
-        "file_ids": {
-          "type": "array",
-          "description": "List of uploaded file IDs to include",
-          "required": false
-        },
-        "expires_after": {
-          "type": "object",
-          "description": "{anchor: 'last_active_at', days: 7}",
-          "required": false
-        }
-      },
-      "output": {
-        "type": "vector_store",
-        "fields": [
-          "id",
-          "name",
-          "status",
-          "file_counts.completed"
+          "created_at",
+          "purpose"
         ]
       },
       "realtime": true,
