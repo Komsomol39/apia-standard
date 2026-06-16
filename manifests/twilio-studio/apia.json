@@ -24,21 +24,21 @@
       "id": "trigger_flow",
       "description_for_ai": "Trigger a Twilio Studio flow execution via REST API.",
       "intent": [
-        "trigger studio flow",
-        "start studio flow",
-        "twilio automation",
-        "запустить flow twilio studio"
+        "trigger Twilio flow",
+        "start Studio flow",
+        "Twilio automation",
+        "запустить поток Twilio"
       ],
       "endpoint": "POST https://studio.twilio.com/v2/Flows/{FlowSid}/Executions",
       "input": {
         "FlowSid": {
           "type": "string",
-          "description": "Flow SID from Twilio Console",
+          "description": "Flow SID: FWxxx",
           "required": true
         },
         "To": {
           "type": "string",
-          "description": "Phone number to send to (E.164)",
+          "description": "Phone number to call/text",
           "required": true
         },
         "From": {
@@ -48,7 +48,7 @@
         },
         "Parameters": {
           "type": "object",
-          "description": "Custom JSON params passed to flow",
+          "description": "Custom variables to pass to flow: {name: 'John', order_id: '123'}",
           "required": false
         }
       },
@@ -58,77 +58,7 @@
           "sid",
           "status",
           "flow_sid",
-          "date_created"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_execution",
-      "description_for_ai": "Get status of a Twilio Studio flow execution.",
-      "intent": [
-        "execution status studio",
-        "flow run status",
-        "twilio studio status",
-        "статус выполнения studio twilio"
-      ],
-      "endpoint": "GET https://studio.twilio.com/v2/Flows/{FlowSid}/Executions/{ExecutionSid}",
-      "input": {
-        "FlowSid": {
-          "type": "string",
-          "required": true
-        },
-        "ExecutionSid": {
-          "type": "string",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "execution",
-        "fields": [
-          "sid",
-          "status",
-          "date_created",
-          "date_updated",
-          "context"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "list_executions",
-      "description_for_ai": "List executions of a Twilio Studio flow.",
-      "intent": [
-        "list studio executions",
-        "flow history",
-        "twilio studio logs",
-        "история выполнений studio"
-      ],
-      "endpoint": "GET https://studio.twilio.com/v2/Flows/{FlowSid}/Executions",
-      "input": {
-        "FlowSid": {
-          "type": "string",
-          "required": true
-        },
-        "DateCreatedFrom": {
-          "type": "string",
-          "description": "ISO 8601 filter",
-          "required": false
-        },
-        "PageSize": {
-          "type": "integer",
-          "default": 20
-        }
-      },
-      "output": {
-        "type": "list<execution>",
-        "fields": [
-          "executions[0].sid",
-          "executions[0].status",
-          "executions[0].to",
-          "executions[0].date_created"
+          "context.flow.variables"
         ]
       },
       "realtime": true,
@@ -136,12 +66,12 @@
     },
     {
       "id": "list_flows",
-      "description_for_ai": "List all Twilio Studio flows in an account.",
+      "description_for_ai": "List all Twilio Studio flows in the account.",
       "intent": [
-        "list studio flows",
-        "my flows twilio",
-        "studio automation list",
-        "список flows twilio studio"
+        "list flows Twilio",
+        "Studio flows",
+        "my Twilio flows",
+        "потоки Twilio Studio"
       ],
       "endpoint": "GET https://studio.twilio.com/v2/Flows",
       "input": {},
@@ -158,15 +88,15 @@
       "requires_auth": true
     },
     {
-      "id": "end_execution",
-      "description_for_ai": "End an active Twilio Studio flow execution.",
+      "id": "get_execution_status",
+      "description_for_ai": "Get the status of a Twilio Studio flow execution.",
       "intent": [
-        "end execution studio",
-        "stop flow twilio",
-        "cancel studio execution",
-        "остановить flow twilio studio"
+        "execution status Twilio",
+        "flow status",
+        "call status Studio",
+        "статус выполнения Twilio"
       ],
-      "endpoint": "DELETE https://studio.twilio.com/v2/Flows/{FlowSid}/Executions/{ExecutionSid}",
+      "endpoint": "GET https://studio.twilio.com/v2/Flows/{FlowSid}/Executions/{ExecutionSid}",
       "input": {
         "FlowSid": {
           "type": "string",
@@ -178,9 +108,86 @@
         }
       },
       "output": {
-        "type": "status",
+        "type": "execution",
         "fields": [
-          "204 No Content on success"
+          "sid",
+          "status (active/ended)",
+          "context",
+          "date_created",
+          "date_updated"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "send_sms_flow",
+      "description_for_ai": "Use a Twilio Studio SMS flow to send contextual messages.",
+      "intent": [
+        "send SMS Twilio Studio",
+        "SMS automation",
+        "text flow Twilio",
+        "SMS автоматизация Twilio"
+      ],
+      "endpoint": "POST https://studio.twilio.com/v2/Flows/{FlowSid}/Executions",
+      "input": {
+        "FlowSid": {
+          "type": "string",
+          "required": true
+        },
+        "To": {
+          "type": "string",
+          "description": "Recipient phone: +1234567890",
+          "required": true
+        },
+        "From": {
+          "type": "string",
+          "required": true
+        },
+        "Parameters": {
+          "type": "object",
+          "description": "{message: 'Your order is ready', order_number: '12345'}",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "execution",
+        "fields": [
+          "sid",
+          "status",
+          "context"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "list_executions",
+      "description_for_ai": "List all executions of a Twilio Studio flow.",
+      "intent": [
+        "Twilio executions",
+        "flow history",
+        "execution log Twilio",
+        "история выполнений Twilio"
+      ],
+      "endpoint": "GET https://studio.twilio.com/v2/Flows/{FlowSid}/Executions",
+      "input": {
+        "FlowSid": {
+          "type": "string",
+          "required": true
+        },
+        "PageSize": {
+          "type": "integer",
+          "default": 50
+        }
+      },
+      "output": {
+        "type": "list<execution>",
+        "fields": [
+          "executions[0].sid",
+          "executions[0].status",
+          "executions[0].date_created",
+          "executions[0].contact_channel_address"
         ]
       },
       "realtime": true,
