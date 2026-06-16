@@ -23,28 +23,30 @@
   "capabilities": [
     {
       "id": "list_issues",
-      "description_for_ai": "List Linear issues with filters by team, status, assignee, priority. Uses GraphQL.",
+      "description_for_ai": "List issues in Linear. Filter by team, project, assignee, state, priority.",
       "intent": [
-        "linear issues",
-        "tickets linear",
-        "task list linear",
-        "задачи linear"
+        "Linear issues",
+        "bug list Linear",
+        "tasks Linear",
+        "задачи Linear"
       ],
       "endpoint": "POST https://api.linear.app/graphql",
       "input": {
         "query": {
-          "type": "string",
-          "description": "GraphQL query: {issues(filter: {state: {name: {eq: \"In Progress\"}}, assignee: {email: {eq: \"me@example.com\"}}}) {nodes {id title state {name} priority assignee {name} createdAt url}}}",
+          "type": "graphql",
+          "description": "GraphQL query: { issues(filter: {team: {name: {eq: \"Engineering\"}}, state: {name: {eq: \"In Progress\"}}}) { nodes { id title state { name } assignee { name } priority createdAt } } }",
           "required": true
         }
       },
       "output": {
         "type": "list<issue>",
         "fields": [
-          "data.issues.nodes[0].id",
-          "data.issues.nodes[0].title",
-          "data.issues.nodes[0].state.name",
-          "data.issues.nodes[0].priority"
+          "id",
+          "title",
+          "state.name",
+          "assignee.name",
+          "priority",
+          "createdAt"
         ]
       },
       "realtime": true,
@@ -52,56 +54,28 @@
     },
     {
       "id": "create_issue",
-      "description_for_ai": "Create a new Linear issue with title, description, team, priority, and assignee.",
+      "description_for_ai": "Create a new issue in Linear with title, description, assignee, and priority.",
       "intent": [
-        "create linear issue",
-        "new ticket linear",
-        "create task linear",
-        "создать задачу linear"
+        "create issue Linear",
+        "new task Linear",
+        "bug report Linear",
+        "создать задачу Linear"
       ],
       "endpoint": "POST https://api.linear.app/graphql",
       "input": {
-        "query": {
-          "type": "string",
-          "description": "GraphQL mutation: mutation { issueCreate(input: {title: \"Bug title\", description: \"Details\", teamId: \"TEAM_ID\", priority: 2, assigneeId: \"USER_ID\", labelIds: [\"LABEL_ID\"]}) { success issue { id url } } }",
+        "mutation": {
+          "type": "graphql",
+          "description": "mutation { issueCreate(input: {teamId: \"team-id\", title: \"Title\", description: \"Markdown desc\", assigneeId: \"user-id\", priority: 1, labelIds: [\"label-id\"]}) { success issue { id identifier title url } } }",
           "required": true
         }
       },
       "output": {
         "type": "issue",
         "fields": [
-          "data.issueCreate.success",
-          "data.issueCreate.issue.id",
-          "data.issueCreate.issue.url"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "get_teams",
-      "description_for_ai": "Get all Linear teams in the workspace with their states and members.",
-      "intent": [
-        "linear teams",
-        "team list linear",
-        "workspace teams",
-        "команды linear"
-      ],
-      "endpoint": "POST https://api.linear.app/graphql",
-      "input": {
-        "query": {
-          "type": "string",
-          "description": "GraphQL query: {teams {nodes {id name key states {nodes {id name type}} members {nodes {id name email}}}}}",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "list<team>",
-        "fields": [
-          "data.teams.nodes[0].id",
-          "data.teams.nodes[0].name",
-          "data.teams.nodes[0].key",
-          "data.teams.nodes[0].states.nodes"
+          "issueCreate.success",
+          "issueCreate.issue.id",
+          "issueCreate.issue.identifier",
+          "issueCreate.issue.url"
         ]
       },
       "realtime": true,
@@ -109,55 +83,109 @@
     },
     {
       "id": "update_issue",
-      "description_for_ai": "Update a Linear issue: change status, priority, assignee, or add comment.",
+      "description_for_ai": "Update issue state, assignee, priority, or description.",
       "intent": [
-        "update linear issue",
-        "change status linear",
-        "assign issue linear",
-        "обновить задачу linear"
+        "update issue Linear",
+        "close issue Linear",
+        "assign issue Linear",
+        "обновить задачу Linear"
       ],
       "endpoint": "POST https://api.linear.app/graphql",
       "input": {
-        "query": {
-          "type": "string",
-          "description": "GraphQL mutation: mutation { issueUpdate(id: \"ISSUE_ID\", input: {stateId: \"STATE_ID\", priority: 1, assigneeId: \"USER_ID\"}) { success issue { id state { name } } } }",
+        "mutation": {
+          "type": "graphql",
+          "description": "mutation { issueUpdate(id: \"issue-id\", input: {stateId: \"done-state-id\", assigneeId: \"user-id\"}) { success } }",
           "required": true
         }
       },
       "output": {
-        "type": "issue",
+        "type": "update",
         "fields": [
-          "data.issueUpdate.success",
-          "data.issueUpdate.issue.id",
-          "data.issueUpdate.issue.state.name"
+          "issueUpdate.success"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_projects",
-      "description_for_ai": "Get Linear projects (epics/initiatives) in the workspace.",
+      "id": "list_teams",
+      "description_for_ai": "List all teams in the Linear workspace.",
       "intent": [
-        "linear projects",
-        "epics linear",
-        "initiatives linear",
-        "проекты linear"
+        "Linear teams",
+        "workspace teams",
+        "команды Linear"
       ],
       "endpoint": "POST https://api.linear.app/graphql",
       "input": {
         "query": {
-          "type": "string",
-          "description": "{ projects { nodes { id name state progress teams { nodes { id name }} } } }",
+          "type": "graphql",
+          "description": "{ teams { nodes { id name description members { nodes { name } } } } }",
           "required": true
         }
       },
       "output": {
-        "type": "list<project>",
+        "type": "list<team>",
         "fields": [
-          "data.projects.nodes[0].id",
-          "data.projects.nodes[0].name",
-          "data.projects.nodes[0].state"
+          "id",
+          "name",
+          "description"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_issues",
+      "description_for_ai": "Search issues by keyword across all teams.",
+      "intent": [
+        "search Linear",
+        "find issue",
+        "issue search",
+        "поиск задач Linear"
+      ],
+      "endpoint": "POST https://api.linear.app/graphql",
+      "input": {
+        "query": {
+          "type": "graphql",
+          "description": "{ issueSearch(query: \"search term\", last: 20) { nodes { id title state { name } assignee { name } url } } }",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<issue>",
+        "fields": [
+          "id",
+          "title",
+          "state.name",
+          "url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_project",
+      "description_for_ai": "Create a new project in Linear to group related issues.",
+      "intent": [
+        "create project Linear",
+        "new project",
+        "project Linear",
+        "проект Linear"
+      ],
+      "endpoint": "POST https://api.linear.app/graphql",
+      "input": {
+        "mutation": {
+          "type": "graphql",
+          "description": "mutation { projectCreate(input: {name: \"Project name\", description: \"Markdown desc\", teamIds: [\"team-id\"], targetDate: \"2024-12-31\"}) { success project { id name url } } }",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "project",
+        "fields": [
+          "projectCreate.project.id",
+          "projectCreate.project.name",
+          "projectCreate.project.url"
         ]
       },
       "realtime": true,
