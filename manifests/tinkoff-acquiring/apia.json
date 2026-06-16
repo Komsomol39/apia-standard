@@ -23,58 +23,52 @@
   "capabilities": [
     {
       "id": "init_payment",
-      "description_for_ai": "Инициировать платёж через Тинькофф эквайринг. Возвращает ссылку на страницу оплаты.",
+      "description_for_ai": "Initialize a Tinkoff payment and get a payment URL for the customer.",
       "intent": [
-        "тинькофф эквайринг",
-        "оплата тинькофф",
-        "tinkoff payment",
-        "платёж тинькофф банк"
+        "Tinkoff payment",
+        "оплата Тинькофф",
+        "платёж Тинькофф",
+        "Tinkoff эквайринг"
       ],
       "endpoint": "POST https://securepay.tinkoff.ru/v2/Init",
       "input": {
         "TerminalKey": {
           "type": "string",
-          "description": "Ключ терминала из личного кабинета",
+          "description": "Your terminal key",
           "required": true
         },
         "Amount": {
           "type": "integer",
-          "description": "Сумма в копейках (100 = 1 рубль)",
+          "description": "Amount in kopecks: 1000 = 10 rubles",
           "required": true
         },
         "OrderId": {
           "type": "string",
-          "description": "Уникальный идентификатор заказа в вашей системе",
+          "description": "Your unique order ID",
           "required": true
         },
         "Description": {
           "type": "string",
-          "description": "Описание заказа",
+          "description": "Payment description shown to customer",
           "required": false
         },
-        "SuccessURL": {
+        "CustomerKey": {
           "type": "string",
-          "description": "URL для редиректа после успешной оплаты",
+          "description": "Customer ID for recurring payments",
           "required": false
         },
-        "FailURL": {
+        "Recurrent": {
           "type": "string",
-          "description": "URL для редиректа при отказе",
-          "required": false
-        },
-        "Receipt": {
-          "type": "object",
-          "description": "{Email, Taxation: 'osn', Items: [{Name, Price, Quantity, Amount, Tax: 'vat20'}]}",
+          "description": "Y to setup recurring",
           "required": false
         }
       },
       "output": {
         "type": "payment",
         "fields": [
-          "Success",
-          "PaymentURL",
           "PaymentId",
-          "Status"
+          "Status",
+          "PaymentURL (redirect customer here)"
         ]
       },
       "realtime": true,
@@ -82,11 +76,11 @@
     },
     {
       "id": "get_payment_state",
-      "description_for_ai": "Получить статус платежа по PaymentId.",
+      "description_for_ai": "Get current payment status.",
       "intent": [
-        "статус платежа тинькофф",
-        "проверить оплату тинькофф",
-        "tinkoff payment status"
+        "payment status Tinkoff",
+        "статус платежа Тинькофф",
+        "проверить оплату Тинькофф"
       ],
       "endpoint": "POST https://securepay.tinkoff.ru/v2/GetState",
       "input": {
@@ -96,21 +90,14 @@
         },
         "PaymentId": {
           "type": "string",
-          "description": "ID платежа из Init ответа",
-          "required": true
-        },
-        "Token": {
-          "type": "string",
-          "description": "SHA-256 подпись запроса",
           "required": true
         }
       },
       "output": {
         "type": "payment",
         "fields": [
-          "Success",
           "PaymentId",
-          "Status",
+          "Status (NEW/FORM_SHOWED/3DS_CHECKING/CONFIRMED/REJECTED/REFUNDED)",
           "Amount",
           "OrderId"
         ]
@@ -119,56 +106,12 @@
       "requires_auth": true
     },
     {
-      "id": "cancel_payment",
-      "description_for_ai": "Отменить платёж или выполнить возврат через Тинькофф эквайринг.",
-      "intent": [
-        "отмена тинькофф",
-        "возврат тинькофф",
-        "tinkoff refund",
-        "cancel tinkoff payment"
-      ],
-      "endpoint": "POST https://securepay.tinkoff.ru/v2/Cancel",
-      "input": {
-        "TerminalKey": {
-          "type": "string",
-          "required": true
-        },
-        "PaymentId": {
-          "type": "string",
-          "required": true
-        },
-        "Amount": {
-          "type": "integer",
-          "description": "Сумма возврата в копейках. Если не указана — полный возврат.",
-          "required": false
-        },
-        "Token": {
-          "type": "string",
-          "description": "SHA-256 подпись",
-          "required": true
-        }
-      },
-      "output": {
-        "type": "cancel",
-        "fields": [
-          "Success",
-          "PaymentId",
-          "Status",
-          "OriginalAmount",
-          "NewAmount"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
       "id": "confirm_payment",
-      "description_for_ai": "Подтвердить двухстадийный платёж (2-step). Списать предавторизованные средства.",
+      "description_for_ai": "Confirm a two-step payment (authorize then confirm).",
       "intent": [
-        "подтвердить платёж тинькофф",
-        "двухстадийная оплата",
-        "confirm tinkoff",
-        "capture tinkoff"
+        "confirm payment Tinkoff",
+        "двухэтапный платёж Тинькофф",
+        "подтвердить платёж"
       ],
       "endpoint": "POST https://securepay.tinkoff.ru/v2/Confirm",
       "input": {
@@ -182,20 +125,88 @@
         },
         "Amount": {
           "type": "integer",
-          "description": "Сумма для списания (может быть меньше авторизованной)",
+          "description": "Amount to confirm in kopecks",
           "required": false
-        },
-        "Token": {
+        }
+      },
+      "output": {
+        "type": "payment",
+        "fields": [
+          "PaymentId",
+          "Status",
+          "Success"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "refund",
+      "description_for_ai": "Refund a Tinkoff payment fully or partially.",
+      "intent": [
+        "refund Tinkoff",
+        "возврат Тинькофф",
+        "отменить платёж Тинькофф"
+      ],
+      "endpoint": "POST https://securepay.tinkoff.ru/v2/Cancel",
+      "input": {
+        "TerminalKey": {
           "type": "string",
+          "required": true
+        },
+        "PaymentId": {
+          "type": "string",
+          "required": true
+        },
+        "Amount": {
+          "type": "integer",
+          "description": "Partial refund amount in kopecks. Omit for full refund.",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "refund",
+        "fields": [
+          "PaymentId",
+          "Status",
+          "OriginalAmount",
+          "NewAmount"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "charge_recurring",
+      "description_for_ai": "Charge a recurring payment using a saved customer token.",
+      "intent": [
+        "recurring payment Tinkoff",
+        "повторный платёж Тинькофф",
+        "рекуррентный платёж"
+      ],
+      "endpoint": "POST https://securepay.tinkoff.ru/v2/Charge",
+      "input": {
+        "TerminalKey": {
+          "type": "string",
+          "required": true
+        },
+        "PaymentId": {
+          "type": "string",
+          "description": "Payment ID from Init with Recurrent=Y",
+          "required": true
+        },
+        "RebillId": {
+          "type": "string",
+          "description": "Token from previous payment notification",
           "required": true
         }
       },
       "output": {
-        "type": "confirm",
+        "type": "payment",
         "fields": [
-          "Success",
           "PaymentId",
-          "Status"
+          "Status",
+          "Amount"
         ]
       },
       "realtime": true,
