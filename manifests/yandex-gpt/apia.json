@@ -154,6 +154,37 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "embeddings",
+      "description_for_ai": "Get text embeddings with YandexGPT for semantic search in Russian.",
+      "intent": [
+        "эмбеддинги яндекс",
+        "векторы яндекс",
+        "yandex embeddings",
+        "семантический поиск яндекс"
+      ],
+      "endpoint": "POST https://llm.api.cloud.yandex.net/foundationModels/v1/textEmbedding",
+      "input": {
+        "modelUri": {
+          "type": "string",
+          "description": "emb://{folder_id}/text-search-doc/latest",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "embedding",
+        "fields": [
+          "embedding (float array)",
+          "numTokens"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
