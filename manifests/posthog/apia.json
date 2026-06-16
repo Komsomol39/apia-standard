@@ -23,44 +23,45 @@
   "capabilities": [
     {
       "id": "capture_event",
-      "description_for_ai": "Capture a user event in PostHog for product analytics.",
+      "description_for_ai": "Track a user event in PostHog. Send custom events with properties for analytics.",
       "intent": [
-        "posthog event",
-        "capture analytics",
-        "track posthog",
-        "аналитика posthog"
+        "track event PostHog",
+        "analytics event",
+        "user tracking",
+        "аналитика PostHog"
       ],
       "endpoint": "POST https://app.posthog.com/capture/",
       "input": {
         "api_key": {
           "type": "string",
+          "description": "Project API key (public, starts with phc_)",
           "required": true
         },
         "event": {
           "type": "string",
-          "description": "Event name e.g. 'button_clicked', 'page_viewed'",
+          "description": "Event name: 'button_clicked', 'purchase_completed'",
           "required": true
         },
         "distinct_id": {
           "type": "string",
-          "description": "Unique user identifier",
+          "description": "User identifier",
           "required": true
         },
         "properties": {
           "type": "object",
-          "description": "Event properties: {$current_url, $browser, plan, amount}",
+          "description": "Custom properties: {plan: 'pro', value: 49.99, page: '/checkout'}",
           "required": false
         },
         "timestamp": {
           "type": "string",
-          "description": "ISO 8601 timestamp. Default: now",
+          "description": "ISO 8601 datetime. Omit for current time.",
           "required": false
         }
       },
       "output": {
-        "type": "result",
+        "type": "status",
         "fields": [
-          "status (1=success)"
+          "status: 1 (success)"
         ]
       },
       "realtime": true,
@@ -68,11 +69,12 @@
     },
     {
       "id": "identify_user",
-      "description_for_ai": "Identify a user in PostHog and set their profile properties.",
+      "description_for_ai": "Set user properties in PostHog (name, email, plan, etc.).",
       "intent": [
-        "identify user posthog",
-        "set user properties",
-        "user profile posthog"
+        "identify user PostHog",
+        "user properties",
+        "set user traits",
+        "идентификация пользователя PostHog"
       ],
       "endpoint": "POST https://app.posthog.com/capture/",
       "input": {
@@ -88,71 +90,66 @@
           "type": "string",
           "required": true
         },
-        "$set": {
+        "properties": {
           "type": "object",
-          "description": "{email: 'user@example.com', name: 'John', plan: 'pro', company: 'Acme'}",
-          "required": false
+          "description": "{$set: {email: 'user@example.com', name: 'John', plan: 'pro'}, $set_once: {created_at: '2024-01-01'}}",
+          "required": true
         }
       },
       "output": {
-        "type": "result",
+        "type": "status",
         "fields": [
-          "status"
+          "status: 1"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "query_insights",
-      "description_for_ai": "Query PostHog insights: event trends, funnels, retention, and user paths.",
+      "id": "get_insights",
+      "description_for_ai": "Query analytics insights from PostHog: trends, funnels, retention, paths.",
       "intent": [
-        "posthog insights",
-        "event trends",
-        "funnel posthog",
-        "аналитика воронки posthog"
+        "PostHog insights",
+        "analytics query",
+        "funnel analysis",
+        "аналитика событий PostHog"
       ],
-      "endpoint": "POST https://app.posthog.com/api/projects/{project_id}/insights/trend/",
+      "endpoint": "GET https://app.posthog.com/api/projects/{project_id}/insights",
       "input": {
         "project_id": {
           "type": "string",
           "required": true
         },
+        "insight": {
+          "type": "string",
+          "description": "TRENDS, FUNNELS, RETENTION, PATHS",
+          "required": false
+        },
         "events": {
-          "type": "array",
-          "description": "[{id: 'button_clicked', type: 'events', math: 'dau'}]",
-          "required": true
-        },
-        "date_from": {
           "type": "string",
-          "description": "-7d, -30d, -90d, or YYYY-MM-DD",
-          "default": "-7d"
-        },
-        "interval": {
-          "type": "string",
-          "description": "day, week, month",
-          "default": "day"
+          "description": "JSON filter for events",
+          "required": false
         }
       },
       "output": {
         "type": "insights",
         "fields": [
-          "result[0].data (array of values)",
-          "result[0].labels (date labels)",
-          "result[0].count"
+          "results[0].data",
+          "results[0].labels",
+          "results[0].count"
         ]
       },
-      "realtime": false,
+      "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "get_feature_flags",
-      "description_for_ai": "Get all feature flags and decide which are enabled for a user.",
+      "id": "feature_flags",
+      "description_for_ai": "Check which feature flags are enabled for a user.",
       "intent": [
-        "feature flags posthog",
-        "A/B test posthog",
+        "feature flags PostHog",
+        "A/B test",
         "feature toggle",
-        "флаги фич posthog"
+        "флаги функций PostHog"
       ],
       "endpoint": "POST https://app.posthog.com/decide/",
       "input": {
@@ -164,63 +161,92 @@
           "type": "string",
           "required": true
         },
-        "person_properties": {
+        "groups": {
           "type": "object",
-          "description": "User properties for flag evaluation",
+          "description": "Optional group memberships",
           "required": false
         }
       },
       "output": {
         "type": "flags",
         "fields": [
-          "featureFlags (dict of flag_name: true/false/variant)",
-          "featureFlagPayloads"
+          "featureFlags (object: flag_name → bool)",
+          "featureFlagPayloads (object: flag_name → payload)"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "create_feature_flag",
-      "description_for_ai": "Create a feature flag in PostHog for A/B testing or gradual rollout.",
+      "id": "get_persons",
+      "description_for_ai": "Get list of users (persons) with their properties from PostHog.",
       "intent": [
-        "feature flag posthog",
-        "A/B test create",
-        "rollout flag",
-        "создать флаг posthog"
+        "users PostHog",
+        "person list",
+        "user database PostHog",
+        "пользователи PostHog"
       ],
-      "endpoint": "POST https://app.posthog.com/api/projects/{project_id}/feature_flags/",
+      "endpoint": "GET https://app.posthog.com/api/projects/{project_id}/persons/",
       "input": {
         "project_id": {
           "type": "string",
           "required": true
         },
-        "key": {
+        "search": {
           "type": "string",
-          "description": "Flag key e.g. new-checkout",
-          "required": true
+          "description": "Filter by name or email",
+          "required": false
         },
-        "active": {
-          "type": "boolean",
-          "default": true
-        },
-        "rollout_percentage": {
-          "type": "integer",
-          "description": "0-100",
-          "default": 100
-        },
-        "filters": {
-          "type": "object",
+        "properties": {
+          "type": "string",
+          "description": "JSON property filter",
           "required": false
         }
       },
       "output": {
-        "type": "feature_flag",
+        "type": "list<person>",
+        "fields": [
+          "results[0].id",
+          "results[0].distinct_ids",
+          "results[0].properties.email",
+          "results[0].created_at"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "create_cohort",
+      "description_for_ai": "Create a user cohort based on behavioral filters for segmentation.",
+      "intent": [
+        "PostHog cohort",
+        "user segment",
+        "audience cohort",
+        "когорта пользователей PostHog"
+      ],
+      "endpoint": "POST https://app.posthog.com/api/projects/{project_id}/cohorts/",
+      "input": {
+        "project_id": {
+          "type": "string",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "filters": {
+          "type": "object",
+          "description": "{properties: {type: 'AND', values: [{type: 'person', key: 'plan', value: 'pro', operator: 'exact'}]}}",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "cohort",
         "fields": [
           "id",
-          "key",
-          "active",
-          "rollout_percentage"
+          "name",
+          "count",
+          "is_calculating"
         ]
       },
       "realtime": true,
