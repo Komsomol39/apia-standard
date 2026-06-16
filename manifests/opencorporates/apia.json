@@ -25,44 +25,181 @@
   "capabilities": [
     {
       "id": "search_companies",
-      "description_for_ai": "Largest open database of company information. 200M+ companies from 140+ jurisdictions worldwide. Company registration, officers, filings. Use for global business verification, KYC, due diligence. Search companies globally by name and jurisdiction. Find company registration numbers worldwide.",
+      "description_for_ai": "Search the OpenCorporates global company database.",
       "intent": [
+        "opencorporates search",
+        "company registry",
         "global company search",
-        "international business",
-        "company verification",
-        "find company worldwide",
-        "corporate registry"
+        "поиск компаний opencorporates"
       ],
       "endpoint": "GET https://api.opencorporates.com/v0.4/companies/search",
       "input": {
         "q": {
           "type": "string",
-          "description": "Search query or filter expression",
           "required": true
         },
         "jurisdiction_code": {
           "type": "string",
-          "description": "Country/state code e.g. us, gb, de, ru, cn",
+          "description": "Country/jurisdiction: gb (UK), us_de (Delaware), de (Germany), fr (France), ru (Russia)",
           "required": false
         },
         "inactive": {
           "type": "boolean",
           "description": "Include inactive companies",
           "default": false
+        },
+        "per_page": {
+          "type": "integer",
+          "default": 30
         }
       },
       "output": {
         "type": "list<company>",
         "fields": [
-          "companies[0].company.name",
           "companies[0].company.company_number",
+          "companies[0].company.name",
           "companies[0].company.jurisdiction_code",
           "companies[0].company.incorporation_date",
-          "companies[0].company.current_status"
+          "companies[0].company.company_type"
         ]
       },
-      "realtime": false,
-      "requires_auth": false
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_company",
+      "description_for_ai": "Get full company details from OpenCorporates.",
+      "intent": [
+        "company details opencorporates",
+        "company info",
+        "company registration",
+        "данные компании opencorporates"
+      ],
+      "endpoint": "GET https://api.opencorporates.com/v0.4/companies/{jurisdiction_code}/{company_number}",
+      "input": {
+        "jurisdiction_code": {
+          "type": "string",
+          "required": true
+        },
+        "company_number": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "company",
+        "fields": [
+          "company.name",
+          "company.company_number",
+          "company.incorporation_date",
+          "company.dissolution_date",
+          "company.registered_address.street_address",
+          "company.officers[0].name",
+          "company.officers[0].position"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_officers",
+      "description_for_ai": "Get directors and officers for a company.",
+      "intent": [
+        "company directors opencorporates",
+        "officers registry",
+        "board members",
+        "директора компании"
+      ],
+      "endpoint": "GET https://api.opencorporates.com/v0.4/companies/{jurisdiction_code}/{company_number}/officers",
+      "input": {
+        "jurisdiction_code": {
+          "type": "string",
+          "required": true
+        },
+        "company_number": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<officer>",
+        "fields": [
+          "officers[0].officer.name",
+          "officers[0].officer.position",
+          "officers[0].officer.start_date",
+          "officers[0].officer.end_date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "search_officers",
+      "description_for_ai": "Search for a person across company officer records.",
+      "intent": [
+        "search director",
+        "person company roles",
+        "officer search",
+        "поиск директора в реестре"
+      ],
+      "endpoint": "GET https://api.opencorporates.com/v0.4/officers/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "jurisdiction_code": {
+          "type": "string",
+          "required": false
+        },
+        "position": {
+          "type": "string",
+          "description": "director, secretary, ceo",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<officer>",
+        "fields": [
+          "officers[0].officer.name",
+          "officers[0].officer.position",
+          "officers[0].officer.company.name",
+          "officers[0].officer.company.jurisdiction_code"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "get_filings",
+      "description_for_ai": "Get company filings (annual reports, changes) from OpenCorporates.",
+      "intent": [
+        "company filings opencorporates",
+        "annual reports",
+        "corporate filings",
+        "подачи документов компания"
+      ],
+      "endpoint": "GET https://api.opencorporates.com/v0.4/companies/{jurisdiction_code}/{company_number}/filings",
+      "input": {
+        "jurisdiction_code": {
+          "type": "string",
+          "required": true
+        },
+        "company_number": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<filing>",
+        "fields": [
+          "filings[0].filing.title",
+          "filings[0].filing.date",
+          "filings[0].filing.filing_type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
     }
   ],
   "meta": {
