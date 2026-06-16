@@ -21,15 +21,13 @@
   },
   "capabilities": [
     {
-      "id": "reasoning",
-      "description_for_ai": "Use OpenAI o3-mini for advanced reasoning: math, coding, science, logic. Thinks before answering. Much stronger than GPT-4o on complex problems.",
+      "id": "reason",
+      "description_for_ai": "Use OpenAI o3-mini for deep chain-of-thought reasoning. Best for math, science, and complex problems.",
       "intent": [
-        "o3 mini",
-        "reasoning AI",
-        "math problem",
-        "complex coding",
-        "hard logic",
-        "сложная задача o3"
+        "o3-mini reasoning",
+        "advanced reasoning AI",
+        "math problem AI",
+        "рассуждение o3-mini"
       ],
       "endpoint": "POST https://api.openai.com/v1/chat/completions",
       "input": {
@@ -43,12 +41,12 @@
         },
         "reasoning_effort": {
           "type": "string",
-          "description": "low (fast), medium (balanced), high (best quality)",
+          "description": "low (fast/cheap), medium (balanced), high (best quality)",
           "default": "medium"
         },
         "max_completion_tokens": {
           "type": "integer",
-          "description": "Max tokens including reasoning tokens. Recommended: 8000+",
+          "description": "Controls maximum output including reasoning tokens",
           "required": false
         }
       },
@@ -56,21 +54,123 @@
         "type": "completion",
         "fields": [
           "choices[0].message.content",
-          "usage.completion_tokens_details.reasoning_tokens",
-          "usage.total_tokens"
+          "usage.prompt_tokens",
+          "usage.completion_tokens",
+          "usage.completion_tokens_details.reasoning_tokens"
         ]
       },
       "realtime": true,
       "requires_auth": true
     },
     {
-      "id": "structured_output",
-      "description_for_ai": "Get structured JSON output from o3-mini for data extraction, classification, or any schema-driven task.",
+      "id": "solve_math",
+      "description_for_ai": "Use o3-mini to solve complex math problems with step-by-step reasoning.",
       "intent": [
-        "structured output o3",
-        "JSON extraction",
-        "data extraction AI",
-        "схема ответа o3"
+        "math solver AI",
+        "solve equation",
+        "calculus AI",
+        "решение задач o3-mini"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "o3-mini"
+        },
+        "messages": {
+          "type": "array",
+          "description": "[{role: 'user', content: 'Solve: integrate x^2 sin(x) dx'}]",
+          "required": true
+        },
+        "reasoning_effort": {
+          "type": "string",
+          "default": "high"
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "code_generation",
+      "description_for_ai": "Generate complex algorithms and code with o3-mini's advanced reasoning.",
+      "intent": [
+        "code AI o3-mini",
+        "algorithm generation",
+        "complex code",
+        "код o3-mini"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "o3-mini"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "reasoning_effort": {
+          "type": "string",
+          "default": "medium"
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "analyze_science",
+      "description_for_ai": "Analyze scientific problems, research papers, or complex technical questions.",
+      "intent": [
+        "science analysis AI",
+        "research analysis",
+        "technical reasoning",
+        "анализ научных задач o3-mini"
+      ],
+      "endpoint": "POST https://api.openai.com/v1/chat/completions",
+      "input": {
+        "model": {
+          "type": "string",
+          "default": "o3-mini"
+        },
+        "messages": {
+          "type": "array",
+          "required": true
+        },
+        "reasoning_effort": {
+          "type": "string",
+          "description": "Use high for complex scientific questions",
+          "default": "high"
+        }
+      },
+      "output": {
+        "type": "completion",
+        "fields": [
+          "choices[0].message.content"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": true
+    },
+    {
+      "id": "structured_reasoning",
+      "description_for_ai": "Get structured JSON output from o3-mini's reasoning.",
+      "intent": [
+        "structured output o3-mini",
+        "JSON reasoning AI",
+        "structured analysis",
+        "структурированный вывод o3-mini"
       ],
       "endpoint": "POST https://api.openai.com/v1/chat/completions",
       "input": {
@@ -84,125 +184,14 @@
         },
         "response_format": {
           "type": "object",
-          "description": "{type: 'json_schema', json_schema: {name: 'schema_name', schema: {...JSON Schema...}, strict: true}}",
-          "required": true
+          "description": "{type: 'json_schema', json_schema: {name: 'result', strict: true, schema: {type: 'object', properties: {...}}}}",
+          "required": false
         }
       },
       "output": {
-        "type": "completion",
+        "type": "json",
         "fields": [
-          "choices[0].message.content (JSON string matching schema)"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "tool_use",
-      "description_for_ai": "o3-mini with function/tool calling. Model decides which tools to use to answer complex multi-step questions.",
-      "intent": [
-        "o3 tools",
-        "function calling o3",
-        "agent o3",
-        "инструменты o3"
-      ],
-      "endpoint": "POST https://api.openai.com/v1/chat/completions",
-      "input": {
-        "model": {
-          "type": "string",
-          "default": "o3-mini"
-        },
-        "messages": {
-          "type": "array",
-          "required": true
-        },
-        "tools": {
-          "type": "array",
-          "description": "[{type: function, function: {name, description, parameters: {JSON Schema}}}]",
-          "required": true
-        },
-        "tool_choice": {
-          "type": "string",
-          "description": "auto, required, none",
-          "default": "auto"
-        }
-      },
-      "output": {
-        "type": "completion",
-        "fields": [
-          "choices[0].message.tool_calls[0].function.name",
-          "choices[0].message.tool_calls[0].function.arguments"
-        ]
-      },
-      "realtime": true,
-      "requires_auth": true
-    },
-    {
-      "id": "batch",
-      "description_for_ai": "Run o3-mini inference at 50% discount via batch API. Async, results within 24h. Ideal for bulk reasoning tasks.",
-      "intent": [
-        "batch o3",
-        "bulk inference",
-        "cheap o3",
-        "пакетная обработка o3"
-      ],
-      "endpoint": "POST https://api.openai.com/v1/batches",
-      "input": {
-        "input_file_id": {
-          "type": "string",
-          "description": "Upload .jsonl file first via /v1/files. Each line: {custom_id, method: POST, url: /v1/chat/completions, body: {...}}",
-          "required": true
-        },
-        "endpoint": {
-          "type": "string",
-          "default": "/v1/chat/completions"
-        },
-        "completion_window": {
-          "type": "string",
-          "default": "24h"
-        }
-      },
-      "output": {
-        "type": "batch",
-        "fields": [
-          "id",
-          "status",
-          "output_file_id",
-          "request_counts.completed"
-        ]
-      },
-      "realtime": false,
-      "requires_auth": true
-    },
-    {
-      "id": "vision_with_reasoning",
-      "description_for_ai": "Analyze images with reasoning using o3 model's visual capabilities.",
-      "intent": [
-        "o3 vision",
-        "analyze image o3",
-        "visual reasoning",
-        "анализ изображения o3"
-      ],
-      "endpoint": "POST https://api.openai.com/v1/chat/completions",
-      "input": {
-        "model": {
-          "type": "string",
-          "default": "o3"
-        },
-        "messages": {
-          "type": "array",
-          "description": "[{role: 'user', content: [{type: 'image_url', image_url: {url: '...'}}, {type: 'text', text: 'question'}]}]",
-          "required": true
-        },
-        "reasoning_effort": {
-          "type": "string",
-          "default": "medium"
-        }
-      },
-      "output": {
-        "type": "completion",
-        "fields": [
-          "choices[0].message.content"
+          "choices[0].message.content (valid JSON)"
         ]
       },
       "realtime": true,
