@@ -159,6 +159,33 @@
       },
       "realtime": true,
       "requires_auth": true
+    },
+    {
+      "id": "check_inn",
+      "description_for_ai": "Validate a Russian INN (individual taxpayer number) and check its format and checksum.",
+      "intent": [
+        "проверить ИНН",
+        "валидация ИНН",
+        "формат ИНН",
+        "check INN Russia"
+      ],
+      "endpoint": "https://api-fns.ru/api/innfl",
+      "input": {
+        "inn": {
+          "type": "string",
+          "description": "12-digit individual INN or 10-digit company INN",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "validation",
+        "fields": [
+          "valid (boolean)",
+          "type (individual/company)"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
     }
   ],
   "agent_hints": {
