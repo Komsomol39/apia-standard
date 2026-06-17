@@ -19,7 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install pytest
+        run: pip install pytest jsonschema
 
       - name: Run tests
         run: pytest tests/ -v --tb=short
@@ -30,7 +30,7 @@ jobs:
           python cli/apia.py validate manifests/openai/apia.json
           python cli/apia.py validate manifests/open-meteo/apia.json
 
-      - name: Check registry integrity
+      - name: Full registry integrity check
         run: python tools/check_registry.py
 
   demo:
@@ -55,3 +55,6 @@ jobs:
 
       - name: Test CLI build-prompt
         run: python cli/apia.py build-prompt weather Berlin
+
+      - name: Test python -m apia
+        run: python -m apia search stripe
