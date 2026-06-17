@@ -180,9 +180,16 @@ def cmd_build_prompt(args):
     query_lower = query.lower()
 
     # Find best matching capabilities
+    # Note: registry entries have capabilities_count, not full capabilities list
+    # We search by name/description fields available in registry
     matches = []
     for m in registry.get("manifests", []):
-        for cap in m.get("capabilities", []):
+        caps = m.get("capabilities", [])
+        if not caps:
+            # Registry entry — create synthetic caps from description
+            caps = [{"id": "search", "description_for_ai": m.get("description_for_ai",""),
+                     "intent": [], "endpoint": m.get("api_base",""), "input": {}, "output": {"type":"object","fields":[]}}]
+        for cap in caps:
             score = 0
             for intent in cap.get("intent", []):
                 if any(w in intent.lower() for w in query_lower.split()):
@@ -208,7 +215,8 @@ The following APIs can help. Choose the most appropriate one and call it.
 """
     for i, (score, m, cap) in enumerate(top, 1):
         auth = m.get("auth", {})
-        prompt += f"""## Option {i}: {m['service']['name']} — {cap['id']}
+        svc_name = m.get("service", {}).get("name", m.get("name", m.get("id", "Unknown")))
+        prompt += f"""## Option {i}: {svc_name} — {cap['id']}
 Description: {cap['description_for_ai']}
 Endpoint: {cap['endpoint']}
 Auth: {auth.get('type','none')} | Free to use: {auth.get('anonymous_access', False)}
