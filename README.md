@@ -7,7 +7,75 @@
 [![PyPI](https://img.shields.io/pypi/v/apia?label=pip%20install%20apia&color=blue)](https://pypi.org/project/apia/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-APIA is an open standard for describing public APIs in a format that AI agents can natively understand and use.
+**APIA is an open registry of 260 public APIs described for AI agents** — not for developers.
+
+Each manifest tells an agent *when* to use an API, *how* to call it, and *what* to expect back. No hallucination about endpoints. No hardcoded tool lists.
+
+## 30-second demo
+
+```bash
+pip install apia
+```
+
+```bash
+$ apia search "send a message"
+telegram-bot     Telegram Bot API      [5 caps, free]
+slack            Slack API             [6 caps, auth]
+twilio           Twilio SMS            [5 caps, auth]
+
+$ apia inspect open-meteo
+  Open-Meteo API
+  Auth: none | Free: True
+  get_current_weather — Get real-time weather by coordinates
+  get_forecast        — 7-day forecast for any location
+  ...
+
+$ apia build-prompt "what is the weather in Berlin?"
+You need to: what is the weather in Berlin?
+
+## Option 1: Open-Meteo — get_current_weather
+Endpoint: GET https://api.open-meteo.com/v1/forecast
+Required: latitude, longitude
+Free to use: True
+```
+
+Or run a real end-to-end example — no API key needed:
+
+```bash
+python examples/weather_demo.py
+# Weather in Berlin:
+# Temperature: 18.4°C  Wind: 12.3 km/h  Conditions: partly cloudy
+```
+
+## What a manifest looks like
+
+```json
+{
+  "service": {
+    "id": "open-meteo",
+    "description_for_ai": "Free weather API. No auth. Use for current conditions and forecasts."
+  },
+  "auth": { "type": "none", "anonymous_access": true, "cost": "free" },
+  "capabilities": [{
+    "id": "get_current_weather",
+    "description_for_ai": "Get real-time weather for any location by coordinates.",
+    "intent": ["current weather", "temperature outside", "погода сейчас", "wie ist das Wetter"],
+    "endpoint": "GET https://api.open-meteo.com/v1/forecast",
+    "input": {
+      "latitude":  { "type": "number", "required": true },
+      "longitude": { "type": "number", "required": true },
+      "current":   { "type": "string", "default": "temperature_2m,wind_speed_10m" }
+    },
+    "output": { "fields": ["current.temperature_2m", "current.wind_speed_10m"] }
+  }],
+  "agent_hints": {
+    "rate_limiting": "No rate limit on free tier.",
+    "errors": "422 means invalid coordinates. Use decimal degrees."
+  }
+}
+```
+
+The agent reads `intent` phrases to find the right API, reads `description_for_ai` to understand it, and uses `endpoint` + `input` to make the call.
 
 ## Why not OpenAPI?
 
