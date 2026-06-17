@@ -31,20 +31,7 @@ jobs:
           python cli/apia.py validate manifests/open-meteo/apia.json
 
       - name: Check registry integrity
-        run: |
-          python3 -c "
-import json, os
-from pathlib import Path
-
-registry = json.loads(Path('registry.json').read_text())
-manifests = list(Path('manifests').glob('*/apia.json'))
-reg_n = len(registry['manifests'])
-file_n = len(manifests)
-print(f'Registry entries: {reg_n}')
-print(f'Manifest files:   {file_n}')
-assert reg_n == file_n, f'Mismatch: {reg_n} vs {file_n}'
-print('OK: counts match')
-"
+        run: python tools/check_registry.py
 
   demo:
     name: End-to-end demo
@@ -67,4 +54,4 @@ print('OK: counts match')
         run: python cli/apia.py inspect open-meteo
 
       - name: Test CLI build-prompt
-        run: python cli/apia.py build-prompt "get weather in Berlin"
+        run: python cli/apia.py build-prompt weather Berlin
