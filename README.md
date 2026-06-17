@@ -2,7 +2,9 @@
 
 [![CI](https://github.com/Komsomol39/apia-standard/actions/workflows/ci.yml/badge.svg)](https://github.com/Komsomol39/apia-standard/actions)
 [![Health](https://github.com/Komsomol39/apia-standard/actions/workflows/weekly-health.yml/badge.svg)](https://github.com/Komsomol39/apia-standard/actions/workflows/weekly-health.yml)
-[![Manifests](https://img.shields.io/badge/manifests-257-blue)](registry.json)
+[![Manifests](https://img.shields.io/badge/manifests-260-blue)](registry.json)
+[![Schema](https://img.shields.io/badge/schema-v1.0-orange)](schema/apia-1.0.schema.json)
+[![PyPI](https://img.shields.io/badge/pip-apia--cli-blue)](https://pypi.org/project/apia-cli/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 APIA is an open standard for describing public APIs in a format that AI agents can natively understand and use.
@@ -126,6 +128,8 @@ Each manifest has `meta.last_verified`. The CI checks that this field exists. Co
 ```bash
 pip install apia-cli
 ```
+
+Then use as `apia` command or `python -m apia`:
 
 Or use directly:
 
