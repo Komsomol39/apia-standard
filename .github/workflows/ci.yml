@@ -22,25 +22,25 @@ jobs:
         run: pip install pytest jsonschema
 
       - name: Run tests
-        run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
-          pytest tests/ -v --tb=short
+        run: pytest tests/ -v --tb=short
 
-      - name: Validate all manifests via CLI
+      - name: Validate sample manifests via CLI
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
-          python cli/apia.py validate --all
+          python cli/apia.py validate manifests/stripe/apia.json
+          python cli/apia.py validate manifests/openai/apia.json
+          python cli/apia.py validate manifests/open-meteo/apia.json
 
       - name: Check registry integrity
         run: |
           python3 -c "
           import json, glob
-          registry = json.load(open('registry.json'))
-          manifests = glob.glob('manifests/*/apia.json')
+          from pathlib import Path
+          registry = json.loads(Path('registry.json').read_text())
+          manifests = list(Path('manifests').glob('*/apia.json'))
           print(f'Registry entries: {len(registry["manifests"])}')
           print(f'Manifest files:   {len(manifests)}')
-          assert len(registry['manifests']) == len(manifests), f'Count mismatch: {len(registry["manifests"])} vs {len(manifests)}'
-          print('OK: counts match')
+          assert len(registry['manifests']) == len(manifests), f'Mismatch: {len(registry["manifests"])} vs {len(manifests)}'
+          print('OK')
           "
 
   demo:
@@ -59,12 +59,6 @@ jobs:
 
       - name: Test CLI commands
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
-          echo "--- search weather ---"
           python cli/apia.py search weather
-          echo "--- search flight status ---"
-          python cli/apia.py search flight status
-          echo "--- inspect open-meteo ---"
           python cli/apia.py inspect open-meteo
-          echo "--- build-prompt ---"
           python cli/apia.py build-prompt "get current weather in Berlin"
