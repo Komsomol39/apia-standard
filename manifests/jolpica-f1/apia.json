@@ -1,0 +1,189 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "jolpica-f1",
+    "name": "Jolpica F1 API",
+    "description_for_ai": "Drop-in replacement for the defunct Ergast F1 API. Full Formula 1 historical data from 1950 to present: race results, standings, lap times, pit stops, qualifying. Free, no auth required. Same URL structure as Ergast.",
+    "url": "https://api.jolpi.ca",
+    "api_base": "https://api.jolpi.ca/ergast/f1",
+    "category": "sports",
+    "geo": [
+      "GLOBAL"
+    ],
+    "language": "en",
+    "docs": "https://github.com/jolpica/jolpica-f1"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "free"
+  },
+  "capabilities": [
+    {
+      "id": "get_race_results",
+      "description_for_ai": "Get Formula 1 race results for any season and round. Returns driver positions, points, fastest lap.",
+      "intent": [
+        "F1 results",
+        "Formula 1 race",
+        "race winner",
+        "GP results",
+        "who won F1",
+        "формула 1 результаты"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}/{round}/results.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year e.g. 2026 or current",
+          "required": true
+        },
+        "round": {
+          "type": "string",
+          "description": "Round number or last for latest",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "race_results",
+        "fields": [
+          "MRData.RaceTable.Races[0].raceName",
+          "MRData.RaceTable.Races[0].Results[0].Driver.familyName",
+          "MRData.RaceTable.Races[0].Results[0].position",
+          "MRData.RaceTable.Races[0].Results[0].points"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_standings",
+      "description_for_ai": "Get current or historical F1 driver or constructor championship standings.",
+      "intent": [
+        "F1 standings",
+        "championship table",
+        "driver points",
+        "F1 champion",
+        "constructor standings"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}/driverStandings.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year or current",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "standings",
+        "fields": [
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].position",
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].Driver.familyName",
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].points"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_race_results",
+      "description_for_ai": "Get F1 race results for a season and round.",
+      "intent": [
+        "F1 race results",
+        "formula 1 results",
+        "гонка формула 1",
+        "результаты гонки F1"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}/{round}/results.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year or 'current'",
+          "required": true
+        },
+        "round": {
+          "type": "string",
+          "description": "Round number or 'last'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "list<result>",
+        "fields": [
+          "MRData.RaceTable.Races[0].Results[0].position",
+          "MRData.RaceTable.Races[0].Results[0].Driver.familyName",
+          "MRData.RaceTable.Races[0].Results[0].Constructor.name",
+          "MRData.RaceTable.Races[0].Results[0].Time.time"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_standings",
+      "description_for_ai": "Get F1 driver or constructor championship standings.",
+      "intent": [
+        "F1 standings",
+        "championship table F1",
+        "таблица чемпионата F1"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}/driverStandings.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year or 'current'",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "driverStandings or constructorStandings",
+          "default": "driverStandings"
+        }
+      },
+      "output": {
+        "type": "standings",
+        "fields": [
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].position",
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].Driver.familyName",
+          "MRData.StandingsTable.StandingsLists[0].DriverStandings[0].points"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    },
+    {
+      "id": "get_schedule",
+      "description_for_ai": "Get F1 race calendar/schedule for a season.",
+      "intent": [
+        "F1 calendar",
+        "F1 schedule",
+        "расписание F1",
+        "этапы F1"
+      ],
+      "endpoint": "GET https://ergast.com/api/f1/{season}.json",
+      "input": {
+        "season": {
+          "type": "string",
+          "description": "Year or 'current'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "schedule",
+        "fields": [
+          "MRData.RaceTable.Races[0].raceName",
+          "MRData.RaceTable.Races[0].date",
+          "MRData.RaceTable.Races[0].Circuit.circuitName",
+          "MRData.RaceTable.Races[0].Circuit.Location.country"
+        ]
+      },
+      "realtime": false,
+      "requires_auth": false
+    }
+  ],
+  "meta": {
+    "apia_version": "1.0",
+    "manifest_author": "APIA community",
+    "last_verified": "2026-06-17",
+    "notes": "Migrated from ergast.com (shut down 2024) to jolpica-f1 (drop-in replacement)"
+  }
+}
