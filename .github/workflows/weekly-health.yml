@@ -2,8 +2,8 @@ name: Weekly Endpoint Health Check
 
 on:
   schedule:
-    - cron: '0 6 * * 1'   # Каждый понедельник в 06:00 UTC
-  workflow_dispatch:        # Ручной запуск
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -27,14 +27,20 @@ jobs:
         id: health
         run: |
           python tools/check_endpoints.py --fail-threshold 30 --output endpoint-health.json
-          echo "dead_pct=$(python3 -c "import json; r=json.load(open('endpoint-health.json')); print(r['summary']['dead_pct'])")" >> $GITHUB_OUTPUT
-          echo "alive=$(python3 -c "import json; r=json.load(open('endpoint-health.json')); print(r['summary']['alive'])")" >> $GITHUB_OUTPUT
-          echo "dead=$(python3 -c "import json; r=json.load(open('endpoint-health.json')); print(r['summary']['dead'])")" >> $GITHUB_OUTPUT
+          python3 -c "
+          import json
+          r = json.load(open('endpoint-health.json'))
+          s = r['summary']
+          print(f'alive={s["alive"]}')
+          print(f'dead={s["dead"]}')
+          print(f'geo_blocked={s["geo_blocked"]}')
+          print(f'dead_pct={s["dead_pct"]}')
+          " | tee -a $GITHUB_OUTPUT
 
       - name: Commit health report
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore(health): weekly endpoint check — ${{ steps.health.outputs.alive }} alive, ${{ steps.health.outputs.dead }} dead"
+          commit_message: "chore(health): weekly check — ${{ steps.health.outputs.alive }} alive, ${{ steps.health.outputs.dead }} dead, ${{ steps.health.outputs.geo_blocked }} geo-blocked"
           file_pattern: "endpoint-health.json"
 
       - name: Open issue if too many dead endpoints
@@ -43,29 +49,38 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            let report = {};
-            try { report = JSON.parse(fs.readFileSync('endpoint-health.json')); } catch(e) {}
-            const summary = report.summary || {};
-            const dead = (report.entries || [])
-              .filter(e => e.alive === false)
-              .map(e => `- \`${e.id}\`: ${e.url} (${e.error || e.status})`)
-              .slice(0, 20)
-              .join('\n');
+            const report = JSON.parse(fs.readFileSync('endpoint-health.json'));
+            const s = report.summary;
+            const dead = report.entries
+              .filter(e => e.status === 'DEAD')
+              .map(e => `- \`${e.id}\`: ${e.url} — ${e.error || e.http_status}`)
+              .slice(0, 25).join('\n');
+            const geoBlocked = report.entries
+              .filter(e => e.status === 'GEO_BLOCKED')
+              .map(e => `- \`${e.id}\` (${e.country}): ${e.url}`)
+              .slice(0, 10).join('\n');
 
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `⚠️ Endpoint health check: ${summary.dead} dead endpoints (${summary.dead_pct}%)`,
-              body: `## Weekly Endpoint Health Check Failed
-
-**${summary.alive} alive** / **${summary.dead} dead** / ${summary.skipped} skipped
-
-Dead rate: **${summary.dead_pct}%** (threshold: 30%)
-
-### Dead endpoints (first 20):
-${dead}
-
-Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-`,
-              labels: ['maintenance', 'health']
+              title: `⚠️ Health check: ${s.dead} dead endpoints (${s.dead_pct}%)`,
+              body: [
+                `## Weekly Endpoint Health Check`,
+                `| | Count |`,
+                `|---|---|`,
+                `| ✅ Alive | ${s.alive} |`,
+                `| ❌ Dead | ${s.dead} (${s.dead_pct}%) |`,
+                `| 🌍 Geo-blocked (RU/BY/CN) | ${s.geo_blocked} |`,
+                `| 🔧 Template URL | ${s.template} |`,
+                ``,
+                `### ❌ Dead endpoints`,
+                dead,
+                ``,
+                `### 🌍 Geo-blocked (not counted as dead)`,
+                geoBlocked,
+                ``,
+                `[Full report](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/endpoint-health.json)`,
+                `Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
+              ].join('\n'),
+              labels: ['maintenance']
             });
