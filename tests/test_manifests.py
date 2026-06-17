@@ -2,100 +2,112 @@
 APIA Standard — test suite
 Run from repo root: pytest tests/
 """
-import pytest, json, os
+import pytest, json
 from pathlib import Path
 
-# Всегда находим корень репо относительно этого файла
 REPO_ROOT = Path(__file__).parent.parent
 MANIFESTS = sorted((REPO_ROOT / "manifests").glob("*/apia.json"))
 
-# ── Schema validation ────────────────────────────────────────────────────
+def validate_manifest(path):
+    """Inline validator — no external imports needed."""
+    errors = []
+    try:
+        data = json.loads(Path(path).read_text())
+    except json.JSONDecodeError as e:
+        return [f"Invalid JSON: {e}"]
+    for field in ["apia", "service", "auth", "capabilities", "meta"]:
+        if field not in data:
+            errors.append(f"Missing required field: {field}")
+    svc = data.get("service", {})
+    for field in ["id", "name", "description_for_ai", "category", "url"]:
+        if field not in svc:
+            errors.append(f"Missing service.{field}")
+    if "type" not in data.get("auth", {}):
+        errors.append("Missing auth.type")
+    if "apia_version" not in data.get("meta", {}):
+        errors.append("Missing meta.apia_version")
+    caps = data.get("capabilities", [])
+    if len(caps) < 5:
+        errors.append(f"Only {len(caps)} capabilities (min 5)")
+    for i, cap in enumerate(caps):
+        for f in ["id", "description_for_ai", "intent", "endpoint"]:
+            if f not in cap:
+                errors.append(f"capabilities[{i}] missing {f}")
+        if len(cap.get("intent", [])) < 2:
+            errors.append(f"capabilities[{i}] needs >= 2 intent phrases")
+    return errors
+
+# ── Per-manifest tests ───────────────────────────────────────────────────
 
 @pytest.mark.parametrize("path", MANIFESTS)
 def test_valid_json(path):
-    """Every manifest must be valid JSON."""
     data = json.loads(path.read_text())
     assert isinstance(data, dict)
 
 @pytest.mark.parametrize("path", MANIFESTS)
 def test_required_fields(path):
-    """Every manifest must have all required top-level fields."""
-    data = json.loads(path.read_text())
-    for field in ["apia", "service", "auth", "capabilities", "meta"]:
-        assert field in data, f"{path.name}: missing top-level field '{field}'"
-    svc = data.get("service", {})
-    for field in ["id", "name", "description_for_ai", "category", "url"]:
-        assert field in svc, f"{path.name}: missing service.{field}"
-    assert "type" in data.get("auth", {}), f"{path.name}: missing auth.type"
-    assert "apia_version" in data.get("meta", {}), f"{path.name}: missing meta.apia_version"
+    errors = [e for e in validate_manifest(path) if "Missing" in e]
+    assert not errors, f"{path.parent.name}: {errors}"
 
 @pytest.mark.parametrize("path", MANIFESTS)
 def test_min_capabilities(path):
-    """Every manifest must have at least 5 capabilities."""
     data = json.loads(path.read_text())
     caps = data.get("capabilities", [])
-    assert len(caps) >= 5, f"{path.parent.name}: only {len(caps)} capabilities (min 5)"
+    assert len(caps) >= 5, f"{path.parent.name}: {len(caps)} caps (min 5)"
 
 @pytest.mark.parametrize("path", MANIFESTS)
 def test_capability_intents(path):
-    """Every capability must have at least 2 intent phrases."""
     data = json.loads(path.read_text())
     for i, cap in enumerate(data.get("capabilities", [])):
-        intents = cap.get("intent", [])
-        assert len(intents) >= 2,             f"{path.parent.name} cap[{i}] '{cap.get('id')}': only {len(intents)} intent phrases"
+        assert len(cap.get("intent", [])) >= 2, \
+            f"{path.parent.name} cap[{i}] '{cap.get('id')}': needs >= 2 intents"
 
 @pytest.mark.parametrize("path", MANIFESTS)
 def test_description_for_ai(path):
-    """description_for_ai must be at least 20 chars."""
     data = json.loads(path.read_text())
-    svc_desc = data.get("service", {}).get("description_for_ai", "")
-    assert len(svc_desc) >= 20, f"{path.parent.name}: service.description_for_ai too short"
+    desc = data.get("service", {}).get("description_for_ai", "")
+    assert len(desc) >= 20, f"{path.parent.name}: description_for_ai too short"
     for i, cap in enumerate(data.get("capabilities", [])):
-        cap_desc = cap.get("description_for_ai", "")
-        assert len(cap_desc) >= 20,             f"{path.parent.name} cap[{i}] '{cap.get('id')}': description_for_ai too short"
+        cdesc = cap.get("description_for_ai", "")
+        assert len(cdesc) >= 20, \
+            f"{path.parent.name} cap[{i}]: description_for_ai too short"
 
 @pytest.mark.parametrize("path", MANIFESTS)
 def test_apia_version(path):
-    """meta.apia_version must be 1.0."""
     data = json.loads(path.read_text())
-    assert data.get("meta", {}).get("apia_version") == "1.0",         f"{path.parent.name}: meta.apia_version must be '1.0'"
+    assert data.get("meta", {}).get("apia_version") == "1.0", \
+        f"{path.parent.name}: meta.apia_version must be '1.0'"
 
 @pytest.mark.parametrize("path", MANIFESTS)
 def test_service_id_matches_directory(path):
-    """service.id must match the directory name."""
     data = json.loads(path.read_text())
-    dir_name = path.parent.name
-    svc_id = data.get("service", {}).get("id", "")
-    assert svc_id == dir_name,         f"service.id '{svc_id}' != directory '{dir_name}'"
+    assert data.get("service", {}).get("id") == path.parent.name, \
+        f"service.id != directory name in {path.parent.name}"
 
-# ── Registry integrity ────────────────────────────────────────────────────
+# ── Registry integrity ───────────────────────────────────────────────────
 
 def test_registry_exists():
-    assert (REPO_ROOT / "registry.json").exists(), "registry.json not found"
+    assert (REPO_ROOT / "registry.json").exists()
 
 def test_registry_count():
-    """registry.json must have exactly as many entries as manifest files."""
     registry = json.loads((REPO_ROOT / "registry.json").read_text())
-    reg_count = len(registry.get("manifests", []))
-    file_count = len(MANIFESTS)
-    assert reg_count == file_count,         f"registry has {reg_count} entries but found {file_count} manifest files"
+    assert len(registry["manifests"]) == len(MANIFESTS), \
+        f"registry={len(registry['manifests'])} files={len(MANIFESTS)}"
 
 def test_registry_capabilities_count():
-    """capabilities_count in registry must match actual manifest."""
     registry = json.loads((REPO_ROOT / "registry.json").read_text())
     errors = []
-    for entry in registry.get("manifests", []):
-        api_id = entry.get("id")
-        reg_count = entry.get("capabilities_count", 0)
-        manifest_path = REPO_ROOT / "manifests" / api_id / "apia.json"
-        if manifest_path.exists():
-            actual = len(json.loads(manifest_path.read_text()).get("capabilities", []))
-            if reg_count != actual:
-                errors.append(f"{api_id}: registry says {reg_count}, actual {actual}")
-    assert not errors, "Stale capabilities_count:\n" + "\n".join(errors[:10])
+    for entry in registry["manifests"]:
+        api_id = entry.get("id","")
+        reg_n = entry.get("capabilities_count", 0)
+        mp = REPO_ROOT / "manifests" / api_id / "apia.json"
+        if mp.exists():
+            actual = len(json.loads(mp.read_text()).get("capabilities", []))
+            if reg_n != actual:
+                errors.append(f"{api_id}: registry={reg_n} actual={actual}")
+    assert not errors, "Stale caps count:\n" + "\n".join(errors[:10])
 
 def test_no_duplicate_ids():
-    """No two manifests should have the same service.id."""
-    ids = [json.loads(p.read_text()).get("service", {}).get("id", "") for p in MANIFESTS]
-    duplicates = {i for i in ids if ids.count(i) > 1}
-    assert not duplicates, f"Duplicate service IDs: {duplicates}"
+    ids = [json.loads(p.read_text()).get("service",{}).get("id","") for p in MANIFESTS]
+    dupes = {i for i in ids if ids.count(i) > 1}
+    assert not dupes, f"Duplicate IDs: {dupes}"
