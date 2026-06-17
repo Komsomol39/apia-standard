@@ -20,7 +20,7 @@
 - `agent_hints`: `rate_limiting`, `pagination`, `errors`, `best_practices`
 
 ### Registry
-- 257 API manifests across 26 categories
+- 260 API manifests across 26 categories
 - Categories: ai, analytics, business, devtools, ecommerce, finance, food, healthcare,
   hr, iot, legal, logistics, maps, media, messaging, payments, real_estate, search,
   social, travel, utilities, weather, and more
