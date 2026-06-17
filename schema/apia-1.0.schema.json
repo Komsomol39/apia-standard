@@ -11,7 +11,6 @@
     "capabilities",
     "meta"
   ],
-  "additionalProperties": false,
   "properties": {
     "apia": {
       "type": "string",
@@ -29,7 +28,6 @@
         "category",
         "geo"
       ],
-      "additionalProperties": false,
       "properties": {
         "id": {
           "type": "string",
@@ -157,7 +155,6 @@
         "type",
         "anonymous_access"
       ],
-      "additionalProperties": true,
       "properties": {
         "type": {
           "type": "string",
@@ -242,11 +239,9 @@
           "realtime",
           "requires_auth"
         ],
-        "additionalProperties": false,
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-z][a-z0-9_]*$",
             "description": "Unique capability identifier, snake_case"
           },
           "description_for_ai": {
@@ -264,42 +259,11 @@
           },
           "endpoint": {
             "type": "string",
-            "pattern": "^(GET|POST|PUT|PATCH|DELETE|WS|WSS) .+",
             "description": "HTTP method and full URL pattern"
           },
           "input": {
             "type": "object",
-            "description": "Input parameter definitions",
-            "additionalProperties": {
-              "type": "object",
-              "required": [
-                "type"
-              ],
-              "properties": {
-                "type": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "required": {
-                  "type": "boolean"
-                },
-                "default": {},
-                "enum": {
-                  "type": "array"
-                },
-                "min": {
-                  "type": "number"
-                },
-                "max": {
-                  "type": "number"
-                },
-                "note": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": "Input parameter definitions"
           },
           "output": {
             "type": "object",
@@ -336,10 +300,7 @@
     },
     "agent_hints": {
       "type": "object",
-      "description": "Key-value hints for AI agents on how to use this API correctly",
-      "additionalProperties": {
-        "type": "string"
-      }
+      "description": "Key-value hints for AI agents on how to use this API correctly"
     },
     "meta": {
       "type": "object",
@@ -347,7 +308,6 @@
         "apia_version",
         "last_verified"
       ],
-      "additionalProperties": false,
       "properties": {
         "apia_version": {
           "type": "string",
