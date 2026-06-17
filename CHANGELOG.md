@@ -1,6 +1,15 @@
 # APIA Changelog
 
-## [1.0.0] — 2026-06-14
+## [Unreleased]
+
+### Planned for v1.1.0
+- `agent_hints.examples` — concrete usage examples in manifests
+- `apia test` CLI command — actually call an API and validate response
+- `apia diff` — compare two versions of a manifest
+
+---
+
+## [1.0.0] — 2026-06-17
 
 ### Standard
 - Initial release of APIA 1.0 schema
