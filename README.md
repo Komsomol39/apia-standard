@@ -4,7 +4,7 @@
 [![Health](https://github.com/Komsomol39/apia-standard/actions/workflows/weekly-health.yml/badge.svg)](https://github.com/Komsomol39/apia-standard/actions/workflows/weekly-health.yml)
 [![Manifests](https://img.shields.io/badge/manifests-260-blue)](registry.json)
 [![Schema](https://img.shields.io/badge/schema-v1.0-orange)](schema/apia-1.0.schema.json)
-[![PyPI](https://img.shields.io/badge/pip-apia--cli-blue)](https://pypi.org/project/apia-cli/)
+[![PyPI](https://img.shields.io/pypi/v/apia?label=pip%20install%20apia&color=blue)](https://pypi.org/project/apia/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 APIA is an open standard for describing public APIs in a format that AI agents can natively understand and use.
@@ -123,13 +123,32 @@ Each manifest also has `meta.last_verified` — the date a human last confirmed 
 
 Each manifest has `meta.last_verified`. The CI checks that this field exists. Community contributors are expected to re-verify manifests periodically. Stale manifests (>1 year) will be flagged in the registry.
 
-## Install CLI
+## Install
 
 ```bash
-pip install apia-cli
+pip install apia
 ```
 
-Then use as `apia` command or `python -m apia`:
+```bash
+# CLI
+apia search "weather forecast"
+apia inspect open-meteo
+apia build-prompt "get temperature in Berlin"
+apia validate manifests/stripe/apia.json
+
+# As module
+python -m apia search weather
+python -m apia inspect stripe
+```
+
+```python
+# Python SDK
+from apia import Registry
+
+registry = Registry()
+apis = registry.find("weather forecast")
+print(apis[0].name)  # Open-Meteo API
+```
 
 Or use directly:
 
