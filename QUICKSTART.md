@@ -6,7 +6,7 @@
 
 ## The Problem APIA Solves
 
-An AI agent doesn't know which of 257 APIs to call for "track my DHL package" or "send a Telegram message". APIA gives each API a machine-readable manifest the agent can read and understand.
+An AI agent doesn't know which of 260 APIs to call for "track my DHL package" or "send a Telegram message". APIA gives each API a machine-readable manifest the agent can read and understand.
 
 ---
 
@@ -37,7 +37,7 @@ print(response.content[0].text)
 
 ## Option 2 — Discover APIs via registry.json
 
-All 257 manifests indexed in one file. Search by intent, category, or geo.
+All 260 manifests indexed in one file. Search by intent, category, or geo.
 
 ```python
 import json, requests
