@@ -9,7 +9,6 @@ setup(
     author="APIA Contributors",
     url="https://github.com/Komsomol39/apia-standard",
     packages=find_packages(),
-    py_modules=["apia"],
     entry_points={
         "console_scripts": [
             "apia=cli.apia:main",
@@ -19,7 +18,6 @@ setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
-        "Topic :: Software Development :: Libraries",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
