@@ -198,7 +198,7 @@
     },
     {
       "id": "get_by_isbn",
-      "description_for_ai": "Get book by ISBN.",
+      "description_for_ai": "Look up a book by its ISBN-10 or ISBN-13 identifier in the Google Books catalog.",
       "intent": [
         "book by ISBN",
         "ISBN lookup",
