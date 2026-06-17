@@ -19,7 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install pytest jsonschema
+        run: pip install pytest
 
       - name: Run tests
         run: pytest tests/ -v --tb=short
@@ -33,15 +33,18 @@ jobs:
       - name: Check registry integrity
         run: |
           python3 -c "
-          import json, glob
-          from pathlib import Path
-          registry = json.loads(Path('registry.json').read_text())
-          manifests = list(Path('manifests').glob('*/apia.json'))
-          print(f'Registry entries: {len(registry["manifests"])}')
-          print(f'Manifest files:   {len(manifests)}')
-          assert len(registry['manifests']) == len(manifests), f'Mismatch: {len(registry["manifests"])} vs {len(manifests)}'
-          print('OK')
-          "
+import json, os
+from pathlib import Path
+
+registry = json.loads(Path('registry.json').read_text())
+manifests = list(Path('manifests').glob('*/apia.json'))
+reg_n = len(registry['manifests'])
+file_n = len(manifests)
+print(f'Registry entries: {reg_n}')
+print(f'Manifest files:   {file_n}')
+assert reg_n == file_n, f'Mismatch: {reg_n} vs {file_n}'
+print('OK: counts match')
+"
 
   demo:
     name: End-to-end demo
@@ -57,8 +60,11 @@ jobs:
       - name: Run weather demo
         run: python examples/weather_demo.py
 
-      - name: Test CLI commands
-        run: |
-          python cli/apia.py search weather
-          python cli/apia.py inspect open-meteo
-          python cli/apia.py build-prompt "get current weather in Berlin"
+      - name: Test CLI search
+        run: python cli/apia.py search weather
+
+      - name: Test CLI inspect
+        run: python cli/apia.py inspect open-meteo
+
+      - name: Test CLI build-prompt
+        run: python cli/apia.py build-prompt "get weather in Berlin"
