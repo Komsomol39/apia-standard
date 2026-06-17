@@ -1,6 +1,7 @@
 # APIA — API Standard for AI Agents
 
 [![CI](https://github.com/Komsomol39/apia-standard/actions/workflows/ci.yml/badge.svg)](https://github.com/Komsomol39/apia-standard/actions)
+[![Health](https://github.com/Komsomol39/apia-standard/actions/workflows/weekly-health.yml/badge.svg)](https://github.com/Komsomol39/apia-standard/actions/workflows/weekly-health.yml)
 [![Manifests](https://img.shields.io/badge/manifests-257-blue)](registry.json)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -92,6 +93,31 @@ The agent runtime is responsible for injecting credentials from a secret store. 
 4. `requires_auth: false` on individual capabilities means that specific endpoint is public
 
 ## How to verify an API is current
+
+Every Monday at 06:00 UTC the CI pings all 257 `api_base` URLs and writes results to [`endpoint-health.json`](endpoint-health.json). If more than 30% are unreachable a GitHub Issue is opened automatically.
+
+To run manually:
+
+```bash
+python tools/check_endpoints.py
+# Results in endpoint-health.json
+```
+
+Sample output:
+```
+Checking 257 manifests...
+Checking 201 unique endpoints (20 parallel)...
+  [20/201] ✅ stripe: 200 45ms
+  [40/201] ✅ openai: 200 112ms
+  ...
+Results: 189 alive, 12 dead, 56 skipped
+Dead rate: 6.0%
+OK: dead rate within threshold (30%)
+```
+
+Dead endpoints are flagged in `endpoint-health.json` with their error reason — DNS failure, timeout, HTTP error. Contributors are notified via GitHub Issues to update or remove stale manifests.
+
+Each manifest also has `meta.last_verified` — the date a human last confirmed the API works correctly end-to-end (not just that the URL responds).
 
 Each manifest has `meta.last_verified`. The CI checks that this field exists. Community contributors are expected to re-verify manifests periodically. Stale manifests (>1 year) will be flagged in the registry.
 
