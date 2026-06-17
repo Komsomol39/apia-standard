@@ -153,10 +153,10 @@ print(apis[0].name)  # Open-Meteo API
 Or use directly:
 
 ```bash
-python cli/apia.py validate manifests/openweathermap/apia.json
-python cli/apia.py search "weather berlin"
-python cli/apia.py inspect open-meteo
-python cli/apia.py build-prompt "find flights from Moscow to London"
+apia validate manifests/openweathermap/apia.json
+apia search "weather berlin"
+apia inspect open-meteo
+apia build-prompt "find flights from Moscow to London"
 ```
 
 ## Add an API
@@ -165,7 +165,7 @@ python cli/apia.py build-prompt "find flights from Moscow to London"
 ```bash
 python tools/openapi2apia.py https://api.example.com/openapi.json --id my-api
 # Review TODOs, then:
-python cli/apia.py validate manifests/my-api/apia.json
+apia validate manifests/my-api/apia.json
 ```
 
 **Option B — manually:**
@@ -174,7 +174,7 @@ python cli/apia.py validate manifests/my-api/apia.json
 mkdir manifests/my-api
 cp manifests/open-meteo/apia.json manifests/my-api/apia.json
 # Edit the file, then:
-python cli/apia.py validate manifests/my-api/apia.json
+apia validate manifests/my-api/apia.json
 ```
 
 Submit a PR. CI validates automatically.
