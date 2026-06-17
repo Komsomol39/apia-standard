@@ -1,0 +1,2326 @@
+{
+  "generated_at": "2026-06-17T11:27:08.790376+00:00",
+  "summary": {
+    "total": 257,
+    "checked": 257,
+    "alive": 221,
+    "dead": 36,
+    "skipped": 0,
+    "dead_pct": 14.0
+  },
+  "entries": [
+    {
+      "id": "2gis",
+      "url": "https://catalog.api.2gis.com/3.0",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1956,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "2gis-cis",
+      "url": "https://catalog.api.2gis.com/3.0",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1956,
+      "error": null,
+      "shared_with": "2gis"
+    },
+    {
+      "id": "abstract-api",
+      "url": "https://emailvalidation.abstractapi.com/v1",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 1120,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "adyen",
+      "url": "https://checkout-test.adyen.com/v71",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 848,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "airbnb",
+      "url": "https://api.airbnb.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 557,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "airtable",
+      "url": "https://api.airtable.com/v0",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 696,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "alpha-vantage",
+      "url": "https://www.alphavantage.co/query",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 493,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "amadeus",
+      "url": "https://test.api.amadeus.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 1030,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "amazon-sp-api",
+      "url": "https://sellingpartnerapi-na.amazon.com",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 612,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "amocrm",
+      "url": "https://{subdomain}.amocrm.ru/api/v4",
+      "alive": false,
+      "status": null,
+      "latency_ms": 352,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "anthropic",
+      "url": "https://api.anthropic.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 478,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "anthropic-claude-haiku",
+      "url": "https://api.anthropic.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 478,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "anthropic"
+    },
+    {
+      "id": "anthropic-claude-haiku-free",
+      "url": "https://api.anthropic.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 478,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "anthropic"
+    },
+    {
+      "id": "apollo-io",
+      "url": "https://api.apollo.io/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 586,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "arxiv",
+      "url": "https://export.arxiv.org/api",
+      "alive": true,
+      "status": 429,
+      "latency_ms": 643,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "assemblyai",
+      "url": "https://api.assemblyai.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 526,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "attom",
+      "url": "https://api.gateway.attomdata.com/propertyapi/v1.0.0",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 471,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "auth0",
+      "url": "https://{tenant}.auth0.com/api/v2",
+      "alive": false,
+      "status": null,
+      "latency_ms": 342,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "aviationstack",
+      "url": "https://api.aviationstack.com/v1",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 647,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "avito",
+      "url": "https://api.avito.ru",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 2526,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "avito-jobs",
+      "url": "https://api.avito.ru",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 2526,
+      "error": null,
+      "shared_with": "avito"
+    },
+    {
+      "id": "aws-comprehend",
+      "url": "https://comprehend.{region}.amazonaws.com",
+      "alive": false,
+      "status": null,
+      "latency_ms": 340,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "aws-iot",
+      "url": "https://{endpoint}.iot.{region}.amazonaws.com",
+      "alive": false,
+      "status": null,
+      "latency_ms": 335,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "aws-lambda",
+      "url": "https://lambda.{region}.amazonaws.com",
+      "alive": false,
+      "status": null,
+      "latency_ms": 325,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "aws-rekognition",
+      "url": "https://rekognition.{region}.amazonaws.com",
+      "alive": false,
+      "status": null,
+      "latency_ms": 106,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "aws-s3",
+      "url": "https://s3.amazonaws.com",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 357,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "bamboohr",
+      "url": "https://api.bamboohr.com/api/gateway.php/{company}/v1",
+      "alive": true,
+      "status": 500,
+      "latency_ms": 594,
+      "error": "HTTP Error 500: Internal Server Error",
+      "shared_with": null
+    },
+    {
+      "id": "binance",
+      "url": "https://api.binance.com",
+      "alive": true,
+      "status": 451,
+      "latency_ms": 350,
+      "error": "HTTP Error 451: ",
+      "shared_with": null
+    },
+    {
+      "id": "bitrix24",
+      "url": "https://{portal}.bitrix24.ru/rest",
+      "alive": false,
+      "status": null,
+      "latency_ms": 74,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "booking-com",
+      "url": "https://demandapi.booking.com/3.1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 427,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "brevo",
+      "url": "https://api.brevo.com/v3",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 559,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "carbon-interface",
+      "url": "https://www.carboninterface.com/api/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 436,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "cbrf",
+      "url": "https://www.cbr.ru",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1304,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "cdek",
+      "url": "https://api.cdek.ru/v2",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1446,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "cian",
+      "url": "https://public-api.cian.ru",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 1358,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "clearbit",
+      "url": "https://company.clearbit.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 160,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "cloudflare-workers",
+      "url": "https://api.cloudflare.com/client/v4",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 96,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "cloudinary",
+      "url": "https://api.cloudinary.com/v1_1/{cloud_name}",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 388,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "cohere",
+      "url": "https://api.cohere.ai/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 198,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "cohere-command-r",
+      "url": "https://api.cohere.ai/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 198,
+      "error": null,
+      "shared_with": "cohere"
+    },
+    {
+      "id": "coinbase",
+      "url": "https://api.coinbase.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 243,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "coingecko",
+      "url": "https://api.coingecko.com/api/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 210,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "coingecko-defi",
+      "url": "https://api.coingecko.com/api/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 210,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "coingecko"
+    },
+    {
+      "id": "companies-house",
+      "url": "https://api.company-information.service.gov.uk",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 751,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "courtlistener",
+      "url": "https://www.courtlistener.com/api/rest/v3",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 6102,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "dadata",
+      "url": "https://suggestions.dadata.ru/suggestions/api/4_1/rs",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 880,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "data-mos-ru",
+      "url": "https://api.data.mos.ru/v1",
+      "alive": false,
+      "status": null,
+      "latency_ms": 8690,
+      "error": "timed out",
+      "shared_with": null
+    },
+    {
+      "id": "datadog",
+      "url": "https://api.datadoghq.com/api/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 334,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "deepgram",
+      "url": "https://api.deepgram.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 576,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "deepl",
+      "url": "https://api-free.deepl.com/v2",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 1267,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "deepseek",
+      "url": "https://api.deepseek.com/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 411,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "deepseek-r1",
+      "url": "https://api.deepseek.com/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 411,
+      "error": null,
+      "shared_with": "deepseek"
+    },
+    {
+      "id": "dhl-api",
+      "url": "https://express.api.dhl.com/mydhlapi",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 811,
+      "error": "HTTP Error 404: No match found for request",
+      "shared_with": null
+    },
+    {
+      "id": "digitalocean",
+      "url": "https://api.digitalocean.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 209,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "discord",
+      "url": "https://discord.com/api/v10",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 161,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "docusign",
+      "url": "https://demo.docusign.net/restapi/v2.1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 257,
+      "error": "HTTP Error 404: The URL provided does not resolve to a resource.",
+      "shared_with": null
+    },
+    {
+      "id": "doordash",
+      "url": "https://openapi.doordash.com/drive/v2",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 255,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "duolingo",
+      "url": "https://www.duolingo.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 410,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "easypost",
+      "url": "https://api.easypost.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 275,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "ebay",
+      "url": "https://api.ebay.com",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 230,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "edamam",
+      "url": "https://api.edamam.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 344,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "egrul-fns",
+      "url": "https://api-fns.ru/api",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 2316,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "elevenlabs",
+      "url": "https://api.elevenlabs.io/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 199,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "elsevier-scopus",
+      "url": "https://api.elsevier.com/content",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1431,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "ergast-f1",
+      "url": "https://ergast.com/api/f1",
+      "alive": false,
+      "status": null,
+      "latency_ms": 8136,
+      "error": "The read operation timed out",
+      "shared_with": null
+    },
+    {
+      "id": "etherscan",
+      "url": "https://api.etherscan.io/api",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 289,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "etsy",
+      "url": "https://openapi.etsy.com/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 312,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "exchangerate-api",
+      "url": "https://v6.exchangerate-api.com/v6",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 278,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "facebook-ads",
+      "url": "https://graph.facebook.com/v20.0",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 421,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "facebook-graph",
+      "url": "https://graph.facebook.com/v20.0",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 421,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": "facebook-ads"
+    },
+    {
+      "id": "fias",
+      "url": "https://fias-public-api.nalog.ru/api/addresses",
+      "alive": false,
+      "status": null,
+      "latency_ms": 583,
+      "error": "[Errno -5] No address associated with hostname",
+      "shared_with": null
+    },
+    {
+      "id": "firebase",
+      "url": "https://firestore.googleapis.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 188,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "fitbit",
+      "url": "https://api.fitbit.com/1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 272,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "flightaware",
+      "url": "https://aeroapi.flightaware.com/aeroapi",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 385,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "football-data",
+      "url": "https://api.football-data.org/v4",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 1567,
+      "error": "HTTP Error 404: ",
+      "shared_with": null
+    },
+    {
+      "id": "foursquare",
+      "url": "https://api.foursquare.com/v3",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 377,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "freshdesk",
+      "url": "https://{domain}.freshdesk.com/api/v2",
+      "alive": false,
+      "status": null,
+      "latency_ms": 46,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "gbif",
+      "url": "https://api.gbif.org/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 651,
+      "error": "HTTP Error 404: Not Found. See https://www.gbif.org/developer/summary for API documentation.",
+      "shared_with": null
+    },
+    {
+      "id": "gbif-species",
+      "url": "https://api.gbif.org/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 651,
+      "error": "HTTP Error 404: Not Found. See https://www.gbif.org/developer/summary for API documentation.",
+      "shared_with": "gbif"
+    },
+    {
+      "id": "github",
+      "url": "https://api.github.com",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 108,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "gitlab",
+      "url": "https://gitlab.com/api/v4",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 233,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-ads",
+      "url": "https://googleads.googleapis.com/v17",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 148,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-analytics",
+      "url": "https://analyticsdata.googleapis.com/v1beta",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 161,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-books",
+      "url": "https://www.googleapis.com/books/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 75,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-calendar",
+      "url": "https://www.googleapis.com/calendar/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 95,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-gemini",
+      "url": "https://generativelanguage.googleapis.com/v1beta",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 173,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-gemini-flash",
+      "url": "https://generativelanguage.googleapis.com/v1beta",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 173,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "google-gemini"
+    },
+    {
+      "id": "google-gemini-pro",
+      "url": "https://generativelanguage.googleapis.com/v1beta",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 173,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "google-gemini"
+    },
+    {
+      "id": "google-gemini-vision",
+      "url": "https://generativelanguage.googleapis.com/v1beta",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 173,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "google-gemini"
+    },
+    {
+      "id": "google-hotels",
+      "url": "https://serpapi.com/search",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 221,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "google-maps",
+      "url": "https://maps.googleapis.com/maps/api",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 149,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-natural-language",
+      "url": "https://language.googleapis.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 347,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-search-console",
+      "url": "https://searchconsole.googleapis.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-translate",
+      "url": "https://translation.googleapis.com/language/translate/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 264,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "google-vision",
+      "url": "https://vision.googleapis.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 219,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "gosuslugi",
+      "url": "https://esia-portal1.test.gosuslugi.ru/esia-rs/api",
+      "alive": false,
+      "status": null,
+      "latency_ms": 8606,
+      "error": "timed out",
+      "shared_with": null
+    },
+    {
+      "id": "greenhouse",
+      "url": "https://harvest.greenhouse.io/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 303,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "groq",
+      "url": "https://api.groq.com/openai/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 179,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "gtfs",
+      "url": "https://transit.land/api/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 210,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "have-i-been-pwned",
+      "url": "https://haveibeenpwned.com/api/v3",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 307,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "here-maps",
+      "url": "https://geocoder.ls.hereapi.com",
+      "alive": false,
+      "status": null,
+      "latency_ms": 305,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "hflabs",
+      "url": "https://api.hflabs.ru",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 2155,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "hh-by",
+      "url": "https://api.hh.by/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 3219,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "hh-kz",
+      "url": "https://api.hh.kz/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 1663,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "hh-ru",
+      "url": "https://api.hh.ru",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 2696,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "hh-uz",
+      "url": "https://api.hh.uz/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 1514,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "home-assistant",
+      "url": "http://{ha_host}:8123/api",
+      "alive": false,
+      "status": null,
+      "latency_ms": 0,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "html2pdf",
+      "url": "https://api.pdfcrowd.com/convert",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 425,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "hubspot",
+      "url": "https://api.hubapi.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 493,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "huggingface",
+      "url": "https://api-inference.huggingface.co",
+      "alive": false,
+      "status": null,
+      "latency_ms": 122,
+      "error": "[Errno -5] No address associated with hostname",
+      "shared_with": null
+    },
+    {
+      "id": "hunter-io",
+      "url": "https://api.hunter.io/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 644,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "idealista",
+      "url": "https://api.idealista.com/3.5",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 520,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "imgix",
+      "url": "https://{source}.imgix.net",
+      "alive": false,
+      "status": null,
+      "latency_ms": 46,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "inaturalist",
+      "url": "https://api.inaturalist.org/v1",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 789,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "infermedica",
+      "url": "https://api.infermedica.com/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 451,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "instagram",
+      "url": "https://graph.instagram.com",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 702,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "intercom",
+      "url": "https://api.intercom.io",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 668,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "ipapi",
+      "url": "http://ip-api.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 92,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "ipgeolocation",
+      "url": "https://api.ipgeolocation.io",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 199,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "jira",
+      "url": "https://{domain}.atlassian.net/rest/api/3",
+      "alive": false,
+      "status": null,
+      "latency_ms": 36,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "jokeapi",
+      "url": "https://v2.jokeapi.dev",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 500,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "khan-academy",
+      "url": "https://www.khanacademy.org/api/v1",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 198,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "klaviyo",
+      "url": "https://a.klaviyo.com/api",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 141,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "kontur-focus",
+      "url": "https://focus-api.kontur.ru",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1959,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "languagetool",
+      "url": "https://api.languagetool.org/v2",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 624,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "linear",
+      "url": "https://api.linear.app/graphql",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 384,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "linkedin",
+      "url": "https://api.linkedin.com/v2",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 139,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "lottie-files",
+      "url": "https://graphql.lottiefiles.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 328,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "luma-ai",
+      "url": "https://api.lumalabs.ai/dream-machine/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 357,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "mailchimp",
+      "url": "https://{dc}.api.mailchimp.com/3.0",
+      "alive": false,
+      "status": null,
+      "latency_ms": 56,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "mailgun",
+      "url": "https://api.mailgun.net/v3",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 331,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "mapbox",
+      "url": "https://api.mapbox.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 137,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "mapillary",
+      "url": "https://graph.mapillary.com",
+      "alive": true,
+      "status": 500,
+      "latency_ms": 614,
+      "error": "HTTP Error 500: Internal Server Error",
+      "shared_with": null
+    },
+    {
+      "id": "mistral",
+      "url": "https://api.mistral.ai/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 262,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "mistral-codestral",
+      "url": "https://codestral.mistral.ai/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 237,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "mixpanel",
+      "url": "https://api.mixpanel.com",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 240,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "mos-ru-api",
+      "url": "https://api.mos.ru",
+      "alive": false,
+      "status": null,
+      "latency_ms": 24657,
+      "error": "timed out",
+      "shared_with": null
+    },
+    {
+      "id": "nager-date",
+      "url": "https://date.nager.at/api/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 457,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "nasa",
+      "url": "https://api.nasa.gov",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 271,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "netlify",
+      "url": "https://api.netlify.com/api/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 360,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "newsapi",
+      "url": "https://newsapi.org/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 194,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "notion-api",
+      "url": "https://api.notion.com/v1",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 157,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "nutritionix",
+      "url": "https://trackapi.nutritionix.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 282,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "o3-mini",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "odds-api",
+      "url": "https://api.the-odds-api.com/v4",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 385,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "open-alex",
+      "url": "https://api.openalex.org",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 329,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "open-fda",
+      "url": "https://api.fda.gov",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 358,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "open-food-facts",
+      "url": "https://world.openfoodfacts.org",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1384,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "open-meteo",
+      "url": "https://api.open-meteo.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 753,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "open-trivia",
+      "url": "https://opentdb.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 419,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "openai",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openai-assistants",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openai-batch",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openai-fine-tuning",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openai-images",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openai-moderation",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openai-tts",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openai-whisper",
+      "url": "https://api.openai.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 162,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": "o3-mini"
+    },
+    {
+      "id": "openaq",
+      "url": "https://api.openaq.org/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 454,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "opencorporates",
+      "url": "https://api.opencorporates.com/v0.4",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 1295,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "opensky-network",
+      "url": "https://opensky-network.org/api",
+      "alive": false,
+      "status": null,
+      "latency_ms": 8224,
+      "error": "timed out",
+      "shared_with": null
+    },
+    {
+      "id": "openstreetmap-nominatim",
+      "url": "https://nominatim.openstreetmap.org",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1089,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "openstreetmap-overpass",
+      "url": "https://overpass-api.de/api",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 866,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "openweathermap",
+      "url": "https://api.openweathermap.org/data/2.5",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 91,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "ozon",
+      "url": "https://api-seller.ozon.ru",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 1187,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "pagerduty",
+      "url": "https://api.pagerduty.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 237,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "particle",
+      "url": "https://api.particle.io/v1",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 407,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "paypal",
+      "url": "https://api-m.paypal.com/v2",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 97,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "perplexity",
+      "url": "https://api.perplexity.ai",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 70,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "perspective-api",
+      "url": "https://commentanalyzer.googleapis.com/v1alpha1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 115,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "pexels",
+      "url": "https://api.pexels.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 314,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "philips-hue",
+      "url": "http://{bridge_ip}/api",
+      "alive": false,
+      "status": null,
+      "latency_ms": 0,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "pinecone",
+      "url": "https://api.pinecone.io",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 183,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "pipedrive",
+      "url": "https://api.pipedrive.com/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 228,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "plaid",
+      "url": "https://production.plaid.com",
+      "alive": true,
+      "status": 411,
+      "latency_ms": 362,
+      "error": "HTTP Error 411: Length Required",
+      "shared_with": null
+    },
+    {
+      "id": "planet-labs",
+      "url": "https://api.planet.com/data/v1",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 276,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "pochta-russia",
+      "url": "https://otpravka-api.pochta.ru",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 3821,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "pokeapi",
+      "url": "https://pokeapi.co/api/v2",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 138,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "polygon-io",
+      "url": "https://api.polygon.io",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 287,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "posthog",
+      "url": "https://app.posthog.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 703,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "pubmed",
+      "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 202,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "qr-code-api",
+      "url": "https://api.qrserver.com/v1",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 1804,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "rapidapi",
+      "url": "https://api.rapidapi.com",
+      "alive": false,
+      "status": null,
+      "latency_ms": 122,
+      "error": "[Errno -5] No address associated with hostname",
+      "shared_with": null
+    },
+    {
+      "id": "reddit",
+      "url": "https://oauth.reddit.com",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 114,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "replicate",
+      "url": "https://api.replicate.com/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 132,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "rest-countries",
+      "url": "https://restcountries.com/v3.1",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 285,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "rightmove",
+      "url": "https://api.rightmove.co.uk",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 1306,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "rosreestr",
+      "url": "https://pkk.rosreestr.ru/api",
+      "alive": false,
+      "status": null,
+      "latency_ms": 49087,
+      "error": "timed out",
+      "shared_with": null
+    },
+    {
+      "id": "runway",
+      "url": "https://api.dev.runwayml.com/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 372,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "salesforce",
+      "url": "https://{instance}.salesforce.com/services/data/v59.0",
+      "alive": false,
+      "status": null,
+      "latency_ms": 76,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "sber-api",
+      "url": "https://ngw.devices.sberbank.ru",
+      "alive": false,
+      "status": null,
+      "latency_ms": 4327,
+      "error": "[Errno 104] Connection reset by peer",
+      "shared_with": null
+    },
+    {
+      "id": "screenshotapi",
+      "url": "https://shot.screenshotapi.net",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 373,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "sec-edgar",
+      "url": "https://data.sec.gov",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 165,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "segment",
+      "url": "https://api.segment.io/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 113,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "semantic-scholar",
+      "url": "https://api.semanticscholar.org/graph/v1",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 391,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "sendbird",
+      "url": "https://api-{app_id}.sendbird.com/v3",
+      "alive": false,
+      "status": null,
+      "latency_ms": 50,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "sendgrid",
+      "url": "https://api.sendgrid.com/v3",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 154,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "sentry",
+      "url": "https://sentry.io/api/0",
+      "alive": false,
+      "status": null,
+      "latency_ms": 8202,
+      "error": "timed out",
+      "shared_with": null
+    },
+    {
+      "id": "serpapi",
+      "url": "https://serpapi.com/search",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 221,
+      "error": null,
+      "shared_with": "google-hotels"
+    },
+    {
+      "id": "shippo",
+      "url": "https://api.goshippo.com",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 206,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "shodan",
+      "url": "https://api.shodan.io",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 131,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "shopify",
+      "url": "https://{shop}.myshopify.com/admin/api/2024-01",
+      "alive": false,
+      "status": null,
+      "latency_ms": 44,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "skyscanner",
+      "url": "https://partners.api.skyscanner.net/apiservices/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 929,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "slack-api",
+      "url": "https://slack.com/api",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 858,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "spoonacular",
+      "url": "https://api.spoonacular.com",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 666,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "sportsdata-io",
+      "url": "https://api.sportsdata.io",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 129,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "spotify",
+      "url": "https://api.spotify.com/v1",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 238,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "stability-ai",
+      "url": "https://api.stability.ai",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 118,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "steam",
+      "url": "https://api.steampowered.com",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 170,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "strava",
+      "url": "https://www.strava.com/api/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 263,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "stripe",
+      "url": "https://api.stripe.com/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 100,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "supabase",
+      "url": "https://{project_id}.supabase.co",
+      "alive": false,
+      "status": null,
+      "latency_ms": 42,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "superjob",
+      "url": "https://api.superjob.ru/2.0",
+      "alive": false,
+      "status": null,
+      "latency_ms": 1378,
+      "error": "Remote end closed connection without response",
+      "shared_with": null
+    },
+    {
+      "id": "superjob-resumes",
+      "url": "https://api.superjob.ru/2.0",
+      "alive": false,
+      "status": null,
+      "latency_ms": 1378,
+      "error": "Remote end closed connection without response",
+      "shared_with": "superjob"
+    },
+    {
+      "id": "telegram-bot",
+      "url": "https://api.telegram.org/bot{token}",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 577,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "tesla",
+      "url": "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 281,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "textrazor",
+      "url": "https://api.textrazor.com",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 438,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "themealdb",
+      "url": "https://www.themealdb.com/api/json/v1/1",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 621,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "tiktok",
+      "url": "https://open.tiktokapis.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 236,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "tinkoff-acquiring",
+      "url": "https://securepay.tinkoff.ru/v2",
+      "alive": false,
+      "status": null,
+      "latency_ms": 8986,
+      "error": "timed out",
+      "shared_with": null
+    },
+    {
+      "id": "tmdb",
+      "url": "https://api.themoviedb.org/3",
+      "alive": true,
+      "status": 204,
+      "latency_ms": 129,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "together-ai",
+      "url": "https://api.together.xyz/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 82,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "tripadvisor",
+      "url": "https://api.content.tripadvisor.com/api/v1",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 414,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "trudvsem",
+      "url": "http://opendata.trudvsem.ru/api/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 797,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "twilio",
+      "url": "https://api.twilio.com/2010-04-01",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 217,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "twilio-studio",
+      "url": "https://studio.twilio.com/v2",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 384,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "twilio-verify",
+      "url": "https://verify.twilio.com/v2",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 509,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "twitch",
+      "url": "https://api.twitch.tv/helix",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 254,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "twitter-x",
+      "url": "https://api.twitter.com/2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 126,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "typeform",
+      "url": "https://api.typeform.com",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 412,
+      "error": "HTTP Error 404: ",
+      "shared_with": null
+    },
+    {
+      "id": "uber",
+      "url": "https://api.uber.com/v1.2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 172,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "unsplash",
+      "url": "https://api.unsplash.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 646,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "vercel",
+      "url": "https://api.vercel.com",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 654,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "virustotal",
+      "url": "https://www.virustotal.com/api/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 171,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "vk",
+      "url": "https://api.vk.com/method",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 1520,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "who",
+      "url": "https://ghoapi.azureedge.net/api",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 808,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "wikidata",
+      "url": "https://www.wikidata.org/w/api.php",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 525,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "wikipedia",
+      "url": "https://en.wikipedia.org/api/rest_v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 196,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "wildberries",
+      "url": "https://statistics-api.wildberries.ru",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 1757,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "wise",
+      "url": "https://api.wise.com",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 224,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "wolfram-alpha",
+      "url": "https://api.wolframalpha.com",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 242,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "woocommerce",
+      "url": "https://{domain}/wp-json/wc/v3",
+      "alive": false,
+      "status": null,
+      "latency_ms": 47,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "workday",
+      "url": "https://{tenant}.workday.com/api",
+      "alive": false,
+      "status": null,
+      "latency_ms": 45,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "world-bank",
+      "url": "https://api.worldbank.org/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 637,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "xai-grok",
+      "url": "https://api.x.ai/v1",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 128,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "yandex-disk",
+      "url": "https://cloud-api.yandex.net/v1/disk",
+      "alive": true,
+      "status": 405,
+      "latency_ms": 1176,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "yandex-gpt",
+      "url": "https://llm.api.cloud.yandex.net",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 970,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "yandex-maps",
+      "url": "https://yandex.ru/maps",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 1778,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "yandex-rasp",
+      "url": "https://api.rasp.yandex.net/v3.0",
+      "alive": false,
+      "status": null,
+      "latency_ms": 1140,
+      "error": "Remote end closed connection without response",
+      "shared_with": null
+    },
+    {
+      "id": "yelp",
+      "url": "https://api.yelp.com/v3",
+      "alive": true,
+      "status": 400,
+      "latency_ms": 159,
+      "error": "HTTP Error 400: Bad Request",
+      "shared_with": null
+    },
+    {
+      "id": "yookassa",
+      "url": "https://api.yookassa.ru/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 1300,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "youtube",
+      "url": "https://www.googleapis.com/youtube/v3",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 145,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "youtube-analytics",
+      "url": "https://youtubeanalytics.googleapis.com/v2",
+      "alive": true,
+      "status": 404,
+      "latency_ms": 70,
+      "error": "HTTP Error 404: Not Found",
+      "shared_with": null
+    },
+    {
+      "id": "zapier",
+      "url": "https://nla.zapier.com/api/v1",
+      "alive": true,
+      "status": 200,
+      "latency_ms": 668,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "zendesk",
+      "url": "https://{subdomain}.zendesk.com/api/v2",
+      "alive": false,
+      "status": null,
+      "latency_ms": 21,
+      "error": "[Errno -2] Name or service not known",
+      "shared_with": null
+    },
+    {
+      "id": "zillow",
+      "url": "https://api.bridgedataoutput.com/api/v2/zora/core",
+      "alive": true,
+      "status": 403,
+      "latency_ms": 139,
+      "error": null,
+      "shared_with": null
+    },
+    {
+      "id": "zoominfo",
+      "url": "https://api.zoominfo.com",
+      "alive": true,
+      "status": 401,
+      "latency_ms": 154,
+      "error": null,
+      "shared_with": null
+    }
+  ]
+}
