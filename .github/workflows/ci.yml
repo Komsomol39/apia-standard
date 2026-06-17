@@ -2,7 +2,7 @@ name: APIA CI
 
 on:
   push:
-    branches: [main, harden-standard-v1]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -22,25 +22,29 @@ jobs:
         run: pip install pytest jsonschema
 
       - name: Run tests
-        run: pytest tests/ -v --tb=short
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          pytest tests/ -v --tb=short
 
       - name: Validate all manifests via CLI
-        run: python cli/apia.py validate --all
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          python cli/apia.py validate --all
 
       - name: Check registry integrity
         run: |
-          python3 << 'EOF'
+          python3 -c "
           import json, glob
           registry = json.load(open('registry.json'))
           manifests = glob.glob('manifests/*/apia.json')
-          print(f"Registry entries: {len(registry['manifests'])}")
-          print(f"Manifest files:   {len(manifests)}")
-          assert len(registry['manifests']) == len(manifests), "Count mismatch!"
-          print("OK: registry count matches manifest files")
-          EOF
+          print(f'Registry entries: {len(registry["manifests"])}')
+          print(f'Manifest files:   {len(manifests)}')
+          assert len(registry['manifests']) == len(manifests), f'Count mismatch: {len(registry["manifests"])} vs {len(manifests)}'
+          print('OK: counts match')
+          "
 
   demo:
-    name: Run end-to-end demo
+    name: End-to-end demo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,11 +54,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run weather demo (no auth required)
+      - name: Run weather demo
         run: python examples/weather_demo.py
 
-      - name: Test CLI search
+      - name: Test CLI commands
         run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          echo "--- search weather ---"
           python cli/apia.py search weather
+          echo "--- search flight status ---"
           python cli/apia.py search flight status
+          echo "--- inspect open-meteo ---"
           python cli/apia.py inspect open-meteo
+          echo "--- build-prompt ---"
+          python cli/apia.py build-prompt "get current weather in Berlin"
