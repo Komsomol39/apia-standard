@@ -96,7 +96,7 @@ The agent runtime is responsible for injecting credentials from a secret store. 
 
 ## How to verify an API is current
 
-Every Monday at 06:00 UTC the CI pings all 257 `api_base` URLs and writes results to [`endpoint-health.json`](endpoint-health.json). If more than 30% are unreachable a GitHub Issue is opened automatically.
+Every Monday at 06:00 UTC the CI pings all 260 `api_base` URLs and writes results to [`endpoint-health.json`](endpoint-health.json). If more than 30% are unreachable a GitHub Issue is opened automatically.
 
 To run manually:
 
@@ -107,7 +107,7 @@ python tools/check_endpoints.py
 
 Sample output:
 ```
-Checking 257 manifests...
+Checking 260 manifests...
 Checking 201 unique endpoints (20 parallel)...
   [20/201] ✅ stripe: 200 45ms
   [40/201] ✅ openai: 200 112ms
@@ -210,7 +210,7 @@ Conditions:  partly cloudy
     apia.json
   stripe/
     apia.json
-  ... (257 total)
+  ... (260 total)
 
 /tests
   test_manifests.py    # pytest suite — runs in CI
