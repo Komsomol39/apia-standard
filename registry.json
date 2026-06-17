@@ -2,7 +2,7 @@
   "_meta": {
     "version": "1.0",
     "generated": "2026-06-17",
-    "total": 257,
+    "total": 260,
     "categories": {
       "ai": 25,
       "ai_media": 15,
@@ -3453,24 +3453,6 @@
       "capabilities_count": 5
     },
     {
-      "id": "jolpica-f1",
-      "name": "Jolpica F1 API",
-      "description_for_ai": "Drop-in replacement for Ergast F1 API (shut down 2024). Full Formula 1 historical data 1950-present: race results, standings, lap times, pit stops, qualifying. Free, no auth.",
-      "category": "sports",
-      "geo": "global",
-      "language": "en",
-      "url": "https://api.jolpi.ca",
-      "docs": "https://github.com/jolpica/jolpica-f1",
-      "api_base": "https://api.jolpi.ca/ergast/f1",
-      "auth_type": "none",
-      "anonymous_access": true,
-      "cost": "free",
-      "agent_hints": {},
-      "capabilities_count": 5,
-      "manifest_path": "manifests/jolpica-f1/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/jolpica-f1/apia.json"
-    },
-    {
       "id": "etherscan",
       "name": "Etherscan API",
       "description_for_ai": "Ethereum blockchain explorer API. Get transaction history, token balances, contract ABI, gas prices, ERC-20/NFT transfers for any Ethereum address. 5 req/sec free.",
@@ -6434,6 +6416,24 @@
       "capabilities_count": 5
     },
     {
+      "id": "jolpica-f1",
+      "name": "Jolpica F1 API",
+      "description_for_ai": "Drop-in replacement for Ergast F1 API (shut down 2024). Full Formula 1 historical data 1950-present: race results, standings, lap times, pit stops, qualifying. Free, no auth.",
+      "category": "sports",
+      "geo": "global",
+      "language": "en",
+      "url": "https://api.jolpi.ca",
+      "docs": "https://github.com/jolpica/jolpica-f1",
+      "api_base": "https://api.jolpi.ca/ergast/f1",
+      "auth_type": "none",
+      "anonymous_access": true,
+      "cost": "free",
+      "agent_hints": {},
+      "capabilities_count": 5,
+      "manifest_path": "manifests/jolpica-f1/apia.json",
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/jolpica-f1/apia.json"
+    },
+    {
       "id": "khan-academy",
       "name": "Khan Academy API",
       "description_for_ai": "Free educational content API. Math, science, computing, humanities for all ages. Videos, exercises, articles. No API key needed for public content. Use for educational apps, homework help, skill assessment.",
@@ -7543,6 +7543,24 @@
       "capabilities_count": 7
     },
     {
+      "id": "numbers-api",
+      "name": "Numbers API",
+      "description_for_ai": "Interesting facts about numbers, dates, and years. Math trivia, historical events. Free, no auth.",
+      "category": "utilities",
+      "geo": "global",
+      "language": "en",
+      "url": "http://numbersapi.com",
+      "docs": "http://numbersapi.com/#api",
+      "api_base": "http://numbersapi.com",
+      "auth_type": "none",
+      "anonymous_access": true,
+      "cost": "free",
+      "agent_hints": {},
+      "capabilities_count": 5,
+      "manifest_path": "manifests/numbers-api/apia.json",
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/numbers-api/apia.json"
+    },
+    {
       "id": "nutritionix",
       "name": "Nutritionix API",
       "description_for_ai": "Largest verified nutrition database. 3M+ food items with calories, macros, vitamins, minerals. Natural language food search. Use for calorie counting apps, nutrition tracking, meal planning.",
@@ -8424,6 +8442,24 @@
       "manifest_path": "manifests/opencorporates/apia.json",
       "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/opencorporates/apia.json",
       "capabilities_count": 5
+    },
+    {
+      "id": "openf1",
+      "name": "OpenF1",
+      "description_for_ai": "Free real-time and historical Formula 1 data API covering 2023-present. Live telemetry, lap times, race control, pit stops. No auth required.",
+      "category": "sports",
+      "geo": "global",
+      "language": "en",
+      "url": "https://openf1.org",
+      "docs": "https://openf1.org",
+      "api_base": "https://api.openf1.org/v1",
+      "auth_type": "none",
+      "anonymous_access": true,
+      "cost": "free",
+      "agent_hints": {},
+      "capabilities_count": 5,
+      "manifest_path": "manifests/openf1/apia.json",
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/openf1/apia.json"
     },
     {
       "id": "opensky-network",
@@ -12616,6 +12652,24 @@
       "manifest_path": "manifests/wikipedia/apia.json",
       "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wikipedia/apia.json",
       "capabilities_count": 6
+    },
+    {
+      "id": "wikipedia-rest",
+      "name": "Wikipedia REST API",
+      "description_for_ai": "Wikipedia REST API for article summaries, full content, search, and media. Free, no auth, 300+ languages.",
+      "category": "search",
+      "geo": "global",
+      "language": "multilingual",
+      "url": "https://www.mediawiki.org/wiki/API:REST_API",
+      "docs": "https://en.wikipedia.org/api/rest_v1/#/",
+      "api_base": "https://en.wikipedia.org/api/rest_v1",
+      "auth_type": "none",
+      "anonymous_access": true,
+      "cost": "free",
+      "agent_hints": {},
+      "capabilities_count": 5,
+      "manifest_path": "manifests/wikipedia-rest/apia.json",
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/wikipedia-rest/apia.json"
     },
     {
       "id": "wildberries",
