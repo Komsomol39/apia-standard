@@ -1,0 +1,30 @@
+name: Run Health Check Now
+
+on:
+  push:
+    paths:
+      - 'health-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run health check
+        run: python tools/check_endpoints.py --fail-threshold 50 --output endpoint-health.json
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(health): first endpoint health report"
+          file_pattern: "endpoint-health.json"
