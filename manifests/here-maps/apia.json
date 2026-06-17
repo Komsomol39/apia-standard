@@ -4,8 +4,8 @@
     "id": "here-maps",
     "name": "HERE Maps API",
     "description_for_ai": "Enterprise mapping platform by HERE Technologies. Geocoding, routing, traffic, public transit, fleet tracking. Strong coverage in Europe and automotive. Used by BMW, Mercedes, Audi.",
-    "url": "https://here.com",
-    "api_base": "https://geocoder.ls.hereapi.com",
+    "url": "https://developer.here.com",
+    "api_base": "https://geocode.search.hereapi.com/v1",
     "category": "maps",
     "geo": [
       "GLOBAL"
@@ -220,6 +220,6 @@
   "meta": {
     "apia_version": "1.0",
     "manifest_author": "APIA community",
-    "last_verified": "2026-06-14"
+    "last_verified": "2026-06-17"
   }
 }
