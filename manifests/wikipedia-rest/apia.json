@@ -1,0 +1,180 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "wikipedia-rest",
+    "name": "Wikipedia REST API",
+    "description_for_ai": "Wikipedia REST API for page summaries, full content, media, and search. Free, no auth. Supports 300+ languages via language prefix. Best for quick factual lookups and article summaries.",
+    "category": "search",
+    "geo": "global",
+    "language": "multilingual",
+    "url": "https://www.mediawiki.org/wiki/API:REST_API",
+    "api_base": "https://en.wikipedia.org/api/rest_v1",
+    "docs": "https://en.wikipedia.org/api/rest_v1/#/"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "free"
+  },
+  "capabilities": [
+    {
+      "id": "get_summary",
+      "description_for_ai": "Get a short plain-text summary of a Wikipedia article by title.",
+      "intent": [
+        "wikipedia summary",
+        "article summary",
+        "quick facts Wikipedia",
+        "краткое содержание Википедия"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/summary/{title}",
+      "input": {
+        "title": {
+          "type": "string",
+          "description": "Article title, URL-encoded: Albert_Einstein, Python_(programming_language)",
+          "required": true
+        },
+        "redirect": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "summary",
+        "fields": [
+          "title",
+          "displaytitle",
+          "extract (plain text summary)",
+          "thumbnail.source",
+          "content_urls.desktop.page"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "search",
+      "description_for_ai": "Search Wikipedia articles by keyword.",
+      "intent": [
+        "search Wikipedia",
+        "find Wikipedia article",
+        "Wikipedia lookup",
+        "поиск Википедия"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/search",
+      "input": {
+        "q": {
+          "type": "string",
+          "required": true
+        },
+        "limit": {
+          "type": "integer",
+          "default": 5
+        }
+      },
+      "output": {
+        "type": "list<page>",
+        "fields": [
+          "pages[0].title",
+          "pages[0].excerpt",
+          "pages[0].thumbnail.url",
+          "pages[0].key"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_full_article",
+      "description_for_ai": "Get full HTML or Markdown content of a Wikipedia article.",
+      "intent": [
+        "full Wikipedia article",
+        "Wikipedia content",
+        "Wikipedia text",
+        "полная статья Википедия"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/mobile-html/{title}",
+      "input": {
+        "title": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "html",
+        "fields": [
+          "Full article HTML"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_media",
+      "description_for_ai": "Get images and media files from a Wikipedia article.",
+      "intent": [
+        "Wikipedia images",
+        "article media",
+        "Wikipedia photos",
+        "изображения Википедия"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/media-list/{title}",
+      "input": {
+        "title": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "media",
+        "fields": [
+          "items[0].title",
+          "items[0].srcset[0].src",
+          "items[0].caption.text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_languages",
+      "description_for_ai": "Get available language versions for a Wikipedia article.",
+      "intent": [
+        "Wikipedia languages",
+        "article in other language",
+        "translate Wikipedia",
+        "языки Википедия"
+      ],
+      "endpoint": "GET https://en.wikipedia.org/api/rest_v1/page/summary/{title}",
+      "input": {
+        "title": {
+          "type": "string",
+          "required": true
+        },
+        "lang": {
+          "type": "string",
+          "description": "Language prefix: ru, de, fr, es, zh, ja",
+          "required": false,
+          "default": "en"
+        }
+      },
+      "output": {
+        "type": "summary",
+        "fields": [
+          "lang",
+          "title",
+          "extract"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "rate_limiting": "5 req/sec recommended. Add Api-User-Agent header with your app name.",
+    "pagination": "Use continue parameter for search pagination."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "last_verified": "2026-06-17"
+  }
+}
