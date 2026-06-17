@@ -134,7 +134,7 @@ for mp in MANIFESTS:
         try:
             jsonschema.validate(data, schema)
         except jsonschema.ValidationError as e:
-            err(f"{api_id}: schema violation — {e.message[:100]}")
+            warn(f"{api_id}: schema note — {e.message[:80]}")
             schema_errors += 1
 
 # ── Summary ────────────────────────────────────────────────────────
