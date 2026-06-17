@@ -5,7 +5,7 @@
     "name": "RapidAPI Hub",
     "description_for_ai": "API marketplace with 40,000+ APIs. One API key, one SDK to access: weather, sports, finance, social media, entertainment, translation, and thousands of niche APIs. Simplifies multi-API integration. Use when you need an API for a specific niche not covered elsewhere.",
     "url": "https://rapidapi.com",
-    "api_base": "https://api.rapidapi.com",
+    "api_base": "https://rapidapi.com/marketplace",
     "category": "utilities",
     "geo": [
       "GLOBAL"
@@ -187,6 +187,7 @@
   "meta": {
     "apia_version": "1.0",
     "manifest_author": "APIA community",
-    "last_verified": "2026-06-14"
+    "last_verified": "2026-06-17",
+    "notes": "RapidAPI Hub is a marketplace — api_base updated to main domain"
   }
 }
