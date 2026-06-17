@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "apia-cli"
@@ -29,3 +29,6 @@ Issues = "https://github.com/Komsomol39/apia-standard/issues"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["cli*", "apia*"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.md"]
