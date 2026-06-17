@@ -1,30 +1,16 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
-  test:
-    name: Run CI before release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install pytest jsonschema
-      - run: pytest tests/ -v --tb=short
-      - run: python tools/check_registry.py
-
-  release:
-    name: GitHub Release + PyPI
-    needs: test
+  build:
+    name: Build package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,48 +19,36 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install build tools
-        run: pip install build twine
-
-      - name: Extract version
-        id: ver
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Update version in pyproject.toml
+      - name: Run tests before release
         run: |
-          sed -i 's/^version = .*/version = "${{ steps.ver.outputs.version }}"/' pyproject.toml
+          pip install pytest jsonschema -q
+          pytest tests/ -v --tb=short
+          python tools/check_registry.py
 
-      - name: Build package
-        run: python -m build
+      - name: Build wheel and sdist
+        run: |
+          pip install build -q
+          python -m build
 
-      - name: Check package
-        run: twine check dist/*
-
-      - name: Create GitHub Release
-        uses: actions/github-script@v7
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
         with:
-          script: |
-            const version = '${{ steps.ver.outputs.version }}';
-            const { readFileSync } = require('fs');
-            const changelog = readFileSync('CHANGELOG.md', 'utf8');
-            const match = changelog.match(
-              new RegExp(`## \\[${version.replace('.','\\.')}\\][^\n]*\n([\s\S]*?)(?=## \\[|$)`)
-            );
-            const body = match ? match[1].trim() : `Release ${version}. See CHANGELOG.md.`;
-            const { data } = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: `v${version}`,
-              name: `APIA Standard v${version}`,
-              body,
-              draft: false,
-              prerelease: version.includes('alpha') || version.includes('beta') || version.includes('rc'),
-            });
-            console.log('Release:', data.html_url);
+          name: dist
+          path: dist/
+
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/apia/
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
 
       - name: Publish to PyPI
-        if: ${{ secrets.PYPI_API_TOKEN != '' }}
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: twine upload dist/*
+        uses: pypa/gh-action-pypi-publish@release/v1
