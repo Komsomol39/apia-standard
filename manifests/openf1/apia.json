@@ -1,0 +1,202 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "openf1",
+    "name": "OpenF1",
+    "description_for_ai": "Free real-time and historical Formula 1 data API covering 2023 to present. Live telemetry, lap times, race control messages, driver info, pit stops, weather, car data. No auth required.",
+    "category": "sports",
+    "geo": "global",
+    "language": "en",
+    "url": "https://openf1.org",
+    "api_base": "https://api.openf1.org/v1",
+    "docs": "https://openf1.org"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "free"
+  },
+  "capabilities": [
+    {
+      "id": "get_sessions",
+      "description_for_ai": "Get F1 sessions: race, qualifying, sprint, practice. Filter by year, location, type.",
+      "intent": [
+        "F1 sessions",
+        "grand prix schedule",
+        "Formula 1 calendar",
+        "сессии Формула 1"
+      ],
+      "endpoint": "GET https://api.openf1.org/v1/sessions",
+      "input": {
+        "year": {
+          "type": "integer",
+          "required": false
+        },
+        "country_name": {
+          "type": "string",
+          "required": false
+        },
+        "session_type": {
+          "type": "string",
+          "description": "Race, Qualifying, Sprint, Practice 1/2/3",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<session>",
+        "fields": [
+          "session_key",
+          "session_name",
+          "date_start",
+          "country_name",
+          "circuit_short_name"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_drivers",
+      "description_for_ai": "Get F1 driver info for a session: name, number, team, country, headshot.",
+      "intent": [
+        "F1 drivers",
+        "Formula 1 driver list",
+        "driver info F1",
+        "гонщики Формула 1"
+      ],
+      "endpoint": "GET https://api.openf1.org/v1/drivers",
+      "input": {
+        "session_key": {
+          "type": "integer",
+          "description": "From get_sessions. Use 'latest' for current session.",
+          "required": false
+        },
+        "driver_number": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<driver>",
+        "fields": [
+          "driver_number",
+          "full_name",
+          "name_acronym",
+          "team_name",
+          "country_code",
+          "headshot_url"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_lap_times",
+      "description_for_ai": "Get lap times for drivers in a session.",
+      "intent": [
+        "F1 lap times",
+        "fastest lap",
+        "lap data Formula 1",
+        "время круга Формула 1"
+      ],
+      "endpoint": "GET https://api.openf1.org/v1/laps",
+      "input": {
+        "session_key": {
+          "type": "integer",
+          "required": true
+        },
+        "driver_number": {
+          "type": "integer",
+          "required": false
+        },
+        "lap_number": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<lap>",
+        "fields": [
+          "lap_number",
+          "lap_duration",
+          "driver_number",
+          "date_start",
+          "is_pit_out_lap"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_position",
+      "description_for_ai": "Get race position data — live standings during a session.",
+      "intent": [
+        "F1 race position",
+        "driver standings live",
+        "race order F1",
+        "позиции гонки Формула 1"
+      ],
+      "endpoint": "GET https://api.openf1.org/v1/position",
+      "input": {
+        "session_key": {
+          "type": "integer",
+          "required": true
+        },
+        "driver_number": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<position>",
+        "fields": [
+          "date",
+          "driver_number",
+          "position"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "get_pit_stops",
+      "description_for_ai": "Get pit stop data: lap number, duration, driver.",
+      "intent": [
+        "F1 pit stops",
+        "pit stop duration",
+        "pit lane F1",
+        "пит-стопы Формула 1"
+      ],
+      "endpoint": "GET https://api.openf1.org/v1/pit",
+      "input": {
+        "session_key": {
+          "type": "integer",
+          "required": true
+        },
+        "driver_number": {
+          "type": "integer",
+          "required": false
+        }
+      },
+      "output": {
+        "type": "list<pit>",
+        "fields": [
+          "lap_number",
+          "pit_duration",
+          "driver_number",
+          "date"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "rate_limiting": "No strict rate limit. Be reasonable.",
+    "pagination": "Use date_gt/date_lt for time-based pagination."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "last_verified": "2026-06-17"
+  }
+}
