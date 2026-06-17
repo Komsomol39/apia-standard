@@ -5,11 +5,9 @@
     "name": "ФИАС / ГАР (Федеральная информационная адресная система)",
     "description_for_ai": "Официальный государственный реестр адресов России от ФНС. Единственный легитимный источник адресных данных РФ. Содержит все адреса: регионы, районы, города, улицы, дома. Используй для валидации и стандартизации российских адресов, получения почтовых индексов, поиска ФИАС-кода адреса.",
     "url": "https://fias.nalog.ru",
-    "api_base": "https://fias-public-api.nalog.ru/api/addresses",
+    "api_base": "https://fias-public-api.nalog.ru/api/addresses/fias",
     "category": "legal",
-    "geo": [
-      "RU"
-    ],
+    "geo": "ru",
     "language": "ru",
     "docs": "https://fias.nalog.ru/"
   },
@@ -195,6 +193,7 @@
   "meta": {
     "apia_version": "1.0",
     "manifest_author": "APIA community",
-    "last_verified": "2026-06-14"
+    "last_verified": "2026-06-17",
+    "notes": "Russian Federal Address System API. Only accessible from Russia/CIS. Blocked from GitHub Actions (US)."
   }
 }
