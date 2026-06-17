@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "apia-cli"
+version = "1.0.0"
+description = "CLI for the APIA standard — API registry for AI agents"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+keywords = ["api", "agents", "llm", "standard", "registry", "cli"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+apia = "cli.apia:main"
+
+[project.urls]
+Homepage = "https://github.com/Komsomol39/apia-standard"
+Repository = "https://github.com/Komsomol39/apia-standard"
+Issues = "https://github.com/Komsomol39/apia-standard/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cli*", "apia*"]
