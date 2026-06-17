@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": "1.0",
-    "generated": "2026-06-16",
+    "generated": "2026-06-17",
     "total": 257,
     "categories": {
       "ai": 25,
@@ -3453,55 +3453,22 @@
       "capabilities_count": 5
     },
     {
-      "id": "ergast-f1",
-      "name": "Ergast Formula 1 API",
-      "description_for_ai": "Free Formula 1 historical and current season data. Race results, driver standings, constructor standings, lap times, pit stops, qualifying from 1950 to present. No API key needed.",
+      "id": "jolpica-f1",
+      "name": "Jolpica F1 API",
+      "description_for_ai": "Drop-in replacement for Ergast F1 API (shut down 2024). Full Formula 1 historical data 1950-present: race results, standings, lap times, pit stops, qualifying. Free, no auth.",
       "category": "sports",
-      "geo": [
-        "GLOBAL"
-      ],
+      "geo": "global",
       "language": "en",
-      "url": "https://ergast.com/mrd/",
-      "docs": "https://ergast.com/mrd/",
-      "api_base": "https://ergast.com/api/f1",
+      "url": "https://api.jolpi.ca",
+      "docs": "https://github.com/jolpica/jolpica-f1",
+      "api_base": "https://api.jolpi.ca/ergast/f1",
       "auth_type": "none",
       "anonymous_access": true,
-      "cost": "Free",
+      "cost": "free",
       "agent_hints": {},
-      "capabilities": [
-        {
-          "id": "get_race_results",
-          "description_for_ai": "Get Formula 1 race results for any season and round. Returns driver positions, points, fastest lap.",
-          "intent": [
-            "F1 results",
-            "Formula 1 race",
-            "race winner",
-            "GP results",
-            "who won F1",
-            "формула 1 результаты"
-          ],
-          "endpoint": "GET https://ergast.com/api/f1/{season}/{round}/results.json",
-          "realtime": false,
-          "requires_auth": false
-        },
-        {
-          "id": "get_standings",
-          "description_for_ai": "Get current or historical F1 driver or constructor championship standings.",
-          "intent": [
-            "F1 standings",
-            "championship table",
-            "driver points",
-            "F1 champion",
-            "constructor standings"
-          ],
-          "endpoint": "GET https://ergast.com/api/f1/{season}/driverStandings.json",
-          "realtime": false,
-          "requires_auth": false
-        }
-      ],
-      "manifest_path": "manifests/ergast-f1/apia.json",
-      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/ergast-f1/apia.json",
-      "capabilities_count": 5
+      "capabilities_count": 5,
+      "manifest_path": "manifests/jolpica-f1/apia.json",
+      "manifest_url": "https://raw.githubusercontent.com/Komsomol39/apia-standard/main/manifests/jolpica-f1/apia.json"
     },
     {
       "id": "etherscan",
