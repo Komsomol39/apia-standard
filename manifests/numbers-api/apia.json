@@ -1,0 +1,183 @@
+{
+  "apia": "1.0",
+  "service": {
+    "id": "numbers-api",
+    "name": "Numbers API",
+    "description_for_ai": "Get interesting facts about numbers, dates, and years. Free, no auth. Math facts, trivia, year facts. Useful for generating fun content, enriching data with context.",
+    "category": "utilities",
+    "geo": "global",
+    "language": "en",
+    "url": "http://numbersapi.com",
+    "api_base": "http://numbersapi.com",
+    "docs": "http://numbersapi.com/#api"
+  },
+  "auth": {
+    "type": "none",
+    "anonymous_access": true,
+    "cost": "free"
+  },
+  "capabilities": [
+    {
+      "id": "number_fact",
+      "description_for_ai": "Get a random or specific interesting fact about a number.",
+      "intent": [
+        "fact about number",
+        "number trivia",
+        "interesting number",
+        "факт о числе"
+      ],
+      "endpoint": "GET http://numbersapi.com/{number}",
+      "input": {
+        "number": {
+          "type": "string",
+          "description": "A number or 'random'",
+          "required": true
+        },
+        "type": {
+          "type": "string",
+          "description": "trivia (default), math, date, year",
+          "required": false
+        },
+        "json": {
+          "type": "boolean",
+          "description": "Set to true for JSON response",
+          "default": true
+        }
+      },
+      "output": {
+        "type": "fact",
+        "fields": [
+          "text",
+          "number",
+          "found",
+          "type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "date_fact",
+      "description_for_ai": "Get an interesting historical fact about a date (month/day).",
+      "intent": [
+        "date fact",
+        "what happened on this day",
+        "historical event date",
+        "исторический факт дата"
+      ],
+      "endpoint": "GET http://numbersapi.com/{month}/{day}/date",
+      "input": {
+        "month": {
+          "type": "integer",
+          "description": "Month 1-12",
+          "required": true
+        },
+        "day": {
+          "type": "integer",
+          "description": "Day 1-31",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "fact",
+        "fields": [
+          "text",
+          "number",
+          "found",
+          "type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "year_fact",
+      "description_for_ai": "Get an interesting fact about a year.",
+      "intent": [
+        "year fact",
+        "what happened in year",
+        "historical year",
+        "факт о годе"
+      ],
+      "endpoint": "GET http://numbersapi.com/{year}/year",
+      "input": {
+        "year": {
+          "type": "integer",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "fact",
+        "fields": [
+          "text",
+          "number",
+          "found",
+          "type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "math_fact",
+      "description_for_ai": "Get a mathematical fact about a number.",
+      "intent": [
+        "math fact",
+        "number math trivia",
+        "математический факт"
+      ],
+      "endpoint": "GET http://numbersapi.com/{number}/math",
+      "input": {
+        "number": {
+          "type": "string",
+          "description": "Number or 'random'",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "fact",
+        "fields": [
+          "text",
+          "number",
+          "found",
+          "type"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    },
+    {
+      "id": "batch_facts",
+      "description_for_ai": "Get facts for multiple numbers at once.",
+      "intent": [
+        "multiple number facts",
+        "batch numbers",
+        "list of facts"
+      ],
+      "endpoint": "GET http://numbersapi.com/{numbers}",
+      "input": {
+        "numbers": {
+          "type": "string",
+          "description": "Comma-separated or range: 1,2,3 or 1..5",
+          "required": true
+        }
+      },
+      "output": {
+        "type": "object",
+        "fields": [
+          "Key-value map: number → fact text"
+        ]
+      },
+      "realtime": true,
+      "requires_auth": false
+    }
+  ],
+  "agent_hints": {
+    "rate_limiting": "No strict limit. Be reasonable.",
+    "errors": "Returns 'missing' field=true if no fact found for the number."
+  },
+  "meta": {
+    "apia_version": "1.0",
+    "last_verified": "2026-06-17"
+  }
+}
