@@ -26,9 +26,5 @@ Homepage = "https://github.com/Komsomol39/apia-standard"
 Repository = "https://github.com/Komsomol39/apia-standard"
 Issues = "https://github.com/Komsomol39/apia-standard/issues"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["cli*", "apia*"]
-
-[tool.setuptools.package-data]
-"*" = ["*.json", "*.md"]
+[tool.setuptools]
+packages = ["cli", "apia"]
