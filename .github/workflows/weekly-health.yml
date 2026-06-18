@@ -26,15 +26,15 @@ jobs:
         id: health
         run: |
           python tools/check_endpoints.py --fail-threshold 30 --output endpoint-health.json
-          python3 -c "
-          import json
-          r = json.load(open('endpoint-health.json'))
-          s = r['summary']
-          print('alive=' + str(s['alive']))
-          print('dead=' + str(s['dead']))
-          print('geo_blocked=' + str(s['geo_blocked']))
-          print('dead_pct=' + str(s['dead_pct']))
-          " | tee -a $GITHUB_OUTPUT
+          ALIVE=$(python3 -c "import json; r=json.load(open('endpoint-health.json')); print(r['summary']['alive'])")
+          DEAD=$(python3 -c "import json; r=json.load(open('endpoint-health.json')); print(r['summary']['dead'])")
+          GEO=$(python3 -c "import json; r=json.load(open('endpoint-health.json')); print(r['summary']['geo_blocked'])")
+          PCT=$(python3 -c "import json; r=json.load(open('endpoint-health.json')); print(r['summary']['dead_pct'])")
+          echo "alive=$ALIVE" >> $GITHUB_OUTPUT
+          echo "dead=$DEAD" >> $GITHUB_OUTPUT
+          echo "geo_blocked=$GEO" >> $GITHUB_OUTPUT
+          echo "dead_pct=$PCT" >> $GITHUB_OUTPUT
+          echo "Results: alive=$ALIVE dead=$DEAD geo=$GEO dead_pct=$PCT%"
 
       - name: Upload health report as artifact
         uses: actions/upload-artifact@v4
@@ -42,24 +42,6 @@ jobs:
           name: endpoint-health-${{ github.run_id }}
           path: endpoint-health.json
           retention-days: 90
-
-      - name: Print summary
-        run: |
-          python3 -c "
-          import json
-          r = json.load(open('endpoint-health.json'))
-          s = r['summary']
-          print(f'✅ Alive:       {s["alive"]}')
-          print(f'❌ Dead:        {s["dead"]} ({s["dead_pct"]}%)')
-          print(f'🌍 Geo-blocked: {s["geo_blocked"]}')
-          print(f'🔧 Template:    {s["template"]}')
-          dead = [e for e in r['entries'] if e.get('status')=='DEAD']
-          if dead:
-              print()
-              print('Dead endpoints:')
-              for e in dead:
-                  print(f'  {e["id"]}: {e.get("error","")[:60]}')
-          "
 
       - name: Open issue if too many dead endpoints
         if: steps.health.outputs.dead_pct > 30
@@ -76,7 +58,7 @@ jobs:
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `⚠️ Health check: ${s.dead} dead endpoints (${s.dead_pct}%)`,
+              title: `Health check: ${s.dead} dead endpoints (${s.dead_pct}%)`,
               body: `## Weekly Endpoint Health Check\n\n**${s.alive} alive / ${s.dead} dead / ${s.geo_blocked} geo-blocked**\n\n### Dead endpoints\n${dead}`,
               labels: ['maintenance']
             });
